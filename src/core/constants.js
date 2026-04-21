@@ -52,7 +52,7 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.2.1';
+export const APP_VERSION='1.2.2';
 export const BUILD_HASH='882q-v1.2';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
@@ -61,7 +61,7 @@ export const CHANGELOG={
     '🤖 All Qs AI-classified into 27 topics with Hebrew explanations (Sonnet 4.5).',
     '⚖️ EXAM_FREQ + IMA_WEIGHTS recalibrated from real IMA distribution — readiness score now reflects actual topic weighting.',
     '🎯 Multi-accept answers (c_accept) preserved per IMA appeals across all sessions.',
-    '🔄 Parallel ingestion pipeline validated — same pattern as Pnimit Mega.',
+    '🔄 Parallel ingestion pipeline validated — same pattern as Mishpacha Mega.',
     '📖 3 official reference PDFs bundled: P0062-2025 syllabus, sources list, AHA CPR guidelines.',
   ],
   '1.1': [

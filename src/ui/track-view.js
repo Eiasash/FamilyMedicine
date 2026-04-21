@@ -290,13 +290,13 @@ const tSt=getTopicStats();
 const ranked=TOPICS.map((t,i)=>({name:t,i,s:tSt[i]||{ok:0,no:0,tot:0}})).filter(p=>p.s.tot>0).sort((a,b)=>{
 const pa=a.s.tot?a.s.ok/a.s.tot:0,pb=b.s.tot?b.s.ok/b.s.tot:0;return pa-pb;});
 const weak15=ranked.slice(0,15);
-let doc='<html><head><meta charset="UTF-8"><title>Pnimit Mega — Cheat Sheet</title>';
+let doc='<html><head><meta charset="UTF-8"><title>Mishpacha Mega — Cheat Sheet</title>';
 doc+='<style>body{font-family:Inter,system-ui,sans-serif;max-width:700px;margin:0 auto;padding:16px;font-size:11px;color:#1e293b}';
 doc+='h1{font-size:16px;margin-bottom:4px}h2{font-size:13px;color:#dc2626;margin:12px 0 4px;border-bottom:1px solid #e2e8f0;padding-bottom:2px}';
 doc+='.bar{height:6px;background:#e2e8f0;border-radius:3px;margin:2px 0 6px}.fill{height:100%;border-radius:3px}';
 doc+='.topic{margin-bottom:10px;padding:8px;border:1px solid #e2e8f0;border-radius:8px;page-break-inside:avoid}';
 doc+='.stat{font-size:10px;color:#64748b}@media print{body{font-size:10px}}</style></head><body>';
-doc+='<h1>🩺 Pnimit Mega — Personal Weak Topics Cheat Sheet</h1>';
+doc+='<h1>🩺 Mishpacha Mega — Personal Weak Topics Cheat Sheet</h1>';
 doc+='<p style="color:#64748b;font-size:10px">Generated '+new Date().toLocaleDateString('en-GB')+' · '+G.QZ.length+' questions analyzed</p>';
 weak15.forEach((p,idx)=>{
 const pct=p.s.tot?Math.round(p.s.ok/p.s.tot*100):0;
@@ -537,7 +537,7 @@ export function renderStudyPlan(){
     <div style="display:flex;align-items:center;gap:8px;flex:1">
       <div style="font-size:16px">📅</div>
       <div style="flex:1">
-        <div style="font-weight:700;font-size:13px;margin-bottom:2px">Study Plan — Internal Medicine</div>
+        <div style="font-weight:700;font-size:13px;margin-bottom:2px">Study Plan — Family Medicine</div>
         <div style="font-size:9px;color:#64748b">${checkedTopics}/${totalTopics} topics (${spPct}%)</div>
       </div>
     </div>
@@ -924,7 +924,7 @@ if(_storedKey){
 h+='<div style="font-size:9px;color:#94a3b8">API key נשמר ב-localStorage בלבד · לא נשלח לשרתים של האפליקציה</div></div>';
 // Version footer
 h+=`<div style="text-align:center;margin-top:20px;padding:12px;font-size:9px;color:#94a3b8;line-height:1.8">
-<div>Pnimit Mega v${APP_VERSION} · ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})} · build ${BUILD_HASH}</div>
+<div>Mishpacha Mega v${APP_VERSION} · ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})} · build ${BUILD_HASH}</div>
 <div>Harrison's 22e · ${G.QZ.length} Questions</div>
 <div style="margin-top:8px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
 <button data-action="force-update" style="font-size:10px;padding:5px 14px;background:#4f46e5;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600">🔄 Force Update</button>
