@@ -49,8 +49,16 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.0';
+export const APP_VERSION='1.1';
 export const CHANGELOG={
+  '1.1': [
+    '📝 First 150 Qs ingested — full 2025-Jun IMA exam (June 12, 2025 session).',
+    '✅ All 150 Qs AI-classified into the 27 topics with Hebrew explanations (Sonnet 4.5).',
+    '🎯 10 multi-accept questions preserved via `c_accept` array (matches IMA appeals).',
+    '📚 3 official reference PDFs bundled under docs/references/: syllabus, sources list, AHA CPR guidelines.',
+    '🔧 Parser fix: Hebrew words ending in א/ב/ג/ד (e.g., בריא) no longer false-match as option markers.',
+    '🗂️ Exam ingestion pipeline ported from Pnimit (scripts/exam_audit/).',
+  ],
   '1.0': [
     '🎉 Mishpacha Mega v1.0 — Family Medicine Shlav A board prep launches.',
     '📚 27 topics covering P0062-2025 syllabus (Goroll 8e + Nelson 22e + AFP + Israeli guidelines).',
