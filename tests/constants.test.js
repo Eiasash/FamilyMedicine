@@ -78,8 +78,10 @@ describe('EXAM_FREQ', () => {
   it('total frequency matches known corpus size (±10%)', () => {
     const total = EXAM_FREQ.reduce((a, b) => a + b, 0);
     // The 7-session corpus has 885 questions; allow ±10% for future ingestion.
-    expect(total).toBeGreaterThanOrEqual(700);
-    expect(total).toBeLessThanOrEqual(1100);
+    const EXPECTED_CORPUS_SIZE = 885;
+    const TOLERANCE = 0.1;
+    expect(total).toBeGreaterThanOrEqual(Math.floor(EXPECTED_CORPUS_SIZE * (1 - TOLERANCE)));
+    expect(total).toBeLessThanOrEqual(Math.ceil(EXPECTED_CORPUS_SIZE * (1 + TOLERANCE)));
   });
 });
 
