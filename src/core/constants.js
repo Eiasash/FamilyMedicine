@@ -15,6 +15,10 @@ export const EXAM_YEARS=['2020','2021-Jun','2022-Jun','2023-Jun','2024-May','202
 export const SUPA_URL='https://krmlzwwelqvlfslwltol.supabase.co';
 export const SUPA_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtybWx6d3dlbHF2bGZzbHdsdG9sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NjQxMDksImV4cCI6MjA4NzU0MDEwOX0.PFSuFgHA-WBnrgs4stmloxvOORSX0CiXDPsW2dinAAQ';
 
+// Shared AI proxy (Netlify function on toranot.netlify.app)
+export const AI_PROXY='https://toranot.netlify.app/api/claude';
+export const AI_SECRET='shlav-a-mega-2026';
+
 // 27 topics for Family Medicine Shlav A (P0062-2025)
 // Order follows clinical-workflow clustering (adult → age-group → cross-cutting)
 export const TOPICS=[
@@ -48,7 +52,9 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.2';
+export const APP_VERSION='1.2.1';
+export const BUILD_HASH='882q-v1.2';
+export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
   '1.2': [
     '📚 882 Qs now in the bank — 7-session corpus (2020 + 2021-Jun through 2025-Jun).',
