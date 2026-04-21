@@ -96,7 +96,7 @@ dRes.forEach(d=>{h+=`<div class="card" style="padding:10px"><span style="font-we
 }
 if(qRes.length){
 h+=`<div style="font-weight:700;font-size:12px;margin:8px 0 6px">📝 Questions (${Math.min(qRes.length,15)} shown)</div>`;
-qRes.slice(0,15).forEach(i=>{h+=`<div class="card heb" dir="${heDir(G.QZ[i].q)}" style="padding:10px;font-size:11px;line-height:1.5"><span class="badge" style="background:${G.QZ[i].t==='Harrison'?'#faf5ff':'#eff6ff'};color:${G.QZ[i].t==='Harrison'?'#7c3aed':'#1d4ed8'}">${G.QZ[i].t==='Harrison'?'🤖 AI':'📝 '+G.QZ[i].t}</span> ${G.QZ[i].q.substring(0,120)}...</div>`;});
+qRes.slice(0,15).forEach(i=>{const isAI=G.QZ[i].t==='AI-Ch';h+=`<div class="card heb" dir="${heDir(G.QZ[i].q)}" style="padding:10px;font-size:11px;line-height:1.5;unicode-bidi:plaintext"><span class="badge" style="background:${isAI?'#faf5ff':'#eff6ff'};color:${isAI?'#7c3aed':'#1d4ed8'}">${isAI?'🤖 AI':'📝 '+G.QZ[i].t}</span> ${sanitize(G.QZ[i].q.substring(0,120))}...</div>`;});
 }
 }
 return h;
@@ -186,11 +186,12 @@ G.save();G.render();
 
 // ===== AI CHAT =====
 const CHAT_STARTERS=[
-'מה ההבדל בין דמנציה לדליריום?',
-'תסביר על תסמונת השברירות (frailty)',
-'מה הגישה האבחנתית לאנמיה נורמוציטית?',
-'תרופות שיש להימנע מהן בקשישים (Beers)',
-'מה הגישה לנפילות בקשיש?',
+'מה יעדי לחץ הדם לפי ההנחיות האחרונות?',
+'גישה אבחנתית ל-HbA1c 7.2% בגיל 55',
+'אילו חיסונים מומלצים למבוגר בן 65?',
+'אבחנה מבדלת לכאב חזה במרפאה ראשונית',
+'מתי להפנות לקולונוסקופיה סקירה?',
+'גישה לדיכאון קל-בינוני אצל נשים בהריון',
 ];
 const CHAT_SYSTEM="You are a senior family physician and mentor at Shaare Zedek Medical Center in Jerusalem. The user is a family medicine resident preparing for their Stage A board exam (P0062-2025 — רפואת המשפחה שלב א׳). Answer in the same language as the question (Hebrew or English). Be concise, clinically precise. Focus on Goroll 8e (primary source), Nelson 22e selected chapters (peds), AFP review articles, and Israeli הר\"י guidelines. Use Harrison 22e only as cross-reference. Emphasize primary-care pathophysiology, evidence-based management, Israeli national guidelines, and exam-tested thresholds.";
 
@@ -214,7 +215,7 @@ if(G.chatLoading){h+='<div class="chat-msg-ai" style="padding:6px 12px"><div cla
 }
 h+='</div>';
 h+='<div class="chat-input-row">';
-h+='<textarea id="chat-input" placeholder="שאל שאלה ברפואה פנימית..." rows="2" aria-label="Chat input" style="flex:1;border:1px solid #e2e8f0;border-radius:10px;padding:8px 10px;font-size:12px;resize:none;font-family:Heebo,sans-serif;direction:rtl;text-align:right;background:inherit;color:inherit" data-action="chat-input"></textarea>';
+h+='<textarea id="chat-input" placeholder="שאל שאלה ברפואת משפחה..." rows="2" aria-label="Chat input" style="flex:1;border:1px solid #e2e8f0;border-radius:10px;padding:8px 10px;font-size:12px;resize:none;font-family:Heebo,sans-serif;direction:rtl;text-align:right;background:inherit;color:inherit;unicode-bidi:plaintext" data-action="chat-input"></textarea>';
 h+='<button class="btn btn-p" data-action="send-chat" '+(G.chatLoading?'disabled':'')+' style="align-self:flex-end;min-width:52px" aria-label="Send">שלח</button>';
 h+='</div>';
 h+='</div>';

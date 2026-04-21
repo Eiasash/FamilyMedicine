@@ -188,7 +188,7 @@ export const TOPIC_REF={
 
 export function renderExamTrendCard(){
   const OLD_EX=new Set(['2020','2021-Jun','2022-Jun','2023-Jun']);
-  const NEW_EX=new Set(['2024-May','2024-Oct','2025-Jun']);
+  const NEW_EX=new Set(['2024-May','2024-Sep','2025-Jun']);
   const TOPICS_L=TOPICS;
   const oldTot=G.QZ.filter(q=>OLD_EX.has(q.t)).length||1;
   const newTot=G.QZ.filter(q=>NEW_EX.has(q.t)).length||1;

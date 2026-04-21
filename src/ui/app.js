@@ -1,6 +1,6 @@
 // App entry point — orchestrates all modules, wires up window bindings for onclick handlers
 import G from '../core/globals.js';
-import { APP_VERSION, LS, TOPICS, EXAM_FREQ, CHANGELOG, BUILD_HASH } from '../core/constants.js';
+import { APP_VERSION, LS, TOPICS, EXAM_FREQ, CHANGELOG, BUILD_HASH, SYLLABUS_VERSION } from '../core/constants.js';
 import { sanitize, fmtT, safeJSONParse, getApiKey, setApiKey, toast, isOk} from "../core/utils.js";
 import { migrateToIDB } from '../core/state.js';
 import '../core/data-loader.js'; // side-effect: populates G.QZ, G.TABS, etc.
@@ -159,14 +159,14 @@ ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;
 ov.onclick=e=>{if(e.target===ov)ov.remove();};
 const sec=(title,icon,color,items)=>`<div style="margin-bottom:14px">
 <div style="font-weight:700;font-size:12px;margin-bottom:6px;color:${color}">${icon} ${title}</div>
-<div style="font-size:10px;line-height:1.8">${items}</div></div>`;
+<div dir="rtl" style="font-size:10px;line-height:1.8;unicode-bidi:plaintext">${items}</div></div>`;
 // safe-innerhtml: help-overlay content is fully static — only interpolated values are APP_VERSION and CHANGELOG entries (code-controlled constants, no user input).
 ov.innerHTML=`<div style="max-width:420px;margin:0 auto;background:#fff;border-radius:16px;padding:20px;color:#1e293b;font-size:11px;line-height:1.7">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
 <div style="font-size:16px;font-weight:800">🏥 Mishpacha Mega</div>
 <button data-action="close-help" style="background:none;border:none;font-size:20px;cursor:pointer;color:#94a3b8" aria-label="Close help">✕</button>
 </div>
-<div style="font-size:10px;color:#64748b;margin-bottom:16px">Israeli Family Medicine Board Exam Prep (שלב א׳ רפואת המשפחה) · P0062-2025 · Goroll 8e + Nelson 22e + AFP + הר"י · Works Offline</div>
+<div style="font-size:10px;color:#64748b;margin-bottom:16px;unicode-bidi:plaintext">Israeli Family Medicine Board Exam Prep (<bdi>שלב א׳ רפואת המשפחה</bdi>) · ${SYLLABUS_VERSION} · Goroll 8e + Nelson 22e + AFP + <bdi>הר"י</bdi> · Works Offline</div>
 <div style="padding:10px;background:#ecfdf5;border:1px solid #bbf7d0;border-radius:10px;margin-bottom:14px">
 <div style="font-weight:700;font-size:11px;margin-bottom:6px;color:#065f46">🆕 What's New in v${APP_VERSION}</div>
 <div style="font-size:10px;line-height:1.7;color:#047857">
@@ -192,10 +192,10 @@ ${sec('AI Study Tools','🤖','#8b5cf6',
 ${sec('Study Modes','📚','#dc2626',
 '<b>🙈 Cover Options</b> — מסתיר תשובות, מכריח היזכרות חופשית<br>'+
 '<b>⏱️ Pomodoro</b> — טיימר 25 דקות פוקוס / 5 דקות הפסקה<br>'+
-'<b>📖 Library</b> — פרקי Harrison נקראים באפליקציה<br>'+
+'<b>📖 Library</b> — <bdi>Goroll 8e</bdi> (239 פרקים) · <bdi>Nelson 22e</bdi> · <bdi>Harrison 22e</bdi> (cross-ref)<br>'+
 '<b>📝 Notes</b> — הערות אישיות כלליות + לכל שאלה<br>'+
 '<b>🃏 Flashcards</b> — '+G.FLASH.length+' כרטיסים עם חזרה מרווחת<br>'+
-'<b>📄 Articles</b> — 10 מאמרים נדרשים מ-NEJM/Lancet<br>'+
+'<b>📄 Articles</b> — רשימת קריאה מלאה של <bdi>P0062-2025</bdi>: PCC, Family systems, EBM, הר"י<br>'+
 '<b>🧮 Calculators</b> — CrCl, CHA₂DS₂-VASc, CURB-65, Wells, PADUA'
 )}
 ${sec('Progress Tracking','📊','#f59e0b',
@@ -207,7 +207,7 @@ ${sec('Progress Tracking','📊','#f59e0b',
 )}
 <div style="padding:10px;background:#f0fdf4;border-radius:10px;margin-bottom:12px">
 <div style="font-weight:700;font-size:11px;margin-bottom:4px">🚀 Quick Start</div>
-<div style="font-size:10px;line-height:1.7">1. לחץ <b>Quiz</b> ← ענה על שאלות<br>2. עיין ב-<b>🔬 Distractor Autopsy</b> לניתוח AI<br>3. בלשונית <b>Track</b> ראה נקודות תורפה<br>4. סנן לפי <b>🔥 Hard</b> כדי לתרגל טעויות<br>5. קרא <b>Library → Harrison</b> לתוכן הפרק</div>
+<div dir="rtl" style="font-size:10px;line-height:1.7;unicode-bidi:plaintext">1. לחץ <bdi><b>Quiz</b></bdi> ← ענה על שאלות<br>2. עיין ב-<bdi><b>🔬 Distractor Autopsy</b></bdi> לניתוח AI<br>3. בלשונית <bdi><b>Track</b></bdi> ראה נקודות תורפה<br>4. סנן לפי <bdi><b>🔥 Hard</b></bdi> כדי לתרגל טעויות<br>5. קרא <bdi><b>Library → Goroll</b></bdi> לתוכן הפרק</div>
 </div>
 <div style="text-align:center;font-size:9px;color:#94a3b8;line-height:1.5">
 صدقة جارية الى من نحب<br>Ceaseless Charity — To the People That We Love<br><br>
@@ -220,7 +220,7 @@ document.body.appendChild(ov);
 // PWA + Background Sync + Daily Notification
 // SW update banner + registration live in core/sw-update.js.
 // Kept here: daily-notification scheduling that needs getDueQuestions() from the app.
-import { initSWUpdate, applyUpdate } from '../core/sw-update.js';
+import { initSWUpdate, applyUpdate, dismissUpdate } from '../core/sw-update.js';
 
 initSWUpdate(APP_VERSION).then(reg => {
   if (!reg) return;
@@ -324,7 +324,7 @@ document.body.addEventListener('click', (e) => {
   if (el.dataset.action === 'close-help') { const ov = document.getElementById('help-overlay'); if (ov) ov.remove(); }
   else if (el.dataset.action === 'share-app') shareApp();
   else if (el.dataset.action === 'apply-update') applyUpdate();
-  else if (el.dataset.action === 'close-update-banner') { try{localStorage.setItem(UPDATE_DISMISS_KEY,'1');}catch(e){} const b = document.getElementById('update-banner'); if (b) b.remove(); }
+  else if (el.dataset.action === 'close-update-banner') { dismissUpdate(); }
   else if (el.dataset.action === 'close-mock-modal') { const m = document.getElementById('mexModal'); if (m) m.remove(); }
   else if (el.dataset.action === 'replay-mock-wrong') { replayMockWrong(window.__mishpachaLastMockWrong || []); }
   else if (el.dataset.action === 'replay-last-mock-wrong') { replayLastMockWrong(); }

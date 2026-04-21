@@ -17,6 +17,12 @@ export function showUpdateBanner() {
   document.body.prepend(b);
 }
 
+export function dismissUpdate() {
+  try { if (_dismissKey) localStorage.setItem(_dismissKey, '1'); } catch (e) { /* noop */ }
+  const b = document.getElementById('update-banner');
+  if (b) b.remove();
+}
+
 export function applyUpdate() {
   try { localStorage.removeItem(_dismissKey); } catch (e) { /* noop */ }
   (async () => {
