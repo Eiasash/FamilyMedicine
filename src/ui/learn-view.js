@@ -5,7 +5,7 @@ import { fsrsR, fsrsInterval, fsrsInitNew, fsrsUpdate } from '../sr/fsrs-bridge.
 
 export function toggleNote(i){G.openNote=G.openNote===i?null:i;G.render();}
 export function renderStudy(){
-let h=`<div class="sec-t">📚 Study Notes</div><div class="sec-s">Internal Medicine Board Prep · Harrison's 22e + Required Articles</div>`;
+let h=`<div class="sec-t">📚 Study Notes</div><div class="sec-s">Family Medicine Board Prep · Goroll 8e + AFP + Nelson</div>`;
 h+=`<input class="search-box" placeholder="Search topics..." data-action="filter-notes" id="nfilt">`;
 const fv=document.getElementById('nfilt')?.value?.toLowerCase()||'';
 G.NOTES.filter(n=>n.topic.toLowerCase().includes(fv)||n.notes.toLowerCase().includes(fv)).forEach(n=>{

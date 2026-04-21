@@ -178,7 +178,7 @@ export async function aiSummarizeChapter(chNum,chTitle){
       return s.title+(body?': '+body.slice(0,300):'');
     }).join('\n').slice(0,3500);
   }
-  const prompt=`You are summarizing Harrison's Internal Medicine Ch ${chNum}: ${chTitle} for the Israeli internal medicine board exam (שלב א׳ פנימית).
+  const prompt=`You are summarizing Goroll's Primary Care Medicine / Harrison Ch ${chNum}: ${chTitle} for the Israeli family medicine board exam (שלב א׳ רפואת משפחה).
 
 Chapter content:
 ${chText||'Chapter '+chNum+': '+chTitle}
@@ -214,11 +214,11 @@ export async function quizMeOnChapter(chNum,chTitle){
     }).join('\n').slice(0,3000);
   }
   if(!chapterText){
-    chapterText="Harrison's Internal Medicine Chapter "+chNum+": "+chTitle;
+    chapterText="Textbook Chapter "+chNum+": "+chTitle;
   }
   const prompt=`You are an Israeli internal medicine board examiner writing MCQ for the שלב א׳ exam.
 
-Based on this chapter content from Harrison's Internal Medicine Ch ${chNum} (${chTitle}):
+Based on this chapter content from Ch ${chNum} (${chTitle}):
 ${chapterText}
 
 Generate 3 original MCQ questions NOT already in the question bank. Each question must:
@@ -265,21 +265,62 @@ export function addChapterQsToBank(jsonStr){
 }
 export function renderLibrary(){
 let h=`<div class="sec-t">📖 Library</div>
-<div class="sec-s">Harrison's 22e · Articles · Past Exams</div>`;
+<div class="sec-s">Goroll 8e · Nelson 22e · Harrison 22e · Articles · Past Exams</div>`;
 // Sub-tabs
 const libTabs=[
+{id:'goroll',l:'📘 Goroll',c:'#d97706'},
+{id:'nelson',l:'👶 Nelson',c:'#059669'},
 {id:'harrison',l:'📗 Harrison',c:'#8b5cf6'},
 {id:'articles',l:'📄 Articles',c:'#3b82f6'},
 {id:'exams',l:'📝 Exams',c:'#06b6d4'}
 ];
+// Default to Goroll on first render (Harrison was the default — wrong for family med)
+if(!G.libSec||G.libSec==='syllabus'||G.libSec==='laws')G.libSec='goroll';
 h+=`<div style="display:flex;gap:4px;overflow-x:auto;padding:4px 0;margin-bottom:12px;-webkit-overflow-scrolling:touch">`;
 libTabs.forEach(t=>{
 h+=`<span class="pill ${G.libSec===t.id?'on':''}" style="white-space:nowrap;font-size:10px" data-action="lib-section" data-sec="${t.id}">${t.l}</span>`;
 });
 h+=`</div>`;
 
-// ===== HARRISON IN-APP READER =====
-if(G.libSec==='harrison'){
+// ===== GOROLL 8e — PDF fragment reader (239 chapters) =====
+if(G.libSec==='goroll'){
+if(!G._gorollData){
+  fetch('goroll_chapters.json').then(r=>r.json()).then(d=>{G._gorollData=d;G.render();}).catch(e=>console.error('Goroll load failed',e));
+  h+=`<div class="card" style="padding:40px;text-align:center"><div style="font-size:13px;color:#64748b">⏳ Loading Goroll chapters...</div></div>`;
+}else{
+h+=`<div class="card" style="padding:14px">
+<div style="font-size:13px;font-weight:700;margin-bottom:4px">📘 Goroll — Primary Care Medicine 8e</div>
+<div style="font-size:10px;color:#64748b;margin-bottom:12px">${G._gorollData.length} chapters · PRIMARY textbook for P0062-2025 · tap to open PDF at chapter page</div>`;
+G._gorollData.forEach(c=>{
+const pageLen=c.end_page?(c.end_page-c.page+1):null;
+h+=`<a href="goroll/Goroll_8e.pdf#page=${c.page}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f1f5f9;text-decoration:none;color:inherit">
+<span style="background:#d97706;color:#fff;font-size:10px;font-weight:700;padding:4px 8px;border-radius:8px;min-width:42px;text-align:center">Ch ${c.num}</span>
+<div style="flex:1;min-width:0">
+<div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.title}</div>
+<div style="font-size:9px;color:#94a3b8;margin-top:2px">p.${c.page}${pageLen?' · ~'+pageLen+' pages':''}</div>
+</div>
+<span style="font-size:18px;color:#94a3b8">›</span></a>`;
+});
+h+=`</div>`;
+}
+}
+
+// ===== NELSON 22e — placeholder (large PDF not yet bundled) =====
+else if(G.libSec==='nelson'){
+h+=`<div class="card" style="padding:20px">
+<div style="font-size:13px;font-weight:700;margin-bottom:8px">👶 Nelson Textbook of Pediatrics 22e</div>
+<div style="font-size:11px;color:#64748b;line-height:1.7">
+The Nelson 22e PDF (167 MB) is not yet bundled in this PWA. The syllabus lists ~130 selected chapters (Appendix א').
+<br><br>
+For now: access Nelson through SZMC's digital library or the shared Google Drive folder.
+<br><br>
+<a href="https://drive.google.com/file/d/1KK7xcN5JHgo8LVUpppHvxlZrg3Ol4VnU/view" target="_blank" rel="noopener" style="color:#059669;font-weight:600;text-decoration:none">→ Open Nelson in Google Drive</a>
+</div>
+</div>`;
+}
+
+// ===== HARRISON IN-APP READER (family-med relevant chapters only) =====
+else if(G.libSec==='harrison'){
 if(G.harChOpen!==null&&G._harData&&G._harData[String(G.harChOpen)]){
 const ch=G._harData[String(G.harChOpen)];
 const allSylChNums=[...SYL_HAR_ALL,...SYL_HAR_BASE].map(c=>c.ch).sort((a,b)=>a-b);

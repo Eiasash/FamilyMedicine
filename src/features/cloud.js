@@ -78,7 +78,7 @@ box.innerHTML=html;
 // ===== FEATURE: FEEDBACK SYSTEM =====
 export function renderFeedback(){
 let h='<div class="sec-t">💡 Feedback & Feature Requests</div>';
-h+='<div class="sec-s">Help improve Pnimit Mega for everyone. AI reviews every submission.</div>';
+h+='<div class="sec-s">Help improve Mishpacha Mega for everyone. AI reviews every submission.</div>';
 h+='<div class="card" style="padding:16px;margin-bottom:12px">';
 h+='<div style="font-size:12px;font-weight:700;margin-bottom:8px">Submit Feedback</div>';
 h+='<select id="fb-type" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;margin-bottom:8px;background:#f8fafc">';
@@ -229,7 +229,7 @@ const ts=getTopicStats();
 const weakTopics=TOPICS.map((t,i)=>({t,s:ts[i]||{ok:0,no:0,tot:0}}))
   .filter(p=>p.s.tot>=3).sort((a,b)=>(a.s.ok/a.s.tot)-(b.s.ok/b.s.tot)).slice(0,5);
 const weakStr=weakTopics.map(p=>`  ${p.t}: ${Math.round(p.s.ok/p.s.tot*100)}% (${p.s.ok}/${p.s.tot})`).join('\n');
-return `Pnimit Mega v${APP_VERSION}\n`+
+return `Mishpacha Mega v${APP_VERSION}\n`+
 `Date: ${new Date().toISOString()}\n`+
 `UA: ${navigator.userAgent}\n`+
 `Screen: ${screen.width}x${screen.height} · DPR: ${devicePixelRatio}\n`+

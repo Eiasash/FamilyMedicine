@@ -110,12 +110,12 @@ export function shareQ(){
 const q=G.QZ[G.pool[G.qi]];
 let txt=q.q+'\n';
 q.o.forEach((o,i)=>{txt+=(isOk(q,i)?'✅ ':'❌ ')+o+'\n';});
-if(navigator.share){navigator.share({title:'Pnimit Mega — Question',text:txt}).catch(()=>{});}
+if(navigator.share){navigator.share({title:'Mishpacha Mega — Question',text:txt}).catch(()=>{});}
 else if(navigator.clipboard)navigator.clipboard.writeText(txt).then(()=>{const b=document.getElementById('shbtn');if(b){b.textContent='✅ הועתק';setTimeout(()=>b.textContent='📋 שתף',1500)}});
 }
 export function shareApp(){
 const url=location.href;
-if(navigator.share){navigator.share({title:'Pnimit Mega — Internal Medicine Board Prep',text:'Internal Medicine Board Prep — Harrison\'s 22e + Required Articles + Calculators + Spaced Repetition',url:url}).catch(()=>{});}
+if(navigator.share){navigator.share({title:'Mishpacha Mega — Family Medicine Board Prep',text:'Family Medicine Board Prep — Goroll 8e + AFP + Required Articles + Calculators + Spaced Repetition',url:url}).catch(()=>{});}
 else if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>toast('✅ Link copied!','success'));}
 }
 
@@ -163,7 +163,7 @@ const sec=(title,icon,color,items)=>`<div style="margin-bottom:14px">
 // safe-innerhtml: help-overlay content is fully static — only interpolated values are APP_VERSION and CHANGELOG entries (code-controlled constants, no user input).
 ov.innerHTML=`<div style="max-width:420px;margin:0 auto;background:#fff;border-radius:16px;padding:20px;color:#1e293b;font-size:11px;line-height:1.7">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-<div style="font-size:16px;font-weight:800">🏥 Pnimit Mega</div>
+<div style="font-size:16px;font-weight:800">🏥 Mishpacha Mega</div>
 <button data-action="close-help" style="background:none;border:none;font-size:20px;cursor:pointer;color:#94a3b8" aria-label="Close help">✕</button>
 </div>
 <div style="font-size:10px;color:#64748b;margin-bottom:16px">Israeli Internal Medicine Board Exam Prep (שלב א׳ פנימית) · P0064-2025 · Harrison's 22e · Works Offline</div>
