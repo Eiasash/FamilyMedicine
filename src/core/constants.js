@@ -52,10 +52,15 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.2.2';
-export const BUILD_HASH='882q-v1.2';
+export const APP_VERSION='1.2.3';
+export const BUILD_HASH='885q-v1.2.3';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.2.3': [
+    '➕ 3 Qs recovered via parallel pipeline — 882→885 (2022-Jun +1, 2024-May +1, 2024-Sep +1).',
+    '🩹 Clinical answer-key corrections for the 3 recovered Qs: Q77 (AST:ALT hepatitis), Q42 (denosumab rebound), Q90 (IPF PFT pattern).',
+    '🔒 Per-tag count lock test added — silent re-ingestion drops now fail CI.',
+  ],
   '1.2': [
     '📚 882 Qs now in the bank — 7-session corpus (2020 + 2021-Jun through 2025-Jun).',
     '🤖 All Qs AI-classified into 27 topics with Hebrew explanations (Sonnet 4.5).',
