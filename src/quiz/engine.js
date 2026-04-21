@@ -309,7 +309,7 @@ export function startMockExamByTag(tag){
   G.render();
 }
 export function showMockExamPicker(){
-  const EXAM_TAGS=['2020','2021-Jun','2022-Jun','2023-Jun','2024-May','2024-Oct','2025-Jun'];
+  const EXAM_TAGS=['2020','2021-Jun','2022-Jun','2023-Jun','2024-May','2024-Sep','2025-Jun'];
   const counts={};
   G.QZ.forEach(q=>{if(EXAM_TAGS.includes(q.t))counts[q.t]=(counts[q.t]||0)+1;});
   const rows=EXAM_TAGS.filter(t=>counts[t]>=20).map(t=>`<button data-action="start-mock-tag" data-tag="${t}" class="btn" style="display:block;width:100%;margin-bottom:6px;padding:10px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;text-align:right;font-size:12px;cursor:pointer">${t} <span style="color:#94a3b8;font-size:10px">— ${counts[t]} שאלות</span></button>`).join('');

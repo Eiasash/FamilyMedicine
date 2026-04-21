@@ -37,7 +37,7 @@ export async function explainWithAI(qIdx){
   try{
     // Feature 8: Detect language — bilingual if question has English terms
     var _qLang=(q.q.match(/[a-zA-Z]/g)||[]).length/q.q.length>0.25?'en':'he';
-    var _langInstr=_qLang==='en'?'Explain in English (3-4 sentences) why this is the correct answer. Be concise and exam-focused.':'הסבר בעברית (3-4 משפטים) למה זו התשובה הנכונה לשאלה הבאה מתחום הרפואה הפנימית. עגן תמיד בתשובה הנכונה הנל.';
+    var _langInstr=_qLang==='en'?'Explain in English (3-4 sentences) why this is the correct answer. Be concise and exam-focused.':'הסבר בעברית (3-4 משפטים) למה זו התשובה הנכונה לשאלה הבאה מתחום רפואת המשפחה. עגן תמיד בתשובה הנכונה הנ"ל.';
     var txt=await callAI([{role:'user',content:'ANSWER KEY: The correct answer is DEFINITIVELY "'+correct+'".\n\n'+_langInstr+'\n\nשאלה: '+q.q+'\nאפשרויות: '+q.o.join(' / ')+'\nתשובה נכונה: '+correct}],400,'sonnet');
     G._exCache[qIdx]={text:txt};
     localStorage.setItem('mishpacha_ex',JSON.stringify(G._exCache));
@@ -68,7 +68,7 @@ G._exCache[_apKey]='<div style="color:#64748b">⏳ AI analyzing each option...</
 G.render();
 try{
 const wrongOpts=q.o.filter((_,i)=>!isOk(q,i));
-const txt=await callAI([{role:'user',content:`Internal medicine board exam question. For EACH wrong option, explain in 1-2 sentences why it's wrong HERE and when it WOULD be correct.
+const txt=await callAI([{role:'user',content:`Israeli family medicine board exam question (שלב א׳ רפואת משפחה). For EACH wrong option, explain in 1-2 sentences why it's wrong HERE and when it WOULD be correct.
 
 Question: ${q.q}
 Correct: ${q.o[q.c]}

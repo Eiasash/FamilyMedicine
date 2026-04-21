@@ -25,11 +25,16 @@ export const TAG_MIGRATION_MAP = Object.freeze({
   Jun22: '2022-Jun',
   Jun23: '2023-Jun',
   May24: '2024-May',
-  Oct24: '2024-Oct',
+  // Fall-2024 session canonical token is 2024-Sep (matches EXAM_YEARS + answer keys).
+  // Earlier short form "Oct24" and the v1 canonicalized "2024-Oct" both remap.
+  Oct24: '2024-Sep',
+  '2024-Oct': '2024-Sep',
   Jun25: '2025-Jun',
 });
 
-export const TAG_MIGRATION_SENTINEL = '__tagMigrationV1';
+// Bumped V1→V2 in v1.2.5 — V1 mapped Oct24→2024-Oct (non-existent tag, empty pool).
+// V2 remaps both Oct24 and 2024-Oct to canonical 2024-Sep.
+export const TAG_MIGRATION_SENTINEL = '__tagMigrationV2';
 
 function rename(v, map) {
   if (typeof v !== 'string') return v;

@@ -52,10 +52,22 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.2.4';
-export const BUILD_HASH='885q-v1.2.4';
+export const APP_VERSION='1.2.5';
+export const BUILD_HASH='885q-v1.2.5';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.2.5': [
+    '🐛 Runtime crash fix — close-update-banner wrote to undefined UPDATE_DISMISS_KEY (ReferenceError silently broke the banner). Now routes through exported dismissUpdate() in sw-update.js.',
+    '🏷️ Canonical exam tag 2024-Sep everywhere — quiz filter pills, track trend card, engine mock-picker, tagMigration map were all keyed to the non-existent 2024-Oct (produced empty pools).',
+    '🔄 tagMigration sentinel bumped V1→V2 so users already migrated with Oct24→2024-Oct get re-remapped to 2024-Sep on next load.',
+    '🤖 Dead AI-badge logic fixed — search/quiz cards were checking q.t===\'Harrison\' (never true in this corpus). Switched to q.t===\'AI-Ch\' (the tag actually assigned by library-view addChapterQsToBank).',
+    '🇮🇱 CHAT_STARTERS replaced with family-medicine prompts (BP targets, HbA1c, adult vaccines, chest-pain triage, colonoscopy screening, perinatal depression) — were still geriatric (dementia/Beers/frailty/falls).',
+    '💬 Chat textarea placeholder: "ברפואה פנימית" → "ברפואת משפחה".',
+    '🧬 AI explain + autopsy prompts rewritten for family medicine (were "הרפואה הפנימית" / "Internal medicine board exam").',
+    '🔤 Bidi isolation on mixed Hebrew/English strings — unicode-bidi:plaintext + <bdi> (help overlay, chat box, search card previews). English no longer visually flips inside RTL paragraphs.',
+    '📣 Help overlay cleanup — Library "פרקי Harrison" → Goroll primary + Nelson + Harrison cross-ref; Articles "10 NEJM/Lancet" → "P0062-2025 required readings"; Quick Start "Library → Harrison" → "Library → Goroll".',
+    '🛡️ sanitize() now wraps Q preview text in search cards (defensive, was raw).',
+  ],
   '1.2.4': [
     '📄 Articles tab rewired for family medicine — 72 P0062-2025 required readings (Appendix ב/ג/ד/ה).',
     '🇮🇱 56 הר"י Israeli guidelines/position papers 2018-2025 grouped by year.',
