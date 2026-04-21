@@ -11,6 +11,8 @@ npx vite build
 echo "→ Copying static assets..."
 cp -r data/ dist/data/
 cp harrison_chapters.json dist/
+cp goroll_chapters.json dist/
+cp nelson_chapters.json dist/
 cp -r shared/ dist/shared/
 cp -r exams/ dist/exams/
 [ -d articles ] && cp -r articles/ dist/articles/ || echo "  (skip: articles/ not present)"
@@ -39,7 +41,7 @@ echo "  → CACHE=mishpacha-v${APP_VER}"
 cat > dist/sw.js << SWEOF
 const CACHE='mishpacha-v${APP_VER}';
 const SHELL_URLS=['mishpacha-mega.html','manifest.json','shared/fsrs.js'];
-const DATA_URLS=['data/questions.json','data/topics.json','data/notes.json','data/drugs.json','data/flashcards.json','data/tabs.json','harrison_chapters.json'];
+const DATA_URLS=['data/questions.json','data/topics.json','data/notes.json','data/drugs.json','data/flashcards.json','data/tabs.json','harrison_chapters.json','goroll_chapters.json','nelson_chapters.json'];
 const ALL_URLS=[...SHELL_URLS,...DATA_URLS];
 
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ALL_URLS)).then(()=>self.skipWaiting())));

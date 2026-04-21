@@ -52,10 +52,17 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.2.5';
-export const BUILD_HASH='885q-v1.2.5';
+export const APP_VERSION='1.2.6';
+export const BUILD_HASH='885q-v1.2.6';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.2.6': [
+    '👶 Nelson 22e tab now shows a searchable index of all 165 required chapters (Appendix א\').',
+    '🔎 Filter by title or chapter number — useful when cross-referencing a peds topic from Goroll.',
+    '📌 Drive link stays prominent (PDF is 167 MB — too big to bundle).',
+    '📗 Harrison\'s tab header now flags it as cross-reference only — Goroll 8e is the primary source for P0062-2025.',
+    '🛠️ Build fix — scripts/build.sh now copies goroll_chapters.json + nelson_chapters.json into dist/ and caches them in the prod SW (Goroll tab was silently 404ing post-deploy).',
+  ],
   '1.2.5': [
     '🐛 Runtime crash fix — close-update-banner wrote to undefined UPDATE_DISMISS_KEY (ReferenceError silently broke the banner). Now routes through exported dismissUpdate() in sw-update.js.',
     '🏷️ Canonical exam tag 2024-Sep everywhere — quiz filter pills, track trend card, engine mock-picker, tagMigration map were all keyed to the non-existent 2024-Oct (produced empty pools).',

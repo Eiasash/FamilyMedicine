@@ -390,18 +390,32 @@ h+=`</div>`;
 }
 }
 
-// ===== NELSON 22e — placeholder (large PDF not yet bundled) =====
+// ===== NELSON 22e — syllabus chapter index (PDF too large to bundle; Drive link stays primary) =====
 else if(G.libSec==='nelson'){
-h+=`<div class="card" style="padding:20px">
-<div style="font-size:13px;font-weight:700;margin-bottom:8px">👶 Nelson Textbook of Pediatrics 22e</div>
-<div style="font-size:11px;color:#64748b;line-height:1.7">
-The Nelson 22e PDF (167 MB) is not yet bundled in this PWA. The syllabus lists ~130 selected chapters (Appendix א').
-<br><br>
-For now: access Nelson through SZMC's digital library or the shared Google Drive folder.
-<br><br>
-<a href="https://drive.google.com/file/d/1KK7xcN5JHgo8LVUpppHvxlZrg3Ol4VnU/view" target="_blank" rel="noopener" style="color:#059669;font-weight:600;text-decoration:none">→ Open Nelson in Google Drive</a>
-</div>
+if(!G._nelData){
+  fetch('nelson_chapters.json').then(r=>r.json()).then(d=>{G._nelData=d;G.render();}).catch(e=>console.error('Nelson load failed',e));
+  h+=`<div class="card" style="padding:40px;text-align:center"><div style="font-size:13px;color:#64748b">⏳ Loading Nelson chapters...</div></div>`;
+}else{
+const nq=(G.nelSearch||'').trim().toLowerCase();
+const filtered=nq?G._nelData.filter(c=>c.title_en.toLowerCase().includes(nq)||String(c.ch).includes(nq)):G._nelData;
+h+=`<div class="card" style="padding:14px">
+<div style="font-size:13px;font-weight:700;margin-bottom:4px">👶 Nelson Textbook of Pediatrics 22e</div>
+<div style="font-size:10px;color:#64748b;margin-bottom:10px">${G._nelData.length} chapters from P0062-2025 Appendix א' · cross-reference to Goroll peds · PDF (167 MB) opens in Google Drive</div>
+<a href="https://drive.google.com/file/d/1KK7xcN5JHgo8LVUpppHvxlZrg3Ol4VnU/view" target="_blank" rel="noopener" style="display:inline-block;font-size:11px;font-weight:600;color:#fff;background:#059669;padding:8px 14px;border-radius:8px;text-decoration:none;margin-bottom:12px">→ Open full Nelson 22e PDF (Drive)</a>
+<input type="search" placeholder="🔎 Search chapter title or number (e.g. asthma, 112)" data-action="nel-search" value="${sanitize(G.nelSearch||'')}" style="width:100%;padding:8px 10px;font-size:12px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:10px;box-sizing:border-box" dir="auto">
+<div style="font-size:9px;color:#94a3b8;margin-bottom:4px">${filtered.length===G._nelData.length?`All ${G._nelData.length} chapters`:`${filtered.length} of ${G._nelData.length} chapters`}</div>`;
+if(filtered.length===0){
+  h+=`<div style="padding:20px;text-align:center;font-size:11px;color:#94a3b8">No chapters match "${sanitize(G.nelSearch||'')}".</div>`;
+}else{
+  filtered.forEach(c=>{
+    h+=`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f1f5f9">
+<span style="background:#059669;color:#fff;font-size:10px;font-weight:700;padding:4px 8px;border-radius:8px;min-width:42px;text-align:center">Ch ${c.ch}</span>
+<div style="flex:1;min-width:0;font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${sanitize(c.title_en)}</div>
 </div>`;
+  });
+}
+h+=`</div>`;
+}
 }
 
 // ===== HARRISON IN-APP READER (family-med relevant chapters only) =====
@@ -448,8 +462,9 @@ h+=`<div class="card" style="padding:40px;text-align:center"><div style="font-si
 const allSylChs=[...SYL_HAR_ALL,...SYL_HAR_BASE].sort((a,b)=>a.ch-b.ch);
 const allChNums=SYL_HAR_ALL.map(c=>c.ch);
 h+=`<div class="card" style="padding:14px">
-<div style="font-size:13px;font-weight:700;margin-bottom:4px">📗 Harrison's 22e — In-App Reader</div>
-<div style="font-size:10px;color:#64748b;margin-bottom:12px">${allSylChs.length} required chapters · <span style="color:#7c3aed">purple</span> = all examinees · <span style="color:#06b6d4">teal</span> = base track only</div>`;
+<div style="font-size:13px;font-weight:700;margin-bottom:4px">📗 Harrison's 22e — Cross-Reference</div>
+<div style="padding:8px 10px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;font-size:10px;color:#854d0e;line-height:1.6;margin-bottom:10px">⚠️ For P0062-2025 (Family Medicine), the <b>primary textbook is Goroll 8e</b>. Harrison is a cross-reference only — use it to dig deeper on specialist topics, not as the main study source.</div>
+<div style="font-size:10px;color:#64748b;margin-bottom:12px">${allSylChs.length} chapters · <span style="color:#7c3aed">purple</span> = all examinees · <span style="color:#06b6d4">teal</span> = base track only</div>`;
 allSylChs.forEach(c=>{
 const isAll=allChNums.includes(c.ch);
 const harCh=G._harData&&G._harData[String(c.ch)];
@@ -600,6 +615,22 @@ export function initLibraryEvents(container) {
     else if (action === 'filter-year') {
       G.tab = 'quiz'; G.filt = el.dataset.yr;
       buildPool(); G.render();
+    }
+  });
+  container.addEventListener('input', (e) => {
+    if (e.target.dataset.action === 'nel-search') {
+      G.nelSearch = e.target.value;
+      // Debounced re-render: avoid jank while typing on mobile
+      clearTimeout(G._nelSearchTimer);
+      G._nelSearchTimer = setTimeout(() => {
+        const prev = document.activeElement;
+        G.render();
+        // Restore focus + caret to the search input after re-render
+        if (prev && prev.dataset && prev.dataset.action === 'nel-search') {
+          const next = document.querySelector('[data-action="nel-search"]');
+          if (next) { next.focus(); next.setSelectionRange(next.value.length, next.value.length); }
+        }
+      }, 120);
     }
   });
 }
