@@ -1,0 +1,27 @@
+[
+  {
+    "id": "quiz",
+    "ic": "📝",
+    "l": "Quiz"
+  },
+  {
+    "id": "learn",
+    "ic": "📚",
+    "l": "Learn"
+  },
+  {
+    "id": "lib",
+    "ic": "📖",
+    "l": "Library"
+  },
+  {
+    "id": "track",
+    "ic": "📊",
+    "l": "Track"
+  },
+  {
+    "id": "more",
+    "ic": "⚙️",
+    "l": "More"
+  }
+]

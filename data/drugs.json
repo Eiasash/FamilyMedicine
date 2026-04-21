@@ -1,0 +1,98 @@
+[
+  {
+    "name": "Amoxicillin",
+    "heb": "אמוקסיצילין",
+    "acb": 0,
+    "beers": 0,
+    "cat": "Antibiotic",
+    "risk": "PCN allergy; diarrhea"
+  },
+  {
+    "name": "Azithromycin",
+    "heb": "אזיתרומיצין",
+    "acb": 0,
+    "beers": 0,
+    "cat": "Antibiotic",
+    "risk": "QT prolongation; GI upset"
+  },
+  {
+    "name": "Metformin",
+    "heb": "מטפורמין",
+    "acb": 0,
+    "beers": 0,
+    "cat": "Antidiabetic",
+    "risk": "Lactic acidosis in renal failure; GI side effects"
+  },
+  {
+    "name": "Atorvastatin",
+    "heb": "אטורבסטטין",
+    "acb": 0,
+    "beers": 0,
+    "cat": "Statin",
+    "risk": "Myalgia; rare rhabdomyolysis; hepatic"
+  },
+  {
+    "name": "Amlodipine",
+    "heb": "אמלודיפין",
+    "acb": 0,
+    "beers": 0,
+    "cat": "CCB",
+    "risk": "Peripheral edema; flushing"
+  },
+  {
+    "name": "Losartan",
+    "heb": "לוסרטן",
+    "acb": 0,
+    "beers": 0,
+    "cat": "ARB",
+    "risk": "Hyperkalemia; AKI in volume depletion; pregnancy category X"
+  },
+  {
+    "name": "Fluoxetine",
+    "heb": "פלואוקסטין",
+    "acb": 1,
+    "beers": 0,
+    "cat": "SSRI",
+    "risk": "Long half-life; SIADH; sexual SE"
+  },
+  {
+    "name": "Salbutamol",
+    "heb": "סלבוטמול",
+    "acb": 0,
+    "beers": 0,
+    "cat": "SABA",
+    "risk": "Tachycardia; tremor; hypokalemia"
+  },
+  {
+    "name": "Budesonide-Formoterol",
+    "heb": "בודזונייד-פורמוטרול",
+    "acb": 0,
+    "beers": 0,
+    "cat": "ICS/LABA",
+    "risk": "Oral candidiasis; dysphonia"
+  },
+  {
+    "name": "Paracetamol",
+    "heb": "פרצטמול",
+    "acb": 0,
+    "beers": 0,
+    "cat": "Analgesic",
+    "risk": "Hepatotoxic >4g/d; reduce in liver disease"
+  },
+  {
+    "name": "Ibuprofen",
+    "heb": "איבופרופן",
+    "acb": 0,
+    "beers": 1,
+    "cat": "NSAID",
+    "risk": "GI bleed; AKI; CV risk; avoid in CKD & HF"
+  },
+  {
+    "name": "Omeprazole",
+    "heb": "אומפרזול",
+    "acb": 0,
+    "beers": 1,
+    "cat": "PPI",
+    "risk": "Long-term: Mg/B12 deficiency; osteoporosis; C.diff"
+  }
+]

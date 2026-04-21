@@ -1,0 +1,137 @@
+[
+  {
+    "id": 0,
+    "en": "Adult Cardiology — IHD & Arrhythmia",
+    "he": "קרדיולוגיה למבוגר — מחלת לב איסכמית והפרעות קצב"
+  },
+  {
+    "id": 1,
+    "en": "Heart Failure & Valves",
+    "he": "אי-ספיקת לב ומסתמים"
+  },
+  {
+    "id": 2,
+    "en": "Hypertension & Lipids",
+    "he": "יתר לחץ דם ודיסליפידמיה"
+  },
+  {
+    "id": 3,
+    "en": "Pulmonology (Asthma, COPD, PE)",
+    "he": "ריאות (אסטמה, COPD, תסחיף)"
+  },
+  {
+    "id": 4,
+    "en": "Gastroenterology & Hepatology",
+    "he": "גסטרו והפטולוגיה"
+  },
+  {
+    "id": 5,
+    "en": "Nephrology, UTI & Urology",
+    "he": "נפרולוגיה, UTI ואורולוגיה"
+  },
+  {
+    "id": 6,
+    "en": "Endocrinology — Diabetes",
+    "he": "אנדוקרינולוגיה — סוכרת"
+  },
+  {
+    "id": 7,
+    "en": "Endocrinology — Thyroid & Other",
+    "he": "אנדוקרינולוגיה — בלוטת תריס ואחר"
+  },
+  {
+    "id": 8,
+    "en": "Hematology & Coagulation",
+    "he": "המטולוגיה וקרישה"
+  },
+  {
+    "id": 9,
+    "en": "Rheumatology & Musculoskeletal",
+    "he": "ראומטולוגיה וטרשת שלד-שריר"
+  },
+  {
+    "id": 10,
+    "en": "Neurology (Stroke, Headache, Dementia)",
+    "he": "נוירולוגיה (שבץ, כאבי ראש, דמנציה)"
+  },
+  {
+    "id": 11,
+    "en": "Dermatology",
+    "he": "דרמטולוגיה"
+  },
+  {
+    "id": 12,
+    "en": "Allergy & Immunology",
+    "he": "אלרגיה ואימונולוגיה"
+  },
+  {
+    "id": 13,
+    "en": "Infectious Disease & Vaccines (Adult)",
+    "he": "מחלות זיהומיות וחיסונים (מבוגרים)"
+  },
+  {
+    "id": 14,
+    "en": "Women's Health & Gynecology",
+    "he": "בריאות האישה וגינקולוגיה"
+  },
+  {
+    "id": 15,
+    "en": "Pregnancy, Perinatal & Postpartum",
+    "he": "הריון ולידה"
+  },
+  {
+    "id": 16,
+    "en": "Men's Health",
+    "he": "בריאות הגבר"
+  },
+  {
+    "id": 17,
+    "en": "Geriatrics (Falls, Cognition, Polypharmacy)",
+    "he": "גריאטריה (נפילות, קוגניציה, ריבוי תרופות)"
+  },
+  {
+    "id": 18,
+    "en": "Mental Health — Mood, Anxiety, Psychosis",
+    "he": "בריאות הנפש — מצב רוח, חרדה, פסיכוזה"
+  },
+  {
+    "id": 19,
+    "en": "Addictions & Lifestyle Behaviors",
+    "he": "התמכרויות והתנהגות בריאותית"
+  },
+  {
+    "id": 20,
+    "en": "Preventive Medicine & Health Promotion",
+    "he": "רפואה מונעת וקידום בריאות"
+  },
+  {
+    "id": 21,
+    "en": "Pain, Palliative & End-of-Life",
+    "he": "כאב, פליאציה וסוף החיים"
+  },
+  {
+    "id": 22,
+    "en": "Emergencies in the Clinic",
+    "he": "חירום במרפאה"
+  },
+  {
+    "id": 23,
+    "en": "Peds — Newborn & Development",
+    "he": "ילדים — יילוד והתפתחות"
+  },
+  {
+    "id": 24,
+    "en": "Peds — Acute & Infections",
+    "he": "ילדים — מחלות חדות וזיהומים"
+  },
+  {
+    "id": 25,
+    "en": "Peds — Adolescent & Mental Health",
+    "he": "ילדים — מתבגרים ובריאות הנפש"
+  },
+  {
+    "id": 26,
+    "en": "EBM, Communication & Family Systems",
+    "he": "רפואה מבוססת ראיות, תקשורת ומערכת משפחתית"
+  }
+]

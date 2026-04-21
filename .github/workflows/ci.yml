@@ -1,0 +1,121 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # ── JSON Parse Validity ──
+      - name: Validate JSON files parse correctly
+        run: |
+          for f in data/questions.json data/notes.json data/drugs.json data/flashcards.json data/topics.json data/tabs.json; do
+            echo "Checking $f..."
+            python3 -c "import json,sys; json.load(open('$f')); print('  OK')"
+          done
+
+      # ── Question Schema (loose in v1.x — strict once ingestion populates) ──
+      - name: Validate question schema integrity
+        run: |
+          python3 << 'PYEOF'
+          import json, sys
+          qs = json.load(open('data/questions.json'))
+          errors = []
+          for i, q in enumerate(qs):
+              if not q.get('q'): errors.append(f'Q{i}: missing question text')
+              if not isinstance(q.get('o'), list) or len(q.get('o', [])) != 4:
+                  errors.append(f'Q{i}: expected 4 options')
+              # Primary c always required
+              if not isinstance(q.get('c'), int) or q['c'] < 0 or q['c'] >= len(q.get('o', [])):
+                  errors.append(f'Q{i}: invalid correct answer c={q.get("c")}')
+              # c_accept rule: if present, primary c MUST be in c_accept
+              if 'c_accept' in q:
+                  ca = q['c_accept']
+                  if not isinstance(ca, list) or len(ca) == 0:
+                      errors.append(f'Q{i}: c_accept must be non-empty list')
+                  elif len(set(ca)) != len(ca):
+                      errors.append(f'Q{i}: c_accept has duplicates')
+                  elif any(not isinstance(x,int) or x<0 or x>=len(q.get('o',[])) for x in ca):
+                      errors.append(f'Q{i}: c_accept index OOB')
+                  elif q['c'] not in ca:
+                      errors.append(f'Q{i}: primary c={q["c"]} not in c_accept={ca}')
+              # ti range: 0-26 (27 topics in Mishpacha Mega)
+              if q.get('ti') is None: errors.append(f'Q{i}: missing ti')
+              elif not isinstance(q.get('ti'), int) or q['ti'] < 0 or q['ti'] > 26:
+                  errors.append(f'Q{i}: ti={q.get("ti")} out of 0-26 range')
+              if not q.get('t'): errors.append(f'Q{i}: missing tag t')
+          if errors:
+              for e in errors[:30]: print(f'ERROR: {e}', file=sys.stderr)
+              if len(errors) > 30: print(f'...and {len(errors)-30} more', file=sys.stderr)
+              sys.exit(1)
+          print(f'OK: All {len(qs)} questions valid (v1.x — count threshold not yet enforced)')
+          PYEOF
+
+      # ── Tag Whitelist ──
+      - name: Check question tags are in whitelist
+        run: |
+          python3 << 'PYEOF'
+          import json, sys
+          qs = json.load(open('data/questions.json'))
+          allowed = {'2020','2021-Jun','2022-Jun','2023-Jun','2024-May','2024-Sep','2025-Jun','Goroll','Nelson','AFP','Exam'}
+          bad = []
+          for i, q in enumerate(qs):
+              if q.get('t') not in allowed:
+                  bad.append(f'Q{i}: unknown tag {q.get("t")!r}')
+          if bad:
+              for b in bad[:10]: print(f'ERROR: {b}', file=sys.stderr)
+              sys.exit(1)
+          print(f'OK: All {len(qs)} tags in whitelist {sorted(allowed)}')
+          PYEOF
+
+      # ── Conflicting Duplicates ──
+      - name: Check for conflicting duplicate questions
+        run: |
+          python3 << 'PYEOF'
+          import json, sys
+          qs = json.load(open('data/questions.json'))
+          seen = {}
+          conflicts = []
+          for i, q in enumerate(qs):
+              key = q['q'].strip()[:80]
+              if key in seen:
+                  j = seen[key]
+                  if qs[i]['o'] == qs[j]['o'] and qs[i]['c'] != qs[j]['c']:
+                      conflicts.append((j, i, key[:60]))
+              else:
+                  seen[key] = i
+          if conflicts:
+              print(f'CRITICAL: {len(conflicts)} conflicting duplicates', file=sys.stderr)
+              for j, i, k in conflicts:
+                  print(f'  Q{j} vs Q{i}: {k}...', file=sys.stderr)
+              sys.exit(1)
+          print('OK: No conflicting duplicates')
+          PYEOF
+
+      # ── Node / Tests ──
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Check all source JS parses
+        run: |
+          find src/ shared/ -name "*.js" | while read f; do
+            node --check "$f" || { echo "ERROR: $f failed syntax check"; exit 1; }
+          done
+
+      - name: SW version sync
+        run: node scripts/sync-sw-version.cjs
+
+      - name: Run Vitest
+        run: npm test

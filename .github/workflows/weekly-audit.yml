@@ -1,0 +1,202 @@
+name: Weekly Audit
+
+on:
+  schedule:
+    - cron: '0 6 * * 0'
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # ── Data Integrity ──
+      - name: Validate all JSON files
+        run: |
+          for f in data/questions.json data/notes.json data/drugs.json data/flashcards.json data/topics.json data/tabs.json; do
+            echo "Checking $f..."
+            python3 -c "import json,sys; json.load(open('$f')); print('  OK')"
+          done
+
+      - name: Check question count and schema
+        run: |
+          python3 << 'PYEOF'
+          import json, sys
+          qs = json.load(open('data/questions.json'))
+          errors = []
+          if len(qs) < 800:
+              errors.append(f'Question count too low: {len(qs)}')
+          for i, q in enumerate(qs):
+              if not q.get('q') or len(q['q']) < 15:
+                  errors.append(f'Q{i}: question text missing or too short')
+              if not isinstance(q.get('o'), list) or len(q.get('o', [])) < 4:
+                  errors.append(f'Q{i}: needs >=4 options')
+              if not isinstance(q.get('c'), int) or q['c'] < 0 or q['c'] >= len(q.get('o', [])):
+                  errors.append(f'Q{i}: invalid correct answer index')
+              if q.get('ti') is None or not isinstance(q.get('ti'), int) or q['ti'] < 0 or q['ti'] > 23:
+                  errors.append(f'Q{i}: invalid topic index')
+              if not q.get('t'):
+                  errors.append(f'Q{i}: missing year field')
+              if not q.get('e'):
+                  errors.append(f'Q{i}: missing explanation')
+          if errors:
+              print(f'ERRORS ({len(errors)}):')
+              for e in errors[:20]:
+                  print(f'  {e}')
+              if len(errors) > 20:
+                  print(f'  ... and {len(errors)-20} more')
+              sys.exit(1)
+          print(f'OK: {len(qs)} questions, all valid')
+          PYEOF
+
+      - name: Check for conflicting duplicates
+        run: |
+          python3 << 'PYEOF'
+          import json, sys
+          qs = json.load(open('data/questions.json'))
+          seen = {}
+          conflicts = []
+          for i, q in enumerate(qs):
+              key = q['q'].strip()[:80]
+              if key in seen:
+                  j = seen[key]
+                  if qs[i]['c'] != qs[j]['c']:
+                      conflicts.append((j, i, key[:60]))
+              else:
+                  seen[key] = i
+          if conflicts:
+              print(f'CRITICAL: {len(conflicts)} conflicting duplicates:')
+              for j, i, k in conflicts:
+                  print(f'  Q{j} vs Q{i}: {k}...')
+              sys.exit(1)
+          print('OK: No conflicting duplicates')
+          PYEOF
+
+      - name: Check topic coverage (min 5 per topic)
+        run: |
+          python3 << 'PYEOF'
+          import json, sys
+          qs = json.load(open('data/questions.json'))
+          counts = {}
+          for q in qs:
+              ti = q.get('ti', -1)
+              counts[ti] = counts.get(ti, 0) + 1
+          thin = [ti for ti in range(24) if counts.get(ti, 0) < 5]
+          if thin:
+              print(f'WARNING: {len(thin)} topics with <5 questions:')
+              for ti in thin:
+                  print(f'  ti={ti}: {counts.get(ti,0)} questions')
+              sys.exit(1)
+          print(f'OK: All 24 topics have >=5 questions')
+          PYEOF
+
+      # ── No Geriatrics Content ──
+      - name: Check no geriatrics-only content
+        run: |
+          python3 << 'PYEOF'
+          import sys, glob
+          banned = ['GRS', "Hazzard's", 'CGA', 'Elder Abuse', 'Driving Fitness',
+                    'BPSD', 'Dysphagia', 'FIM', 'eolState', 'renderEOLTree']
+          found = []
+          for f in sorted(glob.glob('src/**/*.js', recursive=True)):
+              content = open(f).read()
+              for term in banned:
+                  if term in content:
+                      found.append(f'{f}: "{term}"')
+          if found:
+              print(f'ERROR: Geriatrics-only content found:')
+              for f in found: print(f'  {f}')
+              sys.exit(1)
+          print('OK: No geriatrics-only content')
+          PYEOF
+
+      # ── Version Sync ──
+      - name: Check APP_VERSION matches SW cache
+        run: |
+          python3 << 'PYEOF'
+          import re, sys
+          constants = open('src/core/constants.js').read()
+          sw = open('sw.js').read()
+          m_app = re.search(r"APP_VERSION\s*=\s*['\"]([^'\"]+)['\"]", constants)
+          m_sw = re.search(r"CACHE\s*=\s*['\"]mishpacha-v([^'\"]+)['\"]", sw)
+          if not m_app or not m_sw:
+              print('ERROR: Version constants not found'); sys.exit(1)
+          if m_app.group(1) != m_sw.group(1):
+              print(f'MISMATCH: app={m_app.group(1)}, sw={m_sw.group(1)}'); sys.exit(1)
+          print(f'OK: Versions match (v{m_app.group(1)})')
+          PYEOF
+
+      # ── Security ──
+      - name: Check no eval() calls
+        run: |
+          python3 << 'PYEOF'
+          import re, sys, glob
+          for f in sorted(glob.glob('src/**/*.js', recursive=True)):
+              content = open(f).read()
+              evals = [m.start() for m in re.finditer(r'\beval\s*\(', content)]
+              if evals:
+                  print(f'WARNING: {len(evals)} eval() calls in {f}'); sys.exit(1)
+          print('OK: No eval() calls')
+          PYEOF
+
+      - name: Audit innerHTML sanitization
+        run: |
+          python3 << 'PYEOF'
+          import sys, glob
+          warnings = []
+          for f in sorted(glob.glob('src/**/*.js', recursive=True)):
+              for i, line in enumerate(open(f).readlines(), 1):
+                  if '.innerHTML=' in line or '.innerHTML =' in line:
+                      after = line.split('innerHTML')[1]
+                      if ('+' in after or '${' in after) and 'sanitize(' not in after:
+                          warnings.append(f'  {f}:{i}: {line.strip()[:100]}')
+          if warnings:
+              print(f'WARNING: {len(warnings)} unsanitized innerHTML:')
+              for w in warnings[:10]: print(w)
+          else:
+              print('OK: All dynamic innerHTML uses sanitize()')
+          PYEOF
+
+      # ── JS Syntax Check (all modules) ──
+      - name: Check JS syntax
+        run: |
+          FAIL=0
+          for f in src/core/*.js src/sr/*.js src/quiz/*.js src/ai/*.js src/features/*.js src/ui/*.js shared/*.js; do
+            if ! node --check "$f" 2>/dev/null; then
+              echo "SYNTAX ERROR: $f"
+              node --check "$f" 2>&1 | head -3
+              FAIL=1
+            fi
+          done
+          [ $FAIL -eq 0 ] && echo "OK: All modules pass syntax check" || exit 1
+
+      # ── Tests + Build ──
+      - name: Install dependencies
+        run: npm ci
+      - name: Run Vitest tests
+        run: npx vitest run
+      - name: Verify production build
+        run: npx vite build
+
+      # ── Documentation Drift ──
+      - name: Check CLAUDE.md version matches app
+        run: |
+          python3 << 'PYEOF'
+          import re, sys
+          constants = open('src/core/constants.js').read()
+          m = re.search(r"APP_VERSION\s*=\s*['\"]([^'\"]+)['\"]", constants)
+          if not m:
+              print('ERROR: APP_VERSION not found'); sys.exit(1)
+          ver = m.group(1)
+          claude = open('CLAUDE.md').read()
+          if f'v{ver}' not in claude and ver not in claude:
+              print(f'WARNING: CLAUDE.md may be stale (app is v{ver})')
+          else:
+              print(f'OK: CLAUDE.md references v{ver}')
+          PYEOF
