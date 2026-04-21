@@ -1,0 +1,17 @@
+{
+  "name": "Mishpacha Mega — Family Medicine Board Prep",
+  "short_name": "Mishpacha Mega",
+  "description": "Israeli Family Medicine Shlav A Board Prep — Goroll + Nelson + AFP + P0062-2025 Syllabus",
+  "start_url": "mishpacha-mega.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#d97706",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍👩‍👧</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

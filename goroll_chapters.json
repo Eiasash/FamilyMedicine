@@ -1,0 +1,1436 @@
+[
+ {
+  "num": 1,
+  "title": "The Purpose and Practice of Primary Care",
+  "page": 58,
+  "end_page": 82
+ },
+ {
+  "num": 2,
+  "title": "Selection and Interpretation of Diagnostic Tests",
+  "page": 83,
+  "end_page": 111
+ },
+ {
+  "num": 3,
+  "title": "Health Maintenance and the Role of Screening",
+  "page": 112,
+  "end_page": 126
+ },
+ {
+  "num": 4,
+  "title": "Estimating and Communicating Risk and Prognosis",
+  "page": 127,
+  "end_page": 136
+ },
+ {
+  "num": 5,
+  "title": "Choosing among Treatment Options",
+  "page": 137,
+  "end_page": 147
+ },
+ {
+  "num": 6,
+  "title": "Immunization",
+  "page": 148,
+  "end_page": 188
+ },
+ {
+  "num": 7,
+  "title": "Screening for HIV Infection",
+  "page": 190,
+  "end_page": 198
+ },
+ {
+  "num": 8,
+  "title": "Evaluation of Chronic Fatigue",
+  "page": 199,
+  "end_page": 219
+ },
+ {
+  "num": 9,
+  "title": "Evaluation of Weight Loss",
+  "page": 220,
+  "end_page": 237
+ },
+ {
+  "num": 10,
+  "title": "Evaluation of Overweight and Obesity",
+  "page": 238,
+  "end_page": 261
+ },
+ {
+  "num": 11,
+  "title": "Evaluation of Fever",
+  "page": 262,
+  "end_page": 298
+ },
+ {
+  "num": 12,
+  "title": "Evaluation of Lymphadenopathy",
+  "page": 299,
+  "end_page": 313
+ },
+ {
+  "num": 13,
+  "title": "Approach to the Patient with Human Immunodeficiency Virus (HIV) Infection",
+  "page": 314,
+  "end_page": 354
+ },
+ {
+  "num": 14,
+  "title": "Screening for Hypertension",
+  "page": 355,
+  "end_page": 365
+ },
+ {
+  "num": 15,
+  "title": "Screening for Hyperlipidemia and Associated Coronary Heart Disease Risk Factors",
+  "page": 366,
+  "end_page": 387
+ },
+ {
+  "num": 16,
+  "title": "Infective Endocarditis Prophylaxis",
+  "page": 388,
+  "end_page": 396
+ },
+ {
+  "num": 17,
+  "title": "Prevention of Rheumatic Fever and Rheumatic Heart Disease",
+  "page": 397,
+  "end_page": 403
+ },
+ {
+  "num": 18,
+  "title": "Primary Prevention of Coronary Heart Disease",
+  "page": 405,
+  "end_page": 468
+ },
+ {
+  "num": 19,
+  "title": "Evaluation of Hypertension",
+  "page": 469,
+  "end_page": 497
+ },
+ {
+  "num": 20,
+  "title": "Evaluation of Chest Pain",
+  "page": 498,
+  "end_page": 545
+ },
+ {
+  "num": 21,
+  "title": "Evaluation of the Asymptomatic Systolic Murmur",
+  "page": 546,
+  "end_page": 565
+ },
+ {
+  "num": 22,
+  "title": "Evaluation of Leg Edema",
+  "page": 566,
+  "end_page": 589
+ },
+ {
+  "num": 23,
+  "title": "Evaluation of Arterial Insufficiency of the Lower Extremities",
+  "page": 590,
+  "end_page": 607
+ },
+ {
+  "num": 24,
+  "title": "Evaluation of Syncope",
+  "page": 608,
+  "end_page": 636
+ },
+ {
+  "num": 25,
+  "title": "Evaluation of Palpitations",
+  "page": 637,
+  "end_page": 675
+ },
+ {
+  "num": 26,
+  "title": "Management of Hypertension",
+  "page": 676,
+  "end_page": 735
+ },
+ {
+  "num": 27,
+  "title": "Approach to the Patient with a Lipid Disorder",
+  "page": 736,
+  "end_page": 821
+ },
+ {
+  "num": 28,
+  "title": "Outpatient Management of Atrial Fibrillation",
+  "page": 822,
+  "end_page": 868
+ },
+ {
+  "num": 29,
+  "title": "Management of Ventricular Irritability in the Ambulatory Setting",
+  "page": 869,
+  "end_page": 903
+ },
+ {
+  "num": 30,
+  "title": "Management of Chronic Stable Angina",
+  "page": 904,
+  "end_page": 974
+ },
+ {
+  "num": 31,
+  "title": "Secondary Prevention of Coronary Heart Disease after a Recent Acute Coronary Syndrome",
+  "page": 975,
+  "end_page": 1020
+ },
+ {
+  "num": 32,
+  "title": "Approach to the Patient with Chronic Congestive Heart Failure",
+  "page": 1021,
+  "end_page": 1095
+ },
+ {
+  "num": 33,
+  "title": "Management of Valvular Heart Disease",
+  "page": 1096,
+  "end_page": 1144
+ },
+ {
+  "num": 34,
+  "title": "Management of Peripheral Artery Disease (PAD)",
+  "page": 1145,
+  "end_page": 1168
+ },
+ {
+  "num": 35,
+  "title": "Management of Peripheral Venous Disease",
+  "page": 1169,
+  "end_page": 1211
+ },
+ {
+  "num": 36,
+  "title": "Noninvasive Studies for Coronary Heart Disease",
+  "page": 1212,
+  "end_page": 1285
+ },
+ {
+  "num": 37,
+  "title": "Screening for Lung Cancer",
+  "page": 1287,
+  "end_page": 1300
+ },
+ {
+  "num": 38,
+  "title": "Tuberculosis Screening and Prophylaxis",
+  "page": 1301,
+  "end_page": 1314
+ },
+ {
+  "num": 39,
+  "title": "Evaluation and Prevention of Occupational and Environmental Lung Disease",
+  "page": 1315,
+  "end_page": 1333
+ },
+ {
+  "num": 40,
+  "title": "Evaluation of Chronic Dyspnea",
+  "page": 1334,
+  "end_page": 1351
+ },
+ {
+  "num": 41,
+  "title": "Evaluation of Subacute and Chronic Cough",
+  "page": 1352,
+  "end_page": 1372
+ },
+ {
+  "num": 42,
+  "title": "Evaluation of Hemoptysis",
+  "page": 1373,
+  "end_page": 1382
+ },
+ {
+  "num": 43,
+  "title": "Evaluation of Pleural Effusions",
+  "page": 1383,
+  "end_page": 1402
+ },
+ {
+  "num": 44,
+  "title": "Evaluation of the Solitary Pulmonary Nodule",
+  "page": 1403,
+  "end_page": 1420
+ },
+ {
+  "num": 45,
+  "title": "Evaluation of Clubbing",
+  "page": 1421,
+  "end_page": 1427
+ },
+ {
+  "num": 46,
+  "title": "Approach to the Patient with Obstructive Sleep Apnea",
+  "page": 1428,
+  "end_page": 1451
+ },
+ {
+  "num": 47,
+  "title": "Management of Chronic Obstructive Pulmonary Disease",
+  "page": 1452,
+  "end_page": 1513
+ },
+ {
+  "num": 48,
+  "title": "Management of Asthma",
+  "page": 1514,
+  "end_page": 1576
+ },
+ {
+  "num": 49,
+  "title": "Approach to the Patient with Tuberculosis",
+  "page": 1577,
+  "end_page": 1601
+ },
+ {
+  "num": 50,
+  "title": "Approach to Acute Uncomplicated Respiratory Tract Infection",
+  "page": 1602,
+  "end_page": 1624
+ },
+ {
+  "num": 51,
+  "title": "Management of Sarcoidosis",
+  "page": 1625,
+  "end_page": 1656
+ },
+ {
+  "num": 52,
+  "title": "Outpatient Approach to Acute Lower Respiratory Tract Infection— Acute Bronchitis and Pneumonia",
+  "page": 1657,
+  "end_page": 1706
+ },
+ {
+  "num": 53,
+  "title": "Approach to the Patient with Lung Cancer",
+  "page": 1707,
+  "end_page": 1729
+ },
+ {
+  "num": 54,
+  "title": "Smoking Cessation",
+  "page": 1730,
+  "end_page": 1758
+ },
+ {
+  "num": 55,
+  "title": "Screening and Case Finding for Gastrointestinal Cancers",
+  "page": 1760,
+  "end_page": 1770
+ },
+ {
+  "num": 56,
+  "title": "Screening for Colorectal Cancer",
+  "page": 1771,
+  "end_page": 1804
+ },
+ {
+  "num": 57,
+  "title": "Screening for and Prevention of Viral Hepatitis",
+  "page": 1805,
+  "end_page": 1833
+ },
+ {
+  "num": 58,
+  "title": "Evaluation of Abdominal Pain",
+  "page": 1834,
+  "end_page": 1871
+ },
+ {
+  "num": 59,
+  "title": "Evaluation of Nausea and Vomiting",
+  "page": 1872,
+  "end_page": 1889
+ },
+ {
+  "num": 60,
+  "title": "Evaluation of Dysphagia and Suspected Esophageal Chest Pain",
+  "page": 1890,
+  "end_page": 1906
+ },
+ {
+  "num": 61,
+  "title": "Approach to the Patient with Heartburn and Reflux (Gastroesophageal Reflux Disease)",
+  "page": 1907,
+  "end_page": 1927
+ },
+ {
+  "num": 62,
+  "title": "Evaluation of Jaundice",
+  "page": 1928,
+  "end_page": 1952
+ },
+ {
+  "num": 63,
+  "title": "Evaluation of Gastrointestinal Bleeding",
+  "page": 1953,
+  "end_page": 1970
+ },
+ {
+  "num": 64,
+  "title": "Evaluation and Management of Diarrhea",
+  "page": 1971,
+  "end_page": 2011
+ },
+ {
+  "num": 65,
+  "title": "Approach to the Patient with Constipation",
+  "page": 2012,
+  "end_page": 2031
+ },
+ {
+  "num": 66,
+  "title": "Approach to the Patient with Anorectal Complaints",
+  "page": 2032,
+  "end_page": 2059
+ },
+ {
+  "num": 67,
+  "title": "Approach to the Patient with an External Hernia",
+  "page": 2060,
+  "end_page": 2069
+ },
+ {
+  "num": 68,
+  "title": "Management of Peptic Ulcer Disease",
+  "page": 2070,
+  "end_page": 2106
+ },
+ {
+  "num": 69,
+  "title": "Management of Asymptomatic and Symptomatic Gallstones",
+  "page": 2107,
+  "end_page": 2123
+ },
+ {
+  "num": 70,
+  "title": "Management of Hepatitis",
+  "page": 2124,
+  "end_page": 2188
+ },
+ {
+  "num": 71,
+  "title": "Management of Cirrhosis and Chronic Liver Failure",
+  "page": 2189,
+  "end_page": 2218
+ },
+ {
+  "num": 72,
+  "title": "Management of Pancreatitis",
+  "page": 2219,
+  "end_page": 2230
+ },
+ {
+  "num": 73,
+  "title": "Management of Inflammatory Bowel Disease",
+  "page": 2231,
+  "end_page": 2266
+ },
+ {
+  "num": 74,
+  "title": "Approach to the Patient with Functional Gastrointestinal Disease",
+  "page": 2267,
+  "end_page": 2294
+ },
+ {
+  "num": 75,
+  "title": "Management of Diverticular Disease",
+  "page": 2295,
+  "end_page": 2306
+ },
+ {
+  "num": 76,
+  "title": "Management of Gastrointestinal Cancers",
+  "page": 2307,
+  "end_page": 2362
+ },
+ {
+  "num": 77,
+  "title": "Screening for Anemia",
+  "page": 2364,
+  "end_page": 2369
+ },
+ {
+  "num": 78,
+  "title": "Screening for Sickle Cell Disease and Sickle Cell Trait",
+  "page": 2370,
+  "end_page": 2375
+ },
+ {
+  "num": 79,
+  "title": "Evaluation of Anemia",
+  "page": 2376,
+  "end_page": 2411
+ },
+ {
+  "num": 80,
+  "title": "Evaluation of Erythrocytosis (Polycythemia)",
+  "page": 2412,
+  "end_page": 2429
+ },
+ {
+  "num": 81,
+  "title": "Evaluation of Bleeding Problems and Abnormal Bleeding Studies",
+  "page": 2430,
+  "end_page": 2464
+ },
+ {
+  "num": 82,
+  "title": "Management of Common Anemias",
+  "page": 2465,
+  "end_page": 2492
+ },
+ {
+  "num": 83,
+  "title": "Outpatient Oral Anticoagulant Therapy",
+  "page": 2493,
+  "end_page": 2526
+ },
+ {
+  "num": 84,
+  "title": "Approach to the Patient with Lymphoma",
+  "page": 2527,
+  "end_page": 2560
+ },
+ {
+  "num": 85,
+  "title": "Approach to the Patient with Metastatic Cancer of Unknown Primary Origin",
+  "page": 2561,
+  "end_page": 2579
+ },
+ {
+  "num": 86,
+  "title": "Approach to Staging and Monitoring",
+  "page": 2580,
+  "end_page": 2591
+ },
+ {
+  "num": 87,
+  "title": "Comprehensive Care of the Cancer Patient",
+  "page": 2592,
+  "end_page": 2617
+ },
+ {
+  "num": 88,
+  "title": "Principles of Cancer Drug Therapy",
+  "page": 2618,
+  "end_page": 2645
+ },
+ {
+  "num": 89,
+  "title": "Principles of Radiation Therapy",
+  "page": 2646,
+  "end_page": 2659
+ },
+ {
+  "num": 90,
+  "title": "Assessment and Relief of Chronic Cancer Pain and Palliative Care",
+  "page": 2660,
+  "end_page": 2703
+ },
+ {
+  "num": 91,
+  "title": "Managing the Gastrointestinal Complications of Cancer and Cancer Treatment",
+  "page": 2704,
+  "end_page": 2722
+ },
+ {
+  "num": 92,
+  "title": "Complications of Cancer: Oncologic Emergencies, Malignant Effusions, and Paraneoplastic Syndromes",
+  "page": 2723,
+  "end_page": 2740
+ },
+ {
+  "num": 93,
+  "title": "Screening for Type 2 Diabetes Mellitus",
+  "page": 2742,
+  "end_page": 2769
+ },
+ {
+  "num": 94,
+  "title": "Screening for Thyroid Cancer",
+  "page": 2770,
+  "end_page": 2778
+ },
+ {
+  "num": 95,
+  "title": "Evaluation of Thyroid Nodules",
+  "page": 2779,
+  "end_page": 2799
+ },
+ {
+  "num": 96,
+  "title": "Approach to the Patient with Hypercalcemia",
+  "page": 2800,
+  "end_page": 2817
+ },
+ {
+  "num": 97,
+  "title": "Evaluation of Hypoglycemia",
+  "page": 2818,
+  "end_page": 2835
+ },
+ {
+  "num": 98,
+  "title": "Evaluation of Hirsutism",
+  "page": 2836,
+  "end_page": 2857
+ },
+ {
+  "num": 99,
+  "title": "Evaluation of Gynecomastia",
+  "page": 2858,
+  "end_page": 2869
+ },
+ {
+  "num": 100,
+  "title": "Evaluation of Galactorrhea and Hyperprolactinemia",
+  "page": 2870,
+  "end_page": 2882
+ },
+ {
+  "num": 101,
+  "title": "Evaluation of Suspected Diabetes Insipidus",
+  "page": 2883,
+  "end_page": 2892
+ },
+ {
+  "num": 102,
+  "title": "Approach to the Patient with Diabetes Mellitus",
+  "page": 2893,
+  "end_page": 2991
+ },
+ {
+  "num": 103,
+  "title": "Approach to the Patient with Hyperthyroidism",
+  "page": 2992,
+  "end_page": 3022
+ },
+ {
+  "num": 104,
+  "title": "Approach to the Patient with Hypothyroidism",
+  "page": 3023,
+  "end_page": 3050
+ },
+ {
+  "num": 105,
+  "title": "Glucocorticoid Therapy",
+  "page": 3051,
+  "end_page": 3069
+ },
+ {
+  "num": 106,
+  "title": "Screening for Breast Cancer",
+  "page": 3071,
+  "end_page": 3098
+ },
+ {
+  "num": 107,
+  "title": "Screening for Cervical Cancer",
+  "page": 3099,
+  "end_page": 3115
+ },
+ {
+  "num": 108,
+  "title": "Screening for Ovarian Cancer",
+  "page": 3116,
+  "end_page": 3126
+ },
+ {
+  "num": 109,
+  "title": "Screening for Endometrial Cancer",
+  "page": 3127,
+  "end_page": 3134
+ },
+ {
+  "num": 110,
+  "title": "Screening for and Prevention of Intimate Partner Violence",
+  "page": 3135,
+  "end_page": 3146
+ },
+ {
+  "num": 111,
+  "title": "Approach to the Woman with Abnormal Vaginal Bleeding",
+  "page": 3147,
+  "end_page": 3169
+ },
+ {
+  "num": 112,
+  "title": "Evaluation and Symptomatic Management of Secondary Amenorrhea",
+  "page": 3170,
+  "end_page": 3190
+ },
+ {
+  "num": 113,
+  "title": "Evaluation of Breast Masses and Nipple Discharges",
+  "page": 3191,
+  "end_page": 3203
+ },
+ {
+  "num": 114,
+  "title": "Evaluation of Vulvar Pruritus",
+  "page": 3204,
+  "end_page": 3214
+ },
+ {
+  "num": 115,
+  "title": "Medical Evaluation of Female Sexual Dysfunction",
+  "page": 3215,
+  "end_page": 3229
+ },
+ {
+  "num": 116,
+  "title": "Approach to the Patient with Pelvic Pain",
+  "page": 3230,
+  "end_page": 3251
+ },
+ {
+  "num": 117,
+  "title": "Approach to the Patient with an Abnormal Vaginal Discharge",
+  "page": 3252,
+  "end_page": 3270
+ },
+ {
+  "num": 118,
+  "title": "Approach to the Menopausal Woman",
+  "page": 3271,
+  "end_page": 3299
+ },
+ {
+  "num": 119,
+  "title": "Approach to Fertility Control",
+  "page": 3300,
+  "end_page": 3331
+ },
+ {
+  "num": 120,
+  "title": "Approach to the Infertile Couple",
+  "page": 3332,
+  "end_page": 3355
+ },
+ {
+  "num": 121,
+  "title": "Approach to the Woman with an Unplanned Pregnancy",
+  "page": 3356,
+  "end_page": 3372
+ },
+ {
+  "num": 122,
+  "title": "Management of Breast Cancer",
+  "page": 3373,
+  "end_page": 3410
+ },
+ {
+  "num": 123,
+  "title": "Management of the Woman with Genital Tract Cancer",
+  "page": 3411,
+  "end_page": 3431
+ },
+ {
+  "num": 124,
+  "title": "Screening for Syphilis",
+  "page": 3433,
+  "end_page": 3441
+ },
+ {
+  "num": 125,
+  "title": "Screening for Chlamydia and Gonorrhea Infection",
+  "page": 3442,
+  "end_page": 3454
+ },
+ {
+  "num": 126,
+  "title": "Screening for Prostate Cancer",
+  "page": 3455,
+  "end_page": 3471
+ },
+ {
+  "num": 127,
+  "title": "Screening for Asymptomatic Bacteriuria and Urinary Tract Infection",
+  "page": 3472,
+  "end_page": 3480
+ },
+ {
+  "num": 128,
+  "title": "Screening for Urothelial Cancers",
+  "page": 3481,
+  "end_page": 3489
+ },
+ {
+  "num": 129,
+  "title": "Evaluation of the Patient with Hematuria",
+  "page": 3490,
+  "end_page": 3507
+ },
+ {
+  "num": 130,
+  "title": "Evaluation of the Patient with Proteinuria",
+  "page": 3508,
+  "end_page": 3525
+ },
+ {
+  "num": 131,
+  "title": "Evaluation of Scrotal Pain, Masses, and Swelling",
+  "page": 3526,
+  "end_page": 3535
+ },
+ {
+  "num": 132,
+  "title": "Medical Evaluation and Management of Erectile Dysfunction",
+  "page": 3536,
+  "end_page": 3578
+ },
+ {
+  "num": 133,
+  "title": "Approach to Dysuria and Urinary Tract Infections in Women",
+  "page": 3579,
+  "end_page": 3612
+ },
+ {
+  "num": 134,
+  "title": "Approach to Urinary Incontinence",
+  "page": 3613,
+  "end_page": 3638
+ },
+ {
+  "num": 135,
+  "title": "Approach to the Patient with Nephrolithiasis",
+  "page": 3639,
+  "end_page": 3660
+ },
+ {
+  "num": 136,
+  "title": "Approach to the Male Patient with Urethritis",
+  "page": 3661,
+  "end_page": 3674
+ },
+ {
+  "num": 137,
+  "title": "Approach to the Patient with Gonorrhea",
+  "page": 3675,
+  "end_page": 3684
+ },
+ {
+  "num": 138,
+  "title": "Approach to Benign Prostatic Hyperplasia",
+  "page": 3685,
+  "end_page": 3701
+ },
+ {
+  "num": 139,
+  "title": "Management of Acute and Chronic Prostatitis",
+  "page": 3702,
+  "end_page": 3718
+ },
+ {
+  "num": 140,
+  "title": "Management of Urinary Tract Infection in Men",
+  "page": 3719,
+  "end_page": 3734
+ },
+ {
+  "num": 141,
+  "title": "Management of Syphilis and Other Sexually Transmitted Diseases",
+  "page": 3735,
+  "end_page": 3746
+ },
+ {
+  "num": 142,
+  "title": "Management of the Patient with Chronic Kidney Disease",
+  "page": 3747,
+  "end_page": 3778
+ },
+ {
+  "num": 143,
+  "title": "Management of Genitourinary Cancers",
+  "page": 3779,
+  "end_page": 3832
+ },
+ {
+  "num": 144,
+  "title": "Screening for Osteoporosis in Postmenopausal Women",
+  "page": 3834,
+  "end_page": 3845
+ },
+ {
+  "num": 145,
+  "title": "Evaluation of Acute Monoarticular Arthritis",
+  "page": 3846,
+  "end_page": 3857
+ },
+ {
+  "num": 146,
+  "title": "Evaluation of Polyarticular Complaints",
+  "page": 3858,
+  "end_page": 3894
+ },
+ {
+  "num": 147,
+  "title": "Approach to the Patient with Back Pain",
+  "page": 3895,
+  "end_page": 3950
+ },
+ {
+  "num": 148,
+  "title": "Evaluation of Neck Pain",
+  "page": 3951,
+  "end_page": 3963
+ },
+ {
+  "num": 149,
+  "title": "Approach to the Patient with Muscle Soreness or Cramps",
+  "page": 3964,
+  "end_page": 3977
+ },
+ {
+  "num": 150,
+  "title": "Approach to the Patient with Shoulder Pain",
+  "page": 3978,
+  "end_page": 3998
+ },
+ {
+  "num": 151,
+  "title": "Evaluation of Hip Pain",
+  "page": 3999,
+  "end_page": 4013
+ },
+ {
+  "num": 152,
+  "title": "Evaluation of Knee Pain",
+  "page": 4014,
+  "end_page": 4035
+ },
+ {
+  "num": 153,
+  "title": "Approach to Minor Orthopedic Problems of the Elbow, Wrist, and Hand",
+  "page": 4036,
+  "end_page": 4050
+ },
+ {
+  "num": 154,
+  "title": "Approach to Common Problems of the Foot and Ankle",
+  "page": 4051,
+  "end_page": 4069
+ },
+ {
+  "num": 155,
+  "title": "Approach to the Patient with Asymptomatic Hyperuricemia",
+  "page": 4070,
+  "end_page": 4082
+ },
+ {
+  "num": 156,
+  "title": "Management of Rheumatoid Arthritis",
+  "page": 4083,
+  "end_page": 4142
+ },
+ {
+  "num": 157,
+  "title": "Management of Osteoarthritis",
+  "page": 4143,
+  "end_page": 4181
+ },
+ {
+  "num": 158,
+  "title": "Management of Gout",
+  "page": 4182,
+  "end_page": 4206
+ },
+ {
+  "num": 159,
+  "title": "Approach to the Patient with Fibromyalgia",
+  "page": 4207,
+  "end_page": 4233
+ },
+ {
+  "num": 160,
+  "title": "Approach to the Patient with Lyme Disease",
+  "page": 4234,
+  "end_page": 4263
+ },
+ {
+  "num": 161,
+  "title": "Approach to the Patient with Polymyalgia Rheumatica or Giant-Cell (Temporal) Arteritis",
+  "page": 4264,
+  "end_page": 4286
+ },
+ {
+  "num": 162,
+  "title": "Management of Paget Disease",
+  "page": 4287,
+  "end_page": 4298
+ },
+ {
+  "num": 163,
+  "title": "Approach to the Patient with Raynaud Phenomenon",
+  "page": 4299,
+  "end_page": 4316
+ },
+ {
+  "num": 164,
+  "title": "Prevention and Management of Osteoporosis",
+  "page": 4317,
+  "end_page": 4367
+ },
+ {
+  "num": 165,
+  "title": "Approach to the Patient with Headache",
+  "page": 4369,
+  "end_page": 4401
+ },
+ {
+  "num": 166,
+  "title": "Evaluation of Dizziness",
+  "page": 4402,
+  "end_page": 4425
+ },
+ {
+  "num": 167,
+  "title": "Focal Neurologic Complaints: Evaluation of Nerve Root and Peripheral Nerve Syndromes",
+  "page": 4426,
+  "end_page": 4448
+ },
+ {
+  "num": 168,
+  "title": "Evaluation of Tremor",
+  "page": 4449,
+  "end_page": 4460
+ },
+ {
+  "num": 169,
+  "title": "Evaluation of Dementia",
+  "page": 4461,
+  "end_page": 4496
+ },
+ {
+  "num": 170,
+  "title": "Approach to the Patient with a Seizure",
+  "page": 4497,
+  "end_page": 4525
+ },
+ {
+  "num": 171,
+  "title": "Management of Transient Ischemic Attack and Asymptomatic Carotid Bruit",
+  "page": 4526,
+  "end_page": 4557
+ },
+ {
+  "num": 172,
+  "title": "Management of Multiple Sclerosis",
+  "page": 4558,
+  "end_page": 4580
+ },
+ {
+  "num": 173,
+  "title": "Management of Alzheimer Disease",
+  "page": 4581,
+  "end_page": 4622
+ },
+ {
+  "num": 174,
+  "title": "Approach to the Patient with Parkinson Disease",
+  "page": 4623,
+  "end_page": 4646
+ },
+ {
+  "num": 175,
+  "title": "Approach to the Patient with Bell Palsy (Idiopathic Facial Mononeuropathy)",
+  "page": 4647,
+  "end_page": 4655
+ },
+ {
+  "num": 176,
+  "title": "Management of Tic Douloureux (Trigeminal Neuralgia)",
+  "page": 4656,
+  "end_page": 4664
+ },
+ {
+  "num": 177,
+  "title": "Screening for Skin Cancers",
+  "page": 4666,
+  "end_page": 4693
+ },
+ {
+  "num": 178,
+  "title": "Evaluation of Pruritus",
+  "page": 4694,
+  "end_page": 4711
+ },
+ {
+  "num": 179,
+  "title": "Evaluation of Purpura",
+  "page": 4712,
+  "end_page": 4721
+ },
+ {
+  "num": 180,
+  "title": "Evaluation of Disturbances in Pigmentation",
+  "page": 4722,
+  "end_page": 4743
+ },
+ {
+  "num": 181,
+  "title": "Evaluation of Urticaria and Angioedema",
+  "page": 4744,
+  "end_page": 4760
+ },
+ {
+  "num": 182,
+  "title": "Approach to the Patient with Hair Loss",
+  "page": 4761,
+  "end_page": 4778
+ },
+ {
+  "num": 183,
+  "title": "Disturbances of Skin Hydration: Dry Skin and Excessive Sweating",
+  "page": 4779,
+  "end_page": 4791
+ },
+ {
+  "num": 184,
+  "title": "Approach to the Patient with Dermatitis",
+  "page": 4792,
+  "end_page": 4814
+ },
+ {
+  "num": 185,
+  "title": "Management of Acne Vulgaris",
+  "page": 4815,
+  "end_page": 4830
+ },
+ {
+  "num": 186,
+  "title": "Management of Rosacea and Other Acneiform Dermatoses",
+  "page": 4831,
+  "end_page": 4839
+ },
+ {
+  "num": 187,
+  "title": "Management of Psoriasis",
+  "page": 4840,
+  "end_page": 4860
+ },
+ {
+  "num": 188,
+  "title": "Management of Intertrigo and Intertriginous Dermatoses",
+  "page": 4861,
+  "end_page": 4869
+ },
+ {
+  "num": 189,
+  "title": "Management of Corns and Calluses",
+  "page": 4870,
+  "end_page": 4876
+ },
+ {
+  "num": 190,
+  "title": "Approach to Bacterial Skin Infections",
+  "page": 4877,
+  "end_page": 4899
+ },
+ {
+  "num": 191,
+  "title": "Management of Superficial Fungal Infections",
+  "page": 4900,
+  "end_page": 4921
+ },
+ {
+  "num": 192,
+  "title": "Management of Cutaneous and Genital Herpes Simplex",
+  "page": 4922,
+  "end_page": 4943
+ },
+ {
+  "num": 193,
+  "title": "Management of Herpes Zoster",
+  "page": 4944,
+  "end_page": 4960
+ },
+ {
+  "num": 194,
+  "title": "Management of Warts",
+  "page": 4961,
+  "end_page": 4974
+ },
+ {
+  "num": 195,
+  "title": "Management of Scabies and Pediculosis",
+  "page": 4975,
+  "end_page": 4985
+ },
+ {
+  "num": 196,
+  "title": "Management of Skin Trauma: Bites and Burns",
+  "page": 4986,
+  "end_page": 5005
+ },
+ {
+  "num": 197,
+  "title": "Management of Skin Ulceration",
+  "page": 5006,
+  "end_page": 5031
+ },
+ {
+  "num": 198,
+  "title": "Screening for Open-Angle Glaucoma",
+  "page": 5033,
+  "end_page": 5039
+ },
+ {
+  "num": 199,
+  "title": "Evaluation of the Red Eye",
+  "page": 5040,
+  "end_page": 5058
+ },
+ {
+  "num": 200,
+  "title": "Evaluation of Impaired Vision",
+  "page": 5059,
+  "end_page": 5070
+ },
+ {
+  "num": 201,
+  "title": "Evaluation of Eye Pain",
+  "page": 5071,
+  "end_page": 5078
+ },
+ {
+  "num": 202,
+  "title": "Evaluation of Dry Eyes",
+  "page": 5079,
+  "end_page": 5085
+ },
+ {
+  "num": 203,
+  "title": "Evaluation of Common Visual Disturbances: Flashing Lights, Floaters, and Other Transient Phenomena",
+  "page": 5086,
+  "end_page": 5091
+ },
+ {
+  "num": 204,
+  "title": "Evaluation of Exophthalmos",
+  "page": 5092,
+  "end_page": 5098
+ },
+ {
+  "num": 205,
+  "title": "Evaluation of Watery Eyes",
+  "page": 5099,
+  "end_page": 5104
+ },
+ {
+  "num": 206,
+  "title": "Management of the Patient with Age-Related Macular Degeneration",
+  "page": 5105,
+  "end_page": 5114
+ },
+ {
+  "num": 207,
+  "title": "Management of Glaucoma",
+  "page": 5115,
+  "end_page": 5126
+ },
+ {
+  "num": 208,
+  "title": "Management of Cataracts",
+  "page": 5127,
+  "end_page": 5137
+ },
+ {
+  "num": 209,
+  "title": "Management of Diabetic Retinopathy",
+  "page": 5138,
+  "end_page": 5149
+ },
+ {
+  "num": 210,
+  "title": "Correction of Vision",
+  "page": 5150,
+  "end_page": 5158
+ },
+ {
+  "num": 211,
+  "title": "Screening for Oral Cancer",
+  "page": 5160,
+  "end_page": 5168
+ },
+ {
+  "num": 212,
+  "title": "Evaluation of Hearing Loss",
+  "page": 5169,
+  "end_page": 5191
+ },
+ {
+  "num": 213,
+  "title": "Approach to Epistaxis",
+  "page": 5192,
+  "end_page": 5202
+ },
+ {
+  "num": 214,
+  "title": "Evaluation of Acute Facial Pain and Swelling",
+  "page": 5203,
+  "end_page": 5213
+ },
+ {
+  "num": 215,
+  "title": "Evaluation of Smell and Taste Disturbances",
+  "page": 5214,
+  "end_page": 5228
+ },
+ {
+  "num": 216,
+  "title": "Approach to the Patient with Hoarseness",
+  "page": 5229,
+  "end_page": 5242
+ },
+ {
+  "num": 217,
+  "title": "Evaluation of Tinnitus",
+  "page": 5243,
+  "end_page": 5250
+ },
+ {
+  "num": 218,
+  "title": "Approach to the Patient with Otitis",
+  "page": 5251,
+  "end_page": 5259
+ },
+ {
+  "num": 219,
+  "title": "Approach to the Patient with Sinusitis",
+  "page": 5260,
+  "end_page": 5279
+ },
+ {
+  "num": 220,
+  "title": "Approach to the Patient with Pharyngitis",
+  "page": 5280,
+  "end_page": 5300
+ },
+ {
+  "num": 221,
+  "title": "Approach to the Patient with Hiccups (Singultus)",
+  "page": 5301,
+  "end_page": 5306
+ },
+ {
+  "num": 222,
+  "title": "Approach to the Patient with Chronic Nasal Congestion and Discharge",
+  "page": 5307,
+  "end_page": 5329
+ },
+ {
+  "num": 223,
+  "title": "Approach to the Patient with Excessive Snoring",
+  "page": 5330,
+  "end_page": 5333
+ },
+ {
+  "num": 224,
+  "title": "Approach to the Patient with Aphthous Stomatitis",
+  "page": 5334,
+  "end_page": 5341
+ },
+ {
+  "num": 225,
+  "title": "Evaluation and Management of Temporomandibular Disorders",
+  "page": 5342,
+  "end_page": 5352
+ },
+ {
+  "num": 226,
+  "title": "Approach to the Patient with Anxiety",
+  "page": 5354,
+  "end_page": 5396
+ },
+ {
+  "num": 227,
+  "title": "Approach to the Patient with Depression",
+  "page": 5397,
+  "end_page": 5459
+ },
+ {
+  "num": 228,
+  "title": "Approach to the Patient with an Alcohol Use Disorder",
+  "page": 5460,
+  "end_page": 5509
+ },
+ {
+  "num": 229,
+  "title": "Approach to the Patient with Sexual Dysfunction",
+  "page": 5510,
+  "end_page": 5535
+ },
+ {
+  "num": 230,
+  "title": "Approach to the Patient with Somatic Symptom Disorder",
+  "page": 5536,
+  "end_page": 5554
+ },
+ {
+  "num": 231,
+  "title": "Approach to Difficult Patient Interactions",
+  "page": 5555,
+  "end_page": 5564
+ },
+ {
+  "num": 232,
+  "title": "Approach to the Patient with Insomnia",
+  "page": 5565,
+  "end_page": 5601
+ },
+ {
+  "num": 233,
+  "title": "Approach to Eating Disorders",
+  "page": 5602,
+  "end_page": 5635
+ },
+ {
+  "num": 234,
+  "title": "Approach to Drug Use Disorders",
+  "page": 5636,
+  "end_page": 5683
+ },
+ {
+  "num": 235,
+  "title": "Management of Obesity",
+  "page": 5684,
+  "end_page": 5733
+ },
+ {
+  "num": 236,
+  "title": "Pain Management: Approach to the Patient with Chronic Nonmalignant Pain",
+  "page": 5735,
+  "end_page": 5772
+ },
+ {
+  "num": 237,
+  "title": "Herbal Supplements Commonly Used as Complementary or Alternative Therapy",
+  "page": 5773,
+  "end_page": 5792
+ },
+ {
+  "num": 238,
+  "title": "Caring for the Adolescent Patient",
+  "page": 5793,
+  "end_page": 5819
+ },
+ {
+  "num": 239,
+  "title": "Primary Care Geriatrics—Optimizing Cognitive and Physical Function in Older Adults and Caring for the Vulnerabl",
+  "page": 5820,
+  "end_page": 5840
+ }
+]

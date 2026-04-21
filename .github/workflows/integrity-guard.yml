@@ -1,0 +1,223 @@
+name: Integrity Guard
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  js-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # ── GATE 1: JS Syntax Check (all ES modules + shared) ──
+      - name: "GATE 1: JavaScript syntax check"
+        run: |
+          FAIL=0
+          for f in src/core/*.js src/sr/*.js src/quiz/*.js src/ai/*.js src/features/*.js src/ui/*.js; do
+            if ! node --check "$f" 2>/dev/null; then
+              echo "FATAL: Syntax error in $f"
+              node --check "$f" 2>&1 | head -3
+              FAIL=1
+            fi
+          done
+          for f in shared/*.js; do
+            if ! node --check "$f" 2>/dev/null; then
+              echo "FATAL: Syntax error in $f"
+              node --check "$f" 2>&1 | head -3
+              FAIL=1
+            fi
+          done
+          [ $FAIL -eq 0 ] && echo "OK: All modules pass syntax check" || exit 1
+
+      # ── GATE 2: Critical Function Existence ──
+      - name: "GATE 2: Critical functions exist"
+        run: |
+          python3 << 'PYEOF'
+          import re, sys, glob
+
+          # Read all source
+          all_code = ''
+          for f in sorted(glob.glob('src/**/*.js', recursive=True)):
+              all_code += '\n' + open(f).read()
+          for f in sorted(glob.glob('shared/*.js')):
+              all_code += '\n' + open(f).read()
+
+          CRITICAL = [
+              # Boot
+              'loadDataArrays', 'renderTabs', 'render', 'sanitize', 'migrateToIDB',
+              # Quiz engine
+              'buildPool', 'getDueQuestions', 'getWeakTopics', 'buildRescuePool',
+              'getStudyStreak', 'getTopicStats', 'calcEstScore', 'buildMockExamPool',
+              # Analytics
+              'renderTrack', 'trackDailyActivity', 'takeWeeklySnapshot',
+              # Update
+              'showUpdateBanner', 'applyUpdate',
+              # AI
+              'callAI',
+              # Tab rendering
+              'renderQuiz', 'renderStudy', 'renderDrugs', 'renderFlash',
+              'renderLibrary', 'renderCalc', 'renderSearch', 'renderChat', 'renderFeedback',
+              # Mishpacha-specific
+              'renderStudyPlan', 'renderDailyPlan',
+              # Cloud
+              'cloudBackup', 'cloudRestore', 'saveAnswerReport',
+              # SRS
+              'srScore', 'fsrsUpdate', 'fsrsInitNew',
+          ]
+
+          missing = []
+          for fn in CRITICAL:
+              pattern = rf'(?:(?:export\s+)?(?:async\s+)?function\s+{fn}\s*\(|(?:const|let|var)\s+{fn}\s*=)'
+              if not re.search(pattern, all_code):
+                  missing.append(fn)
+
+          if missing:
+              print(f'FATAL: {len(missing)} critical functions MISSING:', file=sys.stderr)
+              for fn in missing: print(f'  ✗ {fn}', file=sys.stderr)
+              sys.exit(1)
+          print(f'OK: All {len(CRITICAL)} critical functions present')
+          PYEOF
+
+      # ── GATE 3: Module Structure Integrity ──
+      - name: "GATE 3: Module structure is intact"
+        run: |
+          python3 << 'PYEOF'
+          import os, sys
+
+          REQUIRED_FILES = [
+              'mishpacha-mega.html',
+              'src/core/globals.js',
+              'src/core/constants.js',
+              'src/core/utils.js',
+              'src/core/state.js',
+              'src/core/data-loader.js',
+              'src/sr/fsrs-bridge.js',
+              'src/sr/spaced-repetition.js',
+              'src/quiz/engine.js',
+              'src/quiz/modes.js',
+              'src/ai/client.js',
+              'src/ai/explain.js',
+              'src/features/cloud.js',
+              'src/ui/quiz-view.js',
+              'src/ui/learn-view.js',
+              'src/ui/library-view.js',
+              'src/ui/track-view.js',
+              'src/ui/more-view.js',
+              'src/ui/app.js',
+              'shared/fsrs.js',
+              'sw.js',
+              'manifest.json',
+          ]
+
+          missing = [f for f in REQUIRED_FILES if not os.path.exists(f)]
+          if missing:
+              print(f'FATAL: {len(missing)} required files missing:', file=sys.stderr)
+              for f in missing: print(f'  ✗ {f}', file=sys.stderr)
+              sys.exit(1)
+
+          # Verify data-loader fetches question data
+          dl = open('src/core/data-loader.js').read()
+          if 'fetch(' not in dl or 'questions.json' not in dl:
+              print('FATAL: data-loader.js has no fetch for questions.json', file=sys.stderr)
+              sys.exit(1)
+
+          # Verify app.js is the entry point referenced in HTML
+          html = open('mishpacha-mega.html').read()
+          if 'src/ui/app.js' not in html:
+              print('FATAL: mishpacha-mega.html does not reference src/ui/app.js', file=sys.stderr)
+              sys.exit(1)
+
+          # Verify app.js wires G.render
+          app = open('src/ui/app.js').read()
+          if 'G.render' not in app:
+              print('FATAL: app.js does not set G.render', file=sys.stderr)
+              sys.exit(1)
+
+          print(f'OK: All {len(REQUIRED_FILES)} required files present, structure intact')
+          PYEOF
+
+      # ── GATE 4: Function Count Regression Guard ──
+      - name: "GATE 4: Function count regression check"
+        run: |
+          python3 << 'PYEOF'
+          import re, sys, subprocess, glob
+
+          # Count functions across all src + shared
+          all_code = ''
+          for f in sorted(glob.glob('src/**/*.js', recursive=True)):
+              all_code += '\n' + open(f).read()
+          for f in sorted(glob.glob('shared/*.js')):
+              all_code += '\n' + open(f).read()
+          current = len(re.findall(r'(?:async\s+)?function\s+\w+\s*\(', all_code))
+
+          try:
+              # Get previous count from all src files
+              prev_code = ''
+              for f in sorted(glob.glob('src/**/*.js', recursive=True)):
+                  r = subprocess.run(['git', 'show', f'HEAD~1:{f}'], capture_output=True, text=True, timeout=10)
+                  if r.returncode == 0: prev_code += '\n' + r.stdout
+              for f in sorted(glob.glob('shared/*.js')):
+                  r = subprocess.run(['git', 'show', f'HEAD~1:{f}'], capture_output=True, text=True, timeout=10)
+                  if r.returncode == 0: prev_code += '\n' + r.stdout
+
+              if prev_code:
+                  prev = len(re.findall(r'(?:async\s+)?function\s+\w+\s*\(', prev_code))
+                  diff = prev - current
+                  if diff > 5:
+                      print(f'FATAL: {diff} functions removed ({prev}→{current})', file=sys.stderr)
+                      sys.exit(1)
+                  print(f'OK: {prev}→{current} functions (diff={-diff:+d})')
+              else:
+                  print(f'OK: First commit or restructure — count: {current}')
+          except Exception:
+              print(f'OK: Cannot compare — count: {current}')
+          PYEOF
+
+      # ── GATE 5: No Truncated Code Patterns ──
+      - name: "GATE 5: No truncated code patterns"
+        run: |
+          python3 << 'PYEOF'
+          import re, sys, glob
+          errors = []
+          for f in sorted(glob.glob('src/**/*.js', recursive=True)):
+              lines = open(f).readlines()
+              for i, line in enumerate(lines):
+                  stripped = line.strip()
+                  if stripped in ('(async', '(async '):
+                      nxt = lines[i+1].strip() if i+1 < len(lines) else ''
+                      if nxt.startswith(')'):
+                          errors.append(f'{f}:{i+1}: Empty async IIFE')
+                  if stripped in ('async', 'async '):
+                      nxt = lines[i+1].strip() if i+1 < len(lines) else ''
+                      if nxt.startswith('_') or nxt.startswith('function'):
+                          errors.append(f'{f}:{i+1}: Orphan async keyword')
+          if errors:
+              print(f'FATAL: {len(errors)} truncated patterns:', file=sys.stderr)
+              for e in errors: print(f'  ✗ {e}', file=sys.stderr)
+              sys.exit(1)
+          print('OK: No truncated code patterns')
+          PYEOF
+
+      # ── GATE 6: SW + Data Files Exist ──
+      - name: "GATE 6: Service worker references valid files"
+        run: |
+          python3 << 'PYEOF'
+          import sys, os
+          sw = open('sw.js').read()
+          REQUIRED = [
+              'mishpacha-mega.html',
+              'data/questions.json', 'data/topics.json', 'data/notes.json',
+              'data/drugs.json', 'data/flashcards.json', 'data/tabs.json',
+              'shared/fsrs.js',
+          ]
+          missing_ref = [f for f in REQUIRED if f not in sw]
+          missing_disk = [f for f in REQUIRED if not os.path.exists(f)]
+          if missing_ref:
+              print(f'ERROR: SW missing refs: {missing_ref}', file=sys.stderr); sys.exit(1)
+          if missing_disk:
+              print(f'ERROR: Files not on disk: {missing_disk}', file=sys.stderr); sys.exit(1)
+          print(f'OK: SW references {len(REQUIRED)} files, all exist')
+          PYEOF
