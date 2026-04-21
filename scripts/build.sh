@@ -143,4 +143,5 @@ echo "Key files:"
 ls -lh dist/mishpacha-mega.html dist/sw.js dist/manifest.json dist/assets/*.js dist/assets/*.css 2>/dev/null
 echo ""
 echo "Static assets:"
-du -sh dist/data/ dist/harrison_chapters.json dist/shared/ dist/exams/ dist/articles/ dist/harrison/ dist/questions/ dist/syllabus/ 2>/dev/null
+du -sh dist/data/ dist/harrison_chapters.json dist/shared/ dist/exams/ dist/harrison/ 2>/dev/null; \
+  for d in dist/articles/ dist/questions/ dist/syllabus/; do [ -d "$d" ] && du -sh "$d"; done; true
