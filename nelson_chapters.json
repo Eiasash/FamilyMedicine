@@ -1,0 +1,827 @@
+[
+  {
+    "ch": 13,
+    "title_en": "Maximizing Children's Health: Screening, Anticipatory Guidance, and Counseling",
+    "notes_he": ""
+  },
+  {
+    "ch": 15,
+    "title_en": "Impact of violence Exposure on children",
+    "notes_he": ""
+  },
+  {
+    "ch": 17,
+    "title_en": "Abused and Neglected Children",
+    "notes_he": ""
+  },
+  {
+    "ch": 22,
+    "title_en": "The Newborn",
+    "notes_he": ""
+  },
+  {
+    "ch": 23,
+    "title_en": "The First Year",
+    "notes_he": ""
+  },
+  {
+    "ch": 24,
+    "title_en": "The Second Year",
+    "notes_he": ""
+  },
+  {
+    "ch": 25,
+    "title_en": "The Preschool years",
+    "notes_he": ""
+  },
+  {
+    "ch": 26,
+    "title_en": "Middle Childhood",
+    "notes_he": ""
+  },
+  {
+    "ch": 27,
+    "title_en": "Assessment of Growth",
+    "notes_he": ""
+  },
+  {
+    "ch": 31,
+    "title_en": "Sleep Medicine",
+    "notes_he": ""
+  },
+  {
+    "ch": 36,
+    "title_en": "Rumination and Pica",
+    "notes_he": ""
+  },
+  {
+    "ch": 37,
+    "title_en": "Motor Disorders and Habits",
+    "notes_he": ""
+  },
+  {
+    "ch": 38,
+    "title_en": "Anxiety Disorders",
+    "notes_he": ""
+  },
+  {
+    "ch": 39,
+    "title_en": "Mood Disorders",
+    "notes_he": ""
+  },
+  {
+    "ch": 40,
+    "title_en": "Suicide and Attempted Suicide",
+    "notes_he": ""
+  },
+  {
+    "ch": 41,
+    "title_en": "Eating Disorders",
+    "notes_he": ""
+  },
+  {
+    "ch": 43,
+    "title_en": "Tantrums and Breath -Holding Spells",
+    "notes_he": ""
+  },
+  {
+    "ch": 50,
+    "title_en": "Attention - Deficit - Hyperactivity Disorder",
+    "notes_he": ""
+  },
+  {
+    "ch": 51,
+    "title_en": "Dyslexia",
+    "notes_he": ""
+  },
+  {
+    "ch": 53,
+    "title_en": "Language Development and Communication Disorders",
+    "notes_he": "רק טבלה53.2"
+  },
+  {
+    "ch": 56,
+    "title_en": "Intellectual Disability",
+    "notes_he": ""
+  },
+  {
+    "ch": 58,
+    "title_en": "Autism Spectrum Disorder",
+    "notes_he": ""
+  },
+  {
+    "ch": 61,
+    "title_en": "Feeding Healthy Infants, Children and Adolescents",
+    "notes_he": ""
+  },
+  {
+    "ch": 65,
+    "title_en": "Overweight and Obesity",
+    "notes_he": ""
+  },
+  {
+    "ch": 75,
+    "title_en": "Deficit Therapy",
+    "notes_he": ""
+  },
+  {
+    "ch": 78,
+    "title_en": "Triage of the Acutely Ill Child",
+    "notes_he": ""
+  },
+  {
+    "ch": 79,
+    "title_en": "Pediatric Emergencies and Resuscitation",
+    "notes_he": ""
+  },
+  {
+    "ch": 84,
+    "title_en": "Syncope",
+    "notes_he": ""
+  },
+  {
+    "ch": 89,
+    "title_en": "Burn Injuries",
+    "notes_he": ""
+  },
+  {
+    "ch": 94,
+    "title_en": "Poisoning",
+    "notes_he": ""
+  },
+  {
+    "ch": 115,
+    "title_en": "The Newborn Infant",
+    "notes_he": ""
+  },
+  {
+    "ch": 134,
+    "title_en": "Digestive System Disorders",
+    "notes_he": ""
+  },
+  {
+    "ch": 137,
+    "title_en": "Jaundice and Hyperbilirubinemia in the Newborn",
+    "notes_he": ""
+  },
+  {
+    "ch": 146,
+    "title_en": "Fetal Alcohol Spectrum Disorder",
+    "notes_he": ""
+  },
+  {
+    "ch": 150,
+    "title_en": "Adolescent Development",
+    "notes_he": ""
+  },
+  {
+    "ch": 153,
+    "title_en": "Gender and Sexual Identity",
+    "notes_he": ""
+  },
+  {
+    "ch": 154,
+    "title_en": "Gay, Lesbian, and Bisexual Adolescents",
+    "notes_he": ""
+  },
+  {
+    "ch": 158,
+    "title_en": "The Breast",
+    "notes_he": ""
+  },
+  {
+    "ch": 159,
+    "title_en": "Menstrual Problems",
+    "notes_he": ""
+  },
+  {
+    "ch": 171,
+    "title_en": "Leukopenia",
+    "notes_he": ""
+  },
+  {
+    "ch": 172,
+    "title_en": "Leukocytosis",
+    "notes_he": ""
+  },
+  {
+    "ch": 182,
+    "title_en": "Allergy and the Immunologic Basis of Atopic Disease",
+    "notes_he": ""
+  },
+  {
+    "ch": 184,
+    "title_en": "Allergic Rhinitis",
+    "notes_he": ""
+  },
+  {
+    "ch": 185,
+    "title_en": "Childhood Asthma",
+    "notes_he": ""
+  },
+  {
+    "ch": 186,
+    "title_en": "Atopic Dermatitis",
+    "notes_he": ""
+  },
+  {
+    "ch": 187,
+    "title_en": "Insect Allergy",
+    "notes_he": ""
+  },
+  {
+    "ch": 188,
+    "title_en": "Ocular Allergies",
+    "notes_he": ""
+  },
+  {
+    "ch": 189,
+    "title_en": "Urticaria and Angioedema",
+    "notes_he": ""
+  },
+  {
+    "ch": 190,
+    "title_en": "Anaphylaxis",
+    "notes_he": ""
+  },
+  {
+    "ch": 192,
+    "title_en": "Food Allergy",
+    "notes_he": ""
+  },
+  {
+    "ch": 194,
+    "title_en": "Evaluation of Suspected Rheumatic Disease",
+    "notes_he": ""
+  },
+  {
+    "ch": 196,
+    "title_en": "Juvenile Idiopathic Arthritis",
+    "notes_he": ""
+  },
+  {
+    "ch": 198,
+    "title_en": "Reactive and Postinfectious Arthritis",
+    "notes_he": ""
+  },
+  {
+    "ch": 204,
+    "title_en": "Hereditary Periodic Fever Syndromes and Other Systemic Autoinflammatory Diseases",
+    "notes_he": "רקPFAPA ו-FMF"
+  },
+  {
+    "ch": 208,
+    "title_en": "Kawasaki Disease",
+    "notes_he": ""
+  },
+  {
+    "ch": 210,
+    "title_en": "Vasculitis Syndromes Henoch -Schönlein Purpura",
+    "notes_he": ""
+  },
+  {
+    "ch": 211,
+    "title_en": "Musculoskeletal Pain Syndromes",
+    "notes_he": "רקGrowing Pain"
+  },
+  {
+    "ch": 219,
+    "title_en": "Fever",
+    "notes_he": ""
+  },
+  {
+    "ch": 220,
+    "title_en": "Fever without a Focus in the neonate",
+    "notes_he": ""
+  },
+  {
+    "ch": 229,
+    "title_en": "Group A Streptococcus",
+    "notes_he": ""
+  },
+  {
+    "ch": 237,
+    "title_en": "Neisseria gonotthoeae",
+    "notes_he": ""
+  },
+  {
+    "ch": 243,
+    "title_en": "Pertussis",
+    "notes_he": ""
+  },
+  {
+    "ch": 293,
+    "title_en": "Measles",
+    "notes_he": ""
+  },
+  {
+    "ch": 294,
+    "title_en": "Rubella",
+    "notes_he": ""
+  },
+  {
+    "ch": 295,
+    "title_en": "Mumps",
+    "notes_he": ""
+  },
+  {
+    "ch": 297,
+    "title_en": "Poliovirus",
+    "notes_he": ""
+  },
+  {
+    "ch": 298,
+    "title_en": "Parvoviruses",
+    "notes_he": ""
+  },
+  {
+    "ch": 299,
+    "title_en": "Herpes Simplex Virus",
+    "notes_he": ""
+  },
+  {
+    "ch": 300,
+    "title_en": "Varicella Zoster Virus",
+    "notes_he": ""
+  },
+  {
+    "ch": 301,
+    "title_en": "Epstein -Barr Virus",
+    "notes_he": ""
+  },
+  {
+    "ch": 302,
+    "title_en": "Cytomegalovirus",
+    "notes_he": ""
+  },
+  {
+    "ch": 303,
+    "title_en": "Roseola (Human Herpesviruses 6 and 7)",
+    "notes_he": ""
+  },
+  {
+    "ch": 305,
+    "title_en": "Influenze Viruses",
+    "notes_he": ""
+  },
+  {
+    "ch": 309,
+    "title_en": "Adenoviruses",
+    "notes_he": ""
+  },
+  {
+    "ch": 311,
+    "title_en": "Coronaviruses",
+    "notes_he": ""
+  },
+  {
+    "ch": 327,
+    "title_en": "Amebiasis",
+    "notes_he": ""
+  },
+  {
+    "ch": 331,
+    "title_en": "Leishmaniasis",
+    "notes_he": ""
+  },
+  {
+    "ch": 334,
+    "title_en": "Malaria",
+    "notes_he": ""
+  },
+  {
+    "ch": 340,
+    "title_en": "Enterobiasis",
+    "notes_he": ""
+  },
+  {
+    "ch": 351,
+    "title_en": "Normal Digestive Tract Phenomena",
+    "notes_he": ""
+  },
+  {
+    "ch": 352,
+    "title_en": "Major Symptoms and Signs of Digestive Tract Disorders",
+    "notes_he": ""
+  },
+  {
+    "ch": 358,
+    "title_en": "Dental Caries",
+    "notes_he": ""
+  },
+  {
+    "ch": 359,
+    "title_en": "Periodontal Diseases",
+    "notes_he": ""
+  },
+  {
+    "ch": 369,
+    "title_en": "Gastroesophageal Reflux Disease",
+    "notes_he": ""
+  },
+  {
+    "ch": 373,
+    "title_en": "Ingestions",
+    "notes_he": ""
+  },
+  {
+    "ch": 375,
+    "title_en": "Pyloric Stenosis and Other Congenital Anomalies of the Stomach",
+    "notes_he": ""
+  },
+  {
+    "ch": 378,
+    "title_en": "Motility disorders Encopresis +",
+    "notes_he": "הירשפרונג"
+  },
+  {
+    "ch": 380,
+    "title_en": "Foreign Bodies and Bezoars",
+    "notes_he": ""
+  },
+  {
+    "ch": 382,
+    "title_en": "Inflammatory Bowel Disease",
+    "notes_he": "רק החלקים של קוליטיס כיבית + קרוהן"
+  },
+  {
+    "ch": 384,
+    "title_en": "Celiac Disease",
+    "notes_he": ""
+  },
+  {
+    "ch": 385,
+    "title_en": "Disorders of Malabsorption",
+    "notes_he": "רק החלקים של תת ספיגה וצליאק"
+  },
+  {
+    "ch": 387,
+    "title_en": "Acute Gastroenteritis in Children",
+    "notes_he": ""
+  },
+  {
+    "ch": 388,
+    "title_en": "Chronic Diarrhea",
+    "notes_he": ""
+  },
+  {
+    "ch": 389,
+    "title_en": "Disorders of Brain -gut Interaction (Functional Abdominal Pain)",
+    "notes_he": ""
+  },
+  {
+    "ch": 391,
+    "title_en": "Acute Appendicitis",
+    "notes_he": ""
+  },
+  {
+    "ch": 394,
+    "title_en": "Inguinal hernia",
+    "notes_he": ""
+  },
+  {
+    "ch": 403,
+    "title_en": "Manifestations of Liver Disease",
+    "notes_he": ""
+  },
+  {
+    "ch": 406,
+    "title_en": "Viral Hepatitis",
+    "notes_he": ""
+  },
+  {
+    "ch": 421,
+    "title_en": "Diagnostic Approach to Respiratory Disease",
+    "notes_he": ""
+  },
+  {
+    "ch": 422,
+    "title_en": "Chronic or Recurrent Respiratory Symptoms",
+    "notes_he": ""
+  },
+  {
+    "ch": 423,
+    "title_en": "Sudden Infant Death Syndrome",
+    "notes_he": ""
+  },
+  {
+    "ch": 424,
+    "title_en": "Brief Resolved Unexplained Events and Other Acute Events in Infants",
+    "notes_he": ""
+  },
+  {
+    "ch": 426,
+    "title_en": "Acquired Disorders of the Nose",
+    "notes_he": ""
+  },
+  {
+    "ch": 428,
+    "title_en": "Common cold",
+    "notes_he": ""
+  },
+  {
+    "ch": 429,
+    "title_en": "Sinusitis",
+    "notes_he": ""
+  },
+  {
+    "ch": 430,
+    "title_en": "Acute Pharyngitis",
+    "notes_he": ""
+  },
+  {
+    "ch": 431,
+    "title_en": "Tonsils and Adenoids",
+    "notes_he": ""
+  },
+  {
+    "ch": 433,
+    "title_en": "Acute Inflammatory Upper Airway Obstruction",
+    "notes_he": ""
+  },
+  {
+    "ch": 435,
+    "title_en": "Foreign Bodies in the Airway",
+    "notes_he": ""
+  },
+  {
+    "ch": 439,
+    "title_en": "Wheezing, Bronchiolitis and Bronchitis",
+    "notes_he": ""
+  },
+  {
+    "ch": 449,
+    "title_en": "Community -Acquired Pneumonia",
+    "notes_he": ""
+  },
+  {
+    "ch": 450,
+    "title_en": "E-Cigarette or Vaping product Use",
+    "notes_he": ""
+  },
+  {
+    "ch": 454,
+    "title_en": "Cystic Fibrosis",
+    "notes_he": ""
+  },
+  {
+    "ch": 471,
+    "title_en": "History and Physical Examination in Cardiac Evaluation",
+    "notes_he": ""
+  },
+  {
+    "ch": 472,
+    "title_en": "Laboratory Cardiac Evaluation",
+    "notes_he": ""
+  },
+  {
+    "ch": 484,
+    "title_en": "Disturbances of Rate and Rhythm of the Heart",
+    "notes_he": ""
+  },
+  {
+    "ch": 485,
+    "title_en": "Sudden Death",
+    "notes_he": ""
+  },
+  {
+    "ch": 486,
+    "title_en": "Infective Endocarditis",
+    "notes_he": ""
+  },
+  {
+    "ch": 487,
+    "title_en": "Rheumatic Heart Disease",
+    "notes_he": ""
+  },
+  {
+    "ch": 488,
+    "title_en": "Disease of the Myocardium",
+    "notes_he": ""
+  },
+  {
+    "ch": 496,
+    "title_en": "The Anemias",
+    "notes_he": ""
+  },
+  {
+    "ch": 535,
+    "title_en": "Splenomegaly",
+    "notes_he": ""
+  },
+  {
+    "ch": 539,
+    "title_en": "Principles of Cancer Treatment",
+    "notes_he": ""
+  },
+  {
+    "ch": 558,
+    "title_en": "Clinical Evaluation of the Child with Hematuria",
+    "notes_he": ""
+  },
+  {
+    "ch": 565,
+    "title_en": "Clinical Evaluation of the Child with Proteinuria",
+    "notes_he": ""
+  },
+  {
+    "ch": 575,
+    "title_en": "Urinary Tract Infections",
+    "notes_he": ""
+  },
+  {
+    "ch": 576,
+    "title_en": "Vesicoureteral Reflux",
+    "notes_he": ""
+  },
+  {
+    "ch": 580,
+    "title_en": "Enuresis",
+    "notes_he": ""
+  },
+  {
+    "ch": 582,
+    "title_en": "Disorders and Anomalies of the Scrotal Content",
+    "notes_he": ""
+  },
+  {
+    "ch": 586,
+    "title_en": "Vulvovaginitis",
+    "notes_he": ""
+  },
+  {
+    "ch": 587,
+    "title_en": "Vaginal Bleeding in the Prepubertal Child",
+    "notes_he": ""
+  },
+  {
+    "ch": 592,
+    "title_en": "Gynecologic Care for Adolescents with Special Needs",
+    "notes_he": ""
+  },
+  {
+    "ch": 599,
+    "title_en": "Physiology of Puberty",
+    "notes_he": ""
+  },
+  {
+    "ch": 600,
+    "title_en": "Disorders of Pubertal Development Incomplete - Partial) Precocious Development Medicational Precocity Delayed or Absent Puberty",
+    "notes_he": "החלקים"
+  },
+  {
+    "ch": 625,
+    "title_en": "Gynecomastia",
+    "notes_he": ""
+  },
+  {
+    "ch": 628,
+    "title_en": "Disorders of Sex Development Neurologic Evaluation",
+    "notes_he": ""
+  },
+  {
+    "ch": 633,
+    "title_en": "Seizures in Childhood",
+    "notes_he": ""
+  },
+  {
+    "ch": 635,
+    "title_en": "Headache",
+    "notes_he": ""
+  },
+  {
+    "ch": 643,
+    "title_en": "Central Nervous System Infections Acute Bacterial Meningitis Beyond the Neonatal Period Viral Meningoencephalitis -ı",
+    "notes_he": "רק שני החלקים-"
+  },
+  {
+    "ch": 661,
+    "title_en": "Disorders of Vision",
+    "notes_he": ""
+  },
+  {
+    "ch": 663,
+    "title_en": "Disorders of Eye Movement",
+    "notes_he": ""
+  },
+  {
+    "ch": 664,
+    "title_en": "Abnormalities of the Lids",
+    "notes_he": ""
+  },
+  {
+    "ch": 665,
+    "title_en": "Disorders of the Lacrimal System",
+    "notes_he": ""
+  },
+  {
+    "ch": 677,
+    "title_en": "Hearing loss",
+    "notes_he": ""
+  },
+  {
+    "ch": 679,
+    "title_en": "External Otitis",
+    "notes_he": ""
+  },
+  {
+    "ch": 680,
+    "title_en": "Otitis Media",
+    "notes_he": ""
+  },
+  {
+    "ch": 688,
+    "title_en": "Dermatologic Disease of the Neonate",
+    "notes_he": ""
+  },
+  {
+    "ch": 696,
+    "title_en": "Eczematous Disorders",
+    "notes_he": "סבוריאה ודרמטיטיס"
+  },
+  {
+    "ch": 706,
+    "title_en": "Cutaneous Bacterial Infection",
+    "notes_he": ""
+  },
+  {
+    "ch": 707,
+    "title_en": "Cutaneous Fungal infection",
+    "notes_he": ""
+  },
+  {
+    "ch": 709,
+    "title_en": "Arthropods Bites and Infestation",
+    "notes_he": ""
+  },
+  {
+    "ch": 710,
+    "title_en": "Acne",
+    "notes_he": ""
+  },
+  {
+    "ch": 714,
+    "title_en": "Orthopedic Evaluation of the Child",
+    "notes_he": ""
+  },
+  {
+    "ch": 715,
+    "title_en": "The Foot and Toes",
+    "notes_he": ""
+  },
+  {
+    "ch": 718,
+    "title_en": "The Knee",
+    "notes_he": ""
+  },
+  {
+    "ch": 719,
+    "title_en": "The Hip",
+    "notes_he": ""
+  },
+  {
+    "ch": 720,
+    "title_en": "The Spine",
+    "notes_he": ""
+  },
+  {
+    "ch": 721,
+    "title_en": "The Neck",
+    "notes_he": "רק טורטיקוליס"
+  },
+  {
+    "ch": 722,
+    "title_en": "The Upper Limb Nursemaid Elbow",
+    "notes_he": ""
+  },
+  {
+    "ch": 724,
+    "title_en": "Common Fractures",
+    "notes_he": ""
+  },
+  {
+    "ch": 725,
+    "title_en": "Osteomyelitis",
+    "notes_he": ""
+  },
+  {
+    "ch": 726,
+    "title_en": "Septic Arthritis",
+    "notes_he": ""
+  },
+  {
+    "ch": 731,
+    "title_en": "Heat Injuries",
+    "notes_he": ""
+  },
+  {
+    "ch": 765,
+    "title_en": "Animal and Human Bites",
+    "notes_he": ""
+  },
+  {
+    "ch": 768,
+    "title_en": "Envenomation",
+    "notes_he": ""
+  }
+]

@@ -51,6 +51,7 @@ const G = {
   // === UI state (app.js + views) ===
   tab: 'quiz', learnSub: 'study', moreSub: 'calc', libSec: 'harrison',
   harChOpen: null, _harData: null, _harLoading: false,
+  _nelData: null, nelSearch: '',
   openNote: null,
   calcVals: {},
   srchQ: '',
