@@ -52,10 +52,17 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.2.3';
-export const BUILD_HASH='885q-v1.2.3';
+export const APP_VERSION='1.2.4';
+export const BUILD_HASH='885q-v1.2.4';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.2.4': [
+    '📄 Articles tab rewired for family medicine — 72 P0062-2025 required readings (Appendix ב/ג/ד/ה).',
+    '🇮🇱 56 הר"י Israeli guidelines/position papers 2018-2025 grouped by year.',
+    '📚 8 Patient-Centered Care + 7 Family + 9 EBM (JAMA Users\' Guides) articles.',
+    '🔗 AFP: dynamic per-topic browsing via aafp.org/afp (link-out, not bundled).',
+    '🧹 Branding leaks purged: app header, AI chat system prompt, teach-back rubric, chapter summarizer, quiz-generator, share-app text, syllabus link (P0064→P0062).',
+  ],
   '1.2.3': [
     '➕ 3 Qs recovered via parallel pipeline — 882→885 (2022-Jun +1, 2024-May +1, 2024-Sep +1).',
     '🩹 Clinical answer-key corrections for the 3 recovered Qs: Q77 (AST:ALT hepatitis), Q42 (denosumab rebound), Q90 (IPF PFT pattern).',
