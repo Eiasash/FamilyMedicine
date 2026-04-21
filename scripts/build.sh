@@ -13,10 +13,10 @@ cp -r data/ dist/data/
 cp harrison_chapters.json dist/
 cp -r shared/ dist/shared/
 cp -r exams/ dist/exams/
-cp -r articles/ dist/articles/
+[ -d articles ] && cp -r articles/ dist/articles/ || echo "  (skip: articles/ not present)"
 cp -r harrison/ dist/harrison/
-cp -r questions/ dist/questions/
-cp -r syllabus/ dist/syllabus/
+[ -d questions ] && cp -r questions/ dist/questions/ || echo "  (skip: questions/ not present)"
+[ -d syllabus ] && cp -r syllabus/ dist/syllabus/ || echo "  (skip: syllabus/ not present)"
 cp manifest.json dist/manifest.json
 cp index.html dist/index.html
 
