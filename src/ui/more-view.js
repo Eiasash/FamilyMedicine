@@ -192,7 +192,7 @@ const CHAT_STARTERS=[
 'תרופות שיש להימנע מהן בקשישים (Beers)',
 'מה הגישה לנפילות בקשיש?',
 ];
-const CHAT_SYSTEM="You are a senior internist and mentor at Shaare Zedek Medical Center in Jerusalem. The user is an internal medicine resident preparing for their Stage A board exam (P0064-2025). Answer in the same language as the question (Hebrew or English). Be concise, clinically precise. Focus on Harrison's 22e and the 10 required NEJM/Lancet articles. Emphasize pathophysiology, evidence-based management, and exam-tested thresholds.";
+const CHAT_SYSTEM="You are a senior family physician and mentor at Shaare Zedek Medical Center in Jerusalem. The user is a family medicine resident preparing for their Stage A board exam (P0062-2025 — רפואת המשפחה שלב א׳). Answer in the same language as the question (Hebrew or English). Be concise, clinically precise. Focus on Goroll 8e (primary source), Nelson 22e selected chapters (peds), AFP review articles, and Israeli הר\"י guidelines. Use Harrison 22e only as cross-reference. Emphasize primary-care pathophysiology, evidence-based management, Israeli national guidelines, and exam-tested thresholds.";
 
 export function renderChat(){
 let h='<div class="sec-t">💬 AI Chat</div><div class="sec-s">Claude-powered Family Medicine Q&A — board prep focus</div>';

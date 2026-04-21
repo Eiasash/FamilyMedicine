@@ -881,7 +881,7 @@ h+=`</div></div>`;
 // Share with friends
 h+=`<div class="card" style="padding:14px;text-align:center;margin-top:12px">
 <div style="font-weight:700;font-size:12px;margin-bottom:8px">🔗 Share with Friends</div>
-<div style="font-size:10px;color:#64748b;margin-bottom:10px">Share this app with fellow internal medicine residents</div>
+<div style="font-size:10px;color:#64748b;margin-bottom:10px">Share this app with fellow family medicine residents</div>
 <button class="btn btn-p" data-action="share-app" style="margin-bottom:8px" aria-label="Share app link">📤 Share App Link</button>
 </div>`;
 // Data management
@@ -995,7 +995,7 @@ export function initTrackEvents(container) {
       e.stopPropagation();
       const name = el.dataset.topic.replace(/&apos;/g, "'");
       G.S.chat = []; window.go('chat');
-      setTimeout(() => { window.sendChatStarter('Give me a concise board-review summary of ' + name + ' in internal medicine. Cover: key definitions, diagnostic criteria, management pearls, exam traps, and must-know numbers. Format with bold headings.'); }, 100);
+      setTimeout(() => { window.sendChatStarter('Give me a concise board-review summary of ' + name + ' in family medicine (P0062-2025). Cover: key definitions, diagnostic criteria, primary-care management pearls, exam traps, and must-know numbers. Cite Goroll/AFP/הר"י where relevant. Format with bold headings.'); }, 100);
     }
     // Heatmap tile
     else if (action === 'goto-quiz-topic') {

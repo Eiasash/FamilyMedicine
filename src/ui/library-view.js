@@ -77,17 +77,102 @@ const SYL_HAR_BASE=[
 {ch:388,t:'Approach to Patient with Endocrine Disorders'},
 ];
 const SYL_LAWS=[];
+// P0062-2025 required reading — family medicine (Appendices ב/ג/ד/ה of sources list)
+// Source: docs/references/P0062-2025_sources.pdf
 const SYL_ARTICLES=[
-{t:'Digitoxin in Patients with Heart Failure and Reduced Ejection Fraction',j:'N Engl J Med 2025;393:1155-65'},
-{t:'A Cell-free DNA Blood-Based Test for Colorectal Cancer Screening',j:'N Engl J Med 2024;390:973-83'},
-{t:'Antibiotic Treatment for 7 versus 14 Days in Patients with Bloodstream Infections',j:'NEJM 2025;392:1065-78'},
-{t:'Aspirin in Patients with Chronic Coronary Syndrome Receiving Oral Anticoagulation',j:'DOI: 10.1056/NEJMoa2507532'},
-{t:'Efficacy and Safety of Baxdrostat in Uncontrolled and Resistant Hypertension',j:'DOI: 10.1056/NEJMoa2507109'},
-{t:'Apixaban for Extended Treatment of Provoked Venous Thromboembolism',j:'N Engl J Med 2025;393:1166-76'},
-{t:'A Phase 3 Trial of Upadacitinib for Giant-Cell Arteritis',j:'N Engl J Med 2025;392:2013-24'},
-{t:'First-Line Treatment of Pulmonary Sarcoidosis with Prednisone or Methotrexate',j:'N Engl J Med 2025;393:231-42'},
-{t:'Sotatercept in Patients with Pulmonary Arterial Hypertension at High Risk for Death',j:'N Engl J Med 2025;392:1987-2000'},
-{t:'ECST-2: Optimised Medical Therapy Alone vs Plus Revascularisation for Carotid Stenosis',j:'Lancet Neurol 2025;24:389-99'},
+// Appendix ב' — Patient-Centered Care (מר"ם exam)
+{s:'Patient-Centered Care',t:'Patient-Centered Medicine: Transforming the Clinical Method (3rd ed)',j:'Stewart M. et al., 2013 — book'},
+{s:'Patient-Centered Care',t:'Patient-centred interviewing I: Understanding patients\' experiences',j:'Weston, Brown, Stewart. Can Fam Physician 1989;35:147-51'},
+{s:'Patient-Centered Care',t:'Patient-Centred Interviewing II: Finding Common Ground',j:'Brown, Weston, Stewart. Can Fam Physician 1989;35'},
+{s:'Patient-Centered Care',t:'Patient-Centred Interviewing III: Five Provocative Questions',j:'Weston, Brown, Stewart. Can Fam Physician 1989;35:159-61'},
+{s:'Patient-Centered Care',t:'The patient-centred clinical method 1: A model for doctor-patient interaction',j:'Levenstein et al. Fam Pract 1986;3(1):24-30'},
+{s:'Patient-Centered Care',t:'The Patient-Centred Clinical Method 2: Definition and Application',j:'Brown et al. Fam Pract 1986;3(2):75-79'},
+{s:'Patient-Centered Care',t:'Patient-Centered Communication: Basic Skills',j:'Hashim MJ. Am Fam Physician 2017;95(1):29-34'},
+{s:'Patient-Centered Care',t:'Calgary-Cambridge Guide to the Medical Interview',j:'https://www.gp-training.net/communication-skills/calgary-cambridge-model/'},
+// Appendix ג' — Family
+{s:'Family',t:'The Expanded Family Life Cycle (4th ed) — Family Life Cycle Stages (binding)',j:'McGoldrick, Carter, Garcia-Preto — book excerpt'},
+{s:'Family',t:'Family-Oriented Primary Care (2nd ed) — Ch 3-5, 11-13, 15-16, 18-20, 22',j:'McDaniel, Campbell, Hepworth, Lorenz — book excerpt'},
+{s:'Family',t:'Behavioral Medicine — A Guide for Clinical Practice (4th ed) — Ch 3,4,11-15,19,20',j:'Feldman & Cristensen — book excerpt'},
+{s:'Family',t:'Five Areas of Questioning to Promote a Family-Oriented Approach in Primary Care',j:'Cole-Kelly, Seaburn. Fam Syst Health 1999;17(3):341-48'},
+{s:'Family',t:'Developmental levels in Family-centered medical care',j:'Doherty, Baird. Fam Med 1986;18(3):153-6'},
+{s:'Family',t:'Chronic Illness and the Life Cycle: A Conceptual Framework',j:'Rolland JS. Fam Process 1987;26:203-21'},
+{s:'Family',t:'Using Triangulation Concepts to Understand the Doctor-Patient-Family Relationship',j:'Shapiro J. Fam Syst Health 2001;19:203-10'},
+{s:'Family',t:'Interviewing When Family Members are Present',j:'Lang F et al. Am Fam Physician 2002;65:1351-4'},
+// Appendix ד' — EBM (JAMA Users\' Guides)
+{s:'EBM',t:'Users\' guides to the medical literature (intro)',j:'JAMA 1993;270(17):2096-7'},
+{s:'EBM',t:'Users\' Guides I: How to get started',j:'JAMA 1993;270(17):2093-5'},
+{s:'EBM',t:'Users\' Guides II: Therapy/prevention — A. Are results valid?',j:'JAMA 1993;270(21):2598-601'},
+{s:'EBM',t:'Users\' Guides II: Therapy/prevention — B. What are results, will they help?',j:'JAMA 1994;271(1):59-63'},
+{s:'EBM',t:'Users\' Guides III: Diagnostic test — A. Are results valid?',j:'JAMA 1994;271(5):389-91'},
+{s:'EBM',t:'Users\' Guides III: Diagnostic test — B. What are results, will they help?',j:'JAMA 1994;271(9):703-7'},
+{s:'EBM',t:'Users\' Guides IV: How to use an article about harm',j:'JAMA 1994;271(20):1615-9'},
+{s:'EBM',t:'Users\' Guides VI: How to use an overview',j:'JAMA 1994;272(17):1367-71'},
+{s:'EBM',t:'EBM knowledge summary',j:'http://www.ebm.med.ualberta.ca/ebm.html'},
+// Appendix ה' — Israeli Guidelines / הנחיות הר"י (ordered newest → oldest)
+{s:'Israeli Guidelines 2025',t:'הנחיות טיפול בשבץ מוח',j:'הר"י 2025'},
+{s:'Israeli Guidelines 2025',t:'יתר לחץ דם כרוני בהריון',j:'הר"י 2025'},
+{s:'Israeli Guidelines 2025',t:'יתר לחץ דם ורעלת בהריון',j:'הר"י 2025'},
+{s:'Israeli Guidelines 2024',t:'ניהול מעקב אישה הרה בהריון בסיכון נמוך',j:'הר"י 2024'},
+{s:'Israeli Guidelines 2024',t:'אבחון וטיפול במחלת הכבד השומני',j:'הר"י 2024'},
+{s:'Israeli Guidelines 2024',t:'טיפול באנמיה בהיריון ומשכב לידה',j:'הר"י 2024'},
+{s:'Israeli Guidelines 2023',t:'טיפול בדמנציה (Dementia) ומניעתה',j:'הר"י 2023'},
+{s:'Israeli Guidelines 2023',t:'אבחון וטיפול בדלקת ריאות הנרכשת בקהילה בילדים',j:'הר"י 2023'},
+{s:'Israeli Guidelines 2023',t:'אבחון וטיפול בדלקת אוזן תיכונה בילדים',j:'הר"י 2023'},
+{s:'Israeli Guidelines 2023',t:'אבחון וטיפול בזיהום בדרכי השתן בילדים',j:'הר"י 2023 (עדכון)'},
+{s:'Israeli Guidelines 2023',t:'דלקות בדרכי השתן בהיריון',j:'הר"י 2023'},
+{s:'Israeli Guidelines 2023',t:'סוכרת היריונית',j:'הר"י 2023'},
+{s:'Israeli Guidelines 2023',t:'האבחנה והטיפול בזיהומי עור חידקיים שכיחים בילדים',j:'הר"י 2023'},
+{s:'Israeli Guidelines 2023',t:'אבחון מניעה וטיפול בסיבוכי קרישיות יתר בהיריון',j:'הר"י 2023'},
+{s:'Israeli Guidelines 2023',t:'שימוש בקנאביס לטיפול בכאב',j:'הר"י 2023'},
+{s:'Israeli Guidelines 2023',t:'המלצות לאבחון ולטיפול בגסטרואנטריטיס חדה בילדים בישראל',j:'הר"י 2023'},
+{s:'Israeli Guidelines 2023',t:'חשיפה למסכים ובריאות הילדים',j:'הר"י 2023'},
+{s:'Israeli Guidelines 2023',t:'שימוש במכשירי התראה למניעת מוות פתאומי לא מוסבר של תינוקות',j:'הר"י 2023'},
+{s:'Israeli Guidelines 2023',t:'קווים מנחים להזרקת חומר ניגוד מבוסס יוד - רגישויות',j:'הר"י 2023'},
+{s:'Israeli Guidelines 2023',t:'קווים מנחים להזרקת חומר ניגוד מבוסס יוד - מחלה כלייתית',j:'הר"י 2023'},
+{s:'Israeli Guidelines 2023',t:'אבחון, טיפול ומניעה של GI לפני/אחרי ניתוחים בריאטריים',j:'הר"י 2023'},
+{s:'Israeli Guidelines 2023',t:'טיפול בזיהומים ומניעתם בילדים חסרי טחול (אספלניה/היפוספלניזם)',j:'הר"י 2023'},
+{s:'Israeli Guidelines 2022',t:'חיסון נגד HPV',j:'הר"י 2022'},
+{s:'Israeli Guidelines 2022',t:'הערכת בריאות קוגניטיבית והתייחסות ל-MCI',j:'הר"י 2022'},
+{s:'Israeli Guidelines 2022',t:'הטיפול בתסמונת המעי הרגיש',j:'הר"י 2022'},
+{s:'Israeli Guidelines 2022',t:'הטיפול בנגעים טרום סרטניים של צוואר הרחם',j:'הר"י 2022'},
+{s:'Israeli Guidelines 2022',t:'הורדת חום בילדים',j:'הר"י 2022'},
+{s:'Israeli Guidelines 2022',t:'מעקב במהלך משכב הלידה',j:'הר"י 2022'},
+{s:'Israeli Guidelines 2022',t:'מעקב אמבולטורי אחר תינוקות לאחר צהבת ילודים',j:'הר"י 2022'},
+{s:'Israeli Guidelines 2022',t:'הנחיות לטיפול בשבץ מוחי',j:'הר"י 2022'},
+{s:'Israeli Guidelines 2022',t:'הסכנות בחשיפת ילדים לקנאביס',j:'הר"י 2022'},
+{s:'Israeli Guidelines 2022',t:'חינוך לבריאות מינית',j:'הר"י 2022'},
+{s:'Israeli Guidelines 2022',t:'ניהול הריון שלאחר המועד',j:'הר"י 2022'},
+{s:'Israeli Guidelines 2022',t:'תבחיני נשיפה - אי סבילות לסוכרים / SIBO',j:'הר"י 2022'},
+{s:'Israeli Guidelines 2021',t:'הנחיות ישראליות לטיפול בדיסליפידמיה',j:'הר"י 2021'},
+{s:'Israeli Guidelines 2021',t:'הנחיות לביצוע אולטרא סאונד בהריון',j:'הר"י 2021'},
+{s:'Israeli Guidelines 2021',t:'הטיפול באישה בגיל המעבר',j:'הר"י 2021'},
+{s:'Israeli Guidelines 2021',t:'הפלות חוזרות',j:'הר"י 2021'},
+{s:'Israeli Guidelines 2021',t:'מניעה של HPV במטופלים עם דיכוי חיסוני',j:'הר"י 2021'},
+{s:'Israeli Guidelines 2021',t:'ניתוח מטבולי - הפתרון הכירורגי לסכרת סוג 2',j:'הר"י 2021'},
+{s:'Israeli Guidelines 2020',t:'הגישה לישנוניות יתר במתבגרים',j:'הר"י 2020'},
+{s:'Israeli Guidelines 2020',t:'הנחיות קליניות לטיפול בילד הבריא חלק א',j:'הר"י 2020'},
+{s:'Israeli Guidelines 2020',t:'תוספי תזונה והרגלים בהריון',j:'הר"י 2020'},
+{s:'Israeli Guidelines 2020',t:'טיפול בפסוריאזיס',j:'הר"י 2020'},
+{s:'Israeli Guidelines 2020',t:'הנחיות לטיפול בדלקת עור אטופית',j:'הר"י 2020'},
+{s:'Israeli Guidelines 2020',t:'אבחנה וטיפול בזיהומי עור פטריתיים בילדים',j:'הר"י 2020'},
+{s:'Israeli Guidelines 2020',t:'ליסטריה בהריון',j:'הר"י 2020'},
+{s:'Israeli Guidelines 2020',t:'מניעת ריגוש לאנטיגן D בנשים הרות',j:'הר"י 2020'},
+{s:'Israeli Guidelines 2020',t:'בדיקות BRCA1/2 לחולי סרטן שד, שחלה ולבלב',j:'הר"י 2020'},
+{s:'Israeli Guidelines 2020',t:'כיבוי דפיברילטור מושתל',j:'הר"י 2020'},
+{s:'Israeli Guidelines 2020',t:'הגישה לתינוק הסובל מדימום לאחר ברית מילה',j:'הר"י 2020'},
+{s:'Israeli Guidelines 2020',t:'אשפוזי בית כתחליף אשפוז במחלקות פנימיות',j:'הר"י 2020'},
+{s:'Israeli Guidelines 2020',t:'אבחון וטיפול בדלקת נגיפית C למיגור המחלה בישראל',j:'הר"י 2020'},
+{s:'Israeli Guidelines 2019',t:'הערכה וטיפול הפרעה בתפקוד המיני + חסר בטסטוסטרון',j:'הר"י 2019'},
+{s:'Israeli Guidelines 2019',t:'אבחון וטיפול ביתר לחץ דם במבוגרים',j:'הר"י 2019'},
+{s:'Israeli Guidelines 2019',t:'הליקובקטר פילורי - קוים מנחים לגישה וטיפול',j:'הר"י 2019'},
+{s:'Israeli Guidelines 2019',t:'פעילות גופנית וספורט בילדים ובני נוער',j:'הר"י 2019'},
+{s:'Israeli Guidelines 2019',t:'טיפול בכאב בהריון והנקה',j:'הר"י 2019'},
+{s:'Israeli Guidelines 2019',t:'מניעת השימוש באלכוהול בקרב בני נוער',j:'הר"י 2019'},
+{s:'Israeli Guidelines 2019',t:'הטיפול התרופתי בכאב בחולה האונקולוגי המבוגר',j:'הר"י 2019'},
+{s:'Israeli Guidelines 2019',t:'חיסונים והריון',j:'הר"י 2019'},
+{s:'Israeli Guidelines 2019',t:'משטח מצוואר הרחם וסריקה לגילוי מוקדם',j:'הר"י 2019'},
+{s:'Israeli Guidelines 2019',t:'טיפול ב-Mebendazole ב-Enterobiasis בילדים <2',j:'הר"י 2019'},
+{s:'Israeli Guidelines 2018',t:'הערכה וטיפול - תפקוד מיני + טסטוסטרון בגברים',j:'הר"י 2018'},
 ];
 // renderSyllabus removed — dead code (89 lines)
 
@@ -155,11 +240,11 @@ export async function submitHarrisonAI(){
   const ans=document.getElementById('harrison-ai-answer');
   if(!q||!ans)return;
   ans.style.display='block';ans.innerHTML='⏳ ...';
-  const prompt=`You are an expert internist helping an Israeli internal medicine resident study Harrison's Internal Medicine 22e for the שלב א׳ internal medicine board exam (P0064-2025).
+  const prompt=`You are an expert family physician helping an Israeli family medicine resident study Harrison's Internal Medicine 22e (cross-reference only — primary source is Goroll 8e) for the שלב א׳ family medicine board exam (P0062-2025).
 
 Question: ${q}
 
-Answer in HEBREW (4-6 sentences). Cite the relevant Harrison chapter if known. Focus on internal medicine principles and what the exam is likely to test. If a specific threshold/criterion/number is asked, lead with it.`;
+Answer in HEBREW (4-6 sentences). Cite the relevant Goroll/Harrison chapter if known. Focus on primary-care family medicine principles and what the שלב א׳ רפואת המשפחה exam is likely to test. If a specific threshold/criterion/number is asked, lead with it.`;
   try{
     const txt=await callAI([{role:'user',content:prompt}],600,'sonnet');
     ans.innerHTML=sanitize(txt);
@@ -186,7 +271,7 @@ ${chText||'Chapter '+chNum+': '+chTitle}
 Create a board-focused summary in HEBREW with:
 1. 5-7 key facts/thresholds the examiner will test (specific numbers, criteria)
 2. 2-3 "exam traps" — common wrong answers and why they're wrong
-3. One clinical pearl for internal medicine practice
+3. One clinical pearl for family medicine / primary-care practice
 
 Format as clean bullet points. Be concise and high-yield.`;
   try{
@@ -216,7 +301,7 @@ export async function quizMeOnChapter(chNum,chTitle){
   if(!chapterText){
     chapterText="Textbook Chapter "+chNum+": "+chTitle;
   }
-  const prompt=`You are an Israeli internal medicine board examiner writing MCQ for the שלב א׳ exam.
+  const prompt=`You are an Israeli family medicine board examiner writing MCQ for the שלב א׳ רפואת המשפחה exam (P0062-2025).
 
 Based on this chapter content from Ch ${chNum} (${chTitle}):
 ${chapterText}
@@ -398,15 +483,27 @@ h+=`</div>`;
 
 // ===== ARTICLES =====
 if(G.libSec==='articles'){
+// Group by section
+const _sections={};
+SYL_ARTICLES.forEach(a=>{const s=a.s||'Other';(_sections[s]=_sections[s]||[]).push(a);});
+const _sectionOrder=['Patient-Centered Care','Family','EBM','Israeli Guidelines 2025','Israeli Guidelines 2024','Israeli Guidelines 2023','Israeli Guidelines 2022','Israeli Guidelines 2021','Israeli Guidelines 2020','Israeli Guidelines 2019','Israeli Guidelines 2018'];
 h+=`<div class="card" style="padding:14px">
-<div style="font-size:13px;font-weight:700;margin-bottom:4px">📄 Required Articles</div>
-<div style="font-size:10px;color:#64748b;margin-bottom:10px">${SYL_ARTICLES.length} journal articles</div>`;
-const _artMap={"0":"articles/01_digitoxin_hfref.pdf","1":"articles/02_cfdna_crc_screening.pdf","2":"articles/03_bsi_7vs14_days.pdf","3":"articles/04_aspirin_ccs_oac.pdf","4":"articles/05_baxdrostat_htn.pdf","5":"articles/06_apixaban_vte.pdf","6":"articles/07_upadacitinib_gca.pdf","7":"articles/08_sarcoidosis_pred_mtx.pdf","8":"articles/09_sotatercept_pah.pdf","9":"articles/10_ecst2_carotid.pdf"};
-SYL_ARTICLES.forEach((a,i)=>{
-const _apdf=_artMap[String(i)];
-h+=`<div style="padding:8px 0;border-bottom:1px solid #f1f5f9;display:flex;align-items:flex-start;gap:8px">
-<div style="flex:1"><div style="font-size:11px;font-weight:600;line-height:1.5">${i+1}. ${a.t}</div>
-<div style="font-size:9px;color:rgb(var(--sky));margin-top:2px">${a.j}</div></div>${_apdf?`<a href="${_apdf}" download style="font-size:10px;padding:3px 7px;background:#eff6ff;color:#3b82f6;border-radius:6px;text-decoration:none;flex-shrink:0">📄</a>`:''}</div>`;
+<div style="font-size:13px;font-weight:700;margin-bottom:4px">📄 Required Reading — P0062-2025</div>
+<div style="font-size:10px;color:#64748b;margin-bottom:10px">${SYL_ARTICLES.length} items · Appendices ב'/ג'/ד'/ה' of the official sources list</div>
+<div style="font-size:10px;color:#64748b;background:#fef3c7;padding:8px;border-radius:6px;margin-bottom:12px;line-height:1.5">
+<b>AFP review articles:</b> the syllabus also requires relevant AFP articles published in the last 7 years (up to 12 months before the exam). That list is dynamic — browse at <a href="https://www.aafp.org/afp" target="_blank" rel="noopener" style="color:rgb(var(--sky))">aafp.org/afp</a> filtered by syllabus topic.
+</div>`;
+let _idx=0;
+_sectionOrder.forEach(sec=>{
+  const items=_sections[sec]; if(!items||!items.length)return;
+  h+=`<div style="font-size:11px;font-weight:700;color:rgb(var(--sky));margin:10px 0 4px">${sec} (${items.length})</div>`;
+  items.forEach(a=>{
+    _idx++;
+    const isUrl=a.j&&a.j.startsWith('http');
+    h+=`<div style="padding:6px 0;border-bottom:1px solid #f1f5f9">
+<div style="font-size:11px;font-weight:600;line-height:1.5">${_idx}. ${a.t}</div>
+<div style="font-size:9px;color:#64748b;margin-top:2px">${isUrl?`<a href="${a.j}" target="_blank" rel="noopener" style="color:rgb(var(--sky))">${a.j}</a>`:a.j}</div></div>`;
+  });
 });
 h+=`</div>`;
 }
@@ -428,7 +525,7 @@ h+=`</div>`;
 }
 
 h+=`<div style="text-align:center;margin-top:12px;font-size:9px;color:#94a3b8">
-<a href="syllabus/P0064-2025.pdf" target="_blank" style="color:rgb(var(--sky));text-decoration:underline">P0064-2025 Syllabus ↗</a></div>`;
+<a href="docs/references/syllabus_curriculum_v2.2.pdf" target="_blank" style="color:rgb(var(--sky));text-decoration:underline">P0062-2025 Syllabus ↗</a> · <a href="docs/references/P0062-2025_sources.pdf" target="_blank" style="color:rgb(var(--sky));text-decoration:underline">Required Sources ↗</a></div>`;
 h+=`<div style="text-align:center;margin-top:8px;padding:8px;font-size:9px;color:#94a3b8;line-height:1.5">
 صدقة جارية الى من نحب<br>Ceaseless Charity — To the People That We Love</div>`;
 return h;

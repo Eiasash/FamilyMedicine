@@ -166,7 +166,7 @@ ov.innerHTML=`<div style="max-width:420px;margin:0 auto;background:#fff;border-r
 <div style="font-size:16px;font-weight:800">🏥 Mishpacha Mega</div>
 <button data-action="close-help" style="background:none;border:none;font-size:20px;cursor:pointer;color:#94a3b8" aria-label="Close help">✕</button>
 </div>
-<div style="font-size:10px;color:#64748b;margin-bottom:16px">Israeli Internal Medicine Board Exam Prep (שלב א׳ פנימית) · P0064-2025 · Harrison's 22e · Works Offline</div>
+<div style="font-size:10px;color:#64748b;margin-bottom:16px">Israeli Family Medicine Board Exam Prep (שלב א׳ רפואת המשפחה) · P0062-2025 · Goroll 8e + Nelson 22e + AFP + הר"י · Works Offline</div>
 <div style="padding:10px;background:#ecfdf5;border:1px solid #bbf7d0;border-radius:10px;margin-bottom:14px">
 <div style="font-weight:700;font-size:11px;margin-bottom:6px;color:#065f46">🆕 What's New in v${APP_VERSION}</div>
 <div style="font-size:10px;line-height:1.7;color:#047857">
