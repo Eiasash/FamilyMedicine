@@ -52,10 +52,14 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.3.0';
-export const BUILD_HASH='950q-v1.3.0';
+export const APP_VERSION='1.3.1';
+export const BUILD_HASH='950q-v1.3.1';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.3.1': [
+    '🔇 DEV-gated 3 console.log leaks (data-loader × 2, sw-update × 1) — no more production console noise on data load / cache cleanup.',
+    '🧼 Audit pass clean: 27 topics all ≥3 Qs, 950-Q corpus, BUILD_HASH tracks APP_VERSION, regression guards green.',
+  ],
   '1.3.0': [
     '🚨 FORK-BUG REMEDIATION (CRITICAL DATA CORRECTNESS FIX) — Discovered that 5 of 7 exam sessions had been ingested from Internal Medicine PDFs, not Family Medicine, due to copy-paste from the Pnimit fork during initial setup. Affected: 2021-Jun, 2022-Jun, 2023-Jun, 2024-May, 2024-Sep. Users had been studying ~593 Internal Medicine board questions while believing they were Family Medicine.',
     '📚 Re-ingested all 5 polluted sessions from correct FM PDFs via Sonnet-4.5 image-based extraction (~$11, 30 min). Each session anchored on official IMA post-appeal answer key. Result: 800 fresh FM Qs validated, 65 multi-accept correctly captured (incl. 9 invalidated-after-appeal where IMA accepted all 4 options). Net corpus 943 → 950.',
