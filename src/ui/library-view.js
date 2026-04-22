@@ -260,8 +260,8 @@ Format as clean bullet points. Be concise and high-yield.`;
   try{
     const txt=await callAI([{role:'user',content:prompt}],800,'sonnet');
     box.innerHTML=`<div style="margin-top:12px;padding:14px;background:#f0fdf4;border-radius:10px;border-left:4px solid #059669">
-<div style="font-weight:700;font-size:12px;color:#065f46;margin-bottom:8px">📝 Board Summary — Ch ${sanitize(String(chNum))}: ${sanitize(chTitle)}</div>
-<div style="font-size:11px;line-height:1.8;direction:rtl;text-align:right;white-space:pre-wrap">${sanitize(txt)}</div>
+<div style="font-weight:700;font-size:12px;color:#065f46;margin-bottom:8px;unicode-bidi:plaintext" dir="auto">📝 Board Summary — Ch ${sanitize(String(chNum))}: ${sanitize(chTitle)}</div>
+<div style="font-size:11px;line-height:1.8;text-align:start;white-space:pre-wrap;unicode-bidi:plaintext" dir="auto">${sanitize(txt)}</div>
 </div>`;
   }catch(e){box.innerHTML='<div style="color:#dc2626;font-size:11px;padding:8px">⚠️ Failed: '+sanitize(e.message)+'</div>';}
 }
@@ -300,8 +300,8 @@ Be concise and high-yield. Do NOT copy the article verbatim — paraphrase.`;
   try{
     const txt=await callAI([{role:'user',content:prompt}],900,'sonnet');
     box.innerHTML=`<div style="margin-top:12px;padding:14px;background:#f0fdf4;border-radius:10px;border-left:4px solid #059669">
-<div style="font-weight:700;font-size:12px;color:#065f46;margin-bottom:8px">📝 Board Summary — ${sanitize(p.kind==='AFP'?'AFP':'הר"י')} · ${sanitize(p.specialty)}</div>
-<div style="font-size:11px;line-height:1.8;direction:rtl;text-align:right;white-space:pre-wrap" dir="auto">${sanitize(txt)}</div>
+<div style="font-weight:700;font-size:12px;color:#065f46;margin-bottom:8px;unicode-bidi:plaintext" dir="auto">📝 Board Summary — ${sanitize(p.kind==='AFP'?'AFP':'הר"י')} · ${sanitize(p.specialty)}</div>
+<div style="font-size:11px;line-height:1.8;text-align:start;white-space:pre-wrap;unicode-bidi:plaintext" dir="auto">${sanitize(txt)}</div>
 </div>`;
   }catch(e){box.innerHTML='<div style="color:#dc2626;font-size:11px;padding:8px">⚠️ Failed: '+sanitize(e.message)+'</div>';}
 }
@@ -380,10 +380,11 @@ const libTabs=[
 {id:'goroll',l:'📘 Goroll',c:'#d97706'},
 {id:'nelson',l:'👶 Nelson',c:'#059669'},
 {id:'harrison',l:'📗 Harrison',c:'#8b5cf6'},
-{id:'afphari',l:'📰 AFP + הר"י',c:'#2563eb'},
-{id:'articles',l:'📄 Articles',c:'#3b82f6'},
+{id:'afphari',l:'📄 Articles',c:'#2563eb'},
 {id:'exams',l:'📝 Exams',c:'#06b6d4'}
 ];
+// Legacy 'articles' libSec redirects to the merged Articles tab
+if(G.libSec==='articles')G.libSec='afphari';
 // Default to Goroll on first render (Harrison was the default — wrong for family med)
 if(!G.libSec||G.libSec==='syllabus'||G.libSec==='laws')G.libSec='goroll';
 h+=`<div style="display:flex;gap:4px;overflow-x:auto;padding:4px 0;margin-bottom:12px;-webkit-overflow-scrolling:touch">`;
@@ -574,25 +575,25 @@ if(G._ahMdCache[mdKey]===undefined){
   fetch(encodeURI(url)).then(r=>r.ok?r.text():Promise.reject(r.status)).then(txt=>{G._ahMdCache[mdKey]=txt;G.render();}).catch(err=>{G._ahMdCache[mdKey]='__ERROR__'+err;G.render();});
 }
 const md=G._ahMdCache[mdKey];
-h+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+h+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap" dir="ltr">
 <button data-action="ah-close" style="background:#f1f5f9;border:none;border-radius:8px;padding:6px 12px;font-size:11px;cursor:pointer">← Back</button>
-<span style="background:${p.kind==='AFP'?'#2563eb':'#0d9488'};color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px">${p.kind==='AFP'?'AFP':'הר"י'}</span>
-<span style="font-size:10px;color:#64748b">${sanitize(p.specialty)}${p.year?' · '+p.year:''}</span>
+<span style="background:${p.kind==='AFP'?'#2563eb':'#0d9488'};color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px" dir="ltr">${p.kind==='AFP'?'AFP':'הר"י'}</span>
+<span style="font-size:10px;color:#64748b;unicode-bidi:plaintext" dir="auto">${sanitize(p.specialty)}${p.year?' · '+p.year:''}</span>
 <button data-action="ah-ai-summary" style="margin-left:auto;font-size:10px;padding:5px 10px;background:#059669;color:#fff;border:none;border-radius:8px;cursor:pointer">📝 AI Summary</button>
 </div>
 <div id="quiz-me-box"></div>
 <div class="card" style="padding:16px">
-<div style="font-size:14px;font-weight:700;line-height:1.4;margin-bottom:8px" dir="auto">${sanitize(p.title)}</div>
-${p.citation?`<div style="font-size:10px;color:#64748b;margin-bottom:12px;font-style:italic">${sanitize(p.citation)}</div>`:''}`;
+<div style="font-size:14px;font-weight:700;line-height:1.4;margin-bottom:8px;unicode-bidi:plaintext" dir="auto">${sanitize(p.title)}</div>
+${p.citation?`<div style="font-size:10px;color:#64748b;margin-bottom:12px;font-style:italic;unicode-bidi:plaintext" dir="auto">${sanitize(p.citation)}</div>`:''}`;
 if(md==='__LOADING__'||md===undefined){
   h+=`<div style="padding:24px;text-align:center;font-size:12px;color:#64748b">⏳ Loading full article…</div>`;
 }else if(typeof md==='string'&&md.startsWith('__ERROR__')){
   // Fallback to the index-level summary when the .md isn't reachable
   h+=`<div style="padding:10px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;font-size:10px;color:#991b1b;margin-bottom:12px">Full article file couldn't load (${sanitize(md.replace('__ERROR__',''))}). Showing index summary instead.</div>`;
-  if(p.abstract)h+=`<div style="font-size:11.5px;font-weight:700;color:#2563eb;margin:14px 0 6px">Abstract</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;text-align:justify">${sanitize(p.abstract)}</p>`;
-  if(p.sort)h+=`<div style="font-size:11.5px;font-weight:700;color:#7c3aed;margin:18px 0 6px">SORT — Key Recommendations</div><pre style="font-size:10.5px;line-height:1.7;white-space:pre-wrap;background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:12px;color:#1e293b;font-family:'Courier New',ui-monospace,monospace" dir="auto">${sanitize(p.sort)}</pre>`;
-  if(p.he)h+=`<div style="font-size:11.5px;font-weight:700;color:#0d9488;margin:18px 0 6px">תקציר / Summary</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px" dir="rtl">${sanitize(p.he)}</p>`;
-  if(p.opening&&!p.abstract)h+=`<div style="font-size:11.5px;font-weight:700;color:#64748b;margin:18px 0 6px">Opening</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;text-align:justify">${sanitize(p.opening)}</p>`;
+  if(p.abstract)h+=`<div style="font-size:11.5px;font-weight:700;color:#2563eb;margin:14px 0 6px" dir="auto">Abstract</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;text-align:start;unicode-bidi:plaintext" dir="auto">${sanitize(p.abstract)}</p>`;
+  if(p.sort)h+=`<div style="font-size:11.5px;font-weight:700;color:#7c3aed;margin:18px 0 6px" dir="auto">SORT — Key Recommendations</div><pre style="font-size:10.5px;line-height:1.7;white-space:pre-wrap;background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:12px;color:#1e293b;font-family:'Courier New',ui-monospace,monospace;unicode-bidi:plaintext" dir="auto">${sanitize(p.sort)}</pre>`;
+  if(p.he)h+=`<div style="font-size:11.5px;font-weight:700;color:#0d9488;margin:18px 0 6px" dir="auto">תקציר / Summary</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;unicode-bidi:plaintext" dir="auto">${sanitize(p.he)}</p>`;
+  if(p.opening&&!p.abstract)h+=`<div style="font-size:11.5px;font-weight:700;color:#64748b;margin:18px 0 6px" dir="auto">Opening</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;text-align:start;unicode-bidi:plaintext" dir="auto">${sanitize(p.opening)}</p>`;
 }else{
   // Strip YAML frontmatter and the first H1 (we already show the title in the reader chrome)
   let body=md.replace(/^---[\s\S]*?---\s*\n/,'').replace(/^#\s+[^\n]+\n+/,'');
@@ -605,6 +606,7 @@ if(md==='__LOADING__'||md===undefined){
   // Restore code blocks as <pre>
   body=body.replace(/\u0000CODE(\d+)\u0000/g,(m,i)=>`<pre style="font-size:10.5px;line-height:1.7;white-space:pre-wrap;background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:12px;color:#1e293b;font-family:'Courier New',ui-monospace,monospace" dir="auto">${codeBlocks[+i].replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre>`);
   // Headings (H2 = section color varies, H3 lighter). Abstract/SORT/תקציר/Opening sections get distinct accents.
+  // BIDI: dir="auto" picks direction from first strong char; unicode-bidi:plaintext keeps mixed-script inline runs ordered naturally.
   body=body.replace(/^##\s+(.+)$/gm,(m,t)=>{
     const tLow=t.toLowerCase();
     let color='#475569';
@@ -612,60 +614,99 @@ if(md==='__LOADING__'||md===undefined){
     else if(tLow.includes('sort'))color='#7c3aed';
     else if(t.includes('תקציר')||tLow.includes('summary'))color='#0d9488';
     else if(tLow.includes('opening'))color='#64748b';
-    return `<div style="font-size:12px;font-weight:700;color:${color};margin:18px 0 6px" dir="auto">${t}</div>`;
+    return `<div style="font-size:12px;font-weight:700;color:${color};margin:18px 0 6px;unicode-bidi:plaintext" dir="auto">${t}</div>`;
   });
-  body=body.replace(/^###\s+(.+)$/gm,'<div style="font-size:11.5px;font-weight:700;color:#334155;margin:14px 0 4px" dir="auto">$1</div>');
+  body=body.replace(/^###\s+(.+)$/gm,'<div style="font-size:11.5px;font-weight:700;color:#334155;margin:14px 0 4px;unicode-bidi:plaintext" dir="auto">$1</div>');
   // Bold + italic
   body=body.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/(?<!\*)\*([^*]+)\*(?!\*)/g,'<em>$1</em>');
-  // Links (already escaped, so &lt; syntax) — only plain markdown links
-  body=body.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener" style="color:rgb(var(--sky));text-decoration:underline">$1</a>');
+  // Links (already escaped, so &lt; syntax) — only plain markdown links. Wrap in <bdi> so URLs don't flip RTL paragraphs.
+  body=body.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,'<bdi><a href="$2" target="_blank" rel="noopener" style="color:rgb(var(--sky));text-decoration:underline">$1</a></bdi>');
   // Horizontal rule
   body=body.replace(/^---+$/gm,'<hr style="border:0;border-top:1px solid #e2e8f0;margin:16px 0">');
-  // Paragraphs: split on blank lines, wrap non-tag chunks in <p>
+  // Bullet lines (- or * at line start) → render as proper list-like blocks with dir=auto per item
+  // Paragraphs: split on blank lines, wrap non-tag chunks in <p>; per-line dir="auto" for mixed EN/HE content
   body=body.split(/\n{2,}/).map(chunk=>{
     const t=chunk.trim();
     if(!t)return '';
     if(t.startsWith('<'))return t;
-    return `<p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;text-align:justify" dir="auto">${t.replace(/\n/g,' ')}</p>`;
+    // Detect bullet block
+    if(/^\s*[-*]\s+/.test(t)){
+      const items=t.split(/\n/).filter(l=>l.trim()).map(l=>{
+        const m=l.match(/^\s*[-*]\s+(.*)$/);
+        const content=m?m[1]:l;
+        return `<li style="margin:4px 0;font-size:11.5px;line-height:1.8;color:#1e293b;unicode-bidi:plaintext" dir="auto">${content}</li>`;
+      }).join('');
+      return `<ul style="padding-inline-start:24px;margin:8px 0" dir="auto">${items}</ul>`;
+    }
+    return `<p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;text-align:start;unicode-bidi:plaintext" dir="auto">${t.replace(/\n/g,' ')}</p>`;
   }).join('\n');
-  h+=`<div class="heb" style="unicode-bidi:plaintext">${body}</div>`;
+  h+=`<div class="heb" style="unicode-bidi:isolate" dir="auto">${body}</div>`;
 }
 h+=`<div style="margin-top:16px;padding-top:10px;border-top:1px solid #e2e8f0;font-size:9px;color:#94a3b8">${sanitize(p.filename)}.pdf (source PDF on your local drive)</div>
 </div>`;
 }else{
 const specCounts={};
 ah.papers.forEach(p=>{specCounts[p.specialty]=(specCounts[p.specialty]||0)+1;});
+const isSyllabus=kindFilter==='syllabus';
+// Filter SYL_ARTICLES by the same search query when Syllabus mode is active
+let sylFiltered=SYL_ARTICLES;
+if(isSyllabus&&q){
+  sylFiltered=SYL_ARTICLES.filter(a=>(a.t||'').toLowerCase().includes(q)||(a.s||'').toLowerCase().includes(q)||(a.j||'').toLowerCase().includes(q));
+}
 h+=`<div class="card" style="padding:14px">
-<div style="font-size:13px;font-weight:700;margin-bottom:4px">📰 AFP + הר"י — Required Reading</div>
-<div style="font-size:10px;color:#64748b;margin-bottom:10px">${ah.totals.afp} AFP review articles · ${ah.totals.hari} הר"י guidelines · window ${sanitize(ah.window)} · ${ah.specialties.length} specialties</div>
-<input type="search" placeholder="🔎 Search by title, specialty, or abstract" data-action="ah-search" value="${sanitize(G.ahSearch||'')}" style="width:100%;padding:8px 10px;font-size:12px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;box-sizing:border-box" dir="auto">
+<div style="font-size:13px;font-weight:700;margin-bottom:4px" dir="auto">📄 Articles — Required Reading P0062-2025</div>
+<div style="font-size:10px;color:#64748b;margin-bottom:10px" dir="auto">${ah.totals.afp} AFP · ${ah.totals.hari} הר"י · ${SYL_ARTICLES.length} syllabus refs · window ${sanitize(ah.window)}</div>
+<input type="search" placeholder="🔎 Search title, specialty, citation" data-action="ah-search" value="${sanitize(G.ahSearch||'')}" style="width:100%;padding:8px 10px;font-size:12px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;box-sizing:border-box" dir="auto">
 <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
 <span class="pill ${!kindFilter?'on':''}" style="font-size:10px;cursor:pointer" data-action="ah-kind" data-kind="">All ${ah.papers.length}</span>
 <span class="pill ${kindFilter==='AFP'?'on':''}" style="font-size:10px;cursor:pointer" data-action="ah-kind" data-kind="AFP">AFP ${ah.totals.afp}</span>
-<span class="pill ${kindFilter==='הרי'?'on':''}" style="font-size:10px;cursor:pointer" data-action="ah-kind" data-kind="הרי">הר"י ${ah.totals.hari}</span>
-</div>
-<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px">
-<span class="pill ${!specFilter?'on':''}" style="font-size:10px;cursor:pointer" data-action="ah-spec" data-spec="">All specialties</span>`;
-ah.specialties.forEach(s=>{
-  h+=`<span class="pill ${specFilter===s?'on':''}" style="font-size:10px;cursor:pointer" data-action="ah-spec" data-spec="${sanitize(s)}" dir="auto">${sanitize(s)} <span style="opacity:0.6">${specCounts[s]||0}</span></span>`;
-});
-h+=`</div>
-<div style="font-size:9px;color:#94a3b8;margin-bottom:6px">${filtered.length} of ${ah.papers.length}${q?' matching "'+sanitize(q)+'"':''}${specFilter?' · '+sanitize(specFilter):''}${kindFilter?' · '+sanitize(kindFilter):''}</div>`;
-if(filtered.length===0){
-  h+=`<div style="padding:20px;text-align:center;font-size:11px;color:#94a3b8">No papers match.</div>`;
+<span class="pill ${kindFilter==='הרי'?'on':''}" style="font-size:10px;cursor:pointer" data-action="ah-kind" data-kind="הרי" dir="auto">הר"י ${ah.totals.hari}</span>
+<span class="pill ${isSyllabus?'on':''}" style="font-size:10px;cursor:pointer" data-action="ah-kind" data-kind="syllabus">📚 Syllabus ${SYL_ARTICLES.length}</span>
+</div>`;
+if(isSyllabus){
+  // Syllabus required reading — SYL_ARTICLES grouped by section
+  const _sections={};
+  sylFiltered.forEach(a=>{const s=a.s||'Other';(_sections[s]=_sections[s]||[]).push(a);});
+  const _sectionOrder=['Patient-Centered Care','Family','EBM','Israeli Guidelines 2025','Israeli Guidelines 2024','Israeli Guidelines 2023','Israeli Guidelines 2022','Israeli Guidelines 2021','Israeli Guidelines 2020','Israeli Guidelines 2019','Israeli Guidelines 2018'];
+  h+=`<div style="font-size:10px;color:#64748b;background:#fef3c7;padding:8px;border-radius:6px;margin-bottom:12px;line-height:1.5" dir="auto"><b>Appendices ב'/ג'/ד'/ה'</b> of the official sources list. AFP recent reviews are under the <b>AFP</b> filter above.</div>
+<div style="font-size:9px;color:#94a3b8;margin-bottom:6px" dir="auto">${sylFiltered.length} of ${SYL_ARTICLES.length}${q?' matching "'+sanitize(q)+'"':''}</div>`;
+  let _idx=0;
+  _sectionOrder.forEach(sec=>{
+    const items=_sections[sec]; if(!items||!items.length)return;
+    h+=`<div style="font-size:11px;font-weight:700;color:rgb(var(--sky));margin:10px 0 4px" dir="auto">${sanitize(sec)} (${items.length})</div>`;
+    items.forEach(a=>{
+      _idx++;
+      const isUrl=a.j&&a.j.startsWith('http');
+      h+=`<div style="padding:6px 0;border-bottom:1px solid #f1f5f9" dir="auto">
+<div style="font-size:11px;font-weight:600;line-height:1.5;unicode-bidi:plaintext" dir="auto">${_idx}. ${sanitize(a.t)}</div>
+<div style="font-size:9px;color:#64748b;margin-top:2px;unicode-bidi:plaintext" dir="auto">${isUrl?`<a href="${sanitize(a.j)}" target="_blank" rel="noopener" style="color:rgb(var(--sky))">${sanitize(a.j)}</a>`:sanitize(a.j)}</div></div>`;
+    });
+  });
+  if(sylFiltered.length===0)h+=`<div style="padding:20px;text-align:center;font-size:11px;color:#94a3b8">No syllabus items match.</div>`;
 }else{
-  filtered.slice(0,100).forEach(p=>{
-    const realIdx=ah.papers.indexOf(p);
-    h+=`<div data-action="ah-open" data-idx="${realIdx}" style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #f1f5f9;cursor:pointer">
-<span style="background:${p.kind==='AFP'?'#2563eb':'#0d9488'};color:#fff;font-size:9px;font-weight:700;padding:3px 7px;border-radius:6px;min-width:34px;text-align:center;flex-shrink:0">${p.kind==='AFP'?'AFP':'הר"י'}</span>
+  h+=`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px">
+<span class="pill ${!specFilter?'on':''}" style="font-size:10px;cursor:pointer" data-action="ah-spec" data-spec="">All specialties</span>`;
+  ah.specialties.forEach(s=>{
+    h+=`<span class="pill ${specFilter===s?'on':''}" style="font-size:10px;cursor:pointer" data-action="ah-spec" data-spec="${sanitize(s)}" dir="auto">${sanitize(s)} <span style="opacity:0.6">${specCounts[s]||0}</span></span>`;
+  });
+  h+=`</div>
+<div style="font-size:9px;color:#94a3b8;margin-bottom:6px" dir="auto">${filtered.length} of ${ah.papers.length}${q?' matching "'+sanitize(q)+'"':''}${specFilter?' · '+sanitize(specFilter):''}${kindFilter?' · '+sanitize(kindFilter):''}</div>`;
+  if(filtered.length===0){
+    h+=`<div style="padding:20px;text-align:center;font-size:11px;color:#94a3b8">No papers match.</div>`;
+  }else{
+    filtered.slice(0,100).forEach(p=>{
+      const realIdx=ah.papers.indexOf(p);
+      h+=`<div data-action="ah-open" data-idx="${realIdx}" style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #f1f5f9;cursor:pointer" dir="auto">
+<span style="background:${p.kind==='AFP'?'#2563eb':'#0d9488'};color:#fff;font-size:9px;font-weight:700;padding:3px 7px;border-radius:6px;min-width:34px;text-align:center;flex-shrink:0" dir="ltr">${p.kind==='AFP'?'AFP':'הר"י'}</span>
 <div style="flex:1;min-width:0">
-<div style="font-size:11.5px;font-weight:600;line-height:1.4" dir="auto">${sanitize(p.title)}</div>
-<div style="font-size:9px;color:#94a3b8;margin-top:3px" dir="auto">${sanitize(p.specialty)}${p.year?' · '+p.year:''}${p.citation?' · '+sanitize(p.citation.slice(0,80)):''}</div>
+<div style="font-size:11.5px;font-weight:600;line-height:1.4;unicode-bidi:plaintext" dir="auto">${sanitize(p.title)}</div>
+<div style="font-size:9px;color:#94a3b8;margin-top:3px;unicode-bidi:plaintext" dir="auto">${sanitize(p.specialty)}${p.year?' · '+p.year:''}${p.citation?' · '+sanitize(p.citation.slice(0,80)):''}</div>
 </div>
 <span style="font-size:16px;color:#cbd5e1;flex-shrink:0">›</span></div>`;
-  });
-  if(filtered.length>100){
-    h+=`<div style="padding:10px;text-align:center;font-size:10px;color:#94a3b8">Showing first 100 of ${filtered.length}. Filter or search to narrow.</div>`;
+    });
+    if(filtered.length>100){
+      h+=`<div style="padding:10px;text-align:center;font-size:10px;color:#94a3b8">Showing first 100 of ${filtered.length}. Filter or search to narrow.</div>`;
+    }
   }
 }
 h+=`</div>`;
@@ -673,32 +714,7 @@ h+=`</div>`;
 }
 }
 
-// ===== ARTICLES =====
-if(G.libSec==='articles'){
-// Group by section
-const _sections={};
-SYL_ARTICLES.forEach(a=>{const s=a.s||'Other';(_sections[s]=_sections[s]||[]).push(a);});
-const _sectionOrder=['Patient-Centered Care','Family','EBM','Israeli Guidelines 2025','Israeli Guidelines 2024','Israeli Guidelines 2023','Israeli Guidelines 2022','Israeli Guidelines 2021','Israeli Guidelines 2020','Israeli Guidelines 2019','Israeli Guidelines 2018'];
-h+=`<div class="card" style="padding:14px">
-<div style="font-size:13px;font-weight:700;margin-bottom:4px">📄 Required Reading — P0062-2025</div>
-<div style="font-size:10px;color:#64748b;margin-bottom:10px">${SYL_ARTICLES.length} items · Appendices ב'/ג'/ד'/ה' of the official sources list</div>
-<div style="font-size:10px;color:#64748b;background:#fef3c7;padding:8px;border-radius:6px;margin-bottom:12px;line-height:1.5">
-<b>AFP review articles:</b> the syllabus also requires relevant AFP articles published in the last 7 years (up to 12 months before the exam). That list is dynamic — browse at <a href="https://www.aafp.org/afp" target="_blank" rel="noopener" style="color:rgb(var(--sky))">aafp.org/afp</a> filtered by syllabus topic.
-</div>`;
-let _idx=0;
-_sectionOrder.forEach(sec=>{
-  const items=_sections[sec]; if(!items||!items.length)return;
-  h+=`<div style="font-size:11px;font-weight:700;color:rgb(var(--sky));margin:10px 0 4px">${sec} (${items.length})</div>`;
-  items.forEach(a=>{
-    _idx++;
-    const isUrl=a.j&&a.j.startsWith('http');
-    h+=`<div style="padding:6px 0;border-bottom:1px solid #f1f5f9">
-<div style="font-size:11px;font-weight:600;line-height:1.5">${_idx}. ${a.t}</div>
-<div style="font-size:9px;color:#64748b;margin-top:2px">${isUrl?`<a href="${a.j}" target="_blank" rel="noopener" style="color:rgb(var(--sky))">${a.j}</a>`:a.j}</div></div>`;
-  });
-});
-h+=`</div>`;
-}
+// ===== ARTICLES — merged into afphari tab above =====
 
 // ===== EXAMS =====
 if(G.libSec==='exams'){
