@@ -158,32 +158,37 @@ return h;
 
 
 // ===== TRACKER =====
-// topic index → {source:'haz'|'notes', label, action} for deep link
+// topic index → {source:'goroll'|'nelson', ch, label} for deep link
+// Keyed to the 27 P0062-2025 FM topics in constants.js. Goroll 8e is the
+// primary source for adult topics; Nelson 22e for peds. Topics without a
+// representative single chapter are omitted (no "Open" button shown).
 export const TOPIC_REF={
-0:{s:'har',ch:285,l:'Harrison Ch 243-286'},
-1:{s:'har',ch:316,l:'Harrison Ch 252-264'},
-2:{s:'har',ch:247,l:'Harrison Ch 247-251'},
-3:{s:'har',ch:133,l:'Harrison Ch 265-277'},
-4:{s:'har',ch:56,l:'Harrison Ch 278-281'},
-5:{s:'har',ch:295,l:'Harrison Ch 282-305'},
-6:{s:'har',ch:332,l:'Harrison Ch 306-370'},
-7:{s:'har',ch:321,l:'Harrison Ch 319-322'},
-8:{s:'har',ch:56,l:'Harrison Ch 55-58'},
-9:{s:'har',ch:388,l:'Harrison Ch 371-407'},
-10:{s:'har',ch:120,l:'Harrison Ch 66-121'},
-11:{s:'har',ch:80,l:'Harrison Ch 73-80'},
-12:{s:'har',ch:315,l:'Harrison Ch 127-192'},
-13:{s:'har',ch:375,l:'Harrison Ch 375-387'},
-14:{s:'har',ch:437,l:'Harrison Ch 433-459'},
-15:{s:'har',ch:314,l:'Harrison Ch 311-317'},
-16:{s:'har',ch:56,l:'Harrison Ch 54-72'},
-17:{s:'har',ch:56,l:'Harrison Ch 342-345'},
-18:{s:'har',ch:56,l:'Harrison Ch 55-58'},
-19:{s:'har',ch:14,l:'Harrison Ch 14-18'},
-20:{s:'har',ch:56,l:'Harrison Ch 311-317'},
-21:{s:'har',ch:56,l:'Harrison Ch 455-460'},
-22:{s:'har',ch:56,l:'Harrison Ch 13-72'},
-23:{s:'har',ch:56,l:'Harrison Ch 278-281'},
+0:{s:'goroll',ch:30,l:'Goroll Ch 30 — Chronic Stable Angina'},
+1:{s:'goroll',ch:32,l:'Goroll Ch 32 — Chronic CHF'},
+2:{s:'goroll',ch:26,l:'Goroll Ch 26 — HTN Management'},
+3:{s:'goroll',ch:47,l:'Goroll Ch 47 — COPD / Ch 48 — Asthma'},
+4:{s:'goroll',ch:70,l:'Goroll Ch 70 — Hepatitis / Ch 61 — GERD'},
+5:{s:'goroll',ch:142,l:'Goroll Ch 142 — CKD / Ch 133 — UTI'},
+6:{s:'goroll',ch:102,l:'Goroll Ch 102 — Diabetes Mellitus'},
+7:{s:'goroll',ch:103,l:'Goroll Ch 103-104 — Hyper/Hypothyroidism'},
+8:{s:'goroll',ch:82,l:'Goroll Ch 82 — Common Anemias / Ch 83 — Anticoag'},
+9:{s:'goroll',ch:157,l:'Goroll Ch 157 — OA / Ch 147 — Back Pain'},
+10:{s:'goroll',ch:171,l:'Goroll Ch 171 — TIA / Ch 165 — Headache'},
+11:{s:'goroll',ch:184,l:'Goroll Ch 184 — Dermatitis'},
+12:{s:'goroll',ch:181,l:'Goroll Ch 181 — Urticaria/Angioedema'},
+13:{s:'goroll',ch:6,l:'Goroll Ch 6 — Immunization'},
+14:{s:'goroll',ch:111,l:'Goroll Ch 111 — Abnormal Vaginal Bleeding'},
+15:{s:'goroll',ch:121,l:'Goroll Ch 121 — Unplanned Pregnancy'},
+16:{s:'goroll',ch:138,l:'Goroll Ch 138 — BPH / Ch 132 — ED'},
+17:{s:'goroll',ch:239,l:'Goroll Ch 239 — Primary Care Geriatrics'},
+18:{s:'goroll',ch:227,l:'Goroll Ch 227 — Depression / Ch 226 — Anxiety'},
+19:{s:'goroll',ch:228,l:'Goroll Ch 228 — Alcohol UD / Ch 54 — Smoking'},
+20:{s:'goroll',ch:3,l:'Goroll Ch 3 — Screening & Prevention'},
+21:{s:'goroll',ch:236,l:'Goroll Ch 236 — Chronic Non-malignant Pain'},
+22:{s:'goroll',ch:20,l:'Goroll Ch 20 — Evaluation of Chest Pain'},
+// 23,24 (peds): refer to Nelson tab — chapter-specific links TBD
+25:{s:'goroll',ch:238,l:'Goroll Ch 238 — Adolescent Care'},
+26:{s:'goroll',ch:5,l:'Goroll Ch 5 — Choosing Among Treatment Options'},
 };
 
 export function renderExamTrendCard(){
@@ -270,7 +275,7 @@ if(weakest.length){
 const w=weakest[0];
 const wPct=w.s.tot?Math.round(w.s.ok/w.s.tot*100):0;
 const ref=TOPIC_REF[w.i];
-h+=`<div>2️⃣ Read: <b>${w.name}</b> (${wPct}% accuracy, ${G.QZ.filter(q=>q.ti===w.i).length} questions) ${ref?`<button data-action="goto-lib-harrison" style="font-size:9px;padding:2px 8px;background:#ede9fe;color:#7c3aed;border:none;border-radius:6px;cursor:pointer">📖 Open</button>`:''}</div>`;
+h+=`<div>2️⃣ Read: <b>${w.name}</b> (${wPct}% accuracy, ${G.QZ.filter(q=>q.ti===w.i).length} questions) ${ref?`<button data-action="goto-lib-goroll" style="font-size:9px;padding:2px 8px;background:#ede9fe;color:#7c3aed;border:none;border-radius:6px;cursor:pointer">📖 Open</button>`:''}</div>`;
 h+=`<div>3️⃣ Drill: <b>20q mini-exam on ${w.name}</b> <button data-action="start-mini-exam" data-ti="${w.i}" style="font-size:9px;padding:2px 8px;background:#dcfce7;color:#166534;border:none;border-radius:6px;cursor:pointer">🎯 Start</button></div>`;
 }
 // Step 3: Traps
@@ -955,8 +960,8 @@ export function initTrackEvents(container) {
       else { setFilt(filt); }
       G.tab = 'quiz'; G.render();
     }
-    else if (action === 'goto-lib-harrison') {
-      G.tab = 'lib'; G.libSec = 'harrison'; G.render();
+    else if (action === 'goto-lib-goroll') {
+      G.tab = 'lib'; G.libSec = 'goroll'; G.render();
     }
     else if (action === 'start-mini-exam') {
       startTopicMiniExam(parseInt(el.dataset.ti, 10));
@@ -981,7 +986,7 @@ export function initTrackEvents(container) {
     }
     else if (action === 'sp-open-chapter') {
       e.stopPropagation();
-      G.libSec = 'harrison'; G.tab = 'lib'; G.render();
+      G.libSec = 'goroll'; G.tab = 'lib'; G.render();
     }
     else if (action === 'sp-open-notes') {
       e.stopPropagation();
