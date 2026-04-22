@@ -11,9 +11,12 @@ export const EXAM_FREQ=[20,13,29,38,41,27,31,24,28,100,41,22,11,30,58,42,9,46,24
 // Past-exam session tokens. Canonical format YYYY-Mon. `2020` bare (month unresolved in source).
 export const EXAM_YEARS=['2020','2021-Jun','2022-Jun','2023-Jun','2024-May','2024-Sep','2025-Jun'];
 
-// Supabase (shared Toranot project)
+// Supabase (shared Toranot project — shared w/ Geriatrics / Pnimit / Toranot)
+// DO NOT drift: the URL + key here must match Geriatrics/shlav-a-mega.html and InternalMedicine/src/core/constants.js.
+// New-format publishable key (sb_publishable_*) — public client key by design, safe to ship.
+// Legacy JWT anon rotated out 2026-04 (matches § B/D on same project).
 export const SUPA_URL='https://krmlzwwelqvlfslwltol.supabase.co';
-export const SUPA_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtybWx6d3dlbHF2bGZzbHdsdG9sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NjQxMDksImV4cCI6MjA4NzU0MDEwOX0.PFSuFgHA-WBnrgs4stmloxvOORSX0CiXDPsW2dinAAQ';
+export const SUPA_ANON='sb_publishable_tUuqQQ8RKMvLDwTz5cKkOg_o_y-rHtw';
 
 // Shared AI proxy (Netlify function on toranot.netlify.app)
 export const AI_PROXY='https://toranot.netlify.app/api/claude';
@@ -52,10 +55,13 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.3.1';
-export const BUILD_HASH='950q-v1.3.1';
+export const APP_VERSION='1.3.2';
+export const BUILD_HASH='950q-v1.3.2';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.3.2': [
+    '🔑 Rotated SUPA_ANON from legacy JWT anon to new-format publishable key (sb_publishable_*) — matches § B Toranot, § D Geriatrics, § E Pnimit on the shared Supabase project. Drift-prevention comment added.',
+  ],
   '1.3.1': [
     '🔇 DEV-gated 3 console.log leaks (data-loader × 2, sw-update × 1) — no more production console noise on data load / cache cleanup.',
     '🧼 Audit pass clean: 27 topics all ≥3 Qs, 950-Q corpus, BUILD_HASH tracks APP_VERSION, regression guards green.',
