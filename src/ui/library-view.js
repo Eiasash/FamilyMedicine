@@ -233,19 +233,20 @@ Answer in HEBREW (4-6 sentences). Cite the relevant Goroll/Harrison chapter if k
     document.getElementById('harrison-ai-q').value='';
   }catch(e){ans.innerHTML='⚠️ Failed: '+sanitize(e.message);}
 }
-export async function aiSummarizeChapter(chNum,chTitle){
+export async function aiSummarizeChapter(chNum,chTitle,source){
   const box=document.getElementById('quiz-me-box');
   if(!box)return;
   box.innerHTML='<div style="text-align:center;padding:16px;color:#64748b">⏳ מסכם את הפרק...</div>';
   let chText='';
   const harCh=G._harData&&G._harData[chNum];
-  if(harCh&&harCh.sections){
+  if(harCh&&harCh.sections&&source!=='nelson'){
     chText=harCh.sections.slice(0,8).map(s=>{
       const body=Array.isArray(s.content)?s.content.join(' '):(s.content||'');
       return s.title+(body?': '+body.slice(0,300):'');
     }).join('\n').slice(0,3500);
   }
-  const prompt=`You are summarizing Goroll's Primary Care Medicine / Harrison Ch ${chNum}: ${chTitle} for the Israeli family medicine board exam (שלב א׳ רפואת משפחה).
+  const srcLabel=source==='nelson'?'Nelson Textbook of Pediatrics 22e':`Goroll's Primary Care Medicine / Harrison`;
+  const prompt=`You are summarizing ${srcLabel} Ch ${chNum}: ${chTitle} for the Israeli family medicine board exam (שלב א׳ רפואת משפחה).
 
 Chapter content:
 ${chText||'Chapter '+chNum+': '+chTitle}
@@ -266,7 +267,7 @@ Format as clean bullet points. Be concise and high-yield.`;
 }
 // toggleAskAI removed — dead code
 // submitAskAI removed — dead code
-export async function quizMeOnChapter(chNum,chTitle){
+export async function quizMeOnChapter(chNum,chTitle,source){
   // Show loading state in Library
   const el=document.getElementById('quiz-me-box');
   // safe-innerhtml: chNum is always an integer from parseInt() / G.harChOpen — no user input path.
@@ -274,14 +275,15 @@ export async function quizMeOnChapter(chNum,chTitle){
   // Get chapter text from already-loaded data
   let chapterText='';
   const harCh=G._harData&&G._harData[chNum];
-  if(harCh&&harCh.sections){
+  if(harCh&&harCh.sections&&source!=='nelson'){
     chapterText=harCh.sections.slice(0,6).map(s=>{
       const body=Array.isArray(s.content)?s.content.join(' '):(s.content||'');
       return s.title+': '+body;
     }).join('\n').slice(0,3000);
   }
   if(!chapterText){
-    chapterText="Textbook Chapter "+chNum+": "+chTitle;
+    const srcLabel=source==='nelson'?'Nelson Textbook of Pediatrics 22e':'Textbook';
+    chapterText=srcLabel+" Chapter "+chNum+": "+chTitle;
   }
   const prompt=`You are an Israeli family medicine board examiner writing MCQ for the שלב א׳ רפואת המשפחה exam (P0062-2025).
 
@@ -338,6 +340,7 @@ const libTabs=[
 {id:'goroll',l:'📘 Goroll',c:'#d97706'},
 {id:'nelson',l:'👶 Nelson',c:'#059669'},
 {id:'harrison',l:'📗 Harrison',c:'#8b5cf6'},
+{id:'afphari',l:'📰 AFP + הר"י',c:'#2563eb'},
 {id:'articles',l:'📄 Articles',c:'#3b82f6'},
 {id:'exams',l:'📝 Exams',c:'#06b6d4'}
 ];
@@ -372,17 +375,43 @@ h+=`</div>`;
 }
 }
 
-// ===== NELSON 22e — syllabus chapter index (PDF too large to bundle; Drive link stays primary) =====
+// ===== NELSON 22e — syllabus chapter index + in-app reader shell (Quiz/Summary via AI) =====
 else if(G.libSec==='nelson'){
 if(!G._nelData){
   fetch('nelson_chapters.json').then(r=>r.json()).then(d=>{G._nelData=d;G.render();}).catch(e=>console.error('Nelson load failed',e));
   h+=`<div class="card" style="padding:40px;text-align:center"><div style="font-size:13px;color:#64748b">⏳ Loading Nelson chapters...</div></div>`;
+}else if(G.nelChOpen!=null){
+// === Nelson chapter reader (shell — full PDF stays on Drive) ===
+const cur=G._nelData.find(x=>x.ch===G.nelChOpen);
+if(cur){
+const idx=G._nelData.findIndex(x=>x.ch===G.nelChOpen);
+const prev=idx>0?G._nelData[idx-1]:null;
+const next=idx<G._nelData.length-1?G._nelData[idx+1]:null;
+h+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+<button data-action="close-nel-chapter" style="background:#f1f5f9;border:none;border-radius:8px;padding:6px 12px;font-size:11px;cursor:pointer">← Back</button>
+<div style="font-size:12px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Ch ${cur.ch}: ${sanitize(cur.title_en)}</div>
+</div>
+<div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+${prev?`<button data-action="open-nel-chapter" data-ch="${prev.ch}" style="font-size:10px;padding:5px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer">‹ Ch ${prev.ch}</button>`:''}
+<button data-action="quiz-nel-chapter" style="font-size:10px;padding:5px 10px;background:#7c3aed;color:#fff;border:none;border-radius:8px;cursor:pointer">🧠 Quiz</button>
+<button data-action="summarize-nel-chapter" style="font-size:10px;padding:5px 10px;background:#059669;color:#fff;border:none;border-radius:8px;cursor:pointer">📝 Summary</button>
+<a href="https://drive.google.com/file/d/1KK7xcN5JHgo8LVUpppHvxlZrg3Ol4VnU/view" target="_blank" rel="noopener" style="font-size:10px;padding:5px 10px;background:#059669;color:#fff;border:none;border-radius:8px;text-decoration:none">→ PDF (Drive)</a>
+${next?`<button data-action="open-nel-chapter" data-ch="${next.ch}" style="font-size:10px;padding:5px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer">Ch ${next.ch} ›</button>`:''}
+</div>
+<div id="quiz-me-box"></div>
+<div class="card" style="padding:16px">
+<div style="font-size:11px;color:#64748b;line-height:1.7">Nelson 22e full text is hosted off-app (167 MB PDF on Drive). Use the AI buttons above to get a board-focused summary or generate practice MCQs for this chapter, or open the full PDF in Drive for deep reading.</div>
+${cur.notes_he?`<div class="heb" style="margin-top:12px;padding:10px;background:#fef3c7;border-radius:8px;font-size:11px;line-height:1.7;direction:rtl;text-align:right">${sanitize(cur.notes_he)}</div>`:''}
+</div>`;
+}else{
+h+=`<div class="card" style="padding:20px;text-align:center;font-size:11px;color:#dc2626">Chapter ${G.nelChOpen} not found in index.</div>`;
+}
 }else{
 const nq=(G.nelSearch||'').trim().toLowerCase();
 const filtered=nq?G._nelData.filter(c=>c.title_en.toLowerCase().includes(nq)||String(c.ch).includes(nq)):G._nelData;
 h+=`<div class="card" style="padding:14px">
 <div style="font-size:13px;font-weight:700;margin-bottom:4px">👶 Nelson Textbook of Pediatrics 22e</div>
-<div style="font-size:10px;color:#64748b;margin-bottom:10px">${G._nelData.length} chapters from P0062-2025 Appendix א' · cross-reference to Goroll peds · PDF (167 MB) opens in Google Drive</div>
+<div style="font-size:10px;color:#64748b;margin-bottom:10px">${G._nelData.length} chapters from P0062-2025 Appendix א' · tap a chapter to open in-app · full PDF (167 MB) on Google Drive</div>
 <a href="https://drive.google.com/file/d/1KK7xcN5JHgo8LVUpppHvxlZrg3Ol4VnU/view" target="_blank" rel="noopener" style="display:inline-block;font-size:11px;font-weight:600;color:#fff;background:#059669;padding:8px 14px;border-radius:8px;text-decoration:none;margin-bottom:12px">→ Open full Nelson 22e PDF (Drive)</a>
 <input type="search" placeholder="🔎 Search chapter title or number (e.g. asthma, 112)" data-action="nel-search" value="${sanitize(G.nelSearch||'')}" style="width:100%;padding:8px 10px;font-size:12px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:10px;box-sizing:border-box" dir="auto">
 <div style="font-size:9px;color:#94a3b8;margin-bottom:4px">${filtered.length===G._nelData.length?`All ${G._nelData.length} chapters`:`${filtered.length} of ${G._nelData.length} chapters`}</div>`;
@@ -390,10 +419,10 @@ if(filtered.length===0){
   h+=`<div style="padding:20px;text-align:center;font-size:11px;color:#94a3b8">No chapters match "${sanitize(G.nelSearch||'')}".</div>`;
 }else{
   filtered.forEach(c=>{
-    h+=`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f1f5f9">
+    h+=`<div data-action="open-nel-chapter" data-ch="${c.ch}" style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f1f5f9;cursor:pointer">
 <span style="background:#059669;color:#fff;font-size:10px;font-weight:700;padding:4px 8px;border-radius:8px;min-width:42px;text-align:center">Ch ${c.ch}</span>
 <div style="flex:1;min-width:0;font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${sanitize(c.title_en)}</div>
-</div>`;
+<span style="font-size:16px;color:#cbd5e1;flex-shrink:0">›</span></div>`;
   });
 }
 h+=`</div>`;
@@ -476,6 +505,80 @@ h+=`<div class="heb" style="padding:8px 0;border-bottom:1px solid #f1f5f9">
 <div style="font-size:9px;color:#94a3b8;margin-top:2px">${l.s}</div></div>${l.f?`<a href="${l.f}" target="_blank" style="font-size:10px;padding:3px 7px;background:#fffbeb;color:#d97706;border-radius:6px;text-decoration:none;flex-shrink:0;white-space:nowrap">📄</a>`:''}</div></div>`;
 });
 h+=`</div>`;
+}
+
+// ===== AFP + הר"י — 542-paper browser (7-year syllabus window 2018-06 → 2025-05) =====
+if(G.libSec==='afphari'){
+if(!G._afpHari){
+  fetch('data/afp_hari_index.json').then(r=>r.json()).then(d=>{G._afpHari=d;G.render();}).catch(e=>{console.error('AFP/הרי load failed',e);G._afpHari={error:true};});
+  h+=`<div class="card" style="padding:40px;text-align:center"><div style="font-size:13px;color:#64748b">⏳ Loading AFP + הר"י index...</div></div>`;
+}else if(G._afpHari.error){
+  h+=`<div class="card" style="padding:20px;text-align:center;font-size:12px;color:#dc2626">Failed to load AFP/הר"י index. Check data/afp_hari_index.json.</div>`;
+}else{
+const ah=G._afpHari;
+const q=(G.ahSearch||'').trim().toLowerCase();
+const specFilter=G.ahSpec||'';
+const kindFilter=G.ahKind||'';
+let filtered=ah.papers;
+if(specFilter)filtered=filtered.filter(p=>p.specialty===specFilter);
+if(kindFilter)filtered=filtered.filter(p=>p.kind===kindFilter);
+if(q)filtered=filtered.filter(p=>(p.title||'').toLowerCase().includes(q)||(p.specialty||'').toLowerCase().includes(q)||(p.abstract||'').toLowerCase().includes(q)||(p.citation||'').toLowerCase().includes(q));
+// If a specific paper is open, show reader
+if(G.ahOpenIdx!=null&&ah.papers[G.ahOpenIdx]){
+const p=ah.papers[G.ahOpenIdx];
+h+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+<button data-action="ah-close" style="background:#f1f5f9;border:none;border-radius:8px;padding:6px 12px;font-size:11px;cursor:pointer">← Back</button>
+<span style="background:${p.kind==='AFP'?'#2563eb':'#0d9488'};color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px">${p.kind==='AFP'?'AFP':'הר"י'}</span>
+<span style="font-size:10px;color:#64748b">${sanitize(p.specialty)}${p.year?' · '+p.year:''}</span>
+</div>
+<div class="card" style="padding:16px">
+<div style="font-size:14px;font-weight:700;line-height:1.4;margin-bottom:8px" dir="auto">${sanitize(p.title)}</div>
+${p.citation?`<div style="font-size:10px;color:#64748b;margin-bottom:12px;font-style:italic">${sanitize(p.citation)}</div>`:''}
+${p.abstract?`<div style="font-size:11.5px;font-weight:700;color:#2563eb;margin:14px 0 6px">Abstract</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;text-align:justify">${sanitize(p.abstract)}</p>`:''}
+${p.sort?`<div style="font-size:11.5px;font-weight:700;color:#7c3aed;margin:18px 0 6px">SORT — Key Recommendations</div><pre style="font-size:10.5px;line-height:1.7;white-space:pre-wrap;background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:12px;color:#1e293b;font-family:'Courier New',ui-monospace,monospace" dir="auto">${sanitize(p.sort)}</pre>`:''}
+${p.he?`<div style="font-size:11.5px;font-weight:700;color:#0d9488;margin:18px 0 6px">תקציר / Summary</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px" dir="rtl">${sanitize(p.he)}</p>`:''}
+${p.opening&&!p.abstract?`<div style="font-size:11.5px;font-weight:700;color:#64748b;margin:18px 0 6px">Opening</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;text-align:justify">${sanitize(p.opening)}</p>`:''}
+<div style="margin-top:16px;padding-top:10px;border-top:1px solid #e2e8f0;font-size:9px;color:#94a3b8">${sanitize(p.filename)}.pdf (source PDF on your local drive)</div>
+</div>`;
+}else{
+const specCounts={};
+ah.papers.forEach(p=>{specCounts[p.specialty]=(specCounts[p.specialty]||0)+1;});
+h+=`<div class="card" style="padding:14px">
+<div style="font-size:13px;font-weight:700;margin-bottom:4px">📰 AFP + הר"י — Required Reading</div>
+<div style="font-size:10px;color:#64748b;margin-bottom:10px">${ah.totals.afp} AFP review articles · ${ah.totals.hari} הר"י guidelines · window ${sanitize(ah.window)} · ${ah.specialties.length} specialties</div>
+<input type="search" placeholder="🔎 Search by title, specialty, or abstract" data-action="ah-search" value="${sanitize(G.ahSearch||'')}" style="width:100%;padding:8px 10px;font-size:12px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;box-sizing:border-box" dir="auto">
+<div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+<span class="pill ${!kindFilter?'on':''}" style="font-size:10px;cursor:pointer" data-action="ah-kind" data-kind="">All ${ah.papers.length}</span>
+<span class="pill ${kindFilter==='AFP'?'on':''}" style="font-size:10px;cursor:pointer" data-action="ah-kind" data-kind="AFP">AFP ${ah.totals.afp}</span>
+<span class="pill ${kindFilter==='הרי'?'on':''}" style="font-size:10px;cursor:pointer" data-action="ah-kind" data-kind="הרי">הר"י ${ah.totals.hari}</span>
+</div>
+<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px">
+<span class="pill ${!specFilter?'on':''}" style="font-size:10px;cursor:pointer" data-action="ah-spec" data-spec="">All specialties</span>`;
+ah.specialties.forEach(s=>{
+  h+=`<span class="pill ${specFilter===s?'on':''}" style="font-size:10px;cursor:pointer" data-action="ah-spec" data-spec="${sanitize(s)}" dir="auto">${sanitize(s)} <span style="opacity:0.6">${specCounts[s]||0}</span></span>`;
+});
+h+=`</div>
+<div style="font-size:9px;color:#94a3b8;margin-bottom:6px">${filtered.length} of ${ah.papers.length}${q?' matching "'+sanitize(q)+'"':''}${specFilter?' · '+sanitize(specFilter):''}${kindFilter?' · '+sanitize(kindFilter):''}</div>`;
+if(filtered.length===0){
+  h+=`<div style="padding:20px;text-align:center;font-size:11px;color:#94a3b8">No papers match.</div>`;
+}else{
+  filtered.slice(0,100).forEach(p=>{
+    const realIdx=ah.papers.indexOf(p);
+    h+=`<div data-action="ah-open" data-idx="${realIdx}" style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #f1f5f9;cursor:pointer">
+<span style="background:${p.kind==='AFP'?'#2563eb':'#0d9488'};color:#fff;font-size:9px;font-weight:700;padding:3px 7px;border-radius:6px;min-width:34px;text-align:center;flex-shrink:0">${p.kind==='AFP'?'AFP':'הר"י'}</span>
+<div style="flex:1;min-width:0">
+<div style="font-size:11.5px;font-weight:600;line-height:1.4" dir="auto">${sanitize(p.title)}</div>
+<div style="font-size:9px;color:#94a3b8;margin-top:3px" dir="auto">${sanitize(p.specialty)}${p.year?' · '+p.year:''}${p.citation?' · '+sanitize(p.citation.slice(0,80)):''}</div>
+</div>
+<span style="font-size:16px;color:#cbd5e1;flex-shrink:0">›</span></div>`;
+  });
+  if(filtered.length>100){
+    h+=`<div style="padding:10px;text-align:center;font-size:10px;color:#94a3b8">Showing first 100 of ${filtered.length}. Filter or search to narrow.</div>`;
+  }
+}
+h+=`</div>`;
+}
+}
 }
 
 // ===== ARTICLES =====
@@ -598,6 +701,41 @@ export function initLibraryEvents(container) {
       G.tab = 'quiz'; G.filt = el.dataset.yr;
       buildPool(); G.render();
     }
+    else if (action === 'ah-spec') {
+      G.ahSpec = el.dataset.spec || '';
+      G.ahOpenIdx = null;
+      G.render();
+    }
+    else if (action === 'ah-kind') {
+      G.ahKind = el.dataset.kind || '';
+      G.ahOpenIdx = null;
+      G.render();
+    }
+    else if (action === 'ah-open') {
+      G.ahOpenIdx = parseInt(el.dataset.idx, 10);
+      G.render();
+    }
+    else if (action === 'ah-close') {
+      G.ahOpenIdx = null;
+      G.render();
+    }
+    else if (action === 'open-nel-chapter') {
+      G.nelChOpen = parseInt(el.dataset.ch, 10);
+      trackChapterRead('nel', G.nelChOpen);
+      G.render();
+    }
+    else if (action === 'close-nel-chapter') {
+      G.nelChOpen = null;
+      G.render();
+    }
+    else if (action === 'quiz-nel-chapter') {
+      const cur = G._nelData && G._nelData.find(x => x.ch === G.nelChOpen);
+      if (cur) quizMeOnChapter(G.nelChOpen, cur.title_en, 'nelson');
+    }
+    else if (action === 'summarize-nel-chapter') {
+      const cur = G._nelData && G._nelData.find(x => x.ch === G.nelChOpen);
+      if (cur) aiSummarizeChapter(G.nelChOpen, cur.title_en, 'nelson');
+    }
   });
   container.addEventListener('input', (e) => {
     if (e.target.dataset.action === 'nel-search') {
@@ -610,6 +748,18 @@ export function initLibraryEvents(container) {
         // Restore focus + caret to the search input after re-render
         if (prev && prev.dataset && prev.dataset.action === 'nel-search') {
           const next = document.querySelector('[data-action="nel-search"]');
+          if (next) { next.focus(); next.setSelectionRange(next.value.length, next.value.length); }
+        }
+      }, 120);
+    }
+    else if (e.target.dataset.action === 'ah-search') {
+      G.ahSearch = e.target.value;
+      clearTimeout(G._ahSearchTimer);
+      G._ahSearchTimer = setTimeout(() => {
+        const prev = document.activeElement;
+        G.render();
+        if (prev && prev.dataset && prev.dataset.action === 'ah-search') {
+          const next = document.querySelector('[data-action="ah-search"]');
           if (next) { next.focus(); next.setSelectionRange(next.value.length, next.value.length); }
         }
       }, 120);
