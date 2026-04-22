@@ -52,7 +52,7 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.2.8';
+export const APP_VERSION='1.2.9';
 export const BUILD_HASH='885q-v1.2.6';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
