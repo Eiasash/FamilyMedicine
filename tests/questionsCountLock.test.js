@@ -10,7 +10,7 @@ const EXPECTED_COUNTS = {
   '2020': 91,
   '2021-Jun': 149,
   '2022-Jun': 147,   // 146 from remote ingest + 1 manually recovered (Q77 AST:ALT hepatitis)
-  '2023-Jun': 148,
+  '2023-Jun': 147,   // was 148, dropped Q133 (spirogram image, empty options unrecoverable)
   '2024-May': 100,   // 99 from remote ingest + 1 manually recovered (Q42 denosumab rebound)
   '2024-Sep': 100,   // 99 from remote ingest + 1 manually recovered (Q90 IPF PFT)
   '2025-Jun': 150,
