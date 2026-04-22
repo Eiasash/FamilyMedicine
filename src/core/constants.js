@@ -3,10 +3,10 @@
 export const LS='mishpacha_mega';
 
 // IMA syllabus topic weights (calibrated from 882-Q corpus across 7 sessions)
-export const IMA_WEIGHTS=[5,8,2,10,11,11,2,5,9,8,2,2,1,5,1,2,1,1,1,0,1,1,3,1,4,1,2];
+export const IMA_WEIGHTS=[5,8,2,9,10,11,3,5,8,8,2,2,1,5,2,2,1,1,1,0,1,1,3,1,4,1,3];
 
 // Historical exam topic frequency (absolute counts across 2020, 2021-Jun..2025-Jun)
-export const EXAM_FREQ=[43,73,17,85,95,101,20,45,78,72,21,16,10,48,13,14,5,10,7,2,9,6,28,6,33,6,19];
+export const EXAM_FREQ=[43,74,20,86,96,104,25,46,78,79,22,16,12,51,16,19,5,11,8,3,12,7,30,8,39,6,27];
 
 // Past-exam session tokens. Canonical format YYYY-Mon. `2020` bare (month unresolved in source).
 export const EXAM_YEARS=['2020','2021-Jun','2022-Jun','2023-Jun','2024-May','2024-Sep','2025-Jun'];
@@ -52,10 +52,14 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.2.12';
-export const BUILD_HASH='943q-v1.2.12';
+export const APP_VERSION='1.2.13';
+export const BUILD_HASH='943q-v1.2.13';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.2.13': [
+    '⚖️ EXAM_FREQ + IMA_WEIGHTS recalibrated for the new 943-Q corpus (was tuned for 884 Qs). Notable shifts: Pulm 10→9, GI 11→10, Heme 9→8, Endo-DM 2→3, Women\u05f3s 1→2, EBM 2→3. Readiness/est-score and weakest-topic detection now reflect the real distribution.',
+    '🛠️ weekly-audit.yml fix — ti range guard was 0..23 (Pnimit-era) but Mishpacha has 27 topics (0..26); the audit had been silently failing every Sunday on every Q with ti≥24. Also bumped Q-count floor 800→940. CLAUDE.md updated to v1.2.12 state.',
+  ],
   '1.2.12': [
     '✨ 2020 stems polished — Sonnet text-pass cleaned residual OCR/reconstruction typos on all 150 Qs (meaning unchanged, readability up). Examples fixed: "בלי\u05f3צו אמא" → "בליווי אמה", "מוחסרת הכרה" → "מחוסרת הכרה". ~$0.40.',
     '🎯 Q21 (16yo teen, confidentiality + school performance drop + depression) re-classified ti 26 → 25 (Peds Adolescent & Mental Health). Topic 25 was empty after initial AI classification; this Q is the textbook case for it.',

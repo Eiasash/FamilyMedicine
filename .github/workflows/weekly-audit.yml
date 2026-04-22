@@ -30,8 +30,8 @@ jobs:
           import json, sys
           qs = json.load(open('data/questions.json'))
           errors = []
-          if len(qs) < 800:
-              errors.append(f'Question count too low: {len(qs)}')
+          if len(qs) < 940:
+              errors.append(f'Question count too low: {len(qs)} (expected ≥940)')
           for i, q in enumerate(qs):
               if not q.get('q') or len(q['q']) < 15:
                   errors.append(f'Q{i}: question text missing or too short')
@@ -39,8 +39,8 @@ jobs:
                   errors.append(f'Q{i}: needs >=4 options')
               if not isinstance(q.get('c'), int) or q['c'] < 0 or q['c'] >= len(q.get('o', [])):
                   errors.append(f'Q{i}: invalid correct answer index')
-              if q.get('ti') is None or not isinstance(q.get('ti'), int) or q['ti'] < 0 or q['ti'] > 23:
-                  errors.append(f'Q{i}: invalid topic index')
+              if q.get('ti') is None or not isinstance(q.get('ti'), int) or q['ti'] < 0 or q['ti'] > 26:
+                  errors.append(f'Q{i}: invalid topic index (must be 0..26 for Mishpacha)')
               if not q.get('t'):
                   errors.append(f'Q{i}: missing year field')
               if not q.get('e'):
