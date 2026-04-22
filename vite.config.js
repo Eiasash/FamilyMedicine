@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  // GitHub Pages: https://eiasash.github.io/InternalMedicine/
-  base: '/InternalMedicine/',
+  // GitHub Pages: https://eiasash.github.io/FamilyMedicine/
+  base: '/FamilyMedicine/',
 
   server: {
     port: 3737,
