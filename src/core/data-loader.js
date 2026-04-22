@@ -76,8 +76,8 @@ G._dataPromise = (async function loadDataArrays() {
     const _xp=safeJSONParse('mishpacha_pending_qs',[]);
     const _xc=safeJSONParse('mishpacha_custom_qs',[]);
     const _xAll=[..._xp,..._xc].filter(q=>q&&typeof q.q==='string'&&Array.isArray(q.o)&&q.o.length===4&&Number.isInteger(q.c)&&q.c>=0&&q.c<=3&&typeof q.ti==='number');
-    if(_xAll.length){G.QZ.push(..._xAll);console.log('Loaded '+_xAll.length+' user-generated questions');}
-    console.log('Data loaded: ' + G.QZ.length + ' questions, ' + G.NOTES.length + ' notes');
+    if(_xAll.length){G.QZ.push(..._xAll);if(import.meta.env.DEV)console.log('Loaded '+_xAll.length+' user-generated questions');}
+    if(import.meta.env.DEV)console.log('Data loaded: ' + G.QZ.length + ' questions, ' + G.NOTES.length + ' notes');
     if(window.takeWeeklySnapshot)window.takeWeeklySnapshot();
   } catch (error) {
     console.error('Data load failed:', error);
