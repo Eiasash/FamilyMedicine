@@ -7,7 +7,7 @@ const rootDir = resolve(import.meta.dirname, '..');
 // When intentionally growing the corpus, update EXPECTED_COUNTS in the same commit.
 
 const EXPECTED_COUNTS = {
-  '2020': 91,
+  '2020': 150,       // v1.2.11: re-ingested from correct Family Medicine 2020 PDFs + post-appeal key (was 91 dirty from wrong PDF)
   '2021-Jun': 149,
   '2022-Jun': 147,   // 146 from remote ingest + 1 manually recovered (Q77 AST:ALT hepatitis)
   '2023-Jun': 147,   // was 148, dropped Q133 (spirogram image, empty options unrecoverable)
