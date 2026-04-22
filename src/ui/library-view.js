@@ -265,6 +265,46 @@ Format as clean bullet points. Be concise and high-yield.`;
 </div>`;
   }catch(e){box.innerHTML='<div style="color:#dc2626;font-size:11px;padding:8px">⚠️ Failed: '+sanitize(e.message)+'</div>';}
 }
+export async function aiSummarizeAfpPaper(p){
+  const box=document.getElementById('quiz-me-box');
+  if(!box||!p)return;
+  box.innerHTML='<div style="text-align:center;padding:16px;color:#64748b">⏳ מסכם את המאמר...</div>';
+  // Build the richest context we have — prefer the full .md (cached), fall back to index fields
+  let ctx='';
+  const mdKey=p.specialty+'/'+(p.kind==='AFP'?'AFP':'הרי')+'/'+p.filename;
+  const md=G._ahMdCache&&G._ahMdCache[mdKey];
+  if(typeof md==='string'&&!md.startsWith('__')){
+    ctx=md.replace(/^---[\s\S]*?---\s*\n/,'').slice(0,6000);
+  }else{
+    const parts=[];
+    if(p.abstract)parts.push('ABSTRACT:\n'+p.abstract);
+    if(p.sort)parts.push('SORT KEY RECOMMENDATIONS:\n'+p.sort);
+    if(p.he)parts.push('תקציר:\n'+p.he);
+    if(p.opening)parts.push('OPENING:\n'+p.opening);
+    ctx=parts.join('\n\n').slice(0,6000);
+  }
+  const srcLabel=p.kind==='AFP'?'American Family Physician (AFP)':'הר"י — Israel Medical Association guideline';
+  const prompt=`You are summarizing a ${srcLabel} article for the Israeli family medicine board exam (שלב א׳ רפואת משפחה / P0062-2025).
+Specialty: ${p.specialty}${p.year?' · '+p.year:''}
+Title: ${p.title}
+Citation: ${p.citation||'n/a'}
+---
+${ctx||'(no body text available; rely on title/citation and standard teaching)'}
+---
+Create a board-focused summary in HEBREW with these sections (use clear bullets, no fluff):
+1) נקודות ליבה – 5-8 עובדות/ספים ספציפיים שהבוחן יבדוק (מספרים, קריטריונים, מינונים)
+2) שלב א׳ Traps – 2-3 תשובות מוטעות נפוצות ולמה הן לא נכונות
+3) SORT / מה לעשות בקליניקה – המלצות דרגה A/B עם ציון הרמה
+4) פנינה למשפחה – כלל אצבע אחד שמשנה ניהול במרפאה
+Be concise and high-yield. Do NOT copy the article verbatim — paraphrase.`;
+  try{
+    const txt=await callAI([{role:'user',content:prompt}],900,'sonnet');
+    box.innerHTML=`<div style="margin-top:12px;padding:14px;background:#f0fdf4;border-radius:10px;border-left:4px solid #059669">
+<div style="font-weight:700;font-size:12px;color:#065f46;margin-bottom:8px">📝 Board Summary — ${sanitize(p.kind==='AFP'?'AFP':'הר"י')} · ${sanitize(p.specialty)}</div>
+<div style="font-size:11px;line-height:1.8;direction:rtl;text-align:right;white-space:pre-wrap" dir="auto">${sanitize(txt)}</div>
+</div>`;
+  }catch(e){box.innerHTML='<div style="color:#dc2626;font-size:11px;padding:8px">⚠️ Failed: '+sanitize(e.message)+'</div>';}
+}
 // toggleAskAI removed — dead code
 // submitAskAI removed — dead code
 export async function quizMeOnChapter(chNum,chTitle,source){
@@ -523,22 +563,74 @@ let filtered=ah.papers;
 if(specFilter)filtered=filtered.filter(p=>p.specialty===specFilter);
 if(kindFilter)filtered=filtered.filter(p=>p.kind===kindFilter);
 if(q)filtered=filtered.filter(p=>(p.title||'').toLowerCase().includes(q)||(p.specialty||'').toLowerCase().includes(q)||(p.abstract||'').toLowerCase().includes(q)||(p.citation||'').toLowerCase().includes(q));
-// If a specific paper is open, show reader
+// If a specific paper is open, show reader (fetches full .md file lazily)
 if(G.ahOpenIdx!=null&&ah.papers[G.ahOpenIdx]){
 const p=ah.papers[G.ahOpenIdx];
+if(!G._ahMdCache)G._ahMdCache={};
+const mdKey=p.specialty+'/'+(p.kind==='AFP'?'AFP':'הרי')+'/'+p.filename;
+if(G._ahMdCache[mdKey]===undefined){
+  const url='afp_hari/'+p.specialty+'/'+(p.kind==='AFP'?'AFP':'הרי')+'/'+p.filename+'.md';
+  G._ahMdCache[mdKey]='__LOADING__';
+  fetch(encodeURI(url)).then(r=>r.ok?r.text():Promise.reject(r.status)).then(txt=>{G._ahMdCache[mdKey]=txt;G.render();}).catch(err=>{G._ahMdCache[mdKey]='__ERROR__'+err;G.render();});
+}
+const md=G._ahMdCache[mdKey];
 h+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
 <button data-action="ah-close" style="background:#f1f5f9;border:none;border-radius:8px;padding:6px 12px;font-size:11px;cursor:pointer">← Back</button>
 <span style="background:${p.kind==='AFP'?'#2563eb':'#0d9488'};color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px">${p.kind==='AFP'?'AFP':'הר"י'}</span>
 <span style="font-size:10px;color:#64748b">${sanitize(p.specialty)}${p.year?' · '+p.year:''}</span>
+<button data-action="ah-ai-summary" style="margin-left:auto;font-size:10px;padding:5px 10px;background:#059669;color:#fff;border:none;border-radius:8px;cursor:pointer">📝 AI Summary</button>
 </div>
+<div id="quiz-me-box"></div>
 <div class="card" style="padding:16px">
 <div style="font-size:14px;font-weight:700;line-height:1.4;margin-bottom:8px" dir="auto">${sanitize(p.title)}</div>
-${p.citation?`<div style="font-size:10px;color:#64748b;margin-bottom:12px;font-style:italic">${sanitize(p.citation)}</div>`:''}
-${p.abstract?`<div style="font-size:11.5px;font-weight:700;color:#2563eb;margin:14px 0 6px">Abstract</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;text-align:justify">${sanitize(p.abstract)}</p>`:''}
-${p.sort?`<div style="font-size:11.5px;font-weight:700;color:#7c3aed;margin:18px 0 6px">SORT — Key Recommendations</div><pre style="font-size:10.5px;line-height:1.7;white-space:pre-wrap;background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:12px;color:#1e293b;font-family:'Courier New',ui-monospace,monospace" dir="auto">${sanitize(p.sort)}</pre>`:''}
-${p.he?`<div style="font-size:11.5px;font-weight:700;color:#0d9488;margin:18px 0 6px">תקציר / Summary</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px" dir="rtl">${sanitize(p.he)}</p>`:''}
-${p.opening&&!p.abstract?`<div style="font-size:11.5px;font-weight:700;color:#64748b;margin:18px 0 6px">Opening</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;text-align:justify">${sanitize(p.opening)}</p>`:''}
-<div style="margin-top:16px;padding-top:10px;border-top:1px solid #e2e8f0;font-size:9px;color:#94a3b8">${sanitize(p.filename)}.pdf (source PDF on your local drive)</div>
+${p.citation?`<div style="font-size:10px;color:#64748b;margin-bottom:12px;font-style:italic">${sanitize(p.citation)}</div>`:''}`;
+if(md==='__LOADING__'||md===undefined){
+  h+=`<div style="padding:24px;text-align:center;font-size:12px;color:#64748b">⏳ Loading full article…</div>`;
+}else if(typeof md==='string'&&md.startsWith('__ERROR__')){
+  // Fallback to the index-level summary when the .md isn't reachable
+  h+=`<div style="padding:10px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;font-size:10px;color:#991b1b;margin-bottom:12px">Full article file couldn't load (${sanitize(md.replace('__ERROR__',''))}). Showing index summary instead.</div>`;
+  if(p.abstract)h+=`<div style="font-size:11.5px;font-weight:700;color:#2563eb;margin:14px 0 6px">Abstract</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;text-align:justify">${sanitize(p.abstract)}</p>`;
+  if(p.sort)h+=`<div style="font-size:11.5px;font-weight:700;color:#7c3aed;margin:18px 0 6px">SORT — Key Recommendations</div><pre style="font-size:10.5px;line-height:1.7;white-space:pre-wrap;background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:12px;color:#1e293b;font-family:'Courier New',ui-monospace,monospace" dir="auto">${sanitize(p.sort)}</pre>`;
+  if(p.he)h+=`<div style="font-size:11.5px;font-weight:700;color:#0d9488;margin:18px 0 6px">תקציר / Summary</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px" dir="rtl">${sanitize(p.he)}</p>`;
+  if(p.opening&&!p.abstract)h+=`<div style="font-size:11.5px;font-weight:700;color:#64748b;margin:18px 0 6px">Opening</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;text-align:justify">${sanitize(p.opening)}</p>`;
+}else{
+  // Strip YAML frontmatter and the first H1 (we already show the title in the reader chrome)
+  let body=md.replace(/^---[\s\S]*?---\s*\n/,'').replace(/^#\s+[^\n]+\n+/,'');
+  // Minimal, safe markdown → HTML (no raw-HTML passthrough)
+  const esc=(s)=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // Pull out fenced code blocks first so the rest of the formatting doesn't touch them
+  const codeBlocks=[];
+  body=body.replace(/```([\s\S]*?)```/g,(m,c)=>{codeBlocks.push(c);return `\u0000CODE${codeBlocks.length-1}\u0000`;});
+  body=esc(body);
+  // Restore code blocks as <pre>
+  body=body.replace(/\u0000CODE(\d+)\u0000/g,(m,i)=>`<pre style="font-size:10.5px;line-height:1.7;white-space:pre-wrap;background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:12px;color:#1e293b;font-family:'Courier New',ui-monospace,monospace" dir="auto">${codeBlocks[+i].replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre>`);
+  // Headings (H2 = section color varies, H3 lighter). Abstract/SORT/תקציר/Opening sections get distinct accents.
+  body=body.replace(/^##\s+(.+)$/gm,(m,t)=>{
+    const tLow=t.toLowerCase();
+    let color='#475569';
+    if(tLow.includes('abstract'))color='#2563eb';
+    else if(tLow.includes('sort'))color='#7c3aed';
+    else if(t.includes('תקציר')||tLow.includes('summary'))color='#0d9488';
+    else if(tLow.includes('opening'))color='#64748b';
+    return `<div style="font-size:12px;font-weight:700;color:${color};margin:18px 0 6px" dir="auto">${t}</div>`;
+  });
+  body=body.replace(/^###\s+(.+)$/gm,'<div style="font-size:11.5px;font-weight:700;color:#334155;margin:14px 0 4px" dir="auto">$1</div>');
+  // Bold + italic
+  body=body.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/(?<!\*)\*([^*]+)\*(?!\*)/g,'<em>$1</em>');
+  // Links (already escaped, so &lt; syntax) — only plain markdown links
+  body=body.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener" style="color:rgb(var(--sky));text-decoration:underline">$1</a>');
+  // Horizontal rule
+  body=body.replace(/^---+$/gm,'<hr style="border:0;border-top:1px solid #e2e8f0;margin:16px 0">');
+  // Paragraphs: split on blank lines, wrap non-tag chunks in <p>
+  body=body.split(/\n{2,}/).map(chunk=>{
+    const t=chunk.trim();
+    if(!t)return '';
+    if(t.startsWith('<'))return t;
+    return `<p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;text-align:justify" dir="auto">${t.replace(/\n/g,' ')}</p>`;
+  }).join('\n');
+  h+=`<div class="heb" style="unicode-bidi:plaintext">${body}</div>`;
+}
+h+=`<div style="margin-top:16px;padding-top:10px;border-top:1px solid #e2e8f0;font-size:9px;color:#94a3b8">${sanitize(p.filename)}.pdf (source PDF on your local drive)</div>
 </div>`;
 }else{
 const specCounts={};
@@ -719,10 +811,23 @@ export function initLibraryEvents(container) {
       G.ahOpenIdx = null;
       G.render();
     }
+    else if (action === 'ah-ai-summary') {
+      const ah = G._ahData;
+      const p = ah && ah.papers && ah.papers[G.ahOpenIdx];
+      if (p) aiSummarizeAfpPaper(p);
+    }
     else if (action === 'open-nel-chapter') {
       G.nelChOpen = parseInt(el.dataset.ch, 10);
       trackChapterRead('nel', G.nelChOpen);
       G.render();
+      // Auto-trigger AI summary on open — Nelson shell has no body text, so the page
+      // looks empty otherwise. Runs once per open; user can re-open chapter to refresh.
+      setTimeout(() => {
+        const cur = G._nelData && G._nelData.find(x => x.ch === G.nelChOpen);
+        if (cur && document.getElementById('quiz-me-box')) {
+          aiSummarizeChapter(G.nelChOpen, cur.title_en, 'nelson');
+        }
+      }, 50);
     }
     else if (action === 'close-nel-chapter') {
       G.nelChOpen = null;
