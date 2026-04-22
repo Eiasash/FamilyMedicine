@@ -1,10 +1,14 @@
 {
-  "session": "2024_Sep",
-  "source_pdf": "2024_Sep_answers_final.pdf",
+  "session": "2024-Sep",
+  "source_pdf": "2024_oct_answers.pdf",
   "count": 100,
   "max_q": 100,
   "multi_accept_count": 11,
-  "gaps": [],
+  "invalidated_after_appeal": [
+    6,
+    29,
+    58
+  ],
   "answers": {
     "1": [
       2
@@ -23,8 +27,6 @@
       0
     ],
     "6": [
-      1,
-      1,
       0,
       1,
       2,
@@ -97,8 +99,6 @@
       2
     ],
     "29": [
-      1,
-      1,
       0,
       1,
       2,
@@ -193,8 +193,6 @@
       0
     ],
     "58": [
-      1,
-      1,
       0,
       1,
       2,
@@ -331,6 +329,5 @@
       2
     ]
   },
-  "note": "capped to Qs 1-100 (official count)",
   "usable": true
 }

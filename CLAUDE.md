@@ -2,12 +2,16 @@
 
 Sibling PWA to **Shlav A Mega** (geriatrics) and **Pnimit Mega** (internal medicine). Shares engine, FSRS, Supabase, AI proxy.
 
-## Current state (v1.2.12, 22/04/26)
-- **943 Qs** across 7 exam sessions (2020=150, 2021-Jun=149, 2022-Jun=147, 2023-Jun=147, 2024-May=100, 2024-Sep=100, 2025-Jun=150)
+## Current state (v1.3.0, 22/04/26)
+- **950 Qs** across 7 exam sessions (2020=150, 2021-Jun=150, 2022-Jun=150, 2023-Jun=150, 2024-May=100, 2024-Sep=100, 2025-Jun=150)
+- All 7 sessions CONFIRMED Family Medicine content (fork-bug remediated in v1.3.0 — see CHANGELOG)
 - **27 topics** (`ti` range 0-26), **12 drugs**, **0 flashcards** (unused so far)
-- **284 tests passing** (18 test files). Pnimit regression guards ported + Mishpacha-specific guards added
+- **315 tests passing** (21 test files). Pnimit regression guards ported + Mishpacha-specific guards added
 - Goroll 239 ch + Nelson 165 ch + Harrison 69 ch (cross-ref) as in-app readers
-- localStorage `mishpacha_mega`, SW cache `mishpacha-v1.2.12`
+- localStorage `mishpacha_mega`, SW cache `mishpacha-v1.3.0`
+
+## v1.3.0 — fork-bug remediation (CRITICAL)
+Before v1.3.0, 5 of 7 exam sessions (2021-Jun, 2022-Jun, 2023-Jun, 2024-May, 2024-Sep) were accidentally ingested from **Internal Medicine** PDFs rather than Family Medicine — a copy-paste residue from the initial Pnimit fork. ~593 of 943 Qs were IM content masquerading as FM. v1.3.0 re-ingested all 5 sessions from correct FM PDFs via Sonnet-4.5 image-based extraction + official IMA post-appeal answer keys (~$11, ~30 min). 2025-Jun was cosmetically refreshed (data was FM but PDF was IM). EXAM_FREQ + IMA_WEIGHTS recalibrated for true 950-Q FM corpus — new emphasis: Peds-Acute 12%, MSK 11%, EBM 8%, Geri 5%. All 18 replaced PDFs verified "רפואת המשפחה" not "רפואה פנימית".
 
 ## Version sync (3 locations — CI gate enforces)
 `src/core/constants.js` → `APP_VERSION` · `sw.js` → `CACHE` · `package.json` → `version`. All three must match.

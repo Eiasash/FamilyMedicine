@@ -2,11 +2,11 @@
 
 export const LS='mishpacha_mega';
 
-// IMA syllabus topic weights (calibrated from 882-Q corpus across 7 sessions)
-export const IMA_WEIGHTS=[5,8,2,9,10,11,3,5,8,8,2,2,1,5,2,2,1,1,1,0,1,1,3,1,4,1,3];
+// IMA syllabus topic weights (calibrated from 950-Q corpus across 7 FM sessions, v1.3.0)
+export const IMA_WEIGHTS=[2,1,3,4,4,3,3,3,3,11,4,2,1,3,6,4,1,5,3,1,3,1,4,3,12,2,8];
 
-// Historical exam topic frequency (absolute counts across 2020, 2021-Jun..2025-Jun)
-export const EXAM_FREQ=[43,74,20,86,96,104,25,46,78,79,22,16,12,51,16,19,5,11,8,3,12,7,30,8,39,6,27];
+// Historical exam topic frequency (absolute counts across 2020 + 2021-Jun..2025-Jun, all confirmed Family Medicine, v1.3.0)
+export const EXAM_FREQ=[20,13,29,38,41,27,31,24,28,100,41,22,11,30,58,42,9,46,24,6,29,10,39,24,115,18,75];
 
 // Past-exam session tokens. Canonical format YYYY-Mon. `2020` bare (month unresolved in source).
 export const EXAM_YEARS=['2020','2021-Jun','2022-Jun','2023-Jun','2024-May','2024-Sep','2025-Jun'];
@@ -52,10 +52,19 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.2.16';
-export const BUILD_HASH='943q-v1.2.16';
+export const APP_VERSION='1.3.0';
+export const BUILD_HASH='950q-v1.3.0';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.3.0': [
+    '🚨 FORK-BUG REMEDIATION (CRITICAL DATA CORRECTNESS FIX) — Discovered that 5 of 7 exam sessions had been ingested from Internal Medicine PDFs, not Family Medicine, due to copy-paste from the Pnimit fork during initial setup. Affected: 2021-Jun, 2022-Jun, 2023-Jun, 2024-May, 2024-Sep. Users had been studying ~593 Internal Medicine board questions while believing they were Family Medicine.',
+    '📚 Re-ingested all 5 polluted sessions from correct FM PDFs via Sonnet-4.5 image-based extraction (~$11, 30 min). Each session anchored on official IMA post-appeal answer key. Result: 800 fresh FM Qs validated, 65 multi-accept correctly captured (incl. 9 invalidated-after-appeal where IMA accepted all 4 options). Net corpus 943 → 950.',
+    '✨ 2025-Jun cosmetically refreshed — content was already FM (someone had imported correctly from another source) but PDF was IM. Replaced PDF with the real IMA 2025-Jun FM PDF + re-extracted Qs for stem/option consistency.',
+    '⚖️ EXAM_FREQ + IMA_WEIGHTS recalibrated for true 950-Q FM corpus. New shape reflects real FM exam emphasis: Peds-Acute 12% (was 4%), MSK 11% (was 8%), EBM 8% (was 3%), Geriatrics 5%, Women\u05f3s Health 6%. Old weights were tuned on IM-polluted data and would have biased Rescue Drill / weakest-topic detection toward IM topics.',
+    '🛡️ Per-session count locks updated: 2021-Jun 149→150, 2022-Jun 147→150, 2023-Jun 147→150 (gained back the dropped Qs), 2025-Jun 150 (refreshed). 2024-May 100, 2024-Sep 100, 2020 150 unchanged.',
+    '📂 Replaced 18 PDFs in exams/ with verified FM versions (questions + answers + images + references for each session). All 7 session PDFs now confirmed "רפואת המשפחה" not "רפואה פנימית".',
+    '🗝️ Canonical answer keys regenerated for 6 sessions from the new IMA PDFs. Multi-accept and invalidated-after-appeal markers preserved.',
+  ],
   '1.2.16': [
     '💊 Drugs tab rebuilt for Family Medicine — expanded from 12 geriatric-leaning entries to ~46 FM essentials with pregnancy category (A/B/C/D/X), renal dosing (CrCl cut-offs), and pediatric dosing per row. Color-coded Preg badges, BIDI-safe (dir="auto" + <bdi>).',
     '🧮 Calc tab rebuilt for FM — added BMI, HAS-BLED, CURB-65, Centor/McIsaac, Wells DVT, PHQ-9, GAD-7, HEART. Removed inpatient-only PADUA. Defaults tuned to FM patient (age 60 / wt 70 — was geriatric 75/55).',
