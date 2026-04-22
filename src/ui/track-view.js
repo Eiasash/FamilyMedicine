@@ -74,10 +74,25 @@ export function renderPriorityMatrix(){
 export function calcUp(k,v){G.calcVals[k]=parseFloat(v)||0;G.render();}
 export function renderCalc(){
 
-let h=`<div class="sec-t">🧮 Clinical Calculators</div><div class="sec-s">CrCl · CHA₂DS₂-VASc · CURB-65 · Wells · PADUA</div>`;
+let h=`<div class="sec-t">🧮 Clinical Calculators</div><div class="sec-s">Family Medicine — CrCl · CHA₂DS₂-VASc · HAS-BLED · CURB-65 · Centor · Wells DVT · PHQ-9 · GAD-7 · BMI · HEART</div>`;
+
+// BMI
+const bmiWt=G.calcVals.bmiWt||70,bmiHt=G.calcVals.bmiHt||170;
+const bmi=bmiHt>0?(bmiWt/((bmiHt/100)**2)).toFixed(1):0;
+const bmiCat=bmi<18.5?'Underweight':bmi<25?'Normal':bmi<30?'Overweight':bmi<35?'Obese I':bmi<40?'Obese II':'Obese III';
+const bmiColor=bmi<18.5||bmi>=30?'#dc2626':bmi>=25?'#d97706':'#059669';
+h+=`<div class="card" style="padding:14px"><h3 style="font-size:13px;font-weight:700;margin-bottom:10px">BMI</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div><label style="font-size:10px;color:#64748b">Weight (kg)</label><input class="calc-in" type="number" value="${bmiWt}" data-action="calc-num" data-key="bmiWt"></div>
+<div><label style="font-size:10px;color:#64748b">Height (cm)</label><input class="calc-in" type="number" value="${bmiHt}" data-action="calc-num" data-key="bmiHt"></div>
+</div>
+<div style="margin-top:10px;padding:10px;background:#eff6ff;border-radius:10px;text-align:center">
+<span style="font-size:22px;font-weight:700;color:${bmiColor}">${bmi} — ${bmiCat}</span>
+<p style="font-size:10px;color:#64748b;margin-top:2px">Screen offer: WHO 2020 — counsel lifestyle ≥25, pharm/surgery consider ≥30 with comorbidity</p>
+</div></div>`;
 
 // CrCl
-const age=G.calcVals.age||75,wt=G.calcVals.wt||55,cr=G.calcVals.cr||1.0,fem=G.calcVals.fem===undefined?0.85:G.calcVals.fem;
+const age=G.calcVals.age||60,wt=G.calcVals.wt||70,cr=G.calcVals.cr||1.0,fem=G.calcVals.fem===undefined?0.85:G.calcVals.fem;
 const crcl=Math.max(0,Math.round(((140-age)*wt*fem)/(72*cr)));
 h+=`<div class="card" style="padding:14px"><h3 style="font-size:13px;font-weight:700;margin-bottom:10px">Cockcroft-Gault CrCl</h3>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
@@ -89,7 +104,7 @@ h+=`<div class="card" style="padding:14px"><h3 style="font-size:13px;font-weight
 </div>
 <div style="margin-top:10px;padding:10px;background:#eff6ff;border-radius:10px;text-align:center">
 <span style="font-size:22px;font-weight:700;color:${crcl<30?'#dc2626':crcl<60?'#d97706':'#059669'}">${crcl} ml/min</span>
-<p style="font-size:10px;color:#64748b;margin-top:2px">${crcl<30?'CKD 4-5: Avoid metformin, adjust all renally-cleared drugs':crcl<60?'CKD 3: Dose adjust many drugs':'CKD 1-2: Mild impairment'}</p>
+<p style="font-size:10px;color:#64748b;margin-top:2px">${crcl<30?'CKD 4–5: STOP metformin, avoid nitrofurantoin, dose-reduce DOACs':crcl<60?'CKD 3: adjust metformin (max 1g), review NSAIDs, imaging contrast':'CKD 1–2: mild impairment'}</p>
 </div></div>`;
 
 // CHA2DS2-VASc
@@ -128,16 +143,15 @@ h+=`<div style="margin-top:10px;padding:10px;background:#eff6ff;border-radius:10
 </div></div>`;
 
 
-// PADUA VTE Score
-const paduaItems=[
-['pad_cancer','Active cancer',3],['pad_vte','Previous VTE',3],['pad_immob','Reduced mobility (≥3 days)',3],
-['pad_throm','Known thrombophilia',3],['pad_trauma','Recent (≤1mo) trauma/surgery',2],
-['pad_age','Age ≥70',1],['pad_hf','Heart/respiratory failure',1],['pad_mi','Acute MI or stroke',1],
-['pad_infect','Acute infection/rheumatic disorder',1],['pad_obesity','Obesity (BMI ≥30)',1],['pad_hormone','Ongoing hormonal therapy',1]
+// HAS-BLED (pair with CHA₂DS₂-VASc — bleeding risk on anticoagulation)
+const hasItems=[
+['has_htn','Hypertension (uncontrolled, SBP >160)',1],['has_renal','Abnormal renal (Cr >200 µmol/L or dialysis)',1],
+['has_liver','Abnormal liver (cirrhosis, bili/AST ↑)',1],['has_stroke','Stroke history',1],['has_bleed','Bleeding hx or predisposition',1],
+['has_inr','Labile INR (TTR <60%)',1],['has_age','Age >65',1],['has_drug','Drugs (antiplatelet, NSAID)',1],['has_alc','Alcohol ≥8 drinks/week',1]
 ];
-const paduaScore=paduaItems.reduce((s,[k,,pts])=>s+(G.calcVals[k]?pts:0),0);
-h+=`<div class="card" style="padding:14px"><h3 style="font-size:13px;font-weight:700;margin-bottom:10px">PADUA VTE Risk Score</h3>`;
-paduaItems.forEach(([k,l,pts])=>{
+const hasScore=hasItems.reduce((s,[k,,pts])=>s+(G.calcVals[k]?pts:0),0);
+h+=`<div class="card" style="padding:14px"><h3 style="font-size:13px;font-weight:700;margin-bottom:10px">HAS-BLED (bleeding risk on AC)</h3>`;
+hasItems.forEach(([k,l,pts])=>{
 const on=G.calcVals[k]||0;
 h+=`<label style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f8fafc;font-size:11px;cursor:pointer">
 <span>${l} (+${pts})</span>
@@ -145,12 +159,118 @@ h+=`<label style="display:flex;justify-content:space-between;align-items:center;
 </label>`;
 });
 h+=`<div style="margin-top:10px;padding:10px;background:#eff6ff;border-radius:10px;text-align:center" class="calc-result">
-<span style="font-size:22px;font-weight:700;color:${paduaScore>=4?'#dc2626':'#059669'}">${paduaScore}</span>
-<p style="font-size:10px;color:#64748b;margin-top:2px">${paduaScore>=4?'High VTE risk (≥4) — Pharmacological prophylaxis recommended':'Low VTE risk (<4) — Mechanical prophylaxis or early mobilization'}</p>
+<span style="font-size:22px;font-weight:700;color:${hasScore>=3?'#dc2626':hasScore>=2?'#d97706':'#059669'}">${hasScore}</span>
+<p style="font-size:10px;color:#64748b;margin-top:2px">${hasScore>=3?'High bleeding risk — address modifiable factors, do NOT use to deny AC alone':'Low-moderate — continue AC with monitoring'}</p>
 </div></div>`;
 
+// Centor / McIsaac — strep pharyngitis
+const centorItems=[
+['cen_fever','Fever >38°C',1],['cen_nocough','Absence of cough',1],['cen_nodes','Tender anterior cervical nodes',1],
+['cen_tonsil','Tonsillar exudate/swelling',1],['cen_age3','Age 3–14',1],['cen_age45','Age ≥45',-1]
+];
+const centorScore=centorItems.reduce((s,[k,,pts])=>s+(G.calcVals[k]?pts:0),0);
+h+=`<div class="card" style="padding:14px"><h3 style="font-size:13px;font-weight:700;margin-bottom:10px">Centor / McIsaac (strep pharyngitis)</h3>`;
+centorItems.forEach(([k,l,pts])=>{
+const on=G.calcVals[k]||0;
+h+=`<label style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f8fafc;font-size:11px;cursor:pointer">
+<span>${l} (${pts>0?'+':''}${pts})</span>
+<input type="checkbox" ${on?'checked':''} data-action="calc-check" data-key="${k}" data-pts="${pts}" style="width:16px;height:16px">
+</label>`;
+});
+const centorRec=centorScore<=0?'No test, no abx (~1% strep)':centorScore===1?'No test, no abx (~10%)':centorScore===2?'RADT — treat if +':centorScore===3?'RADT — treat if +':'RADT/culture; empiric abx reasonable';
+h+=`<div style="margin-top:10px;padding:10px;background:#eff6ff;border-radius:10px;text-align:center" class="calc-result">
+<span style="font-size:22px;font-weight:700;color:${centorScore>=4?'#dc2626':centorScore>=2?'#d97706':'#059669'}">${centorScore}</span>
+<p style="font-size:10px;color:#64748b;margin-top:2px">${centorRec}</p>
+</div></div>`;
 
+// Wells DVT (outpatient)
+const wellsItems=[
+['w_cancer','Active cancer',1],['w_paral','Paralysis/recent plaster',1],['w_bedrid','Bedridden ≥3 d or surgery ≤12w',1],
+['w_tender','Localized tenderness along veins',1],['w_swell','Entire leg swollen',1],['w_calf','Calf swelling >3cm vs other',1],
+['w_pit','Pitting edema unilateral',1],['w_coll','Collateral superficial veins (non-varicose)',1],['w_prev','Prior DVT',1],['w_alt','Alt diagnosis as likely',-2]
+];
+const wellsScore=wellsItems.reduce((s,[k,,pts])=>s+(G.calcVals[k]?pts:0),0);
+h+=`<div class="card" style="padding:14px"><h3 style="font-size:13px;font-weight:700;margin-bottom:10px">Wells Score — DVT (outpatient)</h3>`;
+wellsItems.forEach(([k,l,pts])=>{
+const on=G.calcVals[k]||0;
+h+=`<label style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f8fafc;font-size:11px;cursor:pointer">
+<span>${l} (${pts>0?'+':''}${pts})</span>
+<input type="checkbox" ${on?'checked':''} data-action="calc-check" data-key="${k}" data-pts="${pts}" style="width:16px;height:16px">
+</label>`;
+});
+const wellsRec=wellsScore<=0?'DVT unlikely — D-dimer; if neg, DVT excluded':wellsScore<=2?'Moderate — D-dimer or US':'DVT likely — proceed to compression US';
+h+=`<div style="margin-top:10px;padding:10px;background:#eff6ff;border-radius:10px;text-align:center" class="calc-result">
+<span style="font-size:22px;font-weight:700;color:${wellsScore>=3?'#dc2626':wellsScore>=1?'#d97706':'#059669'}">${wellsScore}</span>
+<p style="font-size:10px;color:#64748b;margin-top:2px">${wellsRec}</p>
+</div></div>`;
 
+// PHQ-9 depression
+const phqItems=[
+['phq_1','Little interest/pleasure'],['phq_2','Down/depressed/hopeless'],['phq_3','Sleep problems'],
+['phq_4','Tired/low energy'],['phq_5','Appetite problems'],['phq_6','Feeling bad about self'],
+['phq_7','Trouble concentrating'],['phq_8','Psychomotor slowing/agitation'],['phq_9','Thoughts of self-harm']
+];
+const phqScore=phqItems.reduce((s,[k])=>s+(G.calcVals[k]||0),0);
+const phqSI=G.calcVals.phq_9||0;
+h+=`<div class="card" style="padding:14px"><h3 style="font-size:13px;font-weight:700;margin-bottom:4px">PHQ-9 (depression screen)</h3>
+<div style="font-size:9px;color:#94a3b8;margin-bottom:10px">0=not at all · 1=several days · 2=>½ days · 3=nearly every day</div>`;
+phqItems.forEach(([k,l])=>{
+const v=G.calcVals[k]||0;
+h+=`<div style="padding:6px 0;border-bottom:1px solid #f8fafc">
+<div style="font-size:11px;margin-bottom:3px">${l}</div>
+<div style="display:flex;gap:4px">${[0,1,2,3].map(n=>`<button data-action="calc-set" data-key="${k}" data-val="${n}" style="flex:1;padding:4px;font-size:11px;border:1px solid #e2e8f0;background:${v===n?'#3b82f6':'#fff'};color:${v===n?'#fff':'#475569'};border-radius:6px;cursor:pointer">${n}</button>`).join('')}</div>
+</div>`;
+});
+const phqSev=phqScore<5?'None-minimal':phqScore<10?'Mild':phqScore<15?'Moderate':phqScore<20?'Moderately severe':'Severe';
+h+=`<div style="margin-top:10px;padding:10px;background:#eff6ff;border-radius:10px;text-align:center" class="calc-result">
+<span style="font-size:22px;font-weight:700;color:${phqScore>=15?'#dc2626':phqScore>=10?'#d97706':'#059669'}">${phqScore}/27 — ${phqSev}</span>
+<p style="font-size:10px;color:#64748b;margin-top:2px">${phqScore>=10?'Offer treatment (SSRI + CBT)':phqScore>=5?'Watchful waiting, reassess':'No treatment needed'}${phqSI>=1?' · ⚠️ SI screen positive — assess safety':''}</p>
+</div></div>`;
+
+// GAD-7 anxiety
+const gadItems=[
+['gad_1','Feeling nervous/anxious'],['gad_2','Cannot stop worrying'],['gad_3','Worrying too much about different things'],
+['gad_4','Trouble relaxing'],['gad_5','Restless, hard to sit still'],['gad_6','Easily annoyed/irritable'],['gad_7','Afraid something awful might happen']
+];
+const gadScore=gadItems.reduce((s,[k])=>s+(G.calcVals[k]||0),0);
+h+=`<div class="card" style="padding:14px"><h3 style="font-size:13px;font-weight:700;margin-bottom:4px">GAD-7 (anxiety screen)</h3>
+<div style="font-size:9px;color:#94a3b8;margin-bottom:10px">Same 0–3 scale as PHQ-9</div>`;
+gadItems.forEach(([k,l])=>{
+const v=G.calcVals[k]||0;
+h+=`<div style="padding:6px 0;border-bottom:1px solid #f8fafc">
+<div style="font-size:11px;margin-bottom:3px">${l}</div>
+<div style="display:flex;gap:4px">${[0,1,2,3].map(n=>`<button data-action="calc-set" data-key="${k}" data-val="${n}" style="flex:1;padding:4px;font-size:11px;border:1px solid #e2e8f0;background:${v===n?'#3b82f6':'#fff'};color:${v===n?'#fff':'#475569'};border-radius:6px;cursor:pointer">${n}</button>`).join('')}</div>
+</div>`;
+});
+const gadSev=gadScore<5?'Minimal':gadScore<10?'Mild':gadScore<15?'Moderate':'Severe';
+h+=`<div style="margin-top:10px;padding:10px;background:#eff6ff;border-radius:10px;text-align:center" class="calc-result">
+<span style="font-size:22px;font-weight:700;color:${gadScore>=15?'#dc2626':gadScore>=10?'#d97706':'#059669'}">${gadScore}/21 — ${gadSev}</span>
+<p style="font-size:10px;color:#64748b;margin-top:2px">${gadScore>=10?'Likely GAD — offer SSRI (sertraline/escitalopram) + CBT':'Subthreshold — psychoeducation, reassess'}</p>
+</div></div>`;
+
+// HEART score (chest pain triage from clinic)
+const heartItems=[
+['h_hist','History (slightly/moderately/highly suspicious = 0/1/2)'],
+['h_ecg','ECG (normal/non-spec repol/significant ST-dev = 0/1/2)'],
+['h_age','Age (<45 / 45–65 / ≥65 = 0/1/2)'],
+['h_rf','Risk factors (0 / 1–2 / ≥3 or known CAD = 0/1/2)'],
+['h_trop','Troponin (≤norm / 1–3× / >3× = 0/1/2)']
+];
+const heartScore=heartItems.reduce((s,[k])=>s+(G.calcVals[k]||0),0);
+h+=`<div class="card" style="padding:14px"><h3 style="font-size:13px;font-weight:700;margin-bottom:4px">HEART Score (chest pain)</h3>
+<div style="font-size:9px;color:#94a3b8;margin-bottom:10px">Each item 0–2 pts</div>`;
+heartItems.forEach(([k,l])=>{
+const v=G.calcVals[k]||0;
+h+=`<div style="padding:6px 0;border-bottom:1px solid #f8fafc">
+<div style="font-size:11px;margin-bottom:3px">${l}</div>
+<div style="display:flex;gap:4px">${[0,1,2].map(n=>`<button data-action="calc-set" data-key="${k}" data-val="${n}" style="flex:1;padding:4px;font-size:11px;border:1px solid #e2e8f0;background:${v===n?'#3b82f6':'#fff'};color:${v===n?'#fff':'#475569'};border-radius:6px;cursor:pointer">${n}</button>`).join('')}</div>
+</div>`;
+});
+const heartRec=heartScore<=3?'Low (~2% MACE) — discharge/outpatient':heartScore<=6?'Moderate (~20%) — admit for obs':'High (~50%) — urgent cath/ACS pathway';
+h+=`<div style="margin-top:10px;padding:10px;background:#eff6ff;border-radius:10px;text-align:center" class="calc-result">
+<span style="font-size:22px;font-weight:700;color:${heartScore>=7?'#dc2626':heartScore>=4?'#d97706':'#059669'}">${heartScore}/10</span>
+<p style="font-size:10px;color:#64748b;margin-top:2px">${heartRec}</p>
+</div></div>`;
 
 
 return h;
@@ -1067,6 +1187,10 @@ export function initTrackEvents(container) {
       if (v) { setApiKey(v); G.render(); }
     }
     else if (action === 'force-update') { window.applyUpdate(); }
+    else if (action === 'calc-set') {
+      const key = el.dataset.key; const val = parseInt(el.dataset.val, 10) || 0;
+      calcUp(key, val);
+    }
   });
 
   container.addEventListener('change', (e) => {

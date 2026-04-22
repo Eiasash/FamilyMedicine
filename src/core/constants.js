@@ -52,10 +52,17 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.2.15';
-export const BUILD_HASH='943q-v1.2.15';
+export const APP_VERSION='1.2.16';
+export const BUILD_HASH='943q-v1.2.16';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.2.16': [
+    '💊 Drugs tab rebuilt for Family Medicine — expanded from 12 geriatric-leaning entries to ~46 FM essentials with pregnancy category (A/B/C/D/X), renal dosing (CrCl cut-offs), and pediatric dosing per row. Color-coded Preg badges, BIDI-safe (dir="auto" + <bdi>).',
+    '🧮 Calc tab rebuilt for FM — added BMI, HAS-BLED, CURB-65, Centor/McIsaac, Wells DVT, PHQ-9, GAD-7, HEART. Removed inpatient-only PADUA. Defaults tuned to FM patient (age 60 / wt 70 — was geriatric 75/55).',
+    '🎯 Mock Exam upgraded to 150q/3h — matches real שלב א׳ format. By-year mode now pulls up to full 150 from that exam tag. Classic and realistic modes unified, both produce per-topic breakdown.',
+    '🔗 Q ↔ Article cross-linking — after revealing an answer in Quiz, related AFP/הר"י articles for that topic appear inline (one tap opens). Article reader footer shows practice past-exam Qs from the same topic.',
+    '📅 Daily Contract banner — Quiz tab now opens with a 3-item daily plan: Due reviews (FSRS), Weak drill (rescue pool from weakest topics), Required reading (1 AFP/הר"י article from weakest topic). Deterministic daily pick; resets each calendar day.',
+  ],
   '1.2.15': [
     '🔍 Option-level audit pass — Sonnet image-based diff against original 2020 PDF flagged 29 candidate option corrections; 18 applied (clear typo/wording fixes), 11 skipped (Q5 cataract revert hallucinations + length anomalies). Notable real fixes: Q26 runner knee pain options ("בישוב"→"בכיפוף"), Q40 gout aspiration option (was gibberish), Q90 impetigo Tx duration (7→14 days), Q96 lung nodule follow-up interval (6mo→1yr per Fleischner), Q142 breastfeeding evaluation options. ~$0.50.',
   ],
@@ -154,3 +161,41 @@ export const CHANGELOG={
 // No in-app textbook readers for Family Medicine v1.0 (Goroll/Nelson are external).
 // Keep export so existing code references don't break.
 export const HARRISON_PDF_MAP={};
+
+// ===== Topic <-> AFP/הר"י specialty cross-link map =====
+// Each topic index (0-26) -> array of Hebrew specialty strings matching
+// data/afp_hari_index.json. First entry is primary; used for filtering.
+// Drives both "related articles on wrong Q" and "drill Qs from article".
+export const TOPIC_TO_AFP_SPECS={
+  0:['קרדיולוגיה'],
+  1:['קרדיולוגיה'],
+  2:['קרדיולוגיה','נפרולוגיה, אלקטרוליטים ולחץ-דם'],
+  3:['ריאות'],
+  4:['גסטרואנטרולוגיה'],
+  5:['נפרולוגיה, אלקטרוליטים ולחץ-דם','אורולוגיה'],
+  6:['אנדוקרינולוגיה'],
+  7:['אנדוקרינולוגיה'],
+  8:['המטולוגיה'],
+  9:['אורתופדיה','ראומטולוגיה'],
+  10:['נוירולוגיה'],
+  11:['עור'],
+  12:['סוגיות ותסמינים כלליים','תרופות, פרמקולוגיה וטוקסיקולוגיה'],
+  13:['מחלות זיהומיות'],
+  14:['רפואת נשים'],
+  15:['רפואת נשים'],
+  16:['אורולוגיה'],
+  17:['סוגיות ותסמינים כלליים'],
+  18:['פסיכיאטריה'],
+  19:['פסיכיאטריה'],
+  20:['קידום בריאות ורפואה מונעת'],
+  21:['כאב'],
+  22:['סוגיות ותסמינים כלליים'],
+  23:['רפואת ילדים'],
+  24:['רפואת ילדים'],
+  25:['רפואת ילדים','פסיכיאטריה'],
+  26:['קידום בריאות ורפואה מונעת'],
+};
+
+// Inverse map: specialty string -> topic indices (for article -> related Qs).
+// Built once at module load.
+export const AFP_SPEC_TO_TOPICS=(()=>{const m={};Object.entries(TOPIC_TO_AFP_SPECS).forEach(([ti,specs])=>{specs.forEach(s=>{(m[s]=m[s]||[]).push(+ti);});});return m;})();

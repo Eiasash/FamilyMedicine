@@ -193,21 +193,31 @@ return h;
 // ===== DRUG LOOKUP =====
 let drugSearch='';
 export function renderDrugs(){
-let h=`<div class="sec-t">💊 Drug Lookup</div><div class="sec-s">Beers Criteria + ACB Score Checker</div>`;
-h+=`<input class="search-box" placeholder="Search drug name..." data-action="drug-search" value="${drugSearch}" id="dsrch">`;
+let h=`<div class="sec-t">💊 Drug Lookup</div><div class="sec-s">Family Medicine essentials — dosing · pregnancy · renal · peds</div>`;
+h+=`<input class="search-box" placeholder="Search drug, Hebrew name, class, or indication..." data-action="drug-search" value="${drugSearch}" id="dsrch">`;
 const fv=drugSearch.toLowerCase();
-const filtered=G.DRUGS.filter(d=>!fv||d.name.toLowerCase().includes(fv)||d.heb.includes(fv)||(d.cat||'').toLowerCase().includes(fv));
+const filtered=G.DRUGS.filter(d=>!fv||d.name.toLowerCase().includes(fv)||(d.heb||'').includes(fv)||(d.cat||'').toLowerCase().includes(fv)||(d.risk||'').toLowerCase().includes(fv));
+h+=`<div style="font-size:10px;color:#94a3b8;margin:4px 0 8px">${filtered.length} of ${G.DRUGS.length} drugs</div>`;
 h+=`<div class="card">`;
 if(!filtered.length)h+=`<div style="padding:16px;text-align:center;color:#94a3b8;font-size:12px">No drugs found</div>`;
 filtered.forEach(d=>{
-h+=`<div class="drug-row"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-<span style="font-weight:700;font-size:12px">${d.name} ${d.heb?'<span style="color:#94a3b8">('+d.heb+')</span>':''}</span>
-<div style="display:flex;gap:4px">
-${d.beers?'<span class="badge badge-r">BEERS</span>':''}
-${d.acb>=3?'<span class="badge badge-r">ACB '+d.acb+'</span>':d.acb>=2?'<span class="badge badge-y">ACB '+d.acb+'</span>':d.acb>=1?'<span class="badge badge-g">ACB '+d.acb+'</span>':''}
-</div></div>
-<div style="font-size:10px;color:#64748b">${d.cat||''}</div>
-<div style="font-size:10px;color:#475569;margin-top:2px">${d.risk}</div></div>`;
+// Pregnancy badge — X/D red, C amber, A/B green, else gray
+const pregCat=(d.preg||'').match(/^[A-Z]/)?.[0];
+const pregColor=pregCat==='X'||pregCat==='D'?'#dc2626':pregCat==='C'?'#d97706':pregCat==='A'||pregCat==='B'?'#059669':'#94a3b8';
+const pregBadge=d.preg?`<span style="background:${pregColor};color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:6px">Preg ${pregCat||'?'}</span>`:'';
+// Renal badge — presence indicates adjustment needed
+const renalBadge=d.renal&&!/no adjustment/i.test(d.renal)?`<span style="background:#0ea5e9;color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:6px">Renal</span>`:'';
+// Legacy Beers/ACB (kept for elderly-risk cross-check when present)
+const beersBadge=d.beers?'<span class="badge badge-r">BEERS</span>':'';
+h+=`<div class="drug-row" dir="auto" style="unicode-bidi:plaintext"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;gap:8px">
+<span style="font-weight:700;font-size:12px">${d.name} ${d.heb?'<bdi style="color:#94a3b8">('+d.heb+')</bdi>':''}</span>
+<div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">${pregBadge}${renalBadge}${beersBadge}</div></div>
+<div style="font-size:10px;color:#64748b;font-weight:600">${d.cat||''}</div>
+<div style="font-size:10px;color:#475569;margin-top:3px;line-height:1.5">${d.risk||''}</div>
+${d.renal?`<div style="font-size:9.5px;color:#0369a1;margin-top:3px"><b>Renal:</b> ${d.renal}</div>`:''}
+${d.preg?`<div style="font-size:9.5px;color:${pregColor};margin-top:2px"><b>Preg:</b> ${d.preg}</div>`:''}
+${d.peds?`<div style="font-size:9.5px;color:#7c3aed;margin-top:2px"><b>Peds:</b> ${d.peds}</div>`:''}
+</div>`;
 });
 h+=`</div>`;
 return h;
