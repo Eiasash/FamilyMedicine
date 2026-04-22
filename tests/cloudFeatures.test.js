@@ -94,10 +94,19 @@ beforeEach(() => {
   G.render = vi.fn();
   G.save = vi.fn();
   globalThis.fetch = vi.fn();
-  // Node's navigator is read-only and lacks `onLine`; getDiagnostics only
-  // reads .userAgent and .onLine which both exist at the Node default.
-  if (typeof globalThis.screen === 'undefined') globalThis.screen = { width: 1024, height: 768 };
-  if (typeof globalThis.devicePixelRatio === 'undefined') globalThis.devicePixelRatio = 2;
+  // getDiagnostics reads navigator.userAgent, navigator.onLine, screen.*,
+  // devicePixelRatio. Node 20 (used in CI) exposes none of these globals;
+  // Node 22+ (local dev) has `navigator` but no `screen`/`devicePixelRatio`.
+  // Shim only when missing so we don't trip Node 22's read-only navigator.
+  if (typeof globalThis.navigator === 'undefined') {
+    globalThis.navigator = { userAgent: 'vitest', onLine: true };
+  }
+  if (typeof globalThis.screen === 'undefined') {
+    globalThis.screen = { width: 1024, height: 768 };
+  }
+  if (typeof globalThis.devicePixelRatio === 'undefined') {
+    globalThis.devicePixelRatio = 2;
+  }
   callAI.mockReset();
 });
 
