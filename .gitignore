@@ -6,3 +6,7 @@ dist/
 /tmp/
 __pycache__/
 *.pyc
+
+# AFP / הר"י extraction pipeline — keep committed summaries, ignore raw pdftotext dumps
+docs/references/afp_hari/.raw/
+docs/references/afp_hari/**/.raw/
