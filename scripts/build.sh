@@ -17,6 +17,8 @@ cp -r shared/ dist/shared/
 cp -r exams/ dist/exams/
 [ -d articles ] && cp -r articles/ dist/articles/ || echo "  (skip: articles/ not present)"
 cp -r harrison/ dist/harrison/
+[ -d goroll ] && cp -r goroll/ dist/goroll/ || echo "  (skip: goroll/ not present)"
+[ -d docs/references/afp_hari ] && cp -r docs/references/afp_hari/ dist/afp_hari/ || echo "  (skip: docs/references/afp_hari/ not present)"
 [ -d questions ] && cp -r questions/ dist/questions/ || echo "  (skip: questions/ not present)"
 [ -d syllabus ] && cp -r syllabus/ dist/syllabus/ || echo "  (skip: syllabus/ not present)"
 cp manifest.json dist/manifest.json
