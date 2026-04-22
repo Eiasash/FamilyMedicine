@@ -2,12 +2,12 @@
 
 Sibling PWA to **Shlav A Mega** (geriatrics) and **Pnimit Mega** (internal medicine). Shares engine, FSRS, Supabase, AI proxy.
 
-## Current state (v1.2.10, 22/04/26)
-- **884 Qs** across 7 exam sessions (2020=91, 2021-Jun=149, 2022-Jun=147, 2023-Jun=147, 2024-May=100, 2024-Sep=100, 2025-Jun=150)
+## Current state (v1.2.12, 22/04/26)
+- **943 Qs** across 7 exam sessions (2020=150, 2021-Jun=149, 2022-Jun=147, 2023-Jun=147, 2024-May=100, 2024-Sep=100, 2025-Jun=150)
 - **27 topics** (`ti` range 0-26), **12 drugs**, **0 flashcards** (unused so far)
 - **284 tests passing** (18 test files). Pnimit regression guards ported + Mishpacha-specific guards added
 - Goroll 239 ch + Nelson 165 ch + Harrison 69 ch (cross-ref) as in-app readers
-- localStorage `mishpacha_mega`, SW cache `mishpacha-v1.2.10`
+- localStorage `mishpacha_mega`, SW cache `mishpacha-v1.2.12`
 
 ## Version sync (3 locations — CI gate enforces)
 `src/core/constants.js` → `APP_VERSION` · `sw.js` → `CACHE` · `package.json` → `version`. All three must match.
