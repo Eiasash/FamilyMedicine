@@ -416,54 +416,46 @@ h+=`</div>`;
 }
 }
 
-// ===== NELSON 22e — syllabus chapter index + in-app reader shell (Quiz/Summary via AI) =====
+// ===== NELSON 22e — PDF chapter index (mirrors Goroll UX: 1-tap → open PDF) =====
+// Each chapter row is a direct <a href> to the PDF (local if {file} set,
+// Drive + #page=N if {page} set, else Drive root). Small inline 📝 / 🧠
+// buttons keep AI Summary + AI Quiz reachable without blocking the tap-to-PDF
+// primary action. When the user later ships per-chapter PDFs into nelson/ or
+// adds page numbers to nelson_chapters.json, the UI upgrades automatically.
 else if(G.libSec==='nelson'){
 if(!G._nelData){
   fetch('nelson_chapters.json').then(r=>r.json()).then(d=>{G._nelData=d;G.render();}).catch(e=>console.error('Nelson load failed',e));
   h+=`<div class="card" style="padding:40px;text-align:center"><div style="font-size:13px;color:#64748b">⏳ Loading Nelson chapters...</div></div>`;
-}else if(G.nelChOpen!=null){
-// === Nelson chapter reader (shell — full PDF stays on Drive) ===
-const cur=G._nelData.find(x=>x.ch===G.nelChOpen);
-if(cur){
-const idx=G._nelData.findIndex(x=>x.ch===G.nelChOpen);
-const prev=idx>0?G._nelData[idx-1]:null;
-const next=idx<G._nelData.length-1?G._nelData[idx+1]:null;
-h+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-<button data-action="close-nel-chapter" style="background:#f1f5f9;border:none;border-radius:8px;padding:6px 12px;font-size:11px;cursor:pointer">← Back</button>
-<div style="font-size:12px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Ch ${cur.ch}: ${sanitize(cur.title_en)}</div>
-</div>
-<div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
-${prev?`<button data-action="open-nel-chapter" data-ch="${prev.ch}" style="font-size:10px;padding:5px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer">‹ Ch ${prev.ch}</button>`:''}
-<button data-action="quiz-nel-chapter" style="font-size:10px;padding:5px 10px;background:#7c3aed;color:#fff;border:none;border-radius:8px;cursor:pointer">🧠 Quiz</button>
-<button data-action="summarize-nel-chapter" style="font-size:10px;padding:5px 10px;background:#059669;color:#fff;border:none;border-radius:8px;cursor:pointer">📝 Summary</button>
-<a href="https://drive.google.com/file/d/1KK7xcN5JHgo8LVUpppHvxlZrg3Ol4VnU/view" target="_blank" rel="noopener" style="font-size:10px;padding:5px 10px;background:#059669;color:#fff;border:none;border-radius:8px;text-decoration:none">→ PDF (Drive)</a>
-${next?`<button data-action="open-nel-chapter" data-ch="${next.ch}" style="font-size:10px;padding:5px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer">Ch ${next.ch} ›</button>`:''}
-</div>
-<div id="quiz-me-box"></div>
-<div class="card" style="padding:16px">
-<div style="font-size:11px;color:#64748b;line-height:1.7">Nelson 22e full text is hosted off-app (167 MB PDF on Drive). Use the AI buttons above to get a board-focused summary or generate practice MCQs for this chapter, or open the full PDF in Drive for deep reading.</div>
-${cur.notes_he?`<div class="heb" style="margin-top:12px;padding:10px;background:#fef3c7;border-radius:8px;font-size:11px;line-height:1.7;direction:rtl;text-align:right">${sanitize(cur.notes_he)}</div>`:''}
-</div>`;
 }else{
-h+=`<div class="card" style="padding:20px;text-align:center;font-size:11px;color:#dc2626">Chapter ${G.nelChOpen} not found in index.</div>`;
-}
-}else{
+const NELSON_DRIVE='https://drive.google.com/file/d/1KK7xcN5JHgo8LVUpppHvxlZrg3Ol4VnU/view';
+const nelHref=(c)=>c.file?`nelson/${encodeURIComponent(c.file)}`:(c.page?`${NELSON_DRIVE}#page=${c.page}`:NELSON_DRIVE);
 const nq=(G.nelSearch||'').trim().toLowerCase();
 const filtered=nq?G._nelData.filter(c=>c.title_en.toLowerCase().includes(nq)||String(c.ch).includes(nq)):G._nelData;
 h+=`<div class="card" style="padding:14px">
 <div style="font-size:13px;font-weight:700;margin-bottom:4px">👶 Nelson Textbook of Pediatrics 22e</div>
-<div style="font-size:10px;color:#64748b;margin-bottom:10px">${G._nelData.length} chapters from P0062-2025 Appendix א' · tap a chapter to open in-app · full PDF (167 MB) on Google Drive</div>
-<a href="https://drive.google.com/file/d/1KK7xcN5JHgo8LVUpppHvxlZrg3Ol4VnU/view" target="_blank" rel="noopener" style="display:inline-block;font-size:11px;font-weight:600;color:#fff;background:#059669;padding:8px 14px;border-radius:8px;text-decoration:none;margin-bottom:12px">→ Open full Nelson 22e PDF (Drive)</a>
+<div style="font-size:10px;color:#64748b;margin-bottom:10px">${G._nelData.length} chapters from P0062-2025 Appendix א' · tap to open PDF · 📝 AI summary · 🧠 AI quiz</div>
+<a href="${NELSON_DRIVE}" target="_blank" rel="noopener" style="display:inline-block;font-size:11px;font-weight:600;color:#fff;background:#059669;padding:8px 14px;border-radius:8px;text-decoration:none;margin-bottom:12px">→ Open full Nelson 22e PDF (Drive, 167 MB)</a>
 <input type="search" placeholder="🔎 Search chapter title or number (e.g. asthma, 112)" data-action="nel-search" value="${sanitize(G.nelSearch||'')}" style="width:100%;padding:8px 10px;font-size:12px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:10px;box-sizing:border-box" dir="auto">
+<div id="quiz-me-box"></div>
 <div style="font-size:9px;color:#94a3b8;margin-bottom:4px">${filtered.length===G._nelData.length?`All ${G._nelData.length} chapters`:`${filtered.length} of ${G._nelData.length} chapters`}</div>`;
 if(filtered.length===0){
   h+=`<div style="padding:20px;text-align:center;font-size:11px;color:#94a3b8">No chapters match "${sanitize(G.nelSearch||'')}".</div>`;
 }else{
   filtered.forEach(c=>{
-    h+=`<div data-action="open-nel-chapter" data-ch="${c.ch}" style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f1f5f9;cursor:pointer">
+    const href=nelHref(c);
+    const pageInfo=c.page?`p.${c.page}`:(c.file?'local PDF':'Drive');
+    h+=`<div style="display:flex;align-items:center;gap:6px;padding:9px 0;border-bottom:1px solid #f1f5f9">
+<a href="${href}" target="_blank" rel="noopener" data-action="nel-read" data-ch="${c.ch}" style="flex:1;display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;min-width:0">
 <span style="background:#059669;color:#fff;font-size:10px;font-weight:700;padding:4px 8px;border-radius:8px;min-width:42px;text-align:center">Ch ${c.ch}</span>
-<div style="flex:1;min-width:0;font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${sanitize(c.title_en)}</div>
-<span style="font-size:16px;color:#cbd5e1;flex-shrink:0">›</span></div>`;
+<div style="flex:1;min-width:0">
+<div style="font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${sanitize(c.title_en)}</div>
+<div style="font-size:9px;color:#94a3b8;margin-top:2px">${pageInfo}</div>
+</div>
+<span style="font-size:16px;color:#cbd5e1;flex-shrink:0">›</span>
+</a>
+<button data-action="summarize-nel-chapter" data-ch="${c.ch}" title="AI Summary" aria-label="AI Summary Ch ${c.ch}" style="font-size:12px;padding:4px 7px;background:#ecfdf5;border:1px solid #d1fae5;border-radius:6px;cursor:pointer;color:#059669;flex:0 0 auto">📝</button>
+<button data-action="quiz-nel-chapter" data-ch="${c.ch}" title="AI Quiz" aria-label="AI Quiz Ch ${c.ch}" style="font-size:12px;padding:4px 7px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:6px;cursor:pointer;color:#7c3aed;flex:0 0 auto">🧠</button>
+</div>`;
   });
 }
 h+=`</div>`;
@@ -848,30 +840,20 @@ export function initLibraryEvents(container) {
       const p = ah && ah.papers && ah.papers[G.ahOpenIdx];
       if (p) aiSummarizeAfpPaper(p);
     }
-    else if (action === 'open-nel-chapter') {
-      G.nelChOpen = parseInt(el.dataset.ch, 10);
-      trackChapterRead('nel', G.nelChOpen);
-      G.render();
-      // Auto-trigger AI summary on open — Nelson shell has no body text, so the page
-      // looks empty otherwise. Runs once per open; user can re-open chapter to refresh.
-      setTimeout(() => {
-        const cur = G._nelData && G._nelData.find(x => x.ch === G.nelChOpen);
-        if (cur && document.getElementById('quiz-me-box')) {
-          aiSummarizeChapter(G.nelChOpen, cur.title_en, 'nelson');
-        }
-      }, 50);
-    }
-    else if (action === 'close-nel-chapter') {
-      G.nelChOpen = null;
-      G.render();
+    else if (action === 'nel-read') {
+      // Don't preventDefault — let the <a> navigate to the PDF. Just log the read.
+      const ch = parseInt(el.dataset.ch, 10);
+      if (!isNaN(ch)) trackChapterRead('nel', ch);
     }
     else if (action === 'quiz-nel-chapter') {
-      const cur = G._nelData && G._nelData.find(x => x.ch === G.nelChOpen);
-      if (cur) quizMeOnChapter(G.nelChOpen, cur.title_en, 'nelson');
+      const ch = parseInt(el.dataset.ch, 10);
+      const cur = G._nelData && G._nelData.find(x => x.ch === ch);
+      if (cur) quizMeOnChapter(ch, cur.title_en, 'nelson');
     }
     else if (action === 'summarize-nel-chapter') {
-      const cur = G._nelData && G._nelData.find(x => x.ch === G.nelChOpen);
-      if (cur) aiSummarizeChapter(G.nelChOpen, cur.title_en, 'nelson');
+      const ch = parseInt(el.dataset.ch, 10);
+      const cur = G._nelData && G._nelData.find(x => x.ch === ch);
+      if (cur) aiSummarizeChapter(ch, cur.title_en, 'nelson');
     }
   });
   container.addEventListener('input', (e) => {

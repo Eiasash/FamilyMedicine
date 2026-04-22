@@ -55,10 +55,14 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.3.2';
-export const BUILD_HASH='950q-v1.3.2';
+export const APP_VERSION='1.3.3';
+export const BUILD_HASH='950q-v1.3.3';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.3.3': [
+    '👶 Nelson Library tab now loads like Goroll — 1-tap on a chapter opens the PDF directly (Drive, with #page=N deep-link when a page number is present in nelson_chapters.json). Removed the shell-intermediate reader view; AI Summary (📝) and AI Quiz (🧠) are now small inline per-row buttons, non-blocking. The UI progressively upgrades: if a chapter gets a {file} field it serves from local nelson/, if {page} it Drive-deep-links, else Drive root.',
+    '🧹 Dead state removed — G.nelChOpen, open-nel-chapter, close-nel-chapter actions purged along with the auto-AI-summary-on-open workaround (was only needed because the shell had no body text).',
+  ],
   '1.3.2': [
     '🔑 Rotated SUPA_ANON from legacy JWT anon to new-format publishable key (sb_publishable_*) — matches § B Toranot, § D Geriatrics, § E Pnimit on the shared Supabase project. Drift-prevention comment added.',
   ],
