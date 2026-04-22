@@ -8,12 +8,12 @@ const rootDir = resolve(import.meta.dirname, '..');
 
 const EXPECTED_COUNTS = {
   '2020': 150,       // v1.2.11: re-ingested from correct Family Medicine 2020 PDFs + post-appeal key (was 91 dirty from wrong PDF)
-  '2021-Jun': 149,
-  '2022-Jun': 147,   // 146 from remote ingest + 1 manually recovered (Q77 AST:ALT hepatitis)
-  '2023-Jun': 147,   // was 148, dropped Q133 (spirogram image, empty options unrecoverable)
-  '2024-May': 100,   // 99 from remote ingest + 1 manually recovered (Q42 denosumab rebound)
-  '2024-Sep': 100,   // 99 from remote ingest + 1 manually recovered (Q90 IPF PFT)
-  '2025-Jun': 150,
+  '2021-Jun': 150,   // v1.3.0: re-ingested from correct FM PDFs (was 149, but previous PDF was Internal Medicine)
+  '2022-Jun': 150,   // v1.3.0: re-ingested from correct FM PDFs (was 147, but previous PDF was Internal Medicine)
+  '2023-Jun': 150,   // v1.3.0: re-ingested from correct FM PDFs (was 147, but previous PDF was Internal Medicine)
+  '2024-May': 100,   // v1.3.0: re-ingested from correct FM PDFs (was 100 IM content, now 100 FM)
+  '2024-Sep': 100,   // v1.3.0: re-ingested from correct FM PDFs (was 100 IM content, now 100 FM)
+  '2025-Jun': 150,   // v1.3.0: cosmetic refresh (PDF was IM but data was FM; re-extracted for consistency)
 };
 
 const EXPECTED_TOTAL = Object.values(EXPECTED_COUNTS).reduce((a, b) => a + b, 0);
