@@ -1,5 +1,5 @@
 import G from '../core/globals.js';
-import { TOPICS, HARRISON_PDF_MAP, APP_VERSION, SYLLABUS_VERSION } from '../core/constants.js';
+import { TOPICS, HARRISON_PDF_MAP, APP_VERSION, SYLLABUS_VERSION, AFP_SPEC_TO_TOPICS } from '../core/constants.js';
 import { sanitize, heDir, safeJSONParse, toast, isOk} from "../core/utils.js";
 import { callAI } from '../ai/client.js';
 import { getTopicStats, trackChapterRead, getChaptersDueForReading } from '../sr/spaced-repetition.js';
@@ -641,6 +641,22 @@ if(md==='__LOADING__'||md===undefined){
     return `<p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;text-align:start;unicode-bidi:plaintext" dir="auto">${t.replace(/\n/g,' ')}</p>`;
   }).join('\n');
   h+=`<div class="heb" style="unicode-bidi:isolate" dir="auto">${body}</div>`;
+}
+// Practice related past-exam Qs — map specialty → topic indices → count + drill
+const _relatedTopics=(AFP_SPEC_TO_TOPICS[p.specialty]||[]);
+if(_relatedTopics.length&&G.QZ&&G.QZ.length){
+  const _qsByTopic=_relatedTopics.map(ti=>({ti,name:TOPICS[ti]||'',count:G.QZ.filter(q=>q.ti===ti).length})).filter(o=>o.count>0);
+  if(_qsByTopic.length){
+    h+=`<div style="margin-top:18px;padding:12px;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:10px" dir="auto">
+<div style="font-size:11px;font-weight:700;color:#065f46;margin-bottom:8px">🎯 Practice past-exam Qs from this topic</div>`;
+    _qsByTopic.forEach(o=>{
+      h+=`<button data-action="drill-topic" data-ti="${o.ti}" style="display:block;width:100%;margin:4px 0;padding:8px 10px;background:#fff;border:1px solid #a7f3d0;border-radius:8px;font-size:11px;text-align:start;cursor:pointer;unicode-bidi:plaintext" dir="auto">
+<b style="color:#065f46">▶ ${sanitize(o.name)}</b>
+<span style="color:#64748b;font-size:10px;float:right">${o.count} questions</span>
+</button>`;
+    });
+    h+=`</div>`;
+  }
 }
 h+=`<div style="margin-top:16px;padding-top:10px;border-top:1px solid #e2e8f0;font-size:9px;color:#94a3b8">${sanitize(p.filename)}.pdf (source PDF on your local drive)</div>
 </div>`;

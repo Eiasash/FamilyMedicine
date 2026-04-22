@@ -255,7 +255,8 @@ else G.render();
 // ===== EXAM MODE =====
 // Historical topic frequency weights (from 9 real exams, recency-weighted 2× for last 2)
 // target 100q: proportional + floor(1) for evergreen topics
-export function buildMockExamPool(){
+export function buildMockExamPool(size){
+  const SZ=size||150;
   const total=EXAM_FREQ.reduce((a,b)=>a+b,0);
   const examPool=[];
   // Group G.QZ by topic
@@ -264,44 +265,47 @@ export function buildMockExamPool(){
   // Compute target per topic
   EXAM_FREQ.forEach((freq,ti)=>{
     if(!freq||!byTopic[ti]||!byTopic[ti].length)return;
-    const target=Math.max(1,Math.round(freq/total*100));
+    const target=Math.max(1,Math.round(freq/total*SZ));
     // shuffle that topic's questions, take target count
     const src=[...byTopic[ti]];for(let i=src.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[src[i],src[j]]=[src[j],src[i]];}
     for(let k=0;k<Math.min(target,src.length);k++)examPool.push(src[k]);
   });
-  // Trim or pad to ~100
+  // Shuffle and trim to target size
   for(let i=examPool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[examPool[i],examPool[j]]=[examPool[j],examPool[i]];}
-  return examPool.slice(0,100);
+  return examPool.slice(0,SZ);
 }
 export function startExam(){
-  // Classic 150q mode (unchanged)
+  // Classic 150q mode — random across all topics, per-topic tracking enabled
   G.examMode=true;G.filt='all';buildPool();G.pool=G.pool.slice(0,150);
-  G._examStartOk=G.S.qOk;G._examStartNo=G.S.qNo;G.examSec=10800;G.mockExamResults=null;G.save();
-  G.examTimer=setInterval(()=>{G.examSec--;if(G.examSec<=0)endExam();
-  const el=document.getElementById('etimer');if(el)el.textContent=fmtT(G.examSec);},1000);
-  G.render();
-}
-export function startMockExam(){
-  // v2: 100q, realistic distribution, per-topic tracking
-  G.examMode=true;
-  G.pool=buildMockExamPool();
-  G.qi=0;G.sel=null;G.ans=false;G.autopsyDistractor=-1;G.teachBackState=null;
-  // per-topic tracking: {ok,no} per ti
-  G.mockExamResults={byTopic:{},start:Date.now()};
+  G.qi=0;G.sel=null;G.ans=false;G.autopsyDistractor=-1;G.teachBackState=null;G._optShuffle=null;G._confidence=null;
+  G.mockExamResults={byTopic:{},start:Date.now(),mode:'classic-150'};
   EXAM_FREQ.forEach((_,ti)=>{G.mockExamResults.byTopic[ti]={ok:0,no:0};});
   G._examStartOk=G.S.qOk;G._examStartNo=G.S.qNo;G.examSec=10800;G.save();
   G.examTimer=setInterval(()=>{G.examSec--;if(G.examSec<=0)endMockExam();
   const el=document.getElementById('etimer');if(el)el.textContent=fmtT(G.examSec);},1000);
   G.render();
 }
-// Mock-by-year: start a mock using only questions from a specific exam tag (e.g. '2025-Jun')
+export function startMockExam(){
+  // v3: 150q, realistic distribution, per-topic tracking
+  G.examMode=true;
+  G.pool=buildMockExamPool(150);
+  G.qi=0;G.sel=null;G.ans=false;G.autopsyDistractor=-1;G.teachBackState=null;
+  // per-topic tracking: {ok,no} per ti
+  G.mockExamResults={byTopic:{},start:Date.now(),mode:'realistic-150'};
+  EXAM_FREQ.forEach((_,ti)=>{G.mockExamResults.byTopic[ti]={ok:0,no:0};});
+  G._examStartOk=G.S.qOk;G._examStartNo=G.S.qNo;G.examSec=10800;G.save();
+  G.examTimer=setInterval(()=>{G.examSec--;if(G.examSec<=0)endMockExam();
+  const el=document.getElementById('etimer');if(el)el.textContent=fmtT(G.examSec);},1000);
+  G.render();
+}
+// Mock-by-year: start a mock using all questions from a specific exam tag (e.g. '2025-Jun') — up to 150
 export function startMockExamByTag(tag){
   G.examMode=true;
   const ixs=[];G.QZ.forEach((q,i)=>{if(q.t===tag)ixs.push(i);});
   for(let i=ixs.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ixs[i],ixs[j]]=[ixs[j],ixs[i]];}
-  G.pool=ixs.slice(0,100);
+  G.pool=ixs.slice(0,150);
   G.qi=0;G.sel=null;G.ans=false;G.autopsyDistractor=-1;G.teachBackState=null;G._optShuffle=null;G._confidence=null;
-  G.mockExamResults={byTopic:{},start:Date.now(),tag};
+  G.mockExamResults={byTopic:{},start:Date.now(),tag,mode:'by-tag'};
   EXAM_FREQ.forEach((_,ti)=>{G.mockExamResults.byTopic[ti]={ok:0,no:0};});
   G._examStartOk=G.S.qOk;G._examStartNo=G.S.qNo;G.examSec=10800;G.save();
   G.examTimer=setInterval(()=>{G.examSec--;if(G.examSec<=0)endMockExam();
@@ -316,8 +320,8 @@ export function showMockExamPicker(){
   const html=`<div id="mockPicker" style="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;padding:16px;overflow-y:auto" data-action="close-mock-picker">
   <div id="mockPickerCard" data-action="mock-picker-noop" style="background:#fff;border-radius:16px;max-width:420px;margin:40px auto;padding:18px;direction:rtl">
     <div style="font-weight:700;font-size:15px;margin-bottom:12px">🎯 מבחן סימולציה</div>
-    <button data-action="start-mock-mixed" class="btn btn-p" style="display:block;width:100%;margin-bottom:10px;padding:10px;font-size:12px;font-weight:700">🎲 100 שאלות — חלוקה מציאותית של כל הנושאים</button>
-    <div style="font-size:10px;color:#94a3b8;margin:10px 0 6px;font-weight:700">או תרגל מבחן שנתי ספציפי:</div>
+    <button data-action="start-mock-mixed" class="btn btn-p" style="display:block;width:100%;margin-bottom:10px;padding:10px;font-size:12px;font-weight:700">🎲 150 שאלות — חלוקה מציאותית (שלב א׳ פורמט)</button>
+    <div style="font-size:10px;color:#94a3b8;margin:10px 0 6px;font-weight:700">או תרגל מבחן שנתי ספציפי (עד 150 שאלות):</div>
     ${rows}
     <button data-action="close-mock-picker" class="btn" style="display:block;width:100%;margin-top:10px;padding:8px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;font-size:11px">ביטול</button>
   </div>

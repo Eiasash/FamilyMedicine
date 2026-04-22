@@ -1,5 +1,5 @@
 import G from '../core/globals.js';
-import { SUPA_URL, SUPA_ANON, TOPICS, EXAM_YEARS } from '../core/constants.js';
+import { SUPA_URL, SUPA_ANON, TOPICS, EXAM_YEARS, TOPIC_TO_AFP_SPECS } from '../core/constants.js';
 import { sanitize, heDir, fmtT, safeJSONParse, getOptShuffle, remapExplanationLetters, isMetaOption, toast, isOk} from "../core/utils.js";
 import { getDueQuestions, getWeakTopics, isExamTrap, srScore, getTopicStats, buildRescuePool } from '../sr/spaced-repetition.js';
 import { isChronicFail } from '../sr/fsrs-bridge.js';
@@ -171,6 +171,81 @@ export function stopTimedMode(){
 
 
 
+// ===== DAILY CONTRACT =====
+// Shows a compact "today's plan" card at the top of the Quiz tab:
+//   1. Due reviews (FSRS)
+//   2. Weak drill (rescue pool from 2 worst topics)
+//   3. Required reading (1 AFP/הר"י article from the weakest topic)
+// Regenerates each calendar day. Users can dismiss; resets tomorrow.
+export function renderDailyContract(dueN){
+  const today=new Date().toISOString().slice(0,10);
+  if(!G.S.dailyContract||G.S.dailyContract.date!==today){
+    G.S.dailyContract={date:today,dueDone:false,drillDone:false,readDone:false,dismissed:false,readIdx:null,readTitle:null,drillTopic:null};
+    G.save();
+  }
+  const dc=G.S.dailyContract;
+  if(dc.dismissed)return '';
+  // Resolve weakest topic (for drill + reading pick)
+  const weak=getWeakTopics(2);
+  const weakestTi=weak.length?weak[0].ti:null;
+  const weakestName=weakestTi!=null?(TOPICS[weakestTi]||''):'';
+  // Pick a stable daily required-reading article from AFP/הר"י index (if loaded)
+  if(!dc.readIdx&&G._afpHari&&G._afpHari.papers&&weakestTi!=null){
+    const specs=TOPIC_TO_AFP_SPECS[weakestTi]||[];
+    if(specs.length){
+      const pool=G._afpHari.papers.map((p,i)=>({p,i})).filter(x=>specs.includes(x.p.specialty));
+      if(pool.length){
+        // Deterministic pick: hash date + topic so same article all day
+        const seed=(today+'|'+weakestTi).split('').reduce((h,c)=>((h<<5)-h+c.charCodeAt(0))|0,0);
+        const pick=pool[Math.abs(seed)%pool.length];
+        dc.readIdx=pick.i;
+        dc.readTitle=pick.p.title||pick.p.file||'מאמר';
+        dc.drillTopic=weakestName;
+        G.save();
+      }
+    }
+  }else if(G._afpHari===undefined&&!G._afpHariLoading){
+    // Kick off AFP/הר"י index load so we can fill reading on next render
+    G._afpHariLoading=true;
+    fetch('data/afp_hari_index.json').then(r=>r.json()).then(d=>{G._afpHari=d;G._afpHariLoading=false;G.render();}).catch(()=>{G._afpHariLoading=false;});
+  }
+  const doneCount=(dc.dueDone?1:0)+(dc.drillDone?1:0)+(dc.readDone?1:0);
+  const dueAvail=dueN>0;
+  const drillAvail=weak.length>0&&weak[0].pct!==null;
+  const readAvail=!!dc.readIdx;
+  // Row builder
+  const row=(icon,label,sub,actionBtn,done)=>`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px dashed #e2e8f0" dir="auto">
+    <div style="font-size:16px;width:20px;text-align:center">${done?'✅':icon}</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:11px;font-weight:700;color:${done?'#64748b':'#0f172a'};text-decoration:${done?'line-through':'none'}" dir="auto"><bdi>${label}</bdi></div>
+      ${sub?`<div style="font-size:10px;color:#94a3b8;margin-top:1px" dir="auto"><bdi>${sub}</bdi></div>`:''}
+    </div>
+    ${done?'':actionBtn}
+  </div>`;
+  const btn=(action,txt,color)=>`<button data-action="${action}" class="btn" style="font-size:10px;padding:4px 10px;background:${color};color:#fff;border:none;border-radius:6px;font-weight:700;white-space:nowrap;cursor:pointer">${txt}</button>`;
+  let h=`<div style="margin-bottom:12px;padding:12px 14px;background:linear-gradient(135deg,#eff6ff 0%,#f5f3ff 100%);border:1px solid #c7d2fe;border-radius:12px" dir="auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="font-weight:700;font-size:12px;color:#4338ca">📅 Daily Contract <span style="font-weight:400;color:#6366f1;font-size:10px">· ${today}</span></div>
+      <div style="display:flex;gap:6px;align-items:center">
+        <div style="font-size:10px;color:#6366f1;font-weight:700">${doneCount}/3</div>
+        <button data-action="dismiss-daily" class="btn" style="font-size:9px;padding:3px 7px;background:#fff;color:#6366f1;border:1px solid #c7d2fe;border-radius:5px" aria-label="Dismiss daily contract for today">×</button>
+      </div>
+    </div>`;
+  // 1. Due reviews
+  h+=row('🔄',`Due reviews (${dueN})`,dueAvail?'Spaced repetition — most efficient study time':'🎉 Nothing due right now',
+    dueAvail?btn('daily-due','Start','#ef4444'):btn('daily-mark-due','Skip','#94a3b8'),dc.dueDone);
+  // 2. Weak drill
+  h+=row('🎯',drillAvail?`Weak drill · ${weakestName}`:'Weak drill',
+    drillAvail?`${weak.length} weakest topics · ~21 Qs`:'Answer more Qs first',
+    drillAvail?btn('daily-drill','Drill','#7c3aed'):btn('daily-mark-drill','Skip','#94a3b8'),dc.drillDone);
+  // 3. Required reading
+  h+=row('📄',readAvail?`Read: ${dc.readTitle}`:'Required reading',
+    readAvail?`From weakest topic · ${weakestName}`:'Loading…',
+    readAvail?btn('daily-read','Open','#059669'):'',dc.readDone);
+  h+=`</div>`;
+  return h;
+}
+
 export function renderQuiz(){
 // ===== SUDDEN DEATH RENDERING =====
 if(G.sdMode){
@@ -225,7 +300,7 @@ let h=G.pomoActive?`<div class="pomo-bar"><div class="pomo-fill" id="pomo-fill" 
 h+=G.examMode?(()=>{
   const answered=G.S.qOk+G.S.qNo;
   const isMock=!!G.mockExamResults;
-  const target=isMock?108:72; // 10800/100 vs 10800/150
+  const target=72; // 10800s / 150q
   const elapsed=10800-G.examSec;
   const avgSec=answered>0?Math.floor(elapsed/answered):0;
   const paceOk=avgSec<=target*1.1;
@@ -236,10 +311,11 @@ h+=G.examMode?(()=>{
 <span style="font-size:11px">${G.qi+1}/${isMock?G.pool.length:150}</span></div>`;
 })():'';
 if(!G.examMode){
+h+=renderDailyContract(dueN);
 h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
 <div class="sec-t">Quiz</div>
 <div style="display:flex;gap:4px;flex-wrap:wrap">
-<button data-action="start-exam" class="btn btn-d" style="font-size:10px;padding:5px 12px" aria-label="Start exam with 150 questions">📋 Exam (150q)</button><button data-action="start-mock" class="btn btn-d" style="font-size:10px;padding:5px 12px;background:#7c3aed;color:#fff" aria-label="Start mock exam with 100 questions">🎯 Mock (100q)</button>
+<button data-action="start-mock" class="btn btn-d" style="font-size:10px;padding:5px 12px;background:#7c3aed;color:#fff" aria-label="Start mock exam">🎯 Mock Exam (150q · 3h)</button>
 <span class="tt-wrap"><button data-action="start-sd" class="btn" style="font-size:10px;padding:5px 12px;background:#fef2f2;color:#dc2626" aria-label="Start sudden death mode">💀 Sudden Death</button><button data-action="start-oncall" class="btn" style="font-size:10px;padding:5px 12px;background:#0f172a;color:#7dd3fc" aria-label="Start on-call mode">🌙 On-call</button><button class="tt-icon" tabindex="0" aria-label="Info about sudden death mode">ⓘ</button><div class="tt-box">One wrong answer ends the session. Builds high-stakes exam pressure.</div></span>
 ${!G.pomoActive?'<span class="tt-wrap"><button data-action="start-pomo" class="btn" style="font-size:10px;padding:5px 12px;background:#ecfdf5;color:#059669" aria-label="Start pomodoro timer">⏱️ Pomodoro</button><button class="tt-icon" tabindex="0" aria-label="Info about pomodoro timer">ⓘ</button><div class="tt-box">25min focus / 5min break study timer. Helps maintain concentration.</div></span>':''}
 </div>
@@ -413,6 +489,28 @@ h+=`<div style="font-weight:700;margin-bottom:4px;font-size:10px">📝 הסבר<
 h+=`<div style="unicode-bidi:plaintext" dir="${heDir(q.e)}">${remapExplanationLetters(q.e,_shuf).replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<b>$1</b>')}</div>`;
 h+=`</div>`;
 }
+// Related AFP/הר"י articles — shown after answer is revealed, based on topic
+if(G.ans&&!G.examMode&&q.ti!=null&&G._afpHari&&G._afpHari.papers){
+  const _specs=TOPIC_TO_AFP_SPECS[q.ti]||[];
+  if(_specs.length){
+    const _related=G._afpHari.papers.filter(p=>_specs.includes(p.specialty)).slice(0,3);
+    if(_related.length){
+      h+=`<div style="margin-top:8px;padding:10px 12px;background:#fef7ff;border:1px solid #e9d5ff;border-radius:10px;font-size:11px" dir="auto">
+<div style="font-weight:700;margin-bottom:6px;font-size:10px;color:#6b21a8">📄 קריאה נוספת · Related reading (${TOPICS[q.ti]})</div>`;
+      _related.forEach((p,i)=>{
+        const _ahIdx=G._afpHari.papers.indexOf(p);
+        h+=`<div data-action="open-related-paper" data-idx="${_ahIdx}" style="padding:6px 0;border-bottom:${i<_related.length-1?'1px solid #f3e8ff':'none'};cursor:pointer;unicode-bidi:plaintext" dir="auto">
+<div style="font-size:10.5px;font-weight:600;color:#6b21a8"><bdi>${sanitize(p.title||'')}</bdi></div>
+<div style="font-size:9px;color:#a78bfa;margin-top:2px"><bdi>${sanitize(p.citation||p.kind||'')}</bdi></div>
+</div>`;
+      });
+      h+=`</div>`;
+    }
+  }
+  // Lazy-load AFP index on demand if not already loaded
+}else if(G.ans&&!G.examMode&&q.ti!=null&&!G._afpHari){
+  if(!G._afpHariLoading){G._afpHariLoading=true;fetch('data/afp_hari_index.json').then(r=>r.json()).then(d=>{G._afpHari=d;G._afpHariLoading=false;G.render();}).catch(()=>{G._afpHariLoading=false;});}
+}
 // AI Explain button
 if(G.ans&&!G.examMode){
   var _aiIdx=G.pool[G.qi];
@@ -506,6 +604,12 @@ export function initQuizEvents(container) {
       const d = el.dataset.d;
       G._diffRating = d; _storeDiff(G.pool[G.qi], d);
     }
+    else if (action === 'open-related-paper') {
+      const idx = parseInt(el.dataset.idx, 10);
+      if (!isNaN(idx)) {
+        G.tab = 'lib'; G.libSec = 'afphari'; G.ahOpenIdx = idx; G.render();
+      }
+    }
     else if (action === 'read-chapter') {
       G.tab = 'lib'; G.libSec = 'harrison';
       const q = G.QZ[G.pool[G.qi]];
@@ -545,6 +649,31 @@ export function initQuizEvents(container) {
     else if (action === 'start-pomo') { startPomodoro(); }
     else if (action === 'start-mini-exam') {
       startTopicMiniExam(parseInt(el.dataset.ti, 10));
+    }
+
+    // === Daily Contract ===
+    else if (action === 'dismiss-daily') {
+      if(!G.S.dailyContract)G.S.dailyContract={};
+      G.S.dailyContract.dismissed=true; G.save(); G.render();
+    }
+    else if (action === 'daily-due') {
+      if(G.S.dailyContract){G.S.dailyContract.dueDone=true;G.save();}
+      setFilt('due');
+    }
+    else if (action === 'daily-mark-due') {
+      if(G.S.dailyContract){G.S.dailyContract.dueDone=true;G.save();G.render();}
+    }
+    else if (action === 'daily-drill') {
+      if(G.S.dailyContract){G.S.dailyContract.drillDone=true;G.save();}
+      buildRescuePool();
+    }
+    else if (action === 'daily-mark-drill') {
+      if(G.S.dailyContract){G.S.dailyContract.drillDone=true;G.save();G.render();}
+    }
+    else if (action === 'daily-read') {
+      if(G.S.dailyContract){G.S.dailyContract.readDone=true;G.save();}
+      const idx=G.S.dailyContract&&G.S.dailyContract.readIdx;
+      if(idx!=null){ G.tab='lib'; G.libSec='afphari'; G.ahOpenIdx=idx; G.render(); }
     }
 
     // === Filters ===

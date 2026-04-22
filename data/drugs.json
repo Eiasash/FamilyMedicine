@@ -1,98 +1,57 @@
 [
-  {
-    "name": "Amoxicillin",
-    "heb": "אמוקסיצילין",
-    "acb": 0,
-    "beers": 0,
-    "cat": "Antibiotic",
-    "risk": "PCN allergy; diarrhea"
-  },
-  {
-    "name": "Azithromycin",
-    "heb": "אזיתרומיצין",
-    "acb": 0,
-    "beers": 0,
-    "cat": "Antibiotic",
-    "risk": "QT prolongation; GI upset"
-  },
-  {
-    "name": "Metformin",
-    "heb": "מטפורמין",
-    "acb": 0,
-    "beers": 0,
-    "cat": "Antidiabetic",
-    "risk": "Lactic acidosis in renal failure; GI side effects"
-  },
-  {
-    "name": "Atorvastatin",
-    "heb": "אטורבסטטין",
-    "acb": 0,
-    "beers": 0,
-    "cat": "Statin",
-    "risk": "Myalgia; rare rhabdomyolysis; hepatic"
-  },
-  {
-    "name": "Amlodipine",
-    "heb": "אמלודיפין",
-    "acb": 0,
-    "beers": 0,
-    "cat": "CCB",
-    "risk": "Peripheral edema; flushing"
-  },
-  {
-    "name": "Losartan",
-    "heb": "לוסרטן",
-    "acb": 0,
-    "beers": 0,
-    "cat": "ARB",
-    "risk": "Hyperkalemia; AKI in volume depletion; pregnancy category X"
-  },
-  {
-    "name": "Fluoxetine",
-    "heb": "פלואוקסטין",
-    "acb": 1,
-    "beers": 0,
-    "cat": "SSRI",
-    "risk": "Long half-life; SIADH; sexual SE"
-  },
-  {
-    "name": "Salbutamol",
-    "heb": "סלבוטמול",
-    "acb": 0,
-    "beers": 0,
-    "cat": "SABA",
-    "risk": "Tachycardia; tremor; hypokalemia"
-  },
-  {
-    "name": "Budesonide-Formoterol",
-    "heb": "בודזונייד-פורמוטרול",
-    "acb": 0,
-    "beers": 0,
-    "cat": "ICS/LABA",
-    "risk": "Oral candidiasis; dysphonia"
-  },
-  {
-    "name": "Paracetamol",
-    "heb": "פרצטמול",
-    "acb": 0,
-    "beers": 0,
-    "cat": "Analgesic",
-    "risk": "Hepatotoxic >4g/d; reduce in liver disease"
-  },
-  {
-    "name": "Ibuprofen",
-    "heb": "איבופרופן",
-    "acb": 0,
-    "beers": 1,
-    "cat": "NSAID",
-    "risk": "GI bleed; AKI; CV risk; avoid in CKD & HF"
-  },
-  {
-    "name": "Omeprazole",
-    "heb": "אומפרזול",
-    "acb": 0,
-    "beers": 1,
-    "cat": "PPI",
-    "risk": "Long-term: Mg/B12 deficiency; osteoporosis; C.diff"
-  }
+  { "name": "Amoxicillin", "heb": "אמוקסיצילין", "cat": "Antibiotic — β-lactam", "risk": "PCN allergy; rash in EBV; diarrhea. 1st-line: otitis media, strep pharyngitis, CAP, sinusitis.", "preg": "B — safe", "renal": "CrCl <30: extend interval", "peds": "40–90 mg/kg/d div q8–12h" },
+  { "name": "Amoxicillin-Clavulanate", "heb": "אוגמנטין", "cat": "Antibiotic — β-lactam + BL inhibitor", "risk": "Diarrhea (clav); cholestatic hepatitis. 1st-line: human/animal bite, sinusitis with risk factors, aspiration pneumonia.", "preg": "B — safe", "renal": "CrCl <30: avoid 875 mg strength", "peds": "40–90 mg/kg/d amox component" },
+  { "name": "Azithromycin", "heb": "אזיתרומיצין", "cat": "Antibiotic — macrolide", "risk": "QT prolongation; hepatotoxicity; GI. Use for atypical CAP, pertussis, chlamydia 1g single dose.", "preg": "B — safe", "renal": "No adjustment", "peds": "10 mg/kg day 1, then 5 mg/kg ×4" },
+  { "name": "Doxycycline", "heb": "דוקסיציקלין", "cat": "Antibiotic — tetracycline", "risk": "Photosensitivity; esophagitis (take upright); teeth staining <8y. 1st-line: CAP, Lyme, acne, chlamydia alt.", "preg": "D — AVOID", "renal": "No adjustment", "peds": "AVOID <8y (except life-threatening)" },
+  { "name": "Ciprofloxacin", "heb": "ציפרופלוקסצין", "cat": "Antibiotic — fluoroquinolone", "risk": "Tendon rupture (esp. Achilles, >60y, steroid co-use); QT; C. diff; aortic dissection. Reserve for complicated UTI/pyelonephritis.", "preg": "C — avoid if alternative", "renal": "CrCl <50: adjust", "peds": "Avoid unless no alternative" },
+  { "name": "Nitrofurantoin", "heb": "מקרודנטין", "cat": "Antibiotic — urinary", "risk": "Pulmonary fibrosis (chronic use); peripheral neuropathy; hemolysis in G6PD. 1st-line: uncomplicated cystitis.", "preg": "B (avoid at term 38–42w)", "renal": "CrCl <30: AVOID (ineffective)", "peds": ">1 month OK" },
+  { "name": "TMP-SMX", "heb": "רספרים", "cat": "Antibiotic — sulfa", "risk": "Hyperkalemia; SJS; ↑INR with warfarin; bone marrow. Alt 1st-line cystitis; PJP prophylaxis.", "preg": "C/D (avoid 1st trim, late 3rd)", "renal": "CrCl <30: adjust/avoid", "peds": ">2 months OK" },
+  { "name": "Cephalexin", "heb": "קפלקס", "cat": "Antibiotic — 1st-gen cephalosporin", "risk": "Cross-reactivity with PCN <2%. 1st-line: cellulitis, strep alternative, UTI in pregnancy.", "preg": "B — safe", "renal": "CrCl <30: adjust", "peds": "25–50 mg/kg/d" },
+  { "name": "Clindamycin", "heb": "קלינדמיצין", "cat": "Antibiotic — lincosamide", "risk": "C. diff colitis (highest risk). Used for MRSA skin, dental, severe PCN allergy.", "preg": "B — safe", "renal": "No adjustment", "peds": "10–30 mg/kg/d" },
+  { "name": "Metronidazole", "heb": "פלג'יל", "cat": "Antibiotic — nitroimidazole", "risk": "Disulfiram reaction with alcohol; metallic taste; peripheral neuropathy. Use for BV, trichomoniasis, C. diff, anaerobes.", "preg": "B (avoid 1st trim)", "renal": "Severe: reduce", "peds": "15–30 mg/kg/d" },
+  { "name": "Penicillin V", "heb": "פניצילין V", "cat": "Antibiotic — β-lactam", "risk": "PCN allergy. 1st-line: strep pharyngitis, mild skin.", "preg": "B — safe", "renal": "Mild adjustment severe CKD", "peds": "25–50 mg/kg/d div q6–8h" },
+
+  { "name": "Metformin", "heb": "מטפורמין", "cat": "Antidiabetic — biguanide", "risk": "Lactic acidosis risk in renal failure/sepsis; GI intolerance; B12 deficiency (long-term). 1st-line T2DM.", "preg": "B (PCOS, GDM OK)", "renal": "CrCl 30–45: max 1g/d; CrCl <30: STOP", "peds": ">10y for T2DM" },
+  { "name": "Empagliflozin", "heb": "ג'ארדיאנס", "cat": "Antidiabetic — SGLT2i", "risk": "Genital mycotic infection; euglycemic DKA (hold before surgery); Fournier gangrene. CV & renal protection in T2DM + CKD/HF.", "preg": "Not recommended", "renal": "eGFR <20: avoid initiation; continue down to 20", "peds": "Not indicated" },
+  { "name": "Dulaglutide", "heb": "טרולסיטי", "cat": "Antidiabetic — GLP-1 RA", "risk": "Nausea/vomiting; pancreatitis; medullary thyroid Ca (contraindicated MEN2/MTC fh); weight loss. Weekly SC.", "preg": "Not recommended", "renal": "No adjustment", "peds": "10y+ T2DM (liraglutide)" },
+  { "name": "Insulin Glargine", "heb": "לנטוס", "cat": "Antidiabetic — basal insulin", "risk": "Hypoglycemia; weight gain. Start 10U or 0.1–0.2 U/kg QHS; titrate FBG 80–130.", "preg": "B — OK (NPH preferred historically; glargine used)", "renal": "Reduce needs at low GFR", "peds": "T1DM any age" },
+  { "name": "Glibenclamide", "heb": "דאוניל", "cat": "Antidiabetic — sulfonylurea", "risk": "Hypoglycemia (prolonged, esp. elderly/CKD); weight gain. Avoid elderly — prefer gliclazide.", "preg": "C", "renal": "CrCl <60: avoid", "peds": "Not indicated" },
+
+  { "name": "Atorvastatin", "heb": "ליפיטור / אטורבה", "cat": "Lipid — statin", "risk": "Myalgia; rhabdomyolysis (rare); transaminitis; new DM. No dose adjustment in mild renal.", "preg": "X — STOP before conception", "renal": "No adjustment", "peds": "≥10y familial hypercholesterolemia" },
+  { "name": "Rosuvastatin", "heb": "קרסטור", "cat": "Lipid — statin", "risk": "Most potent statin; myalgia; transaminitis. Lower Asian dosing.", "preg": "X — STOP", "renal": "CrCl <30: start 5 mg, max 10 mg", "peds": "≥8y FH" },
+  { "name": "Ezetimibe", "heb": "אזטרול", "cat": "Lipid — cholesterol absorption inhibitor", "risk": "Add-on to statin; myalgia (mild). LDL ↓18–25%.", "preg": "C", "renal": "No adjustment", "peds": "≥10y" },
+
+  { "name": "Amlodipine", "heb": "נורבסק / אמלו", "cat": "Antihypertensive — CCB (dihydropyridine)", "risk": "Peripheral edema (dose-dep, up to 25%); flushing; gingival hyperplasia. 1st-line HTN, esp. Black/elderly, isolated systolic.", "preg": "C (nifedipine preferred)", "renal": "No adjustment", "peds": "≥6y HTN" },
+  { "name": "Losartan", "heb": "לוסרטן / אוקסאר", "cat": "Antihypertensive — ARB", "risk": "Hyperkalemia; AKI if volume-depleted/bilateral RAS; angioedema (rare vs ACEi). 1st-line HTN, HF, CKD, DM+proteinuria.", "preg": "D — CONTRAINDICATED", "renal": "Monitor K + Cr after start", "peds": "≥6y HTN" },
+  { "name": "Ramipril", "heb": "טריטייס", "cat": "Antihypertensive — ACEi", "risk": "Cough (~10–15%); angioedema (higher in Black, smokers); hyperkalemia; AKI. 1st-line HTN, HF, post-MI, CKD proteinuric.", "preg": "D — CONTRAINDICATED", "renal": "CrCl <40: reduce", "peds": "Rare" },
+  { "name": "Hydrochlorothiazide", "heb": "HCT", "cat": "Antihypertensive — thiazide diuretic", "risk": "Hyponatremia (esp. elderly women); hypokalemia; hyperuricemia/gout; hypercalcemia; ↑glucose; photosensitivity/SCC risk. 1st-line HTN.", "preg": "B", "renal": "CrCl <30: ineffective — use loop", "peds": "HTN >6mo" },
+  { "name": "Bisoprolol", "heb": "קונקור", "cat": "β-blocker (β1-selective)", "risk": "Bradycardia; AV block; fatigue; masks hypoglycemia; bronchospasm (less than non-selective). HF mortality benefit; AFib rate control.", "preg": "C", "renal": "CrCl <20: reduce", "peds": "Limited" },
+  { "name": "Spironolactone", "heb": "אלדקטון", "cat": "Diuretic — K-sparing / MRA", "risk": "Hyperkalemia (esp. + ACEi/ARB); gynecomastia; menstrual irregularity. HF w/ reduced EF; resistant HTN; PCOS acne/hirsutism.", "preg": "C (avoid; feminization)", "renal": "CrCl <30: avoid", "peds": "Off-label" },
+
+  { "name": "Warfarin", "heb": "קומדין", "cat": "Anticoagulant — VKA", "risk": "Bleeding; skin necrosis; teratogenic. HUGE drug/food interactions (vit K, abx, amiodarone). Target INR 2–3 (AFib/VTE); 2.5–3.5 (mech valve).", "preg": "X (D in mech valves carefully)", "renal": "No dose adj but monitor", "peds": "Rare, thrombophilia" },
+  { "name": "Apixaban", "heb": "אליקויס", "cat": "Anticoagulant — DOAC (factor Xa)", "risk": "Bleeding; no routine monitoring. Preferred DOAC in CKD. Dose reduce 2.5 mg BID if any 2: age ≥80, wt ≤60 kg, Cr ≥1.5.", "preg": "Not recommended", "renal": "Usable down to CrCl 15–25 with caution", "peds": "Not approved" },
+  { "name": "Rivaroxaban", "heb": "קסרלטו", "cat": "Anticoagulant — DOAC (factor Xa)", "risk": "Bleeding; take with food (15 mg, 20 mg). Avoid CrCl <30.", "preg": "Not recommended", "renal": "CrCl 15–50: 15 mg QD; <15: avoid", "peds": "Limited" },
+  { "name": "Aspirin (low-dose)", "heb": "אספירין 75/100 מ\"ג", "cat": "Antiplatelet", "risk": "GI bleed; hemorrhagic stroke. Secondary prevention: strong benefit. Primary prevention: USPSTF 2022 → individualize 40–59, AVOID ≥60 de novo.", "preg": "Low-dose OK for preeclampsia prevention 12–36 wk in high-risk", "renal": "Caution severe CKD", "peds": "Kawasaki only; avoid (Reye)" },
+  { "name": "Clopidogrel", "heb": "פלביקס", "cat": "Antiplatelet — P2Y12", "risk": "Bleeding; CYP2C19 variability (↓effect). Post-stent, recent ACS, stroke.", "preg": "B — limited data", "renal": "No adjustment", "peds": "Rare" },
+
+  { "name": "Fluoxetine", "heb": "פרוזק", "cat": "SSRI", "risk": "Long half-life (safe if missed dose, hard washout for switching); activating — AM dosing; SIADH; sexual SE; first-trimester cardiac malformation small risk.", "preg": "C — often continued if severe depression", "renal": "Mild adjustment severe CKD", "peds": "≥8y depression/OCD" },
+  { "name": "Sertraline", "heb": "לוסטרל / ציפרלקס-alt", "cat": "SSRI", "risk": "GI SE; sexual SE; SIADH. Preferred SSRI in pregnancy/lactation. 1st-line for MDD, GAD, PTSD, panic.", "preg": "C — preferred", "renal": "No adjustment", "peds": "≥6y OCD" },
+  { "name": "Escitalopram", "heb": "ציפרלקס", "cat": "SSRI", "risk": "QT prolongation (dose-dep, max 10 mg >65y); GI; sexual SE. 1st-line MDD, GAD.", "preg": "C", "renal": "CrCl <20: caution", "peds": "≥12y MDD" },
+  { "name": "Mirtazapine", "heb": "מירטזפין", "cat": "Atypical antidepressant", "risk": "Sedation; weight gain; ↓anxiety; rare agranulocytosis. Good for depression + insomnia + weight loss in elderly.", "preg": "C", "renal": "Reduce CrCl <40", "peds": "Limited" },
+  { "name": "Venlafaxine", "heb": "אפקסור", "cat": "SNRI", "risk": "Dose-dep HTN; discontinuation syndrome (worst). MDD, GAD, neuropathic pain alt.", "preg": "C", "renal": "CrCl <30: reduce 50%", "peds": "Limited" },
+
+  { "name": "Salbutamol", "heb": "ונטולין", "cat": "SABA inhaler", "risk": "Tachycardia; tremor; hypokalemia (high dose). Rescue + exercise premedication.", "preg": "C — OK", "renal": "No adjustment", "peds": "Any age" },
+  { "name": "Budesonide-Formoterol", "heb": "סימביקורט", "cat": "ICS/LABA", "risk": "Oral candidiasis (rinse!); dysphonia. GINA 2023: MART/SMART for asthma step 1–5 (use as both controller AND rescue).", "preg": "B/C — controllers safe", "renal": "No adjustment", "peds": "≥6y" },
+  { "name": "Tiotropium", "heb": "ספירבה", "cat": "LAMA inhaler", "risk": "Dry mouth; urinary retention (BPH caution); narrow-angle glaucoma. COPD; add-on severe asthma.", "preg": "C", "renal": "No adjustment", "peds": "≥6y severe asthma" },
+  { "name": "Montelukast", "heb": "סינגולייר", "cat": "Leukotriene receptor antagonist", "risk": "2020 FDA boxed warning — neuropsychiatric (agitation, sleep, suicidality, esp. adolescents). Allergic rhinitis, exercise asthma.", "preg": "B", "renal": "No adjustment", "peds": "≥6 months" },
+
+  { "name": "Paracetamol", "heb": "אקמול / פרצטמול", "cat": "Analgesic / antipyretic", "risk": "Hepatotoxic >4 g/d (>3 g if liver disease, alcohol, malnutrition). 1st-line pain in CKD, HF, pregnancy.", "preg": "B — 1st-line", "renal": "Safe", "peds": "15 mg/kg q4–6h, max 75 mg/kg/d" },
+  { "name": "Ibuprofen", "heb": "איבופרופן / נורופן", "cat": "NSAID", "risk": "GI bleed (add PPI if long-term + risk); AKI; CV risk (MI, stroke); HF exacerbation; ↓ACE/diuretic effect. AVOID: CKD, HF, 3rd trimester pregnancy, age >75 chronic.", "preg": "B (1st/2nd); D (3rd trim — ductus closure)", "renal": "Avoid CrCl <30", "peds": "≥6 months; 10 mg/kg" },
+  { "name": "Naproxen", "heb": "נקסין", "cat": "NSAID", "risk": "Same class risks; slightly less CV risk than other NSAIDs per meta-analyses. Gout, dysmenorrhea, MSK.", "preg": "B (avoid 3rd trim)", "renal": "Avoid CrCl <30", "peds": "≥12y" },
+  { "name": "Omeprazole", "heb": "אומפרזול", "cat": "PPI", "risk": "Long-term: B12/Mg/Ca deficiency; ↑C. diff; interstitial nephritis; hip fracture (osteoporosis); ↓clopidogrel effect (prefer pantoprazole).", "preg": "C — consider alternative", "renal": "No adjustment", "peds": "≥1y GERD" },
+
+  { "name": "Levothyroxine", "heb": "אלטרוקסין / אוטרוקס", "cat": "Thyroid hormone", "risk": "Take fasting 30–60 min before food; separate from Ca, Fe, PPI, soy. Start low in elderly/CAD. Overreplacement → AF, osteoporosis.", "preg": "A — dose ↑~30% in 1st trim; target TSH <2.5", "renal": "No adjustment", "peds": "Any age, dose by weight" },
+  { "name": "Colchicine", "heb": "קולצ'יצין", "cat": "Anti-inflammatory — acute gout / FMF", "risk": "GI; myopathy; bone marrow. Reduce with CKD, CYP3A4/P-gp inhibitors (macrolides, statins, diltiazem). Acute gout: 1.2 mg then 0.6 mg 1h later.", "preg": "C (FMF — continue)", "renal": "CrCl <30: reduce dose", "peds": "FMF any age" },
+  { "name": "Allopurinol", "heb": "אלוריל / זילוריק", "cat": "Urate-lowering — xanthine oxidase inhibitor", "risk": "HLA-B*58:01 → SJS/DRESS (screen Han Chinese, Thai, Korean). Start low (100 mg), titrate to urate <6 mg/dL. Renal dose in CKD.", "preg": "C", "renal": "Start 50–100 mg; titrate slowly", "peds": "Rare" },
+  { "name": "Dipyrone (Metamizole)", "heb": "אופטלגין", "cat": "Analgesic — pyrazolone (Israel/EU)", "risk": "Rare agranulocytosis (why banned US/UK); hypotension IV. Widely used in Israel for pain, fever, colic.", "preg": "Avoid 1st + 3rd trim", "renal": "No adjustment", "peds": ">3 months OK in Israel" }
 ]
