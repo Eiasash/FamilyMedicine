@@ -55,10 +55,16 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.3.4';
-export const BUILD_HASH='950q-v1.3.4';
+export const APP_VERSION='1.4.0';
+export const BUILD_HASH='982q-v1.4.0';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.4.0': [
+    '📝 Nelson tab: 20 high-yield chapters now ship with hand-crafted Hebrew board notes (data/nelson_notes.json) — jaundice, pneumonia, AOM, febrile seizure, bronchiolitis/RSV, asthma, DKA, enuresis, UTI, anemia, leukemia, meningitis, strep pharyngitis, Kawasaki, abuse, development milestones, immunization, ADHD, obesity, lead. Inline "📝 הערות" per-row button next to the existing AI Summary / AI Quiz buttons — expands the notes card right under the chapter; ✨ badge flags chapters that have them.',
+    '🔥 AI-Hard seed: 32 hard-level Hebrew board MCQs merged at build time into questions.json (base 950 + seed 32 = 982 total). 15 tagged AI-Hard-G (Goroll 8e decision-rule/threshold Qs) + 17 tagged AI-Hard-AFP (AFP SORT-A/B reviews). Quiz tag filter gets two new red-styled pills "🔥 Hard-G" and "🔥 Hard-AFP".',
+    '🧰 scripts/gen_ai_hard.mjs — manual LLM generator (claude-sonnet-4-6, Anthropic API) to expand the seed from Goroll chapters + AFP/הר"י articles. Writes to ai_hard_seed.generated.json for human review before merge into ai_hard_seed.json. Not on the build path.',
+    '🏗️ build.sh now merges data/ai_hard_seed.json into dist/data/questions.json post-Vite + caches data/nelson_notes.json in sw.js. Source-of-truth questions.json stays clean; seed ships only in the built bundle.',
+  ],
   '1.3.4': [
     '🔤 BIDI hygiene pass — .heb class no longer force-sets direction:rtl (was forcing English content to render RTL inside Hebrew-font containers). Now uses unicode-bidi:plaintext + text-align:start, so each paragraph\'s base direction is computed from its own first strong character per the Unicode Bidi Algorithm. Hebrew stays right-aligned, English left-aligns, mixed-majority content renders the way the content dictates.',
     '🔤 Quiz chrome — AI-flag banner, imgDep banner, teach-back textarea, teach-back header span: dir="rtl" → dir="auto" + unicode-bidi:plaintext. Interpolated eFlag text wrapped in <bdi> so English error strings don\'t reorder into surrounding Hebrew.',
