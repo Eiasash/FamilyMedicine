@@ -341,7 +341,7 @@ Return ONLY valid JSON array:
 c = 0-based index of correct answer. No markdown, no preamble.`;
   try{
     const txt=await callAI([{role:'user',content:prompt}],1200,'sonnet');
-    const clean=txt.replace(/\`\`\`json|\`\`\`/g,'').trim();
+    const clean=txt.replace(/```json|```/g,'').trim();
     const qs=JSON.parse(clean);
     // Display the generated questions
     let h='<div style="margin-top:16px;border-top:2px solid #7c3aed;padding-top:12px">';
@@ -683,6 +683,7 @@ if(md==='__LOADING__'||md===undefined){
   body=body.replace(/```([\s\S]*?)```/g,(m,c)=>{codeBlocks.push(c);return `\u0000CODE${codeBlocks.length-1}\u0000`;});
   body=esc(body);
   // Restore code blocks as <pre>
+  // eslint-disable-next-line no-control-regex -- intentional NUL sentinel
   body=body.replace(/\u0000CODE(\d+)\u0000/g,(m,i)=>`<pre style="font-size:10.5px;line-height:1.7;white-space:pre-wrap;background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:12px;color:#1e293b;font-family:'Courier New',ui-monospace,monospace" dir="auto">${codeBlocks[+i].replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre>`);
   // Headings (H2 = section color varies, H3 lighter). Abstract/SORT/תקציר/Opening sections get distinct accents.
   // BIDI: dir="auto" picks direction from first strong char; unicode-bidi:plaintext keeps mixed-script inline runs ordered naturally.

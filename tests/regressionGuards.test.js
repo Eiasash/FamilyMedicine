@@ -145,7 +145,7 @@ describe('questions.json — duplicates', () => {
   let questions;
   beforeAll(() => { questions = loadJSON('data/questions.json'); });
 
-  const normStem = (s) => (s || '').replace(/[\s\d.,?!:;()\[\]"'\-\u05BE]+/g, '').toLowerCase();
+  const normStem = (s) => (s || '').replace(/[\s\d.,?!:;()[\]"'\-\u05BE]+/g, '').toLowerCase();
 
   test('no duplicate questions within a single tag (normalized stem)', () => {
     const byTagKey = new Map();
