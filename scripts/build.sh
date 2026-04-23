@@ -13,6 +13,24 @@ cp -r data/ dist/data/
 cp harrison_chapters.json dist/
 cp goroll_chapters.json dist/
 cp nelson_chapters.json dist/
+
+# 2a. Merge AI-hard seed Qs into dist/data/questions.json (v1.4.0+)
+# Source-of-truth questions.json stays clean of generated content; seed lives alongside.
+# We inject at build time so the merged bundle ships with the prod app.
+if [ -f data/ai_hard_seed.json ]; then
+  echo "→ Merging AI-hard seed Qs into dist/data/questions.json..."
+  node -e "
+    const fs=require('fs');
+    const base=JSON.parse(fs.readFileSync('dist/data/questions.json','utf8'));
+    const seed=JSON.parse(fs.readFileSync('data/ai_hard_seed.json','utf8'));
+    const tags={};
+    seed.forEach(q=>{tags[q.t]=(tags[q.t]||0)+1;});
+    const merged=[...base,...seed];
+    fs.writeFileSync('dist/data/questions.json',JSON.stringify(merged));
+    console.log('  base='+base.length+' + seed='+seed.length+' = '+merged.length+' total');
+    console.log('  seed tags:',JSON.stringify(tags));
+  "
+fi
 cp -r shared/ dist/shared/
 cp -r exams/ dist/exams/
 [ -d articles ] && cp -r articles/ dist/articles/ || echo "  (skip: articles/ not present)"
@@ -43,7 +61,7 @@ echo "  → CACHE=mishpacha-v${APP_VER}"
 cat > dist/sw.js << SWEOF
 const CACHE='mishpacha-v${APP_VER}';
 const SHELL_URLS=['mishpacha-mega.html','manifest.json','shared/fsrs.js'];
-const DATA_URLS=['data/questions.json','data/topics.json','data/notes.json','data/drugs.json','data/flashcards.json','data/tabs.json','data/afp_hari_index.json','harrison_chapters.json','goroll_chapters.json','nelson_chapters.json'];
+const DATA_URLS=['data/questions.json','data/topics.json','data/notes.json','data/drugs.json','data/flashcards.json','data/tabs.json','data/afp_hari_index.json','data/nelson_notes.json','harrison_chapters.json','goroll_chapters.json','nelson_chapters.json'];
 const ALL_URLS=[...SHELL_URLS,...DATA_URLS];
 
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ALL_URLS)).then(()=>self.skipWaiting())));

@@ -58,7 +58,7 @@ const SYL_HAR_BASE=[
 {ch:384,t:'Gout & Crystal-Associated Arthropathies'},
 {ch:388,t:'Approach to Patient with Endocrine Disorders'},
 ];
-const SYL_LAWS=[];
+// SYL_LAWS removed v1.4.0 — was empty and the LAWS tab was removed in v1.2.11 nav trim.
 // P0062-2025 required reading — family medicine (Appendices ב/ג/ד/ה of sources list)
 // Source: docs/references/P0062-2025_sources.pdf
 const SYL_ARTICLES=[
@@ -429,13 +429,24 @@ if(!G._nelData){
 }else{
 const NELSON_DRIVE='https://drive.google.com/file/d/1KK7xcN5JHgo8LVUpppHvxlZrg3Ol4VnU/view';
 const nelHref=(c)=>c.file?`nelson/${encodeURIComponent(c.file)}`:(c.page?`${NELSON_DRIVE}#page=${c.page}`:NELSON_DRIVE);
+// Lazy-load canned Hebrew board notes once. Used for ✨ badge + inline "📖" expand button.
+if(!G._nelNotes){
+  fetch('data/nelson_notes.json').then(r=>r.json()).then(d=>{G._nelNotes=d;G.render();}).catch(e=>{console.error('Nelson notes load failed',e);G._nelNotes={_error:true};});
+}
+G._nelOpenNotes=G._nelOpenNotes||new Set();
 const nq=(G.nelSearch||'').trim().toLowerCase();
-const filtered=nq?G._nelData.filter(c=>c.title_en.toLowerCase().includes(nq)||String(c.ch).includes(nq)):G._nelData;
+const onlyNotes=!!G.nelOnlyNotes;
+const notesCount=(G._nelNotes&&!G._nelNotes._error)?Object.keys(G._nelNotes).filter(k=>!k.startsWith('_')).length:0;
+let filtered=nq?G._nelData.filter(c=>c.title_en.toLowerCase().includes(nq)||String(c.ch).includes(nq)):G._nelData;
+if(onlyNotes&&G._nelNotes&&!G._nelNotes._error){
+  filtered=filtered.filter(c=>G._nelNotes[String(c.ch)]&&G._nelNotes[String(c.ch)].notes);
+}
 h+=`<div class="card" style="padding:14px">
 <div style="font-size:13px;font-weight:700;margin-bottom:4px">👶 Nelson Textbook of Pediatrics 22e</div>
-<div style="font-size:10px;color:#64748b;margin-bottom:10px">${G._nelData.length} chapters from P0062-2025 Appendix א' · tap to open PDF · 📝 AI summary · 🧠 AI quiz</div>
+<div style="font-size:10px;color:#64748b;margin-bottom:10px">${G._nelData.length} chapters from P0062-2025 Appendix א' · ${notesCount?`<b style="color:#059669">✨ ${notesCount} chapters with Hebrew board notes</b> · `:''}tap row → PDF · 📖 notes · 📝 AI summary · 🧠 AI quiz</div>
 <a href="${NELSON_DRIVE}" target="_blank" rel="noopener" style="display:inline-block;font-size:11px;font-weight:600;color:#fff;background:#059669;padding:8px 14px;border-radius:8px;text-decoration:none;margin-bottom:12px">→ Open full Nelson 22e PDF (Drive, 167 MB)</a>
-<input type="search" placeholder="🔎 Search chapter title or number (e.g. asthma, 112)" data-action="nel-search" value="${sanitize(G.nelSearch||'')}" style="width:100%;padding:8px 10px;font-size:12px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:10px;box-sizing:border-box" dir="auto">
+<input type="search" placeholder="🔎 Search chapter title or number (e.g. asthma, 112)" data-action="nel-search" value="${sanitize(G.nelSearch||'')}" style="width:100%;padding:8px 10px;font-size:12px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;box-sizing:border-box" dir="auto">
+${notesCount?`<div style="margin-bottom:10px"><span class="pill ${onlyNotes?'on':''}" data-action="nel-toggle-notes" style="font-size:10px;cursor:pointer">${onlyNotes?'✓':''} ✨ Show only chapters with notes (${notesCount})</span></div>`:''}
 <div id="quiz-me-box"></div>
 <div style="font-size:9px;color:#94a3b8;margin-bottom:4px">${filtered.length===G._nelData.length?`All ${G._nelData.length} chapters`:`${filtered.length} of ${G._nelData.length} chapters`}</div>`;
 if(filtered.length===0){
@@ -444,18 +455,33 @@ if(filtered.length===0){
   filtered.forEach(c=>{
     const href=nelHref(c);
     const pageInfo=c.page?`p.${c.page}`:(c.file?'local PDF':'Drive');
+    const noteRec=(G._nelNotes&&!G._nelNotes._error)?G._nelNotes[String(c.ch)]:null;
+    const hasNotes=!!(noteRec&&noteRec.notes);
+    const isOpen=G._nelOpenNotes.has(c.ch);
     h+=`<div style="display:flex;align-items:center;gap:6px;padding:9px 0;border-bottom:1px solid #f1f5f9">
 <a href="${href}" target="_blank" rel="noopener" data-action="nel-read" data-ch="${c.ch}" style="flex:1;display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;min-width:0">
 <span style="background:#059669;color:#fff;font-size:10px;font-weight:700;padding:4px 8px;border-radius:8px;min-width:42px;text-align:center">Ch ${c.ch}</span>
 <div style="flex:1;min-width:0">
-<div style="font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${sanitize(c.title_en)}</div>
+<div style="font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${sanitize(c.title_en)}${hasNotes?' <span title="Hebrew board notes available" style="font-size:10px;color:#059669;font-weight:700">✨</span>':''}</div>
 <div style="font-size:9px;color:#94a3b8;margin-top:2px">${pageInfo}</div>
 </div>
 <span style="font-size:16px;color:#cbd5e1;flex-shrink:0">›</span>
 </a>
+${hasNotes?`<button data-action="nel-toggle-note" data-ch="${c.ch}" title="Hebrew board notes" aria-label="Board notes Ch ${c.ch}" style="font-size:12px;padding:4px 7px;background:${isOpen?'#059669':'#ecfdf5'};border:1px solid #d1fae5;border-radius:6px;cursor:pointer;color:${isOpen?'#fff':'#059669'};flex:0 0 auto">📖</button>`:''}
 <button data-action="summarize-nel-chapter" data-ch="${c.ch}" title="AI Summary" aria-label="AI Summary Ch ${c.ch}" style="font-size:12px;padding:4px 7px;background:#ecfdf5;border:1px solid #d1fae5;border-radius:6px;cursor:pointer;color:#059669;flex:0 0 auto">📝</button>
 <button data-action="quiz-nel-chapter" data-ch="${c.ch}" title="AI Quiz" aria-label="AI Quiz Ch ${c.ch}" style="font-size:12px;padding:4px 7px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:6px;cursor:pointer;color:#7c3aed;flex:0 0 auto">🧠</button>
 </div>`;
+    if(isOpen&&hasNotes){
+      const safe=sanitize(noteRec.notes);
+      const rendered=safe
+        .replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')
+        .replace(/\n- /g,'<br>• ')
+        .replace(/\n/g,'<br>');
+      h+=`<div style="padding:10px 12px;margin:0 0 8px 0;background:#f0fdf4;border-right:3px solid #059669;border-radius:8px">
+<div style="font-weight:700;font-size:11px;color:#059669;margin-bottom:6px;text-align:right;unicode-bidi:plaintext" dir="auto">📝 נקודות ליבה למבחן — ${sanitize(noteRec.title||c.title_en)}</div>
+<div class="heb" style="font-size:11px;line-height:1.8;color:#1e293b;text-align:right;unicode-bidi:plaintext" dir="auto">${rendered}</div>
+</div>`;
+    }
   });
 }
 h+=`</div>`;
@@ -525,20 +551,7 @@ h+=`</div>`;
 }
 }
 
-// ===== LAWS =====
-if(G.libSec==='laws'){
-h+=`<div class="card" style="padding:14px">
-<div style="font-size:13px;font-weight:700;margin-bottom:4px">⚖️ חוקים, נהלים ופרסומים</div>
-<div class="heb" style="font-size:10px;color:#64748b;margin-bottom:10px">${SYL_LAWS.length} items</div>`;
-SYL_LAWS.forEach((l,i)=>{
-h+=`<div class="heb" style="padding:8px 0;border-bottom:1px solid #f1f5f9">
-<div style="display:flex;align-items:flex-start;gap:8px">
-<span style="background:#f59e0b;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;flex-shrink:0">${i+1}</span>
-<div style="flex:1"><div style="font-size:11px;font-weight:600">${l.n}</div>
-<div style="font-size:9px;color:#94a3b8;margin-top:2px">${l.s}</div></div>${l.f?`<a href="${l.f}" target="_blank" style="font-size:10px;padding:3px 7px;background:#fffbeb;color:#d97706;border-radius:6px;text-decoration:none;flex-shrink:0;white-space:nowrap">📄</a>`:''}</div></div>`;
-});
-h+=`</div>`;
-}
+// ===== LAWS removed v1.4.0 — SYL_LAWS was empty + libTabs has no 'laws' entry since v1.2.11 nav trim =====
 
 // ===== AFP + הר"י — 542-paper browser (7-year syllabus window 2018-06 → 2025-05) =====
 if(G.libSec==='afphari'){
@@ -844,6 +857,20 @@ export function initLibraryEvents(container) {
       // Don't preventDefault — let the <a> navigate to the PDF. Just log the read.
       const ch = parseInt(el.dataset.ch, 10);
       if (!isNaN(ch)) trackChapterRead('nel', ch);
+    }
+    else if (action === 'nel-toggle-note') {
+      // Inline expand/collapse of the per-chapter Hebrew board notes card.
+      const ch = parseInt(el.dataset.ch, 10);
+      if (!isNaN(ch)) {
+        G._nelOpenNotes = G._nelOpenNotes || new Set();
+        if (G._nelOpenNotes.has(ch)) G._nelOpenNotes.delete(ch);
+        else { G._nelOpenNotes.add(ch); trackChapterRead('nel', ch); }
+        G.render();
+      }
+    }
+    else if (action === 'nel-toggle-notes') {
+      G.nelOnlyNotes = !G.nelOnlyNotes;
+      G.render();
     }
     else if (action === 'quiz-nel-chapter') {
       const ch = parseInt(el.dataset.ch, 10);

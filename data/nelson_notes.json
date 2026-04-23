@@ -1,0 +1,83 @@
+{
+  "_meta": {
+    "version": 1,
+    "updated": "2026-04-23",
+    "source": "Nelson 22e board-focused FM Shlav A notes — Hebrew, by chapter number"
+  },
+  "13": {
+    "title": "Maximizing Children's Health: Screening",
+    "notes": "**סקירות מרכזיות בילדות (Bright Futures / AAP):**\n- **שמיעה:** בלידה (OAE/ABR), גיל 4, 5, 6, 8, 10, ואחת שנה-שנתיים בגיל ההתבגרות.\n- **ראיה:** נגד גלויה מגיל 3; ביצועים בגיל 6–11 ואחרת בגיל ההתבגרות.\n- **שומן בדם:** סקירה אוניברסלית בגיל 9–11 ו-17–21 (NHLBI).\n- **עופרת:** סיכון-סלקטיבי (CDC 2021) עם reference value 3.5 μg/dL.\n- **אנמיה:** 9–12 חודשים (screening Hb/Hct).\n- **דיכאון:** שנתית מגיל 12 (USPSTF 2022, PHQ-A).\n- **MASLD / השמנה:** BMI מגיל 2 בכל ביקור; ALT אם BMI ≥95%ile + ≥10 שנים.\n**רד-פלגים:** fall off growth curve >2 Z-scores, head-circumference cross percentiles, apparent developmental regression."
+  },
+  "22": {
+    "title": "The Newborn",
+    "notes": "**הערכת יילוד חיונית:**\n- **APGAR** ב-1 ו-5 דק'; ≤7 ב-5 דק' = הערכה מורחבת (לא מחייב החייאה).\n- **אישוש חיוני לצד המיטה:** pulse-ox pre+post-ductal (CCHD screening): הפרש >3% או <95% = חשד CCHD.\n- **גלוקוז:** לא-ציר בריאים לא נבדקים. סקר: LGA, SGA, IDM, פגות, תסמונות.\n- **בילירובין:** total bili בכל יילוד לפני שחרור + nomogram (Bhutani 2022).\n- **חיסונים בלידה:** HepB (בכל), Vit K 1 mg IM (מניעת HDN), erythromycin eye ointment.\n- **Anomalies/syndromes common:** Down (hypotonia, simian crease), cleft lip/palate, DDH (Barlow/Ortolani), heart murmur (PDA flow), neural tube defects.\n- **יציאה (meconium):** 99% תוך 48 שעות; חוסר = שלילת Hirschsprung, CF, anal atresia."
+  },
+  "31": {
+    "title": "Sleep Medicine",
+    "notes": "**זמני שינה נורמליים:**\n- Newborn 14–17h; 4–12m 12–16h (עם תנומות); 1–2y 11–14h; 3–5y 10–13h; 6–12y 9–12h; 13–18y 8–10h.\n**פרעות שכיחות:**\n- **Parasomnias** (sleepwalking, night terrors, confusional arousals): שכיחות בגיל 3–8, self-limited, ניהול בעיקר חינוך ושגרת שינה.\n- **OSA ילדים:** סיבה עיקרית = היפרטרופיה אדנו-טונזילרית; טיפול = ad-T (adenotonsillectomy) = קו ראשון.\n- **נחירה ראשונית** vs OSA: PSG הוא gold standard לאבחנה.\n- **DSPD מתבגרים:** bright-light בוקר + melatonin 0.3–0.5 mg 3–4 שעות לפני הרצוי.\n- **אינסומניה ילדים:** 80% התנהגותית — SLEEP-hygiene + extinction / graduated extinction."
+  },
+  "38": {
+    "title": "Anxiety Disorders",
+    "notes": "**השכיחות הילדותית הגבוהה ביותר של מחלה פסיכיאטרית.**\n- GAD, SAD (separation), social phobia, specific phobia, panic, selective mutism.\n- אבחנה: שישה חודשים מינימום של impairment תפקודי.\n- **קו ראשון <7:** CBT בלבד.\n- **8+:** CBT ± SSRI (sertraline, fluoxetine, escitalopram FDA-approved).\n- **הימנע:** benzodiazepines (עלולים לגרום disinhibition בילדים).\n- **Black box:** SSRI → suicidality — מעקב שבועי 4 שבועות ראשונים."
+  },
+  "40": {
+    "title": "Suicide and Attempted Suicide",
+    "notes": "**השכיחות:**\n- סיבת מוות #2–3 ב-10–24.\n- Gender: בנות ניסיונות רבים יותר, בנים תמותה גבוהה (lethal means).\n**גורמי סיכון:**\n- ניסיון קודם (החשוב ביותר), דיכאון, בולימיה, abuse, LGBTQ+ ללא תמיכה, substance use, גישה לנשק בבית.\n**סקירה:**\n- PHQ-A, או Ask Suicide-Screening Questions (ASQ) בכל מתבגר בסמסטרים.\n- ראיון פרטי ללא הורים.\n**ניהול:**\n- ניסיון פעיל עם מתכון/אמצעי/כוונה = אשפוז.\n- means restriction counseling להורים (lethal means removal).\n- safety plan עם זיהוי warning signs, coping strategies, אנשי קשר, 1201."
+  },
+  "50": {
+    "title": "ADHD",
+    "notes": "**אבחון DSM-5:**\n- ≥6 תסמיני inattention ו/או hyperactivity-impulsivity ≥6 חודשים.\n- בשני סביבות (בית + ביה\"ס).\n- הופיע לפני גיל 12.\n- פוגע בתפקוד.\n**קו ראשון AAP 2019:**\n- **4–5 שנים:** parent training (PCIT, Triple P) ראשון; methylphenidate רק אם כישלון.\n- **6–11 שנים:** stimulant (methylphenidate או amphetamine) + CBT/ educational support.\n- **12–18 שנים:** stimulant + CBT.\n**קו שני:** atomoxetine, guanfacine XR, clonidine XR.\n**Black box stimulants:** abuse potential, cardiovascular (FDA: לא דרוש routine EKG אלא אם היסטוריה/משפחה).\n**מעקב:** BP, גובה, משקל כל 3–6 חודשים."
+  },
+  "61": {
+    "title": "Feeding Healthy Infants",
+    "notes": "**הנקה אקסקלוסיבית 6 חודשים, המשך עד גיל 1–2 (WHO).**\n- תוספים: Vitamin D 400 IU/day מלידה; ברזל 1 mg/kg מגיל 4 חודשים אם exclusive breastfeeding.\n**תמ\"ל (פורמולה):**\n- קו ראשון = cow's milk-based iron-fortified.\n- Soy רק אם galactosemia או תרבותי.\n- Hydrolyzed אם CMPA (cow milk protein allergy).\n**מזון מוצק:**\n- ~6 חודשים (בדוק head control + interest + loss of tongue thrust).\n- אלרגניים (בוטנים, ביצים) מוקדם ב-4–6 חודשים למניעה (LEAP study).\n**Honey ללא לפני גיל שנה** (botulism).\n**חלב פרה שלם לא לפני שנה** (microcytic anemia risk).\n**מיץ ללא עד גיל 1; מוגבל 4 oz/day ב-1–3 שנים.**"
+  },
+  "65": {
+    "title": "Overweight and Obesity",
+    "notes": "**BMI ילדים:**\n- >85%ile overweight, >95%ile obesity, >120% של 95%ile severe.\n**סקירה:**\n- מגיל 2 כל ביקור well-child.\n- Comorbidities לסקירה מ-BMI ≥85%: BP, lipid, ALT (≥10y), HbA1c/FPG אם risk factors, OSA, PCOS.\n**AAP 2023 CPG:**\n- >6 שנים עם obesity → intensive health behavior + lifestyle treatment (IHBLT) ≥26 שעות קשר ב-year.\n- ≥12 עם obesity: AOM (pharmacotherapy) כתוספת — liraglutide, semaglutide, phentermine-topiramate.\n- ≥13 עם severe obesity: bariatric surgery evaluation.\n**רמז בחינה:** חסימה של SNP MC4R, leptin deficiency, Prader-Willi = genetic obesity — short stature, hyperphagia, delayed puberty.\n**Screen time ≤2h/day (non-academic).**"
+  },
+  "78": {
+    "title": "Triage of Acutely Ill Child",
+    "notes": "**PALS / pediatric assessment triangle (PAT):**\n- Appearance (TICLS: tone, interactiveness, consolability, look/gaze, speech/cry)\n- Work of breathing (retractions, nasal flaring, grunting, stridor/wheeze)\n- Circulation to skin (pallor, mottling, cyanosis)\n**חריגה באחד או יותר = sick child.**\n**vital signs age-normed:**\n- Newborn HR 100–205, RR 30–60, SBP >60\n- Infant HR 100–180, RR 30–53\n- Child 6–12 HR 75–118, RR 18–25\n**Shock cues:** HR גבוה, capillary refill >2s, BP late sign (ילדים compensate).\n**Fluid bolus:** 20 mL/kg isotonic crystalloid ×2–3, אז vasopressor.\n**Access:** IV ×2 ניסיונות 90 שניות → IO."
+  },
+  "84": {
+    "title": "Syncope",
+    "notes": "**סיווג:**\n- Neurocardiogenic (vasovagal): שכיח ביותר במתבגרים — prodrome (nausea, diaphoresis, graying vision), recovery מהיר. ללא red flags = קליני, לא צריך בדיקות נוספות.\n- Orthostatic: POTS (HR↑ >40 bpm בתנועה מאופקית), dehydration.\n- Cardiac (המסוכן): exertional syncope, family history sudden death, no prodrome, palpitations. → EKG + echo + holter.\n**EKG חובה בכל סינקופה בילד:**\n- QTc >460 ms → LQT.\n- WPW (delta wave, short PR).\n- HCM voltage.\n- Brugada pattern.\n- ARVC epsilon wave.\n**Red flags מחייבים הערכה קרדיולוגית:** exertional, cardiac FH sudden death <50, abnormal EKG/echo, syncope in supine position, chest pain/palpitations before."
+  },
+  "94": {
+    "title": "Poisoning",
+    "notes": "**התקשרות מיידית:** מרכז ארצי להרעלות (IPIC) 04-7771900 / 1-800-777-330.\n**Decontamination:**\n- Activated charcoal 1 g/kg — רק אם <1–2 שעות מהבליעה, חולה ערני, לא caustic/hydrocarbon.\n- Ipecac כבר לא בשימוש.\n- Gastric lavage רק במקרים נבחרים (<1 שעה, life-threatening).\n**Antidotes נפוצים:**\n- Acetaminophen → NAC (Rumack-Matthew nomogram).\n- Opioid → naloxone.\n- Benzo → flumazenil (זהירות — מוריד סף פרכוסים).\n- Iron → deferoxamine.\n- CO → 100% O₂ ± HBO.\n- Beta-blocker → glucagon.\n- CCB → calcium + insulin euglycemia.\n- TCA → sodium bicarb (לQRS >100).\n- Methanol/EG → fomepizole.\n**Iron toxicity phases:** GI → latent → shock/metabolic → hepatic → sequelae."
+  },
+  "137": {
+    "title": "Jaundice in Newborn",
+    "notes": "**Unconjugated (indirect) — השכיח:**\n- Physiologic: peaks day 3–5, resolves 1–2 שבועות.\n- Breastfeeding jaundice: inadequate intake, onset week 1.\n- Breast milk jaundice: onset week 2, prolongation 1–3 months, benign.\n- Hemolytic: ABO/Rh incompatibility, G6PD, hereditary spherocytosis.\n- Crigler-Najjar, Gilbert.\n**Conjugated (direct) — תמיד פתולוגי:**\n- Biliary atresia (MUST rule out — surgery by 8 weeks!).\n- Neonatal hepatitis, metabolic (galactosemia, tyrosinemia), sepsis, TPN cholestasis.\n**אבחון:**\n- Total + direct bilirubin בכל יילוד עם jaundice.\n- Direct >1 mg/dL או >20% of total = pathologic → work-up (LFT, US, HIDA).\n**AAP 2022 nomogram:**\n- החלטה phototherapy על פי שעת חיים, bili, GA, risk factors (hemolysis, sepsis, albumin <3).\n**Complications:** acute bilirubin encephalopathy → kernicterus (choreoathetoid CP, hearing loss, upward gaze palsy, enamel dysplasia)."
+  },
+  "159": {
+    "title": "Menstrual Problems",
+    "notes": "**Menarche ממוצע:** 12.5 שנים.\n**Amenorrhea primary:** אי-מחזור עד גיל 15 (עם signs of puberty) או 13 (ללא signs).\n- מצבים: Turner (45,X), androgen insensitivity, Müllerian agenesis, הריון, eating disorder, אתלטיות יתר, hypothalamic.\n**Amenorrhea secondary:** אי-מחזור ≥3 cycles או 6 חודשים אחרי cycles regulars.\n- **הריון הוא תמיד הראשון לשלול (hCG).**\n- PCOS (irregularity, acne, hirsutism, insulin resistance).\n- Hypothalamic (stress, weight loss, female athlete triad).\n- Hyperprolactinemia.\n- Hypothyroid.\n- POI (premature ovarian insufficiency) — FSH >30 × 2.\n**Dysmenorrhea:**\n- Primary (prostaglandin-mediated) — NSAID (ibuprofen 400 q6h, naproxen 500 q12h) + OCP combined.\n- Secondary = endometriosis, PID, adenomyosis, fibroids (pelvic US).\n**Menorrhagia במתבגרת:**\n- Anovulatory bleeding (immature HPO axis) — שכיח ב-1–2 שנים הראשונות.\n- Bleeding disorder (vWD ב-13–20% של menorrhagia חמורה!) — PT/PTT, vWD panel, CBC.\n**Toxic shock:** high fever, rash, hypotension, multiorgan — tampon use; remove + ICU + clindamycin + vancomycin."
+  },
+  "112": {
+    "title": "Asthma (Pediatric)",
+    "notes": "**אבחנה (מעל גיל 5):** episodic wheeze, dyspnea, cough, reversible obstruction (FEV1 ↑12% post-SABA).\n**מתחת גיל 5:** Asthma Predictive Index — wheeze ≥4 episodes + (major: asthma parent, eczema, sensitization aeroallergen OR 2 minor: food allergy, eosinophilia ≥4%, wheeze without URI).\n**Step-wise therapy (NAEPP 2020):**\n- 0–4y: Step 1 SABA; Step 2 daily low-dose ICS; Step 3 medium ICS.\n- 5–11y: Step 1 SABA or low-dose ICS-formoterol PRN; Step 2 daily low-dose ICS; up to high-dose ICS+LABA at Step 5; biologics at Step 6.\n- ≥12y: GINA 2023 — all steps ICS-containing.\n**Acute exacerbation:**\n- Mild: SABA q4h ± PO prednisolone.\n- Moderate: O2, SABA 3×/20 min, PO steroid 1–2 mg/kg (max 60 mg), ipratropium nebulized.\n- Severe: + MgSO4 IV 25–75 mg/kg, consider IV terbutaline, ICU.\n**Discharge:** SABA + oral steroid 3–5 days (no taper <10 days) + ICS step-up + action plan."
+  },
+  "114": {
+    "title": "Bronchiolitis",
+    "notes": "**אטיולוגיה:** RSV (50–80%), rhinovirus, parainfluenza, hMPV.\n**גיל:** <2 שנים, peak 3–6 חודשים.\n**Clinical:** URI prodrome → wheeze, tachypnea, retractions, hypoxia.\n**AAP 2014 CPG:**\n- אבחנה קלינית — ללא routine CXR, viral testing, or labs.\n- **לא יעיל / לא מומלץ:** albuterol, epi, systemic steroids, abx (אלא אם suspected bacterial).\n- **יעיל:** O2 suppl (target ≥90%), hydration, nasal suction, observation.\n- **High-risk for severe disease:** <12 weeks, prematurity (<32w), BPD, CHD, immunocompromised, neuromuscular.\n**מניעה:**\n- Palivizumab (RSV mAb) לילדים high-risk (prematurity <29w, BPD, CHD).\n- Nirsevimab (2023): מנה יחידה לכל יילוד בעונת RSV.\n- RSV vaccine for pregnant 32–36w gestation (2023)."
+  },
+  "167": {
+    "title": "Bacterial Meningitis Beyond Neonatal Period",
+    "notes": "**אטיולוגיה:** S. pneumoniae (פוסט-PCV13 עדיין #1), N. meningitidis (outbreak), H. influenzae b (כמעט העלם פוסט-Hib).\n**Clinical triad** (רק 44%): fever + nuchal rigidity + altered mental state.\n- **Infants:** lethargy, poor feeding, irritability, bulging fontanel, seizures (30%).\n- **Brudzinski / Kernig** — sens נמוכה (<10%) אבל spec >90%.\n**Work-up:**\n- LP מיידי אחרי cultures — אל תעכב אבחון!\n- CT לפני LP רק אם: focal deficit, papilledema, immunocompromised, seizure, GCS depressed.\n- **CSF bacterial:** WBC >1000 neutrophilic, glucose <40 (or CSF/serum <0.4), protein >100, gram stain + culture.\n**Empiric therapy ≥1m:**\n- Vancomycin + ceftriaxone.\n- Steroid (dexamethasone 0.15 mg/kg q6h × 4 days): יעיל בעיקר ב-Hib (עם הירידה ב-Hib — מחלוקת; כן ב-adults עם S. pneumoniae). לפני או עם המנה הראשונה של abx.\n**Chemoprophylaxis contacts:** N. meningitidis — rifampin, ciprofloxacin, או ceftriaxone. H. influenzae b — rifampin.\n**Complications:** hearing loss (30%), seizures, SIADH, hydrocephalus, cerebritis."
+  },
+  "225": {
+    "title": "Vaccines",
+    "notes": "**לוח חיסונים ישראלי עדכני:**\n- **לידה:** HepB.\n- **2, 4, 6 חודשים:** Hexa (DTaP-IPV-Hib-HepB), PCV13, Rota.\n- **12 חודשים:** MMR-V, HepA (12m + 18m), PCV13.\n- **18 חודשים:** DTaP-IPV, HepA.\n- **כיתה א (6y):** MMR-V, DTaP-IPV.\n- **כיתה ב (7y):** HPV מ-2018 (נערים ונערות).\n- **כיתה ח (14y):** Tdap, HPV, meningococcal.\n**חיסונים חיים (CI בהריון, immunocompromised):** MMR, Varicella, Rota, Yellow fever, BCG, oral typhoid, intranasal flu (LAIV).\n**המתנה חיה-חיה:** 4 שבועות אם לא ניתנו באותו יום.\n**Catch-up:** לפי CDC/משרד הבריאות tables.\n**Contraindications:** אנפילקסיס רקע למנה קודמת או רכיב; encephalopathy תוך 7 ימים ל-pertussis = לא DTaP.\n**Precautions (not CI):** moderate-severe acute illness, immunosuppression (ללא חי).\n**חיסונים שחסרים בפיגור:** Meningococcal ACWY+ B למתבגרים, הבולטים בכותרות עבור חיילים/סטודנטים.\n**Egg allergy + flu:** IIV בכל רמת אלרגיה מאז 2016."
+  },
+  "400": {
+    "title": "Iron Deficiency Anemia",
+    "notes": "**שכיחות ביותר ב-9–24 חודשים וב-adolescent menstruating girls.**\n**סקירה:** Hb + Hct ב-9–12 חודשים universal.\n**גורמי סיכון:**\n- Premature, LBW.\n- Cow's milk <12m or >24 oz/day after 1y (blocks iron, GI microbleeds).\n- Vegetarian.\n- Menorrhagia.\n**Clinical:** pallor, fatigue, pica (geophagia, pagophagia), koilonychia (rare).\n- Impact: neurocognitive delay (irreversible if chronic <2y), breath-holding spells.\n**Labs:**\n- Microcytic hypochromic (MCV low, RDW high early).\n- Ferritin <15 ng/mL = diagnostic (acute-phase reactant).\n- TIBC high, transferrin sat <16%, reticulocyte low.\n**טיפול:**\n- Elemental iron 3–6 mg/kg/day divided (ferrous sulfate).\n- Vitamin C enhances absorption; avoid with milk/calcium.\n- Recheck Hb in 4 weeks; expect ↑1 g/dL.\n- Continue ×3 months after Hb normalizes to replete stores.\n**אבחנה מבדלת microcytic:** TAILS — Thalassemia, Anemia chronic, Iron deficiency, Lead, Sideroblastic.\n**Thalassemia trait vs IDA:** Mentzer index = MCV/RBC — <13 = thal, >13 = IDA. Thalassemia: normal-high RBC, normal RDW, Hb electrophoresis."
+  },
+  "546": {
+    "title": "Diabetes Mellitus in Children",
+    "notes": "**DM1 הוא ~85% של DM פדיאטרי.**\n**Presentation:**\n- Polyuria, polydipsia, weight loss, enuresis.\n- DKA (30% at presentation): Kussmaul, abdominal pain, fruity breath, altered mental state.\n**אבחנה (any of):**\n- FPG ≥126, או random ≥200 + תסמינים, או OGTT 2h ≥200, או HbA1c ≥6.5%.\n**DKA treatment principles:**\n- Fluid resuscitation (slower in peds — cerebral edema risk): 10 mL/kg bolus ×1–2, then maintenance + deficit over 24–48h.\n- Insulin: 0.05–0.1 U/kg/h IV regular (no bolus in children — cerebral edema).\n- K replacement proactive.\n- Glucose add when <250.\n- **Cerebral edema** (0.5–1% of peds DKA): HA, bradycardia, HTN, altered mental state → mannitol 0.5–1 g/kg + 3% saline; DON'T overcorrect Na.\n**Chronic care:**\n- Basal-bolus or CSII (pump).\n- Continuous glucose monitor (CGM) now standard.\n- HbA1c target <7% (ADA relaxed from <7.5% for peds 2020).\n- Celiac + thyroid screening at diagnosis + yearly.\n- Retinopathy screening from puberty.\n**DM2 in children:** rising with obesity; presents with acanthosis, family history, ± DKA. Metformin ± insulin; lifestyle.\n**MODY:** autosomal dominant FH 3 generations, non-obese, negative antibodies — gene panel."
+  }
+}
