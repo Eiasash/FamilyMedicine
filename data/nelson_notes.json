@@ -1,7 +1,7 @@
 {
   "_meta": {
     "version": 1,
-    "updated": "2026-04-23",
+    "updated": "2026-04-23-r2",
     "source": "Nelson 22e board-focused FM Shlav A notes — Hebrew, by chapter number"
   },
   "13": {
@@ -67,6 +67,10 @@
   "167": {
     "title": "Bacterial Meningitis Beyond Neonatal Period",
     "notes": "**אטיולוגיה:** S. pneumoniae (פוסט-PCV13 עדיין #1), N. meningitidis (outbreak), H. influenzae b (כמעט העלם פוסט-Hib).\n**Clinical triad** (רק 44%): fever + nuchal rigidity + altered mental state.\n- **Infants:** lethargy, poor feeding, irritability, bulging fontanel, seizures (30%).\n- **Brudzinski / Kernig** — sens נמוכה (<10%) אבל spec >90%.\n**Work-up:**\n- LP מיידי אחרי cultures — אל תעכב אבחון!\n- CT לפני LP רק אם: focal deficit, papilledema, immunocompromised, seizure, GCS depressed.\n- **CSF bacterial:** WBC >1000 neutrophilic, glucose <40 (or CSF/serum <0.4), protein >100, gram stain + culture.\n**Empiric therapy ≥1m:**\n- Vancomycin + ceftriaxone.\n- Steroid (dexamethasone 0.15 mg/kg q6h × 4 days): יעיל בעיקר ב-Hib (עם הירידה ב-Hib — מחלוקת; כן ב-adults עם S. pneumoniae). לפני או עם המנה הראשונה של abx.\n**Chemoprophylaxis contacts:** N. meningitidis — rifampin, ciprofloxacin, או ceftriaxone. H. influenzae b — rifampin.\n**Complications:** hearing loss (30%), seizures, SIADH, hydrocephalus, cerebritis."
+  },
+  "185": {
+    "title": "Childhood Asthma",
+    "notes": "**אפידמיולוגיה:** המחלה הכרונית השכיחה ביותר בילדים (~9%). זכרים > נקבות טרום-בגרות, מתהפך לאחר גיל 12.\n**אבחנה (NAEPP / GINA):**\n- **קליני:** wheezing חוזר, שיעול לילי, ce קוצר נשימה/חזה, מגיב לברונכודילטור.\n- **Spirometry ≥5y:** FEV1/FVC <0.85, reversibility ≥12% אחרי SABA.\n- **<5y:** אבחנה קלינית + תגובה לטיפול. **Asthma Predictive Index (API):** ≥4 wheezing episodes + 1 major (parental asthma, eczema, aeroallergen sens) או 2 minor (food allergy, eosinophilia ≥4%, wheezing without URI).\n**סיווג חומרה (לפני טיפול) — Step-up:**\n| Step | Controller |\n|------|------------|\n| 1 (intermittent) | SABA PRN |\n| 2 (mild persistent) | low-dose ICS daily |\n| 3 | medium-dose ICS, או low ICS + LABA (≥5y) / LTRA |\n| 4 | medium-high ICS + LABA |\n| 5–6 | high-dose ICS + LABA ± biologic (omalizumab, dupilumab, mepolizumab) |\n**SMART (Single Maintenance And Reliever Therapy) ≥4–5y:** ICS-formoterol as both controller + reliever — עדיפות GINA 2023.\n**Acute exacerbation (ED):**\n- **Mild-moderate:** SABA q20min ×3, oral steroid (prednisolone 1–2 mg/kg, max 60 mg × 5d).\n- **Moderate-severe:** add ipratropium ×3 doses, O2 to SpO2 ≥94%.\n- **Severe/impending failure:** IV MgSO4 25–50 mg/kg (max 2g), consider heliox, continuous albuterol, ICU.\n- **אל תתן:** antibiotics routinely, sedatives, excessive IV fluids (SIADH risk).\n**Discharge criteria:** SpO2 ≥94% RA, minimal wheeze/retractions, PEF >70% predicted, אבולציה בטוחה, משפחה מבינה action plan.\n**Triggers לסלק:** tobacco smoke (including 3rd-hand), mites, cockroach, mold, pets, NSAIDs (rare בילדים), exercise-induced (pre-SABA 15 min before).\n**Asthma action plan (green/yellow/red zones):** חובה מכל ביקור — פחית אשפוזים.\n**Comorbidities לטפל:** AR, GERD, obesity, OSA, eczema.\n**Follow-up:** every 1–6m, step-down after 3m control; flu vaccine annually."
   },
   "225": {
     "title": "Vaccines",
