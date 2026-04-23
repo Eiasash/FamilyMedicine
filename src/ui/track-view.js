@@ -1,9 +1,9 @@
 import G from '../core/globals.js';
 import { TOPICS, EXAM_FREQ, IMA_WEIGHTS, APP_VERSION, HARRISON_PDF_MAP, LS, BUILD_HASH } from '../core/constants.js';
 import { sanitize, fmtT, safeJSONParse, getApiKey, setApiKey, heDir } from '../core/utils.js';
-import { getDueQuestions, getWeakTopics, getStudyStreak, getTopicStats, isExamTrap, getChaptersDueForReading } from '../sr/spaced-repetition.js';
+import { getDueQuestions, getWeakTopics, getStudyStreak, getTopicStats, isExamTrap, getChaptersDueForReading, getDrillTarget, buildDrillPool } from '../sr/spaced-repetition.js';
 import { isChronicFail } from '../sr/fsrs-bridge.js';
-import { setFilt, startTopicMiniExam, buildPool } from '../quiz/engine.js';
+import { setFilt, startTopicMiniExam, buildPool, buildMockExamPool } from '../quiz/engine.js';
 import { buildRescuePool } from '../sr/spaced-repetition.js';
 import { renderWrongAnswerLog } from './library-view.js';
 
@@ -749,6 +749,52 @@ export function renderStudyPlan(){
   return h;
 }
 
+// === Drill Your Weakest — always-on smart daily recommender ===
+// Renders a single high-leverage topic to drill next, regardless of whether user has
+// a <65% topic (that's Rescue Drill's job). Cold-start aware: <10 Qs answered → shows
+// "answer 15 to calibrate" instead of a bogus pick.
+export function renderDrillTargetCard(){
+  const t = getDrillTarget();
+  if(!t) return '';
+  // Cold start
+  if(t.reason === 'cold_start'){
+    return `<div class="card" style="padding:14px;margin-bottom:10px;background:linear-gradient(135deg,#eff6ff,#f0f9ff);border:1px solid #bfdbfe">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:24px">🎯</span>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:12px;color:#1d4ed8">Calibration drill</div>
+          <div style="font-size:10px;color:#64748b">Answer 15 Qs across all topics — I'll then auto-pick your weakest one each day.</div>
+        </div>
+        <button data-action="drill-calibration" class="btn" style="font-size:11px;padding:8px 14px;background:#1d4ed8;color:#fff;border:none;border-radius:10px;font-weight:700">Start</button>
+      </div></div>`;
+  }
+  const name = TOPICS[t.ti] || ('Topic '+t.ti);
+  const why = t.reason === 'low_accuracy' ? `Only ${t.pct}% correct on ${t.n} Qs — lowest accuracy × exam weight.`
+           : t.reason === 'undercovered' ? `You've barely touched this (${t.n} Qs) despite ${t.imaWt}% exam weight — blind spot.`
+           : t.reason === 'untested_high_weight' ? `${t.imaWt}% of the exam, zero data — you need a baseline here.`
+           : `Highest marginal gain: ${t.pct===null?'untested':t.pct+'%'} · ${t.imaWt}% weight.`;
+  // Color ramp — red when clearly weak, amber for undercovered, sky for opportunistic
+  const tone = t.reason === 'low_accuracy' ? { bg:'linear-gradient(135deg,#fef2f2,#fff7ed)', border:'#fecaca', fg:'#dc2626', btn:'#dc2626' }
+             : t.reason === 'undercovered' ? { bg:'linear-gradient(135deg,#fffbeb,#fef3c7)', border:'#fde68a', fg:'#b45309', btn:'#d97706' }
+             : t.reason === 'untested_high_weight' ? { bg:'linear-gradient(135deg,#f0f9ff,#eff6ff)', border:'#bae6fd', fg:'#0369a1', btn:'#0284c7' }
+             : { bg:'linear-gradient(135deg,#ecfeff,#f0fdfa)', border:'#a5f3fc', fg:'#0e7490', btn:'#0891b2' };
+  return `<div class="card" style="padding:14px;margin-bottom:10px;background:${tone.bg};border:1px solid ${tone.border}">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <span style="font-size:24px">🎯</span>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:12px;color:${tone.fg}">Drill your weakest — ${sanitize(name)}</div>
+        <div style="font-size:10px;color:#64748b">${sanitize(why)}</div>
+      </div>
+      <button data-action="drill-target" data-ti="${t.ti}" class="btn" style="font-size:11px;padding:8px 14px;background:${tone.btn};color:#fff;border:none;border-radius:10px;font-weight:700">Drill 15</button>
+    </div>
+    <div style="display:flex;gap:8px;font-size:9px;color:#64748b;flex-wrap:wrap">
+      <span>📊 ${t.n} answered</span>
+      <span>🎯 ${t.pct===null?'—':t.pct+'%'} acc</span>
+      <span>📈 IMA weight ${t.imaWt}%</span>
+      <span>🕳 coverage gap ${t.covGap}%</span>
+    </div></div>`;
+}
+
 export function renderTrack(){
 const done=Object.values(G.S.ck).filter(Boolean).length;
 const tot=G.S.qOk+G.S.qNo;const pctN=tot?Math.round(G.S.qOk/tot*100):0;const pct=tot?pctN+'%':'—';
@@ -837,6 +883,10 @@ if(G.S.examDate||localStorage.getItem('mishpacha_exam_date')){
 h+=`<div style="text-align:center;margin-bottom:10px"><button data-action="set-exam-date" style="font-size:9px;color:#94a3b8;background:none;border:none;cursor:pointer;text-decoration:underline">📅 Change exam date</button></div>`;
 }
 h+=renderExamTrendCard();
+// === Drill Your Weakest — smart daily suggestion (v1.4.3) ===
+// Always present, unlike Rescue Drill which only fires when someone has a <65% topic.
+// Picks the highest-leverage topic by composite score (accuracy gap × coverage gap × IMA weight).
+h+=renderDrillTargetCard();
 // Rescue Drill CTA
 const _weakTopics=getWeakTopics(3);
 if(_weakTopics.length&&_weakTopics[0].pct!==null&&_weakTopics[0].pct<65){
@@ -1138,6 +1188,17 @@ export function initTrackEvents(container) {
     // Rescue drill
     else if (action === 'rescue-drill') {
       buildRescuePool(); G.tab = 'quiz'; G.render();
+    }
+    // Drill Your Weakest (v1.4.3) — topic-focused 15-Q
+    else if (action === 'drill-target') {
+      const ti = parseInt(el.dataset.ti, 10);
+      if(!isNaN(ti)){ buildDrillPool(ti, 15); G.tab = 'quiz'; G.render(); }
+    }
+    // Cold-start calibration — 15 Qs sampled by IMA weight (reuses Mock exam builder)
+    else if (action === 'drill-calibration') {
+      G.pool = buildMockExamPool(15);
+      G.qi = 0; G.sel = null; G.ans = false; G.filt = 'custom';
+      G.tab = 'quiz'; G.render();
     }
     // Retry wrong questions (from Study Journal)
     else if (action === 'retry-wrong') {

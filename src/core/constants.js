@@ -55,10 +55,19 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.4.2';
-export const BUILD_HASH='989q-v1.4.2';
+export const APP_VERSION='1.4.3';
+export const BUILD_HASH='1013q-v1.4.3';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.4.3': [
+    '🔥 AI-Hard seed expansion 39 → 63 Qs. +16 Nelson-sourced Peds hard MCQs (new AI-Hard-N tag, Chs 13/22/40/50/61/78/84/94/114/137/167/185/225/400/546 — kawasaki, bronchiolitis, DKA, meningitis, Kocher criteria, HSP, JIA, etc). +8 IMA-weighted gap-fill Qs (AF/DOAC, rotator cuff, statin myopathy, HRT window, NNT, PPV, geri pain ladder, GERD alarm features).',
+    '🔗 Every AI-Hard Q now carries `ref` (Goroll chapter / AFP article / Nelson chapter) and AFP-tagged Qs also carry `ref_slug` — the UI can deep-link a wrong-answer banner straight to the source article. 63/63 refs populated (was 0/39).',
+    '🎯 Track tab: new smart "Drill Your Weakest" card. Composite score = accuracy gap × coverage gap × IMA exam weight — always surfaces the single highest-leverage next topic, even when no single topic is below the 65% Rescue threshold. Cold-start aware: <10 Qs answered → shows 15-Q calibration drill instead of a bogus pick.',
+    '🩻 Distractor autopsy v1.4.3: patched 9 Qs (23/25/26/27/28/30/31/32/34) that had the "correct_longest" anti-pattern — distractors rewritten with parity-length plausible clinical detail so option length no longer leaks the answer. 0 anti-pattern findings on the full 63-Q seed.',
+    '🛡️ RLS sanity pass on shared Supabase (krmlzwwelqvlfslwltol): all 18 public tables have RLS on. Documented: 3 zero-policy tables are intentional service-role-only (app_config, toranot_config, toranot_patients_backup). P1 finding filed — proxy_rate_limits ALL qual=true public is a rate-limit bypass, cross-repo fix deferred pending Toranot coordination.',
+    '📊 Syllabus coverage audit: 1013-Q corpus drifts ≤17% from IMA target on every topic (0 undercovered at 30% threshold). Near-margins to watch: Addictions (ti19 -30%), Thyroid/Mental Health (-17%).',
+    '📈 Total corpus: 950 base + 63 seed = 1013 Qs.',
+  ],
   '1.4.2': [
     '🔥 AI-Hard seed expansion 32→39 Qs — now covers all 27 topics (was 20/27). Added: HF quad-pillar/ARNI swap (ti 1), BCC Mohs H-zone indication (ti 11), anaphylaxis biphasic monitoring duration (ti 12), BPH combo therapy by gland size (ti 16), AUD naltrexone first-line (ti 19), opioid conversion morphine PO→fentanyl patch (ti 21), NNT from ARR (ti 26). Each with 5+ sentence explanation + structured src field.',
     '🏷️ Back-filled "src" field on all 39 seed Qs — AI-Hard-G → Goroll 8e / AI-Hard-AFP → AFP/הר"י review. Future Q-quality tooling can now filter/cite by source.',

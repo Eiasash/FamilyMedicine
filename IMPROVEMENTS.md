@@ -77,3 +77,68 @@ Geri vs fam: fully divergent (different line endings and/or actual content). Ger
 ### 7. CLAUDE.md doc drift
 
 `CLAUDE.md` at repo root mentions v1.3.0 as "current state" and `mishpacha-v1.3.0` SW cache. Bump to v1.3.3 on next CLAUDE.md pass.
+
+---
+
+## v1.4.3 audit pass (2026-04-23)
+
+### RLS sanity pass — shared Supabase project `krmlzwwelqvlfslwltol`
+
+Ran the 4-query sanity pass (STEP 0 of audit-fix-deploy). 18 public-schema tables enumerated, 3 distinct risk classes surfaced.
+
+**Status summary:**
+- ✅ RLS enabled on every public table (18/18).
+- ✅ No legacy `{public} qual=true` on authenticated-scoped data where `auth.uid()` exists (`toranot_state`, `shared_shifts` both properly gated).
+- ✅ No test/debug-named leftover policies.
+- ⚠️ 3 zero-policy tables — intentional but worth documenting.
+- ⚠️ 8 public/anon `qual=true` tables — architectural, not a hole, but worth calling out.
+- ⚠️ 1 rate-limit bypass surface.
+
+**Zero-policy tables (intentional, service-role only):**
+- `app_config` — server-managed kill-switches/config.
+- `toranot_config` — same pattern.
+- `toranot_patients_backup` — auto-snapshot table written by server on schema change, never client-touched.
+
+These are safe. RLS-on + 0 policies = deny-all to anon/authenticated; only service_role (server code) can read/write. No fix needed, just documented here so future audits don't flag as "unreachable = broken".
+
+**Capability-token tables (`{public}` / `{anon}` qual=true, uid-keyed):**
+
+All three medical-PWA backups + leaderboards sit on the same anonymous-user pattern: client generates a long-random `uid` (text PK), stores it in IndexedDB, uses it as a capability token.
+
+| Table | PK | Policies | Real risk |
+|-------|-----|----------|-----------|
+| `mishpacha_backups` | `id TEXT` | anon S/I/U qual=true | If `uid` is high-entropy random → safe (capability token). If low-entropy / user-chosen → enumeration exposes all user progress. **Check client-side uid generation.** |
+| `pnimit_backups` | `id TEXT` | public S/I/U qual=true | Same as above. |
+| `samega_backups` | `id TEXT` | public S/I/U qual=true | Same as above. |
+| `mishpacha_leaderboard` | `uid TEXT` | anon S/I/U qual=true | Public read is expected (it's a leaderboard). Public UPDATE qual=true = anyone can edit anyone's score if they guess a uid. Acceptable if uid is a secret capability token. |
+| `pnimit_leaderboard` | `uid TEXT` | public S/I/U qual=true | Same. |
+| `shlav_leaderboard` | `uid TEXT` | public S/I/U qual=true | Same. |
+
+**Action for § C (Mishpacha):** audit `src/features/cloud.js` to confirm `uid` is `crypto.randomUUID()` or `crypto.getRandomValues()` — **NOT** derivable from device fingerprint or user handle. If it's weak, the RLS posture is effectively "security by obscurity". Don't migrate to authenticated mode (breaks anonymous-use-case) — instead, harden the uid to 128+ bits of entropy.
+
+**P1 — rate-limit bypass: `proxy_rate_limits`**
+
+Schema: `device_id TEXT, date TEXT, count INT`. Policy: **`ALL qual=true with_check=true roles={public}`**.
+
+This means ANY anon client can issue `DELETE FROM proxy_rate_limits` or `UPDATE proxy_rate_limits SET count=0` and reset everyone's rate limits — defeating the whole point of the table.
+
+**Recommended fix (a cross-repo migration, blocks § B/D as well if they use this table):**
+```sql
+DROP POLICY "Allow all proxy_rate_limits" ON public.proxy_rate_limits;
+CREATE POLICY "service_role full" ON public.proxy_rate_limits
+  FOR ALL TO service_role USING (true) WITH CHECK (true);
+```
+The Netlify proxy function must then be switched from anon key to service_role key (server-only, not shipped in client bundle) for the increment/read path. If the function currently uses anon key client-side — that's the deeper bug; rate-limiting via client-held credentials has always been a fiction.
+
+**Deferred** — requires coordination with Toranot deploy. Not blocking v1.4.3.
+
+**P2 — feedback tables `qual=true` public SELECT:**
+`answer_reports`, `mishpacha_feedback`, `pnimit_feedback`, `shlav_feedback` — anyone can read everyone's feedback. Content is user-submitted review/report text. Not catastrophic but if users think feedback is private, it's not. Consider either (a) a banner in the UI saying "feedback is public" or (b) dropping SELECT policy entirely and letting the maintainer query via service_role.
+
+**Conclusion:** 0 hard stops. 1 P1 (rate-limit bypass) deferred pending cross-repo coordination. Shared-Supabase architecture is capability-token based, which is legitimate for an anonymous-user app but fragile — uid entropy audit recommended.
+
+### Follow-ups added this pass
+
+8. **Audit `cloud.js` uid entropy** (client-side, § C only).
+9. **Lock `proxy_rate_limits` to service_role** — cross-repo migration, needs Toranot coordination.
+10. **Feedback-is-public UX copy** — small banner on feedback form, non-blocking.
