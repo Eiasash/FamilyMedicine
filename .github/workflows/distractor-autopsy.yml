@@ -18,12 +18,28 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 55
     steps:
-      - name: Checkout distractor-autopsy branch
+      # Bootstrap: if cowork/distractor-autopsy doesn't exist yet, fork it from main.
+      # Without this, every cron fails at checkout until someone manually creates the branch.
+      - name: Checkout main
         uses: actions/checkout@v4
         with:
-          ref: cowork/distractor-autopsy
+          ref: main
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Ensure cowork/distractor-autopsy branch exists
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin cowork/distractor-autopsy >/dev/null 2>&1; then
+            echo "Branch cowork/distractor-autopsy exists — checking out"
+            git fetch origin cowork/distractor-autopsy:cowork/distractor-autopsy
+            git checkout cowork/distractor-autopsy
+          else
+            echo "Branch cowork/distractor-autopsy missing — forking from main"
+            git checkout -b cowork/distractor-autopsy
+            git push -u origin cowork/distractor-autopsy
+          fi
 
       - name: Setup Node
         uses: actions/setup-node@v4
