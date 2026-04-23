@@ -55,10 +55,15 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.4.3';
-export const BUILD_HASH='1013q-v1.4.3';
+export const APP_VERSION='1.4.4';
+export const BUILD_HASH='1013q-v1.4.4';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.4.4': [
+    '📒 Lerner 2025 integrated as 6th Library tab — full 860-page Hebrew "סיכום רפואת המשפחה 2025" (Dr. Nataly Lerner) split into 329 topic-tagged sections (3.58 MB). Searchable, topic-filterable (27-topic taxonomy), inline chapter reader with prev/next + drill-topic button. Adds native Hebrew prose coverage where AFP/הר"י English abstracts were the only non-Q source.',
+    '📊 Coverage audit (docs/coverage_audit_v144.md): 0 🚨 ZERO topics, 2 \'ok\' (ti 26 EBM ratio 4.00, ti 9 Rheum/MSK ratio 4.36), 25 ✅ rich. Lerner closed the gap most on HTN/Lipids (+12), GI (+12), Heme (+13), Peds-Newborn (+22).',
+    '🏗️ build.sh + sw.js updated to cache lerner_chapters.json as first-class data asset alongside Goroll/Nelson/Harrison chapter indices. Cache bumped mishpacha-v1.4.3 → v1.4.4.',
+  ],
   '1.4.3': [
     '🔥 AI-Hard seed expansion 39 → 63 Qs. +16 Nelson-sourced Peds hard MCQs (new AI-Hard-N tag, Chs 13/22/40/50/61/78/84/94/114/137/167/185/225/400/546 — kawasaki, bronchiolitis, DKA, meningitis, Kocher criteria, HSP, JIA, etc). +8 IMA-weighted gap-fill Qs (AF/DOAC, rotator cuff, statin myopathy, HRT window, NNT, PPV, geri pain ladder, GERD alarm features).',
     '🔗 Every AI-Hard Q now carries `ref` (Goroll chapter / AFP article / Nelson chapter) and AFP-tagged Qs also carry `ref_slug` — the UI can deep-link a wrong-answer banner straight to the source article. 63/63 refs populated (was 0/39).',

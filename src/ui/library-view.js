@@ -374,12 +374,13 @@ export function addChapterQsToBank(jsonStr){
 }
 export function renderLibrary(){
 let h=`<div class="sec-t">📖 Library</div>
-<div class="sec-s">Goroll 8e · Nelson 22e · Harrison 22e · Articles · Past Exams</div>`;
+<div class="sec-s">Goroll 8e · Nelson 22e · Harrison 22e · לרנר 2025 · Articles · Past Exams</div>`;
 // Sub-tabs
 const libTabs=[
 {id:'goroll',l:'📘 Goroll',c:'#d97706'},
 {id:'nelson',l:'👶 Nelson',c:'#059669'},
 {id:'harrison',l:'📗 Harrison',c:'#8b5cf6'},
+{id:'lerner',l:'📒 לרנר',c:'#be123c'},
 {id:'afphari',l:'📄 Articles',c:'#2563eb'},
 {id:'exams',l:'📝 Exams',c:'#06b6d4'}
 ];
@@ -552,6 +553,79 @@ h+=`</div>`;
 }
 
 // ===== LAWS removed v1.4.0 — SYL_LAWS was empty + libTabs has no 'laws' entry since v1.2.11 nav trim =====
+
+// ===== LERNER 2025 — Hebrew FM summary reader (329 sections, topic-tagged) =====
+// Supplementary study material: Dr. Nataly Lerner's 860-page Hebrew FM board-exam
+// summary (updated 01/01/2025). Lazy-loaded JSON; rendered inline with search +
+// topic filter; each section tagged to the 27-topic taxonomy for drill-down.
+else if(G.libSec==='lerner'){
+if(G.lerChOpen!==null&&G._lerData&&G._lerData.chapters[G.lerChOpen]){
+  const ch=G._lerData.chapters[G.lerChOpen];
+  const prevCh=G.lerChOpen>0?G.lerChOpen-1:null;
+  const nextCh=G.lerChOpen<G._lerData.chapters.length-1?G.lerChOpen+1:null;
+  const tiLabel=(typeof ch.ti==='number'&&TOPICS[ch.ti])?TOPICS[ch.ti]:'—';
+  h+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+<button data-action="close-ler-chapter" style="background:#f1f5f9;border:none;border-radius:8px;padding:6px 12px;font-size:11px;cursor:pointer">← Back</button>
+<div style="font-size:12px;font-weight:700;flex:1;min-width:0;text-align:right;unicode-bidi:plaintext" dir="auto">📒 ${sanitize(ch.title)}</div>
+</div>
+<div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;font-size:10px">
+<span style="padding:4px 9px;background:#fef2f2;color:#be123c;border-radius:8px;font-weight:600">p.${ch.page}-${ch.endPage}</span>
+${typeof ch.ti==='number'?`<span style="padding:4px 9px;background:#ede9fe;color:#6d28d9;border-radius:8px;font-weight:600">${sanitize(tiLabel)}</span>`:''}
+${prevCh!==null?`<button data-action="open-ler-chapter" data-idx="${prevCh}" style="padding:4px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer">‹ קודם</button>`:''}
+${nextCh!==null?`<button data-action="open-ler-chapter" data-idx="${nextCh}" style="padding:4px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer">הבא ›</button>`:''}
+${typeof ch.ti==='number'?`<button data-action="drill-topic" data-ti="${ch.ti}" style="padding:4px 10px;background:#7c3aed;color:#fff;border:none;border-radius:8px;cursor:pointer">🧠 תרגל נושא</button>`:''}
+</div>
+<div class="card" style="padding:16px">
+<div class="heb" style="font-size:12px;line-height:1.9;color:#1e293b;text-align:right;unicode-bidi:plaintext;white-space:pre-wrap" dir="auto">${sanitize(ch.body)}</div>
+</div>`;
+}else if(!G._lerData){
+  fetch('lerner_chapters.json').then(r=>r.json()).then(d=>{G._lerData=d;G.render();}).catch(e=>{console.error('Lerner load failed',e);G._lerData={_error:true};});
+  h+=`<div class="card" style="padding:40px;text-align:center"><div style="font-size:13px;color:#64748b">⏳ טוען את סיכום לרנר...</div></div>`;
+}else if(G._lerData._error){
+  h+=`<div class="card" style="padding:20px;text-align:center;font-size:12px;color:#dc2626">Failed to load Lerner summary. Check lerner_chapters.json.</div>`;
+}else{
+const data=G._lerData;
+const q=(G.lerSearch||'').trim().toLowerCase();
+const tiFilter=(typeof G.lerTi==='number')?G.lerTi:null;
+let filtered=data.chapters;
+if(tiFilter!==null)filtered=filtered.filter(c=>c.ti===tiFilter);
+if(q)filtered=filtered.filter(c=>c.title.toLowerCase().includes(q)||c.body.toLowerCase().includes(q));
+h+=`<div class="card" style="padding:14px">
+<div style="font-size:13px;font-weight:700;margin-bottom:4px">📒 סיכום רפואת המשפחה — ד"ר נטלי לרנר</div>
+<div style="font-size:10px;color:#64748b;margin-bottom:10px">${data.meta.chapter_count} sections · 860-page supplement · עודכן ${data.meta.updated} · SUPPLEMENTARY to Goroll/Nelson/Harrison</div>
+<input type="search" placeholder="🔎 חיפוש בכותרות ותוכן (למשל: סוכרת, אוסטיאופורוזיס, דמנציה)" data-action="ler-search" value="${sanitize(G.lerSearch||'')}" style="width:100%;padding:8px 10px;font-size:12px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;box-sizing:border-box" dir="auto">
+<div style="display:flex;gap:4px;overflow-x:auto;margin-bottom:10px;padding-bottom:4px">
+<span class="pill ${tiFilter===null?'on':''}" data-action="ler-ti" data-ti="" style="font-size:10px;white-space:nowrap">הכל</span>`;
+for(let ti=0;ti<27;ti++){
+  const cnt=data.chapters.filter(c=>c.ti===ti).length;
+  if(cnt>0){
+    h+=`<span class="pill ${tiFilter===ti?'on':''}" data-action="ler-ti" data-ti="${ti}" style="font-size:10px;white-space:nowrap">${sanitize((TOPICS[ti]||'').slice(0,22))} · ${cnt}</span>`;
+  }
+}
+h+=`</div>
+<div style="font-size:9px;color:#94a3b8;margin-bottom:6px">${filtered.length===data.chapters.length?`כל ${data.chapters.length} הסעיפים`:`${filtered.length} מתוך ${data.chapters.length}`}</div>`;
+if(filtered.length===0){
+  h+=`<div style="padding:20px;text-align:center;font-size:11px;color:#94a3b8">אין תוצאות.</div>`;
+}else{
+  // Cap to 200 visible rows to keep DOM lean; search narrows further
+  const rows=filtered.slice(0,200);
+  rows.forEach(c=>{
+    const tiLabel=(typeof c.ti==='number'&&TOPICS[c.ti])?TOPICS[c.ti]:'';
+    h+=`<div data-action="open-ler-chapter" data-idx="${c.idx}" style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f1f5f9;cursor:pointer">
+<span style="background:#be123c;color:#fff;font-size:10px;font-weight:700;padding:4px 8px;border-radius:8px;min-width:42px;text-align:center">p.${c.page}</span>
+<div style="flex:1;min-width:0;text-align:right;unicode-bidi:plaintext" dir="auto">
+<div style="font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${sanitize(c.title)}</div>
+${tiLabel?`<div style="font-size:9px;color:#94a3b8;margin-top:2px">${sanitize(tiLabel)}</div>`:''}
+</div>
+<span style="font-size:16px;color:#cbd5e1">‹</span></div>`;
+  });
+  if(filtered.length>200){
+    h+=`<div style="padding:10px;text-align:center;font-size:10px;color:#94a3b8">+${filtered.length-200} נוספים — צמצם חיפוש</div>`;
+  }
+}
+h+=`</div>`;
+}
+}
 
 // ===== AFP + הר"י — 542-paper browser (7-year syllabus window 2018-06 → 2025-05) =====
 if(G.libSec==='afphari'){
@@ -882,9 +956,33 @@ export function initLibraryEvents(container) {
       const cur = G._nelData && G._nelData.find(x => x.ch === ch);
       if (cur) aiSummarizeChapter(ch, cur.title_en, 'nelson');
     }
+    else if (action === 'open-ler-chapter') {
+      const idx = parseInt(el.dataset.idx, 10);
+      if (!isNaN(idx)) { G.lerChOpen = idx; window.scrollTo(0,0); G.render(); }
+    }
+    else if (action === 'close-ler-chapter') {
+      G.lerChOpen = null; G.render();
+    }
+    else if (action === 'ler-ti') {
+      const raw = el.dataset.ti;
+      G.lerTi = (raw === '' || raw === undefined) ? null : parseInt(raw, 10);
+      G.render();
+    }
   });
   container.addEventListener('input', (e) => {
-    if (e.target.dataset.action === 'nel-search') {
+    if (e.target.dataset.action === 'ler-search') {
+      G.lerSearch = e.target.value;
+      clearTimeout(G._lerSearchTimer);
+      G._lerSearchTimer = setTimeout(() => {
+        const prev = document.activeElement;
+        G.render();
+        if (prev && prev.dataset && prev.dataset.action === 'ler-search') {
+          const next = document.querySelector('[data-action="ler-search"]');
+          if (next) { next.focus(); next.setSelectionRange(next.value.length, next.value.length); }
+        }
+      }, 120);
+    }
+    else if (e.target.dataset.action === 'nel-search') {
       G.nelSearch = e.target.value;
       // Debounced re-render: avoid jank while typing on mobile
       clearTimeout(G._nelSearchTimer);
