@@ -15,7 +15,8 @@
     "st": "HTN — initiation threshold (Stage 1 + high-ASCVD)",
     "ti": 2,
     "e": "לפי ACC/AHA 2017, בחולה עם ל\"ד Stage 1 (130–139/80–89) ו-ASCVD 10y ≥10% → יש אינדיקציה לטיפול תרופתי בתוספת אורח חיים. החולה כאן כבר ב-Stage 2 (≥140/90), וסף של ASCVD אינו רלוונטי כי הגיע לסף תרופתי בכל מקרה. שתי תרופות במקביל מומלצות רק ב-Stage 2 עם ל\"ד ≥20/10 מעל היעד. Goroll 8e Ch 19.",
-    "src": "Goroll 8e — Primary Care Medicine"
+    "src": "Goroll 8e — Primary Care Medicine",
+    "ref": "Goroll 8e Ch 19"
   },
   {
     "q": "מטופלת בת 68 עם DM2 (HbA1c 8.1%), eGFR 48, ו-HFrEF (EF 38%). איזו תרופה נוגדת סוכר היא הבחירה המועדפת בהוספה למטפורמין?",
@@ -33,7 +34,8 @@
     "st": "DM2 — SGLT2i in HF + CKD",
     "ti": 6,
     "e": "SGLT2i (אמפגליפלוזין/דפגליפלוזין) היא הבחירה המועדפת בחולה DM2 עם HFrEF ו/או CKD — שיפור תמותה ואשפוזים בלב וכליות. בטוח עד eGFR 20–25 להגנה קרדיו-רנלית (אם כי ההשפעה על גלוקוז נחלשת מתחת ל-45). פיוגליטזון אסור ב-HF. SU גורם היפוגליקמיה ועלייה במשקל. ADA 2024 + Goroll 8e Ch 102.",
-    "src": "Goroll 8e — Primary Care Medicine"
+    "src": "Goroll 8e — Primary Care Medicine",
+    "ref": "Goroll 8e Ch 102 — Diabetes Mellitus"
   },
   {
     "q": "גבר בן 58, LDL 145, HDL 45, TG 180, לח\"ד 132/82, לא מעשן, ASCVD 10y = 11%. לפי AHA/ACC 2018 מהי ההמלצה לסטטין?",
@@ -51,7 +53,8 @@
     "st": "Lipids — statin intensity by ASCVD risk",
     "ti": 2,
     "e": "Primary prevention, ASCVD 10y בין 7.5–19.9% = \"intermediate risk\" → moderate-intensity statin (אטורבסטטין 10–20 / רוסובסטטין 5–10). High-intensity שמור ל-ASCVD ≥20%, LDL ≥190, או secondary prevention. Goroll 8e Ch 15 + AFP 2019.",
-    "src": "Goroll 8e — Primary Care Medicine"
+    "src": "Goroll 8e — Primary Care Medicine",
+    "ref": "Goroll 8e Ch 27 — Dyslipidemia"
   },
   {
     "q": "חולה בת 72 עם AF חדש, CHA₂DS₂-VASc = 3 (גיל + HTN + F), ללא דימום משמעותי ברקע. HAS-BLED = 2. מה ההמלצה הנכונה ביותר?",
@@ -69,7 +72,8 @@
     "st": "AF — anticoagulation threshold by CHA2DS2-VASc",
     "ti": 0,
     "e": "CHA₂DS₂-VASc ≥2 בנשים (או ≥2 בגברים, ≥3 בנשים לפי גרסאות מחמירות) = אינדיקציה לנוגדי קרישה. DOAC מועדף על וורפרין (פרט ל-AF עם מסתם מכני או מיטרלי מכני/סטנוזיס). אספירין לא מספיק. HAS-BLED 2 אינו סף חסימה — הוא רק דורש מעקב צמוד. Goroll 8e Ch 30.",
-    "src": "Goroll 8e — Primary Care Medicine"
+    "src": "Goroll 8e — Primary Care Medicine",
+    "ref": "Goroll 8e Ch 28 — Atrial Fibrillation"
   },
   {
     "q": "מטופלת בת 32 עם אסתמה, משתמשת ב-SABA PRN 3–4 פעמים בשבוע + SABA לילי 1×/חודש. לא נוטלת ICS. לפי GINA 2023, מהו הצעד הבא?",
@@ -87,7 +91,8 @@
     "st": "Asthma — GINA track-1 low-dose ICS-formoterol",
     "ti": 3,
     "e": "GINA 2019 הסירה את ה-SABA-only מהקו הראשון. כל חולה מעל גיל 12 צריך לקבל ICS (בעצמו או בשילוב פורמוטרול) כטיפול מקל/בקרה. Step 1–2 = low-dose ICS-formoterol PRN (MART). SABA לבד = סיכון מוגבר לאקססרבציה ולמוות. Goroll 8e Ch 37 + GINA 2023.",
-    "src": "Goroll 8e — Primary Care Medicine"
+    "src": "Goroll 8e — Primary Care Medicine",
+    "ref": "Goroll 8e Ch 48 — Asthma"
   },
   {
     "q": "חולה בן 65 מעשן לשעבר, FEV1/FVC 0.62 אחרי מרחיב סמפונות, FEV1 = 54% מהצפוי, mMRC dyspnea score = 2, אקססרבציה אחת ב-12 חודשים האחרונים ללא אשפוז. מהי קבוצת GOLD 2023?",
@@ -105,7 +110,8 @@
     "st": "COPD — GOLD 2023 ABE grouping",
     "ti": 3,
     "e": "GOLD 2023 ביטלה קבוצות C ו-D ויצרה קבוצה חדשה E (exacerbator). החלוקה: A = mMRC 0–1 / CAT <10 AND ≤1 אקססרבציה מתונה ללא אשפוז; B = mMRC ≥2 / CAT ≥10 AND ≤1 אקססרבציה מתונה ללא אשפוז; E = ≥2 אקססרבציות מתונות או ≥1 אקססרבציה שדרשה אשפוז (ללא קשר לסימפטומים). החולה כאן: mMRC=2 + אקססרבציה אחת ללא אשפוז = קבוצה B. Goroll 8e Ch 37 + GOLD 2023.",
-    "src": "Goroll 8e — Primary Care Medicine"
+    "src": "Goroll 8e — Primary Care Medicine",
+    "ref": "Goroll 8e Ch 47 — COPD"
   },
   {
     "q": "מטופלת בת 55 עם hypothyroidism sub-clinical (TSH 7.8, FT4 תקין), ללא תסמינים, ללא אנטי-TPO. מה ההמלצה?",
@@ -124,7 +130,8 @@
     "st": "Subclinical hypothyroidism — treatment threshold",
     "ti": 7,
     "e": "TSH בין 4.5–10, א-תסמיני, ללא אנטי-TPO ולא בהריון → חזרת בדיקה ב-1–3 חודשים לפני החלטה. סף התחלת טיפול מוסכם: TSH >10, או הריון/ניסיון להרות, או סימפטומטי, או אנטי-TPO חיובי גבוה. ATA 2014 + AFP 2021.",
-    "src": "Goroll 8e — Primary Care Medicine"
+    "src": "Goroll 8e — Primary Care Medicine",
+    "ref": "Goroll 8e Ch 104 — Thyroid Disorders"
   },
   {
     "q": "אישה בת 67 לאחר מנופוזה, FRAX 10y major osteoporotic fracture = 22%, hip = 4.2%, DEXA T-score femoral neck = -2.1. אורח חיים תקין. על פי NOF / USPSTF מה ההמלצה?",
@@ -142,7 +149,8 @@
     "st": "Osteoporosis — FRAX threshold even at osteopenia",
     "ti": 9,
     "e": "ב-T-score בתחום osteopenia (-1.0 עד -2.5), סף הטיפול לפי NOF: FRAX major ≥20% או hip ≥3%. החולה עוברת את שני הספים → אינדיקציה ל-bisphosphonate (קו ראשון). Goroll 8e Ch 148 + AFP 2023.",
-    "src": "Goroll 8e — Primary Care Medicine"
+    "src": "Goroll 8e — Primary Care Medicine",
+    "ref": "Goroll 8e Ch 164 — Osteoporosis"
   },
   {
     "q": "חולה בת 45 פונה עם מצב רוח ירוד, אנהדוניה, הפרעות שינה ואבדן משקל מ-4 שבועות. PHQ-9 = 16. מה דרגת החומרה + הבחירה הראשונה לטיפול?",
@@ -160,7 +168,8 @@
     "st": "Depression — PHQ-9 thresholds + first-line Rx",
     "ti": 18,
     "e": "PHQ-9: 0–4 מינימלי, 5–9 קל, 10–14 בינוני, 15–19 בינוני-חמור, ≥20 חמור. 16 = moderately severe → SSRI + CBT (שילוב עדיף). הפניה לאשפוז רק עם סיכון אובדני פעיל או פסיכוזה. Goroll 8e Ch 227 + AFP 2022.",
-    "src": "Goroll 8e — Primary Care Medicine"
+    "src": "Goroll 8e — Primary Care Medicine",
+    "ref": "Goroll 8e Ch 227 — Depression"
   },
   {
     "q": "חולה בן 70, קולונוסקופיה סקר אחרונה לפני 5 שנים עם 1 טובולרי אדנומה <10 מ\"מ. מה הבדיקה הבאה והמרווח?",
@@ -178,7 +187,8 @@
     "st": "Colonoscopy surveillance — low-risk adenoma",
     "ti": 20,
     "e": "USMSTF 2020 עדכן: 1–2 טובולרי אדנומות <10 מ\"מ = מרווח 7–10 שנים (היה 5). High-risk adenoma (≥3, או ≥10 מ\"מ, או villous, או high-grade dysplasia) = 3 שנים. החולה ב-5 שנים אחרי לואו-ריסק → עוד 2–5 שנים. Goroll 8e Ch 76.",
-    "src": "Goroll 8e — Primary Care Medicine"
+    "src": "Goroll 8e — Primary Care Medicine",
+    "ref": "Goroll 8e Ch 56 — Colorectal Cancer Screening"
   },
   {
     "q": "אישה בת 72 בריאה, עם מכתב שחרור מ-shingles לפני 3 חודשים. מה ההמלצה לגבי חיסון Shingrix?",
@@ -196,7 +206,8 @@
     "st": "Adult vaccines — Shingrix after HZ",
     "ti": 20,
     "e": "ACIP ממליץ Shingrix (חיסון רקומבינטי לא-חי) לכל ≥50 גם לאחר זיהום קודם (מכיוון שההגנה הטבעית חלקית וקצרה) — לאחר שה-rash הרגיש. Zostavax כבר לא בשימוש בארה\"ב. אין צורך להמתין שנים. Goroll 8e Ch 11 + ACIP 2022.",
-    "src": "Goroll 8e — Primary Care Medicine"
+    "src": "Goroll 8e — Primary Care Medicine",
+    "ref": "Goroll 8e Ch 7 — Adult Immunization"
   },
   {
     "q": "חולה בן 58, HTN, DM, eGFR 55, UACR 180 mg/g. כבר על ACEi + מטפורמין + אטורבסטטין. איזו תוספת תיתן את התועלת הגבוהה ביותר להאטת CKD?",
@@ -214,7 +225,8 @@
     "st": "CKD — SGLT2i for albuminuria",
     "ti": 5,
     "e": "DAPA-CKD ו-EMPA-KIDNEY: SGLT2i מפחית הידרדרות CKD וב-CV events בחולי CKD עם או בלי DM, במיוחד עם אלבומינוריה. בטוח עד eGFR 20. ACEi/ARB + SGLT2i הם ה-backbone. מטפורמין בטוח עד eGFR 30. Goroll 8e Ch 147 + KDIGO 2022.",
-    "src": "Goroll 8e — Primary Care Medicine"
+    "src": "Goroll 8e — Primary Care Medicine",
+    "ref": "Goroll 8e Ch 142 — CKD"
   },
   {
     "q": "חולה בן 42 עם dyspepsia אפיגסטרי 3 חודשים, ללא alarm features, לא על NSAIDs. מה הצעד הראשון?",
@@ -232,7 +244,8 @@
     "st": "Dyspepsia — test-and-treat under age 60",
     "ti": 4,
     "e": "ACG 2017: <60 ללא alarm features → test-and-treat H. pylori. ≥60 או alarm features (ירידה במשקל, דימום, דיספגיה, הקאות מתמשכות) → גסטרוסקופיה. PPI אמפירי נשקל אם H. pylori שלילי. Goroll 8e Ch 63 + AFP 2021.",
-    "src": "Goroll 8e — Primary Care Medicine"
+    "src": "Goroll 8e — Primary Care Medicine",
+    "ref": "Goroll 8e Ch 68 — Dyspepsia / H. pylori"
   },
   {
     "q": "חולה בן 50 ללא רקע עם כאב חזה קל במאמץ, לא טיפוסי לאנגינה. HEART score = 3 (גיל + EKG לא ספציפי + anamnesis), טרופונין שלילי ×1. מה הצעד הבא?",
@@ -250,7 +263,8 @@
     "st": "Chest pain — HEART score 0–3 management",
     "ti": 0,
     "e": "HEART score 0–3 = סיכון 30 יום MACE ~1.7% → בטוח לשחרר לאחר שלילת NSTEMI (טרופונין), עם מעקב קרדיולוגי אמבולטורי כולל stress/anatomic test תוך שבועות. HEART 4–6 = intermediate (observation + serial troponin). 7–10 = high-risk (cath). AHA 2021 chest pain guideline.",
-    "src": "Goroll 8e — Primary Care Medicine"
+    "src": "Goroll 8e — Primary Care Medicine",
+    "ref": "Goroll 8e Ch 20 — Chest Pain Evaluation"
   },
   {
     "q": "חולה בן 45 עם נזופרינגיטיס 4 ימים, חום קל, אין שיעול, לימפדנופתיה צווארית, exudate בשקדים. Centor/McIsaac = 4. מה ההמלצה?",
@@ -268,7 +282,8 @@
     "st": "Strep pharyngitis — Centor 4 + RADT",
     "ti": 13,
     "e": "IDSA 2012: אפילו ב-Centor 4, לא לטפל אמפירית — לבצע RADT (sens 85–95%). אם שלילי ומעל גיל 15, אין חובה לתרבית; אם <15, כן תרבית אישור. פניצילין V 10 ימים או אמוקסיצילין חד-יומי. אמוקסיצילין-קלבולנט מיותר. Goroll 8e Ch 220 + IDSA.",
-    "src": "Goroll 8e — Primary Care Medicine"
+    "src": "Goroll 8e — Primary Care Medicine",
+    "ref": "Goroll 8e Ch 219 — Pharyngitis"
   },
   {
     "q": "תינוק בן 14 חודשים, חום 39.5, כאב אוזן, TM אדום ובולט משמאל. ללא תרופות ב-3 חודשים האחרונים. מה האנטיביוטיקה הראשונה?",
@@ -286,7 +301,9 @@
     "st": "AOM — first-line amoxicillin high-dose",
     "ti": 24,
     "e": "AAP 2013: אמוקסיצילין 80–90 mg/kg/day (חלוקה ל-2 מנות) הוא קו ראשון בילד ≥6 חודשים עם AOM מאומצת. קלבולנט שמור ל: טיפול אנטיביוטי ב-30 יום אחרונים, conjunctivitis-otitis syndrome, או כישלון אמוקסיצילין. אזיתרומיצין רק באלרגיה אמיתית לפניצילין. AFP 2019.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — AOM Guidance 2019",
+    "ref_slug": "aom-2019"
   },
   {
     "q": "ילד בן 3, חום 40 ל-48 שעות, ללא מוקד ברור, WBC 18,000 עם neutrophilia, לא נוראלי, חיסונים מלאים כולל PCV13. מה הצעד?",
@@ -304,7 +321,9 @@
     "st": "Pediatric fever without source 3–36m, PCV13 era",
     "ti": 24,
     "e": "לאחר עידן PCV13 וחיסונים מלאים, סיכון occult bacteremia ירד דרמטית (<1%). UTI נשאר הגורם הבקטריאלי השכיח ביותר ב-fever without source, במיוחד בבנות <2 ובבנים לא-נימולים. UA + culture + observation = הגישה המעודכנת. AFP 2020 + AAP 2021.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — Fever Without Source 2020",
+    "ref_slug": "fws-2020"
   },
   {
     "q": "אישה בת 28, UTI 3 אפיזודות ב-12 חודשים, צמחית E. coli רגישה, ללא אנומליה אנטומית. מה הגישה המומלצת?",
@@ -322,7 +341,9 @@
     "st": "Recurrent UTI — nitrofurantoin prophylaxis",
     "ti": 5,
     "e": "≥2/6 חודשים או ≥3/12 חודשים = recurrent UTI. אפשרויות: continuous low-dose prophylaxis (nitrofurantoin 50–100 mg/night, או TMP-SMX, או cefalexin), או post-coital, או self-start therapy. Fluoroquinolone נדחה בגלל תופעות לוואי. CT urogram רק אם יש ממצאים אטיפיים. AFP 2020.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — Recurrent UTI 2020",
+    "ref_slug": "ruti-2020"
   },
   {
     "q": "אישה בת 62 עם vertigo פתאומי 12 שעות, נוסטגמוס אופקי, ללא סימנים נוירולוגיים אחרים. HINTS exam: head-impulse חיובי (saccade corrective), nystagmus חד-כיווני, test of skew שלילי. מה הפירוש?",
@@ -340,7 +361,9 @@
     "st": "Vertigo — HINTS (peripheral pattern)",
     "ti": 10,
     "e": "HINTS בעת nystagmus מתמשך: Head-Impulse חיובי (saccade), Nystagmus חד-כיווני, Test-of-Skew שלילי → peripheral (sens ~100%, יותר טוב מ-MRI בשעות ראשונות). לעומת זאת, HINTS \"מרכזי\" (head-impulse שלילי, nystagmus דו-כיווני/משנה כיוון, או skew חיובי) → stroke. AFP 2017 + STANDING.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — Dizziness & Vertigo 2022",
+    "ref_slug": "vertigo-2022"
   },
   {
     "q": "אישה בת 28 מעוניינת ב-OCP. היא מיגרנוטית עם אורה, BMI 32, ללא עישון, לח\"ד 125/78. איזה סיווג CDC MEC לקומבינציה של אסטרוגן+פרוגסטרון?",
@@ -358,7 +381,9 @@
     "st": "Contraception — migraine with aura = MEC 4",
     "ti": 14,
     "e": "CDC US MEC: מיגרנה עם aura = Category 4 ל-combined hormonal contraceptives (סיכון מוגבר לשבץ). אפשרויות בטוחות: progestin-only (POP, DMPA, implants, IUD Mirena) = Category 1–2. חשוב לא לבלבל עם מיגרנה ללא aura (Category 2–3 לפי גיל). AFP 2020 + CDC 2016.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — Contraception MEC 2020",
+    "ref_slug": "contraception-mec-2020"
   },
   {
     "q": "אישה 30 ימים פוסט-פרטום, פונה עם עייפות קשה, אנהדוניה, בכי, מחשבות אובדניות חולפות ללא תכנון. EPDS = 14. מה הצעד?",
@@ -376,7 +401,9 @@
     "st": "PPD — EPDS threshold + Rx",
     "ti": 15,
     "e": "EPDS ≥13 = סף דיאגנוסטי ל-PPD (sens/spec ~86/78). Baby blues חולף תוך 10–14 יום. Sertraline הוא SSRI מועדף בהנקה (העברה נמוכה לחלב). מחשבות אובדניות לא תכנוניות לא דורשות אשפוז — אבל כן מחייבות מעקב צמוד ותכנית בטיחות. ACOG 2018 + USPSTF 2022.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — Postpartum Depression 2019",
+    "ref_slug": "ppd-2019"
   },
   {
     "q": "ילד בן 6 עם ADHD שאובחן לפי DSM-5. שיפור בקרית הספר דורש טיפול. על פי AAP 2019 מהו הקו הראשון?",
@@ -394,7 +421,9 @@
     "st": "ADHD — age-based first-line (behavior < 6)",
     "ti": 25,
     "e": "AAP 2019: גיל 4–5 → טיפול התנהגותי (parent training) ראשון, תרופתי רק אם כישלון. 6–11 → FDA-approved stimulant + התנהגותי ו/או educational. 12–18 → תרופתי עם הסכמה + התנהגותי לפי צורך. Atomoxetine + guanfacine/clonidine XR = 2nd-line. AFP 2020.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — ADHD 2020",
+    "ref_slug": "adhd-2020"
   },
   {
     "q": "ילד בן 2 עם lead screening, רמת עופרת = 6 μg/dL. מה ההתערבות הנדרשת?",
@@ -412,15 +441,17 @@
     "st": "Lead — CDC 2021 BLRV 3.5 μg/dL",
     "ti": 23,
     "e": "CDC 2021: reference value הורד מ-5 ל-3.5 μg/dL. כל רמה ≥3.5 מחייבת התערבות סביבתית, הדרכה תזונתית (ברזל, Ca, ויטמין C), ומעקב. Chelation רק ב-≥45 μg/dL. אין רמה \"בטוחה\" של עופרת. AFP 2022 + CDC.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — Lead Poisoning 2022",
+    "ref_slug": "lead-2022"
   },
   {
     "q": "ילדה בת 5 עם אסתמה אקססרבציה בינונית: SaO2 91% באוויר חדר, שימוש בשרירי עזר, wheezing בשני הריאות. מה הטיפול הראשוני בחדר מיון?",
     "o": [
-      "אויר סביבתי + observation",
+      "אויר סביבתי + observation של שעה לפני החלטה",
       "Albuterol nebulizer 3 מנות כל 20 ד' + prednisolone PO 1–2 mg/kg + O₂",
-      "Epinephrine IM מיד",
-      "Magnesium sulfate IV קו ראשון"
+      "Epinephrine IM 0.01 mg/kg מיידי + שחרור לבית",
+      "Magnesium sulfate IV 40 mg/kg כקו ראשון יחיד"
     ],
     "c": 1,
     "c_accept": [
@@ -430,7 +461,9 @@
     "st": "Pediatric asthma exacerbation — first-line ED Rx",
     "ti": 24,
     "e": "GINA/NAEPP: אקססרבציה בינונית-חמורה = SABA 3 מנות בשעה הראשונה + סטרואיד סיסטמי תוך שעה (PO כמו IV אם המצב מאפשר). אפי IM רק באנפילקסיס. MgSO4 IV באקססרבציה חמורה שלא מגיבה. AFP 2020 + GINA 2023.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — Pediatric Asthma 2020",
+    "ref_slug": "peds-asthma-2020"
   },
   {
     "q": "חולה DM2 עם HbA1c 7.2%, משך מחלה 4 שנים. אחרון eye exam לפני שנה נורמלי. מתי לעשות next screening?",
@@ -448,15 +481,17 @@
     "st": "DR — extended screening for well-controlled",
     "ti": 6,
     "e": "AAO/ADA: DM2 — בדיקה ראשונית בעת אבחון, אחר כך שנתית. אם 1–2 בדיקות נורמליות + glycemia מיוצבת → ניתן להרחיב ל-2 שנים. DM1 — שנה לאחר אבחון, אחר כך שנתית. DR מתקדמת = בדיקה קרובה יותר. AFP 2022.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — Diabetic Retinopathy 2019",
+    "ref_slug": "dr-2019"
   },
   {
     "q": "אישה בת 52 לאחר מנופוזה מלאה (סדר LMP לפני שנה), עם hot flushes קשים המפריעים לשינה ולתפקוד. ללא VTE, ללא סרטן שד במשפחה, ללא CV. איזו המלצה נכונה?",
     "o": [
       "HRT סיסטמית בהפעלה נמוכה היא הטיפול היעיל ביותר ובטוח יחסית ב-<60 / <10 שנים מאז מנופוזה",
-      "HRT contraindicated אחרי מנופוזה",
-      "SSRI/SNRI הם קו ראשון יחיד",
-      "רק טיפול לא-תרופתי"
+      "HRT contraindicated לאחר מנופוזה בכל גיל",
+      "SSRI / SNRI (paroxetine / venlafaxine) = קו ראשון יחיד",
+      "Lifestyle וטיפול לא-תרופתי בלבד — HRT רק במקרה קיצון"
     ],
     "c": 0,
     "c_accept": [
@@ -466,15 +501,17 @@
     "st": "HRT — window of opportunity",
     "ti": 14,
     "e": "NAMS 2022: HRT היא הטיפול היעיל ביותר לתסמיני VMS. בריאות-מועדף (\"timing hypothesis\"): <60 או <10 שנים מאז מנופוזה — יחס תועלת/סיכון חיובי. Contraindications: VTE/stroke בהיסטוריה, סרטן שד, מחלת כבד פעילה. SSRI/SNRI (paroxetine FDA-approved) = 2nd-line אם HRT אסור. AFP 2023.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — Menopause HRT 2021",
+    "ref_slug": "hrt-2021"
   },
   {
     "q": "מטופל עם low back pain חד, ללא trauma, 3 ימים. מה השאלה הבודדת שהכי חשובה לשלול red flag?",
     "o": [
-      "\"האם הכאב מחמיר בישיבה?\"",
+      "\"האם הכאב מחמיר בישיבה ממושכת?\" — חשש discitis",
       "\"האם יש חולשה ברגל, אובדן שליטה בשתן/צואה, או saddle anesthesia?\"",
-      "\"האם הכאב ירד לירך?\"",
-      "\"האם יש לך עייפות?\""
+      "\"האם הכאב מקרין לירך הקדמית?\" — חשש meralgia paresthetica",
+      "\"האם יש עייפות כללית ונפילות תכופות?\" — חשש anemia"
     ],
     "c": 1,
     "c_accept": [
@@ -484,15 +521,17 @@
     "st": "LBP — red flag for cauda equina",
     "ti": 9,
     "e": "Cauda equina syndrome הוא emergency נוירולוגי — saddle anesthesia, אצירה/חוסר שליטה בשתן, ירידה בטונוס sphincter, חולשה דו-צדדית. Red flags נוספים: >50, ירידה במשקל, ממאירות ברקע, trauma, חום, שימוש ב-IVDU, סטרואידים, הלילה-כאב לא מעיר. AFP 2018.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — Low Back Pain 2023",
+    "ref_slug": "lbp-2023"
   },
   {
     "q": "ילוד בן 4 ימים, יילוד במועד, עם jaundice. total bili 14 mg/dL. הורים ABO-incompatible (אם O, תינוק A). משקל -7% מהלידה. מה הצעד?",
     "o": [
-      "לעקוב 24 שעות",
+      "לעקוב 24 שעות וחזור למדידה לפני החלטה טיפולית",
       "להתחיל phototherapy על פי nomogram AAP (שעות + גיל היריון + risk factors)",
-      "exchange transfusion מיידית",
-      "UGT1A1 sequencing"
+      "Exchange transfusion מיידית ללא התחשבות בערך נומוגרמה",
+      "UGT1A1 sequencing טרם החלטה על phototherapy"
     ],
     "c": 1,
     "c_accept": [
@@ -502,15 +541,17 @@
     "st": "Neonatal jaundice — AAP nomogram decision",
     "ti": 23,
     "e": "החלטה מבוססת על Bhutani / AAP 2022 nomogram: שעת חיים + bili + risk factors (isoimmunization, G6PD, asphyxia, albumin <3, prematurity). ABO incompatibility הוא neurotoxicity risk → הפוטו-תרפיה מוקדמת יותר. Exchange רק אם bili מתקרב ל-exchange threshold או תסמיני encephalopathy. AFP 2023.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — Neonatal Jaundice 2021",
+    "ref_slug": "neonatal-jaundice-2021"
   },
   {
     "q": "חולה 65 אלכוהוליסט עם אנמיה mean MCV 108. B12 תקין, folate 2.1 ng/mL (נמוך). מה הסיבה הסבירה ביותר?",
     "o": [
-      "Pernicious anemia",
+      "Pernicious anemia — חסר intrinsic factor + anti-IF antibodies",
       "Folate deficiency משנית לאלכוהול ותזונה לקויה",
-      "Myelodysplastic syndrome",
-      "Hypothyroidism"
+      "Myelodysplastic syndrome — צורך biopsy מח עצם לאימות",
+      "Hypothyroidism — בדיקת TSH לפני כל החלטה טיפולית"
     ],
     "c": 1,
     "c_accept": [
@@ -520,7 +561,9 @@
     "st": "Macrocytic anemia — alcoholism + folate low",
     "ti": 8,
     "e": "מאקרוציטוזיס (MCV >100) בחולה אלכוהוליסט: folate deficiency שכיח בגלל תזונה + אלכוהול שמעכב ספיגה ומטבוליזם של folate. אלכוהול עצמו גם גורם macrocytosis ישיר. חשוב להחליף folate רק אחרי בדיקת B12 כדי למנוע neuropathy מסכנת. MDS/hypothyroid גם אפשריים אבל פחות ראשונים. Goroll 8e Ch 79.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — Macrocytic Anemia 2018",
+    "ref_slug": "macrocytic-anemia-2018"
   },
   {
     "q": "חולה בת 60 עם osteoarthritis של ברך, BMI 32, כאבים יומיים. איזו התערבות הראשונה ביעילות מוכחת?",
@@ -538,15 +581,17 @@
     "st": "Knee OA — non-pharm first-line",
     "ti": 9,
     "e": "ACR/AAOS 2019: מעקב על הירידה במשקל (≥5%) + תרגילי כוח למורפולוגיה + נעלי הליכה מתאימות = הבסיס. NSAID topical (diclofenac) מועדף על PO. Intra-articular steroid מוגבל ל-3–4 זריקות בשנה ותועלתם קצרה. Opioid לא מומלץ. AFP 2020.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — Knee OA 2021",
+    "ref_slug": "knee-oa-2021"
   },
   {
     "q": "חולה 80 עם delirium אקוטי באשפוז. שללנו זיהום, תרופות, מטבולית. מה ראשון ניהולית?",
     "o": [
-      "haloperidol קבוע",
+      "Haloperidol 0.5 mg BID קבוע לכל חולה עם delirium בגיל מבוגר",
       "ניהול לא-תרופתי (reorientation, family, sleep hygiene, mobilization, glasses/hearing aids)",
-      "benzodiazepine למנוע agitation",
-      "physical restraints"
+      "Lorazepam 0.5 mg q4h IV למניעת agitation סיסטמית",
+      "Physical restraints רוטיניים עד ההתייצבות הקוגניטיבית"
     ],
     "c": 1,
     "c_accept": [
@@ -556,15 +601,17 @@
     "st": "Delirium — non-pharm first",
     "ti": 17,
     "e": "delirium — Bundle HELP / ABCDEF: orientation, mobilization, כוסות/שומע, שינה, משפחה, שליטה בכאב. תרופות אנטי-פסיכוטיות רק אם אגרסיביות מסכנת. Benzo מחמיר את ה-delirium (מלבד DT). Restraint מחמיר agitation. Goroll 8e Ch 169 + AFP 2022.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — Delirium 2021",
+    "ref_slug": "delirium-2021"
   },
   {
     "q": "חולה עם syncope: איבוד הכרה <30 שניות, קדם-trigger של כאב (venipuncture), recovered spontaneously. EKG תקין, אורתוסטטי שלילי. מה הצעד הנכון?",
     "o": [
-      "cardiac monitor 48 שעות לאבחנה",
+      "Cardiac monitor 48 שעות לכל חולה עם סינקופה ראשונה",
       "הצרעת vasovagal, ייעוץ להימנע trigger + מי שתייה + מניעת מצבים מסכנים — שחרור",
-      "MRI מוח מיידי",
-      "echocardiogram + stress test routine"
+      "MRI מוח מיידי לשלול stroke או TIA אחורי",
+      "Echocardiogram + stress test routine לכל חולה מעל 40"
     ],
     "c": 1,
     "c_accept": [
@@ -574,15 +621,17 @@
     "st": "Syncope — reflex (vasovagal) workup",
     "ti": 22,
     "e": "Reflex syncope (vasovagal): prodrome + trigger מוגדר + recovery מהיר + EKG תקין = אבחון קליני, לא צריך בדיקות הדמיה/הולטר. חינוך (מים, נמנע trigger, squeeze maneuvers, lie down) = טיפול. בדיקות מורחבות רק ב-atypical או עם red flags (קשיש, פציעה, exertional, palpitations, family sudden death). AFP 2022.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — Syncope 2019",
+    "ref_slug": "syncope-2019"
   },
   {
     "q": "חולה בן 65 עם HFrEF (EF 30%, NYHA II), כבר על lisinopril 20 mg + metoprolol succinate 100 mg/d. eGFR 55, K+ 4.2, לח\"ד 118/72. מה הצעד הבא לפי GDMT?",
     "o": [
-      "הוספת דיגוקסין",
+      "הוספת digoxin לשליטה ב-HR וחיזוק התכווצות",
       "החלפת ACEi ל-ARNI (sacubitril/valsartan) לאחר washout של 36 שעות",
-      "הוספת CCB (amlodipine) לשליטה ב-HR",
-      "הוספת loop diuretic קבוע"
+      "הוספת CCB (amlodipine) לוויסות לחץ דם והיקף",
+      "הוספת loop diuretic קבוע ללא מדידת חסר/עודף"
     ],
     "c": 1,
     "c_accept": [
@@ -592,7 +641,8 @@
     "st": "HFrEF — ARNI swap (quad pillars)",
     "ti": 1,
     "e": "AHA/ACC/HFSA 2022: ב-HFrEF סימפטומטי (NYHA II–III) תחת ACEi/ARB — המרה ל-ARNI משפרת תמותה (PARADIGM-HF). יש לבצע washout של 36 שעות מ-ACEi כדי להימנע מ-angioedema. ארבעת הגמרים (quad pillars): ARNI או ACEi/ARB + β-blocker + MRA + SGLT2i — כולם כקו ראשון. דיגוקסין רק להורדת אשפוזים כשיש סימפטומים למרות ה-4. CCB לא-דיהידרופירידיני אסור ב-HFrEF. Goroll 8e Ch 32.",
-    "src": "Goroll 8e — Primary Care Medicine"
+    "src": "Goroll 8e — Primary Care Medicine",
+    "ref": "Goroll 8e Ch 32 — Heart Failure"
   },
   {
     "q": "גבר בן 72 עם נגע nodular BCC, קוטר 8 מ\"מ, באזור ה-nasolabial fold (H-zone של הפנים), נגע ראשון. מהי הבחירה הטיפולית המיטבית?",
@@ -610,15 +660,17 @@
     "st": "BCC — Mohs indication (H-zone)",
     "ti": 11,
     "e": "Mohs הוא הטיפול המועדף ב-BCC באזורים בעלי סיכון גבוה להישנות (\"H-zone\" — נחיריים, שפתיים, אוזן, periocular, nasolabial), נגעים ≥1 ס\"מ בפנים, subtypes אגרסיביים (morpheaform, infiltrative), recurrent lesions, או מטופלים מדוכאי-חיסון. קצב ריפוי ~99%, שוליים נבדקים 100% אינטרה-אופ. כריתה סטנדרטית עם 4 מ\"מ מתאימה לנגעים low-risk (גוף, גפיים, <2 ס\"מ, nodular). Cryo/5-FU = superficial BCC בלבד. AFP 2020.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — Skin Cancer 2020",
+    "ref_slug": "skin-cancer-2020"
   },
   {
     "q": "חולה בת 34 הגיעה ל-ED עם אנפילקסיס לאגוז — קיבלה IM epinephrine 0.3 מ\"ג מיידית, תסמינים נפתרו תוך 15 דקות. מה משך התצפית המומלץ המינימלי לפני שחרור?",
     "o": [
-      "עד שהתסמינים נפתרו לחלוטין",
-      "כשעה לאחר פתרון התסמינים",
-      "לפחות 4 שעות לאחר פתרון התסמינים (6–8 שעות אם תגובה חמורה, אסתמה, או היסטוריה של biphasic)",
-      "24 שעות לכל חולה"
+      "עד שהתסמינים נפתרו לחלוטין — סביב 30-60 דקות לרוב החולים",
+      "כשעה לאחר פתרון התסמינים — זמן ממוצע מחקרי של תגובת rebound",
+      "לפחות 4 שעות לאחר פתרון (6–8 שעות אם חמור / אסתמה / biphasic בעבר)",
+      "24 שעות בכל חולה — אשפוז חובה לאחר כל anaphylaxis בכל דרגה"
     ],
     "c": 2,
     "c_accept": [
@@ -628,7 +680,9 @@
     "st": "Anaphylaxis — biphasic monitoring duration",
     "ti": 12,
     "e": "תגובה biphasic מתרחשת ב-~5% מהאנפילקסיס, בדרך כלל תוך 1–4 שעות (עד 72 שעות). מינימום 4 שעות תצפית לאחר פתרון; 6–8 שעות אם: תגובה חמורה (היפוטנסיה, intubation), אסתמה, נדרש >1 מנת epi, או היסטוריה של biphasic. שחרור עם: 2 Epi-pens, action plan, הפניה לאלרגולוג. Steroid/antihistamine לא מונעים biphasic — epi הוא הטיפול הראשון והיחיד שמציל חיים. AFP 2020 + WAO 2020.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — Anaphylaxis 2020",
+    "ref_slug": "anaphylaxis-2020"
   },
   {
     "q": "גבר בן 68 עם BPH. IPSS = 18 (moderate-severe), bother score 4, PSA 3.2, נפח prostate ב-TRUS = 55 גרם, ללא retention או hematuria. מהי הבחירה הטיפולית המיטבית?",
@@ -646,7 +700,9 @@
     "st": "BPH — combo therapy by gland size",
     "ti": 16,
     "e": "MTOPS + CombAT: בפרוסטטה >40 גרם, PSA >1.5, או סיכון ל-progression — שילוב α-blocker (תסמינים מהירים תוך ימים) + 5-ARI (הקטנת גודל ו-AUR תוך חודשים) עדיף על כל תרופה לבדה בהורדת תסמינים, AUR ולצורך בניתוח. Tamsulosin לבד מתאים לפרוסטטה קטנה <40 גרם. 5-ARI לבד מאט אך לא משפר תסמינים מהר. PDE5i (tadalafil 5 mg) חלופה אם ED מלווה. TURP שמור ל-refractory / complications (retention חוזר, hematuria, אבני שלפוחית, CKD). AFP 2024.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — BPH 2018",
+    "ref_slug": "bph-2018"
   },
   {
     "q": "מטופל בן 45 עם AUD שותה 6 מנות ליום, מעוניין להפסיק. LFT 1.5× (steatosis), ללא שימוש באופיואידים, ללא הריון. איזו תרופה היא הבחירה הראשונה?",
@@ -664,7 +720,9 @@
     "st": "AUD — naltrexone first-line",
     "ti": 19,
     "e": "USPSTF / VA-DoD 2022: Naltrexone ו-Acamprosate הם first-line עם עדות חזקה. Naltrexone (PO 50 mg או LAI 380 mg/חודש) — מקטין cravings ושתייה כבדה, לא דורש abstinence, פועל מיד. Contraindications: שימוש באופיואידים (יגרום withdrawal), hepatitis חד, כבד failure. Acamprosate דורש abstinence כבר 3–7 ימים לפני התחלה, בטוח יותר בכבד אבל פחות נוח (3×/יום). Disulfiram — רק למוטיבציה גבוהה + תמיכה מבוגר אחראי (aversion severe, הפטוטוקסי). Gabapentin/topiramate = 2nd-line. AFP 2022.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — AUD Pharmacotherapy 2020",
+    "ref_slug": "aud-2020"
   },
   {
     "q": "חולה onco בסוף החיים על morphine PO 60 mg/יום מפוצל, כאב יציב. רוצים להמיר ל-transdermal fentanyl patch. מה המדבקה ההתחלתית הנכונה?",
@@ -682,7 +740,9 @@
     "st": "Opioid conversion — morphine PO → fentanyl patch",
     "ti": 21,
     "e": "המרה: morphine PO 60 mg/day ≈ 60 MME/day. Fentanyl patch טבלה: 60–134 MME/day → 25 mcg/h. כללים בהמרה: (1) הפחתה של 25–50% להחלפה למנוע over-dose בגלל cross-tolerance incomplete; (2) כיסוי breakthrough pain עם short-acting (morphine 10% מהיומי q1–2h PRN); (3) fentanyl patch steady-state רק לאחר 12–24 שעות — להמשיך opioid הקודם ל-12 שעות ראשונות; (4) fentanyl patch אסור ב-opioid-naïve בגלל סיכון respiratory depression. AFP 2018.",
-    "src": "AFP / הר\"י review"
+    "src": "AFP / הר\"י review",
+    "ref": "AFP — Opioid Conversion 2020",
+    "ref_slug": "opioid-conversion-2020"
   },
   {
     "q": "RCT: התערבות X הפחיתה אירועים מ-4% ל-2% במשך 5 שנים (ARR 2%, RRR 50%). מה ה-NNT?",
@@ -700,6 +760,466 @@
     "st": "EBM — NNT calculation from ARR",
     "ti": 26,
     "e": "NNT = 1/ARR. ARR = 0.02 → NNT = 1/0.02 = 50. כלומר יש לטפל ב-50 חולים במשך 5 שנים כדי למנוע אירוע אחד. חשוב: (1) NNT צריך timeframe — NNT=50 ל-5 שנים שונה מ-NNT=50 לשנה; (2) RRR נשמע מרשים (50%!) אבל ARR הוא שמוביל את ההחלטה הקלינית, במיוחד כשה-baseline risk נמוך; (3) השוואת NNT למספר ה-NNH (harm) = decision calculus. Goroll 8e Ch 1 (EBM).",
-    "src": "Goroll 8e — Primary Care Medicine"
+    "src": "Goroll 8e — Primary Care Medicine",
+    "ref": "Goroll 8e Ch 1 — Approach to the Patient"
+  },
+  {
+    "q": "תינוקת בת 48 שעות, הנקה בלעדית, TSB כולל = 16 mg/dL. לפי נומוגרמת Bhutani שעתית + AAP 2022:",
+    "o": [
+      "Phototherapy אם חצה סף שעתי-ספציפי לגיל + גורמי סיכון",
+      "המתנה 24h ובדיקה חוזרת עם אור יום",
+      "Exchange transfusion מיד לכל תינוק ≥15 mg/dL",
+      "הפסקת הנקה ומעבר לפורמולה ל-72 שעות"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-N",
+    "st": "Neonatal jaundice — phototherapy threshold",
+    "ti": 23,
+    "e": "AAP 2022 עדכנה את נומוגרמת Bhutani עם ספי phototherapy גבוהים ב-2–3 mg/dL מהמסמך 2004. Phototherapy מתחילה כשהערך חוצה סף שעתי-ספציפי (≈15–17 ב-48h ללא גורמי סיכון). המתנה שגויה אחרי סף. Exchange transfusion שמור ל-≥25 mg/dL או אנצפלופתיה. הפסקת הנקה מחריפה dehydration ומעלה את הבילירובין.",
+    "src": "Nelson 22e Ch 137",
+    "ref": "Nelson 22e Ch 137 — Jaundice in Newborn"
+  },
+  {
+    "q": "תינוק בן 3 חודשים, ברונכיוליט (RSV+), sat 94% RA, RR 52, מזין. לפי AAP 2014 + Nelson Ch 114:",
+    "o": [
+      "תמיכה (hydration + O2 PRN) בלבד; ללא ברונכודילטטור, steroids או abx שגרתיים",
+      "Salbutamol ניסיוני; המשך אם תגובה קלינית נצפית",
+      "Prednisolone 2 mg/kg PO ×5 ימים למניעת החמרה",
+      "Racemic epinephrine נבולייזר כל 4 שעות שגרתי"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-N",
+    "st": "Bronchiolitis — supportive care only",
+    "ti": 24,
+    "e": "AAP 2014 (Ralston) הסירה ברונכודילטטורים וסטרואידים שגרתיים — מטא-אנליזות לא הראו תועלת על LOS או SaO₂. Racemic epi שמור להתדרדרות. טריאל היה בעבר אך גם הוסר. Cornerstone = O2 מעל 90-92%, הידרציה, ניטור. Nelson 22e משקף הנחייה זהה.",
+    "src": "Nelson 22e Ch 114",
+    "ref": "Nelson 22e Ch 114 — Bronchiolitis"
+  },
+  {
+    "q": "בן 5 עם fever 39.5 + meningeal signs. LP: WBC 2,000 PMN, glucose 25, protein 180. טיפול אמפירי ראשון לפי Nelson + IDSA:",
+    "o": [
+      "Ceftriaxone + vancomycin + dexamethasone טרם/עם AB ראשון",
+      "Ampicillin + gentamicin (כיסוי Listeria + GBS)",
+      "Ceftriaxone מונותרפי ללא vanc בפרה-אסכולי",
+      "Meropenem + linezolid כקו ראשון אמפירי"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-N",
+    "st": "Bacterial meningitis beyond neonatal — empirical",
+    "ti": 24,
+    "e": "מעל גיל 1 חודש: Strep pneumo + N. meningitidis. Ceftriaxone מכסה, vanc נדרש ל-PRSP. Dexamethasone 0.15 mg/kg q6h ×4d לפני/עם מנת AB ראשונה. Ampi+gent = נאונטלי (GBS/Listeria). Ceftriaxone לבד חסר vanc. Meropenem שמור לרזרבה.",
+    "src": "Nelson 22e Ch 167",
+    "ref": "Nelson 22e Ch 167 — Bacterial Meningitis"
+  },
+  {
+    "q": "ילד בן 7, אסתמה step 2 (ICS נמוך + SABA PRN). בחודש: 3 התקפים, SABA יומי, שינה מופרעת 2×/שבוע. GINA 2024:",
+    "o": [
+      "החלפת ICS נמוך ב-ICS-formoterol כ-MART (maintenance + reliever)",
+      "הכפלת מינון ICS קבוע בלי שינוי reliever",
+      "הוספת montelukast יומי ל-ICS קיים",
+      "Prednisolone PO 5 mg יומי קבוע למניעת exacerbation"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-N",
+    "st": "Pediatric asthma — step-up to SMART/MART",
+    "ti": 3,
+    "e": "GINA 2024 (track 1) ממליצה על SMART/MART ב-step 3 מעל גיל 6 — מפחית exacerbations מעל ICS קבוע + SABA. הכפלת ICS פחות יעיל. Montelukast add-on עם black-box נוירופסיכיאטרי. Prednisolone כרוני = step 5 fallback בלבד.",
+    "src": "Nelson 22e Ch 185",
+    "ref": "Nelson 22e Ch 185 — Childhood Asthma"
+  },
+  {
+    "q": "בן 4, בליעת paracetamol כ-4h לפני, אסימפטומטי. רמה ב-4h = 160 μg/mL. Rumack-Matthew + AAP toxicology:",
+    "o": [
+      "NAC מיידי — מעל קו treatment (150 μg/mL ב-4h)",
+      "פחם פעיל 1 g/kg כעת — מקסם ספיגה",
+      "שחרור הביתה עם מעקב טלפוני ב-24h",
+      "המתנה לרמה בשעה 8 לפני החלטה טיפולית"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-N",
+    "st": "Acetaminophen poisoning — NAC threshold",
+    "ti": 24,
+    "e": "Rumack-Matthew treatment line = 150 μg/mL ב-4h (לוגריתמית). 160 > קו → NAC (PO 140→70×17 או IV 150→50→100). פחם פעיל יעיל רק בשעה הראשונה. המתנה ל-8h מטעה — הפגיעה מצטברת; NAC עד 8-10h = יעיל מלא.",
+    "src": "Nelson 22e Ch 94",
+    "ref": "Nelson 22e Ch 94 — Poisoning"
+  },
+  {
+    "q": "ילד בן 3 עם DKA (pH 7.18, HCO3 12, glu 580). עקרון החייאת נוזלים לפי PECARN FLUID + ISPAD:",
+    "o": [
+      "Isotonic 10 mL/kg על שעה, ואז החלפת חסר על 24–48h; הימנע מירידה מהירה באוסמולריות",
+      "Bolus 40 mL/kg על 30 דקות כדי להתחיל אינסולין מוקדם",
+      "D5W IV מיידי כי הגלוקוז צפוי ליפול מהר",
+      "Sodium bicarbonate 1 mEq/kg להחזרת pH לקרוב ל-7.3"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-N",
+    "st": "Pediatric DKA — fluid resuscitation",
+    "ti": 24,
+    "e": "PECARN FLUID 2018 + ISPAD 2022: החייאה איטית (10 mL/kg/h) ואז 24–48h החלפה. Bolus אגרסיבי מעלה סיכון cerebral edema (הסיבוך הפטאלי של peds DKA). Bicarbonate — רק pH<6.9 עם פגיעה המודינמית. אינסולין 0.05–0.1 u/kg/h אחרי שעה-שעתיים נוזלים. D5W מתווסף כשגלוקוז <250-300.",
+    "src": "Nelson 22e Ch 546",
+    "ref": "Nelson 22e Ch 546 — Pediatric Diabetes"
+  },
+  {
+    "q": "בן 8, ADHD משולב, מזיק ללימודים. גיל בית ספר יסודי (6-12). AAP 2019 + NICE 2018 — first-line:",
+    "o": [
+      "Stimulant (methylphenidate/amphetamine) בשילוב behavior therapy הורים+מורים",
+      "Behavior therapy לבד לפחות 6 חודשים לפני ניסיון תרופתי",
+      "Atomoxetine monotherapy — לא-ממריץ, בטוח יותר ללב",
+      "Clonidine XR first-line — מועדף לילדים רגישים"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-N",
+    "st": "Peds ADHD — first-line pharmacotherapy ≥6 yo",
+    "ti": 25,
+    "e": "AAP 2019: גיל 6–12 = stimulant + behavior בשילוב. גיל 4–5 = behavior בלבד קודם. Atomoxetine + guanfacine/clonidine XR = קו שני (אי-תגובה או effect-side). Behavior בלבד לא יעיל ב-ADHD בינוני-חמור בגיל בית-ספר.",
+    "src": "Nelson 22e Ch 50",
+    "ref": "Nelson 22e Ch 50 — ADHD"
+  },
+  {
+    "q": "נערה בת 15, דיכאון + passive suicidal ideation, על sertraline, ניסיון paracetamol לפני שנה. איזה מצב דורש התערבות בהולה מכולם?",
+    "o": [
+      "תוכנית ספציפית + גישה לנשק בבית (רובה לא נעול של האב)",
+      "Passive ideation בלבד ללא תוכנית או כוונה",
+      "היסטוריית דיכאון משפחתית משמעותית בדרגה ראשונה",
+      "Substance use חברתי בסוף-שבוע (alcohol, ללא עצמית)"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-N",
+    "st": "Adolescent suicide — risk stratification red flags",
+    "ti": 25,
+    "e": "Columbia SSRS + Nelson: תוכנית + means-access (במיוחד נשק) = HIGH imminent risk → השמה + הרחקת נשק. Passive ideation = low-moderate, דורש מעקב. Substance use ודיכאון = גורמי סיכון אך לא חירום כשלעצמם. יש לשאול במפורש על plan/means/intent/timing.",
+    "src": "Nelson 22e Ch 40",
+    "ref": "Nelson 22e Ch 40 — Suicide"
+  },
+  {
+    "q": "תינוק בן 8 שבועות, הנקה בלעדית. וויטמין D — המלצה AAP 2022 + Nelson Ch 61:",
+    "o": [
+      "400 IU/day מהלידה עד גמילה ל-≥1L פורמולה מועשרת ליום",
+      "1000 IU/day רק אם הנקה בלעדית מוחלטת ללא פורמולה",
+      "לא נדרש — חלב-אם מספק ויטמין D בכמות מספקת",
+      "רק אם כהה-עור או פג מתחת 34 שבועות"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-N",
+    "st": "Infant feeding — vitamin D supplementation",
+    "ti": 23,
+    "e": "AAP/IOM: 400 IU/day מיום הלידה לכל תינוק יונק בלעדית או בעיקר, עד גמילה ל-≥1L פורמולה מועשרת. חלב-אם <25 IU/L. 1000 IU = טיפול בחסר, לא מניעה. חשיפה לשמש <6חו לא מומלצת — המלצה זהה לכל עור.",
+    "src": "Nelson 22e Ch 61",
+    "ref": "Nelson 22e Ch 61 — Feeding Healthy Infants"
+  },
+  {
+    "q": "ילד 14 חודשים: Hgb 9.2, MCV 68, ferritin 8, CRP תקין. שותה >30 oz חלב-פרה/יום. טיפול לפי AAP + Nelson Ch 400:",
+    "o": [
+      "Iron elemental 3–6 mg/kg/day PO + הגבלת חלב פרה ל-16–24 oz/day",
+      "Iron 1 mg/kg/day PO בלבד, ללא שינוי תזונתי כרגע",
+      "עירוי דם כיוון שההמוגלובין מתחת לסף הסימפטומטי",
+      "IV iron מיידי, כי PO לא סובל בילד קטן בגיל הזה"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-N",
+    "st": "Iron deficiency anemia — treatment dose",
+    "ti": 23,
+    "e": "AAP: IDA ילד קטן → 3–6 mg/kg/day ×3 חודשים (נורמליזציה + 2-3 חו מילוי מאגרים). חלב-פרה מוגבל ל-16–24 oz — הגורם הראשי (מעכב ספיגה + דל Fe + דם microGI). עירוי רק Hgb<5-6 סימפטומטי. IV iron רק כישלון PO או malabsorption.",
+    "src": "Nelson 22e Ch 400",
+    "ref": "Nelson 22e Ch 400 — Iron Deficiency Anemia"
+  },
+  {
+    "q": "תינוק בן 24 שעות, משקל לידה 3.5 ק\"ג, מזין טוב. POC glucose = 38 mg/dL, אסימפטומטי. לפי AAP 2011 (Adamkin):",
+    "o": [
+      "הזנה מיידית (breast / 10 mL formula) ובדיקה חוזרת תוך 30 דקות",
+      "Glucagon 1 mg IM מיידי לכל תינוק מתחת 45 mg/dL",
+      "המתנה עד 12 שעות חיים ואז בדיקה שנייה סטנדרטית",
+      "D50% bolus 2 mL/kg IV מיד דרך קו-היקפי גדול"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-N",
+    "st": "Neonatal hypoglycemia — AAP threshold-based approach",
+    "ti": 23,
+    "e": "AAP 2011: תינוק בסיכון (LGA/SGA/LPT/IDM) + אסימפטומטי → הזנה קודם, ואז בדיקה חוזרת. D10W IV (לא D50 — heme sclerosis) אם <25 בשעה הראשונה או <35 אחרי הזנה, או סימפטומטי. גלוקגון רק בחסר עמיד עם מאגרי גליקוגן. המתנה 12h מסוכנת.",
+    "src": "Nelson 22e Ch 22",
+    "ref": "Nelson 22e Ch 22 — The Newborn"
+  },
+  {
+    "q": "בת 8 עם egg allergy חמורה (אנפילקסיס בעבר). ACIP 2024 — איזה חיסון מחייב זהירות מיוחדת?",
+    "o": [
+      "Yellow fever — עתיר egg protein, דורש הערכת אלרגולוג לפני מתן",
+      "MMR — אסור מתחת גיל 9 בכל egg-allergic בגלל סיכון",
+      "Inactivated influenza — אסור בכל אלרגיה לביצה",
+      "DTaP — זהירות במתן, לרוב נמנע בילדים רגישים"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-N",
+    "st": "Vaccines — egg allergy and vaccine safety",
+    "ti": 24,
+    "e": "ACIP 2024: MMR + flu (IIV/LAIV) — ללא מגבלה עם egg allergy חמורה (הדרישה לצפייה מיוחדת הוסרה). Yellow fever = egg protein גבוה → desensitization / אלרגולוג. DTaP לא קשור לביצה. חשוב לפני נסיעות לאזורים אנדמיים.",
+    "src": "Nelson 22e Ch 225",
+    "ref": "Nelson 22e Ch 225 — Vaccines"
+  },
+  {
+    "q": "אם בשבוע 28 להריון, מבקשת Tdap. ACIP/ACOG — זמן אידיאלי:",
+    "o": [
+      "שבועות 27–36 בכל הריון, גם אם חוסנה בהריון קודם",
+      "רק אם חלפו מעל 10 שנים מ-Tdap האחרון שלה",
+      "לאחר לידה בלבד (\"cocooning\") + חיסון בני משפחה קרובים",
+      "אסור בהריון — הורמונים משנים את התגובה החיסונית"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-N",
+    "st": "Vaccines — Tdap in pregnancy",
+    "ti": 24,
+    "e": "ACIP: Tdap בכל הריון 27-36 שבועות (אידיאלי סוף T2 / תחילת T3) למעבר נוגדנים מקסימלי לעובר למניעת pertussis בינקות. Cocooning משלים אך לא מחליף. מגבלת 10 שנים לא רלוונטית בהריון.",
+    "src": "Nelson 22e Ch 225",
+    "ref": "Nelson 22e Ch 225 — Vaccines"
+  },
+  {
+    "q": "בן 7 ב-triage: fever 40, HR 155, BP 78/45, lethargic. PAT + Pediatric Sepsis 1-hour bundle:",
+    "o": [
+      "Isotonic saline 20 mL/kg + AB רחב-טווח (ceftriaxone) תוך שעה מהזיהוי",
+      "CT-מוח לפני כל צעד לשלול סיבה נוירולוגית להלם",
+      "LP מיידי לפני AB כדי לקבל תרבית CSF נקייה",
+      "המתנה לתוצאות מעבדה בטרם החלטה על נוזלים ו-AB"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-N",
+    "st": "Triage acutely ill child — sepsis",
+    "ti": 24,
+    "e": "Septic shock peds 1-hour bundle: 20 mL/kg NS חוזר עד 60 mL/kg, AB רחב (ceftriaxone) תוך שעה, O2. LP/CT נדחים אם לא יציב. עיכוב AB = +7% תמותה/שעה. Nelson Ch 78 מדגיש PAT (appearance, work of breathing, circulation) כ-triage.",
+    "src": "Nelson 22e Ch 78",
+    "ref": "Nelson 22e Ch 78 — Triage of Acutely Ill Child"
+  },
+  {
+    "q": "ילדה בת 10, סינקופה תוך ריצה, ללא prodrome, אין היסטוריה משפחתית ידועה. ECG: QTc 480ms. Nelson Ch 84 + AHA 2018:",
+    "o": [
+      "הפניה לקרדיולוג ילדים מיידית — חשד ל-LQTS / סיבה קרדיאלית",
+      "Tilt-table test באמבולטורי — vasovagal הוא המסתבר ביותר",
+      "Reassurance ושחרור עם המלצה על שתייה וזהירות",
+      "MRI מוח לשלול דימום תוך-מוחי או גידול אחורי"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-N",
+    "st": "Peds syncope — exertional red flag",
+    "ti": 24,
+    "e": "דגלי אדום בסינקופה peds: מאמץ, ללא prodrome, hx משפחתית של מוות פתאומי, QTc>460-470(♀)/>450(♂). זה LQTS קלאסי. Tilt-table low-yield בילדים. סינקופה אקסרציונלית = cardiac עד הוכחה.",
+    "src": "Nelson 22e Ch 84",
+    "ref": "Nelson 22e Ch 84 — Syncope"
+  },
+  {
+    "q": "ביקור 12 חודשים Well-child במרפאה. AAP Bright Futures + Nelson Ch 13 — סקר חובה:",
+    "o": [
+      "Hgb + סקר עופרת לפי גורמי סיכון (Medicaid, דיור ישן, תעשייה)",
+      "TSH שגרתי חוזר כחלק ממעקב מתמיד אחרי newborn screen",
+      "Urinalysis שגרתי לגילוי pyuria אסימפטומטית מוקדמת",
+      "Lipid panel שגרתי למדידת כולסטרול עם אבחון מוקדם"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-N",
+    "st": "Well-child screening — 12-month visit",
+    "ti": 23,
+    "e": "Bright Futures 12m: Hgb (IDA) + Lead (סיכון גבוה — Medicaid, בית <1978, אזור תעשייה). TSH = רק newborn screen. Urinalysis שגרתי — לא (pyuria א-סימפטומטית חסר משמעות). Lipid — 9-11 שנים (אוניברסלי) או 2-8 אם risk factors.",
+    "src": "Nelson 22e Ch 13",
+    "ref": "Nelson 22e Ch 13 — Screening"
+  },
+  {
+    "q": "בת 66, AF חדשה + HTN + DM + CHF. CHA₂DS₂-VASc = 4. ESC 2024 + AHA 2023 — טיפול מונע שבץ:",
+    "o": [
+      "DOAC (apixaban/rivaroxaban/edoxaban) — מועדף על warfarin",
+      "Warfarin עם INR יעד 2-3 בהתאמה פרטנית",
+      "Aspirin 81 mg יומי — הוכח יעיל בסיכון בינוני",
+      "Clopidogrel 75 mg monotherapy ב-AF לא-ואלוולארי"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-G",
+    "st": "AF — DOAC over warfarin non-valvular",
+    "ti": 0,
+    "e": "ESC 2024 + AHA 2023: DOAC קו ראשון ב-nvAF עם CHA₂DS₂-VASc ≥2(♂)/≥3(♀). Warfarin = קו שני / valvular/mechanical. Aspirin ו-clopidogrel לא יעילים ב-AF והוסרו. 4 נקודות ← DOAC חובה.",
+    "src": "Goroll 8e Ch 28",
+    "ref": "Goroll 8e Ch 28"
+  },
+  {
+    "q": "בן 35, כאב כתף שמאל לאחר עבודה פיזית. Apley + empty can חיוביים, טווח תנועה מופחת מעל 90°. AFP 2020 Shoulder Pain:",
+    "o": [
+      "PT 6–12 שבועות + NSAID; US/MRI רק אם אין שיפור או full-thickness חשוד",
+      "MRI מיידי — חובה לכל חשד rotator cuff לאימות האבחנה",
+      "Arthroscopic repair דחוף — acute tears מגיבים הכי טוב כשמתקנים מיד",
+      "Steroid subacromial injection כקו ראשון בודד, חוזר 3 שבועות"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-AFP",
+    "st": "Rotator cuff tear — imaging",
+    "ti": 9,
+    "e": "AFP 2020: ללא חולשה חמורה / full-thickness → conservative 6-12 שבועות (PT + NSAID ± injection). כישלון או full-thickness בצעיר עם דרישה פונקציונלית גבוהה → imaging ואז repair. MRI מיידי לא cost-effective. Injection כ-monotherapy לא עדיף על PT.",
+    "src": "AFP — Shoulder Pain 2020",
+    "ref": "AFP — Shoulder Pain 2020",
+    "ref_slug": "shoulder-pain-2020"
+  },
+  {
+    "q": "חולה על statin למניעה משנית, כאבי שרירים, CK 350 (<5× ULN), ללא חולשה, eGFR תקין. AFP 2019 + ACC 2022:",
+    "o": [
+      "המשך ה-statin, reassurance; שקול dose-reduction או switch אם מפריע",
+      "הפסק מיידית — כל CK מעל הנורמה מצביע על סיכון rhabdomyolysis",
+      "החלף ל-ezetimibe monotherapy — שקול סטטין שוב בעוד שנה",
+      "הוסף hydroxychloroquine להקלה על דלקת השרירים הסמויה"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-AFP",
+    "st": "Statin myopathy — CK threshold",
+    "ti": 2,
+    "e": "AFP 2019: SAMS — רוב CK תקין/<5× ULN. המשך statin אם CK<5× ULN ללא חולשה; שקול dose-reduction/alternate-day/switch rosuvastatin/pravastatin. הפסקה אם CK>10× ULN / rhabdo / אי-סבילות. Ezetimibe = add-on, לא תחליף ב-2° prevention.",
+    "src": "AFP — Statin Adverse Effects 2019",
+    "ref": "AFP — Statin Adverse Effects 2019",
+    "ref_slug": "statin-adverse-effects-2019"
+  },
+  {
+    "q": "בת 55 בגיל הבלות, hot flashes + אי-שינה, ללא VTE/CAD/שד. NAMS 2022 — טיפול אופטימלי:",
+    "o": [
+      "HRT (estradiol + progestin עם רחם) — בטוח ב-≤59 או ≤10 שנים מהבלות",
+      "Estrogen monotherapy — גם עם רחם אם המינון נמוך מספיק",
+      "SSRI/SNRI כקו ראשון קודם לניסיון HRT בכל אישה מעל 50",
+      "HRT אסור מעל גיל 50 — סיכון CV עולה בכל אישה לאחר הבלות"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-G",
+    "st": "Menopause HRT — decision framework",
+    "ti": 14,
+    "e": "NAMS 2022: HRT הטיפול היעיל ביותר ל-VMS. בטוח ב-healthy ≤59 או ≤10 שנים מבלות, ללא VTE/CAD/שד. רחם = progestin חובה להגן אנדומטריון. SSRI/SNRI (paroxetine/venlafaxine) = קו שני אם לא יכול HRT. >60 או >10 שנים = שיקול, לא איסור.",
+    "src": "Goroll 8e Ch 119",
+    "ref": "Goroll 8e Ch 119"
+  },
+  {
+    "q": "מחקר RCT: ARR = 2.5%. חשב NNT:",
+    "o": [
+      "NNT = 40 — צריך לטפל ב-40 למנוע אירוע אחד",
+      "NNT = 25 — חישוב על 100 חולים ב-2.5 נפילות",
+      "NNT = 2.5 — אפקט חזק, טיפול קליני מיידי נדרש",
+      "NNT = 250 — תוצאה זניחה של יעילות חלשה במחקר"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-AFP",
+    "st": "NNT from ARR — mental-math",
+    "ti": 26,
+    "e": "NNT = 1/ARR (עשרוני): 1/0.025 = 40. משמעות: טיפול ב-40 חולים → מניעת אירוע אחד בתקופת המחקר. במניעה משנית CV זה משמעותי; במניעה ראשונית סיכון נמוך NNT 100-200 עדיין יכול להיות cost-effective.",
+    "src": "Goroll 8e Ch 1",
+    "ref": "Goroll 8e Ch 1"
+  },
+  {
+    "q": "בדיקה: sensitivity 95%, specificity 80%. שכיחות 1%. PPV:",
+    "o": [
+      "≈4.6% — ב-low prevalence, FP מציף את ה-TP",
+      "≈95% — PPV קרוב ל-sensitivity כשהסף גבוה",
+      "≈80% — PPV משקף specificity ישירות",
+      "≈50% — הממוצע בין sens ל-spec הוא הכלל"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-AFP",
+    "st": "PPV at low prevalence",
+    "ti": 26,
+    "e": "2×2 על 10,000: מחלה=100 (TP=95, FN=5), בריא=9,900 (TN=7920, FP=1980). PPV = 95/(95+1980) = 4.58%. לקח: בשכיחות 1% גם בדיקה טובה נותנת רוב FP — USPSTF דורש harm-benefit לפני סקירה המונית.",
+    "src": "AFP — Evidence-Based Medicine Primer",
+    "ref": "AFP — EBM Basics",
+    "ref_slug": "ebm-basics"
+  },
+  {
+    "q": "בן 70, hip fracture + קוגניציה ירודה, DNR. AGS Beers + ACP 2023 — ניהול כאב:",
+    "o": [
+      "Paracetamol 3–4 g/day קבוע + opioid PRN; הימנע NSAID מעל 65 ב-CKD/HF",
+      "Morphine PO קבוע מהיום הראשון למניעת כאב פורץ מתמיד",
+      "NSAID קבוע בשילוב PPI — מגן קיבה גם בגיל מבוגר",
+      "Tramadol 50 mg q6h קבוע — חלופה בטוחה יותר מ-opioid חזק"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-G",
+    "st": "Geriatric pain — acetaminophen first",
+    "ti": 21,
+    "e": "AGS Beers + ACP 2023: paracetamol 3–4 g/day = כסולד ראשון לקשיש עם פרקטורה/OA. NSAID נמנע >65 עם CKD/HF/anticoag/PUD. Tramadol ברשימה (seizure, סרוטונרגי, delirium). Morphine קבוע מהיום הראשון ללא escalation לא מומלץ.",
+    "src": "Goroll 8e Ch 238",
+    "ref": "Goroll 8e Ch 238"
+  },
+  {
+    "q": "בן 62, GERD >2 שנים, לא מגיב ל-PPI סטנדרטי, ללא alarm. ACG 2022:",
+    "o": [
+      "EGD — refractory PPI = אינדיקציה לשלול Barrett / EoE / esophagitis",
+      "הכפלת PPI ל-6 חודשים נוספים לפני כל בירור אנדוסקופי",
+      "H2-blocker הוספה בלבד — זול ויעיל כמו EGD בשלב הזה",
+      "Nissen fundoplication מיידי — refractory מחייב פתרון סופי"
+    ],
+    "c": 0,
+    "c_accept": [
+      0
+    ],
+    "t": "AI-Hard-G",
+    "st": "GERD — EGD indication (refractory)",
+    "ti": 4,
+    "e": "ACG 2022: refractory GERD (failed 8 שבועות PPI מלא) → EGD לשלול Barrett, EoE, esophagitis, לאמת אבחנה. הכפלת מינון אופציונלית אך לא מחליפה EGD. H2 add-on פחות יעיל. Fundoplication = אופציה אחרי אבחון + pH-impedance, לא ראשון.",
+    "src": "Goroll 8e Ch 61",
+    "ref": "Goroll 8e Ch 61"
   }
 ]

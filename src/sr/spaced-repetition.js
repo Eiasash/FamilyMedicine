@@ -1,6 +1,6 @@
 import G from '../core/globals.js';
 import { fsrsR, fsrsInterval, fsrsInitNew, fsrsUpdate, fsrsMigrateFromSM2, isChronicFail, fsrsIntervalWithDeadline } from './fsrs-bridge.js';
-
+import { IMA_WEIGHTS } from '../core/constants.js';
 import { toast } from '../core/utils.js';
 // Spaced repetition, SRS scoring, activity tracking — extracted from mishpacha-mega.html
 // Depends on: G.S, G.save (state.js), FSRS functions (shared/fsrs.js), G.QZ (data)
@@ -88,6 +88,65 @@ for(let i=0;i<365;i++){
 }
 return streak;
 }
+// Composite weak-topic selector used by the "Drill Your Weakest" card.
+// Score = (1 - accuracy) * coverage_gap * exam_frequency_weight
+// where coverage_gap boosts topics you've barely touched relative to their IMA weight.
+// Returns { ti, reason, acc, n, pct, imaWt } or null if user has no data yet.
+export function getDrillTarget(){
+  try{
+    const WTS = IMA_WEIGHTS || [2,1,3,4,4,3,3,3,3,11,4,2,1,3,6,4,1,5,3,1,3,1,4,3,12,2,8];
+    const stats = getTopicStats();
+    const totalAnswered = Object.values(stats).reduce((s,x)=>s+(x.tot||0),0);
+    // Cold-start: fewer than 10 Qs answered → no data-driven pick.
+    if(totalAnswered < 10) return { ti:null, reason:'cold_start', acc:null, n:totalAnswered, pct:null, imaWt:null };
+    // Build candidate list. For each of 27 ti:
+    //   acc = ok/tot (null if untested)
+    //   gap = 1 - acc (0.75 if untested → bias toward unexplored)
+    //   cov = tot / (totalAnswered * WTS[ti]/100)  — <1 means undercovered
+    //   covGap = clamp(1 - cov, 0, 1)
+    //   score = (gap*0.6 + covGap*0.25) * (WTS[ti]/12)   // normalize by max weight
+    let best = null, bestScore = -1;
+    for(let ti=0; ti<27; ti++){
+      const s = stats[ti] || { ok:0, tot:0 };
+      const acc = s.tot>=3 ? s.ok/s.tot : null;
+      const gap = acc===null ? 0.75 : (1 - acc);
+      const expected = totalAnswered * (WTS[ti]||1) / 100;
+      const cov = expected>0 ? s.tot/expected : 1;
+      const covGap = Math.max(0, Math.min(1, 1 - cov));
+      const freqW = (WTS[ti]||1) / 12;
+      const score = (gap*0.6 + covGap*0.25) * freqW;
+      if(score > bestScore){ bestScore = score; best = { ti, acc, n:s.tot, pct: acc===null?null:Math.round(acc*100), imaWt:WTS[ti], covGap: Math.round(covGap*100), score }; }
+    }
+    if(!best) return null;
+    // Reason tag so UI can render a one-liner "why this topic?"
+    if(best.acc!==null && best.acc < 0.5)       best.reason = 'low_accuracy';
+    else if(best.covGap >= 50)                   best.reason = 'undercovered';
+    else if(best.acc===null)                     best.reason = 'untested_high_weight';
+    else                                         best.reason = 'best_marginal';
+    return best;
+  }catch(e){ return null; }
+}
+
+// Build a 15-Q drill pool for a given ti, prioritizing: due SRS items, chronic fails, low-accuracy, then novel.
+export function buildDrillPool(ti, n=15){
+  if(typeof ti !== 'number' || ti < 0 || ti > 26) return;
+  const pool = G.QZ.map((q,i)=>({i,q})).filter(x=>x.q && x.q.ti===ti);
+  if(!pool.length){ toast('No questions for this topic yet','info'); return; }
+  const now = Date.now();
+  pool.forEach(x=>{
+    const s = G.S.sr[x.i] || { tot:0, ok:0, n:0, due:null };
+    const acc = s.tot>0 ? s.ok/s.tot : 0.5;
+    const overdue = s.due && s.due<now ? 2 : 0;
+    const untested = s.tot===0 ? 1 : 0;
+    x.rank = -acc*3 + overdue + untested*0.5 + Math.random()*0.1;
+  });
+  pool.sort((a,b)=> b.rank - a.rank);
+  const picks = pool.slice(0, Math.min(n, pool.length)).map(x=>x.i);
+  G.pool = picks; G.qi = 0; G.sel = null; G.ans = false;
+  G.filt = 'drill';
+  G.render();
+}
+
 export function buildRescuePool(){
 const weak=getWeakTopics(3);
 if(!weak.length){toast('Not enough data yet \u2014 answer more questions first','info');return;}
