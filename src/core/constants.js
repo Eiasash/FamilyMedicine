@@ -55,10 +55,15 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.4.1';
-export const BUILD_HASH='982q-v1.4.1';
+export const APP_VERSION='1.4.2';
+export const BUILD_HASH='989q-v1.4.2';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.4.2': [
+    '🔥 AI-Hard seed expansion 32→39 Qs — now covers all 27 topics (was 20/27). Added: HF quad-pillar/ARNI swap (ti 1), BCC Mohs H-zone indication (ti 11), anaphylaxis biphasic monitoring duration (ti 12), BPH combo therapy by gland size (ti 16), AUD naltrexone first-line (ti 19), opioid conversion morphine PO→fentanyl patch (ti 21), NNT from ARR (ti 26). Each with 5+ sentence explanation + structured src field.',
+    '🏷️ Back-filled "src" field on all 39 seed Qs — AI-Hard-G → Goroll 8e / AI-Hard-AFP → AFP/הר"י review. Future Q-quality tooling can now filter/cite by source.',
+    '📊 Total corpus: 950 base + 39 seed = 989 Qs.',
+  ],
   '1.4.1': [
     '📝 Nelson notes: added 20th high-yield chapter — Ch 185 Childhood Asthma (NAEPP/GINA stepwise, SMART, exacerbation ED tiers, action plan). Fixes v1.4.0 CHANGELOG overclaim of "20 chapters" when only 19 shipped.',
   ],
