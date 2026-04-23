@@ -24,10 +24,8 @@ function installLocalStorageShim() {
 // ---- safeJSONParse ---------------------------------------------------------
 
 describe('safeJSONParse', () => {
-  let store;
-
   beforeEach(() => {
-    store = installLocalStorageShim();
+    installLocalStorageShim();
   });
 
   it('returns parsed value when key holds valid JSON', () => {
