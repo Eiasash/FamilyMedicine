@@ -154,6 +154,12 @@ if(clients.openWindow)return clients.openWindow(e.notification.data?.url||'mishp
 });
 SWEOF
 
+# 4b. Verify the generated dist/sw.js is internally consistent.
+#     Catches drift between scripts/build.sh heredoc and what Vite actually emits
+#     (e.g. someone renames data/*.json but forgets to update the heredoc list).
+echo "→ Verifying dist/sw.js manifest…"
+node scripts/verify-dist-sw.cjs
+
 # 5. Summary
 echo ""
 echo "=== Build complete ==="
