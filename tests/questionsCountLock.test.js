@@ -14,6 +14,7 @@ const EXPECTED_COUNTS = {
   '2024-May': 100,   // v1.3.0: re-ingested from correct FM PDFs (was 100 IM content, now 100 FM)
   '2024-Sep': 100,   // v1.3.0: re-ingested from correct FM PDFs (was 100 IM content, now 100 FM)
   '2025-Jun': 150,   // v1.3.0: cosmetic refresh (PDF was IM but data was FM; re-extracted for consistency)
+  'FM-Core': 60,     // v1.5.0: textbook-grounded content sprint filling 6 syllabus gaps (cancer screening 12, vaccines 12, contraception 10, adolescent/HEEADSSS 10, family violence 8, STI 8) — IL MOH + USPSTF + CDC 2020 sources
 };
 
 const EXPECTED_TOTAL = Object.values(EXPECTED_COUNTS).reduce((a, b) => a + b, 0);
@@ -22,6 +23,7 @@ const ALLOWED_TAGS = new Set([
   '2020', '2021-Jun', '2022-Jun', '2023-Jun',
   '2024-May', '2024-Sep', '2025-Jun',
   'Goroll', 'Nelson', 'AFP', 'Exam',
+  'FM-Core',
 ]);
 
 describe('data/questions.json — count + schema lock', () => {
