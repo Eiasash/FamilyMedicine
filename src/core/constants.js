@@ -55,10 +55,21 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.4.5';
-export const BUILD_HASH='1028q-v1.4.5';
+export const APP_VERSION='1.5.0';
+export const BUILD_HASH='1010q-v1.5.0';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+    '1.5.0': [
+      '🩺 Content sprint — +60 FM-Core Qs filling 6 syllabus gaps from v1.4.5 audit:',
+      '   • Cancer screening (+12, ti=20): mammogram/colono/Pap/PSA/LDCT — IL MOH + USPSTF',
+      '   • Vaccines / immunization (+12, ti=13): IL pediatric schedule + adult 65+ + pregnancy + travel + immunosuppressed',
+      '   • Contraception (+10, ti=14): LARC, COC absolute CIs (smoking/migraine-aura/VTE), emergency contraception, postpartum, mature minor',
+      '   • Adolescent / HEEADSSS (+10, ti=25): confidentiality framework, NSSI vs SI, bulimia, PrEP, IPV in teen dating, gender dysphoria, adolescent depression',
+      '   • Family violence (+8, ti=18): IPV with controlling partner, elder abuse mandatory reporting, child abuse Form 223, post-rape protocol',
+      '   • STI screening (+8, ti=13): <25 women, MSM 3-site, pregnancy panel, GC treatment per CDC 2020, BV diagnosis, primary syphilis',
+      '🏷 t=\'FM-Core\' tag for textbook content (won\'t appear in EXAM_YEARS-filtered pools but available in all-mode + topic-filter)',
+      '📊 950 → 1010 Qs (+6.3%); ti=13 IF/Vaccines: 30→50; ti=20 Prev: 29→41; ti=25 Adolescent: 18→28; ti=18 Mental: 24→32',
+    ],
   '1.4.5': [
     '🎯 Audit-driven AI-Hard seed expansion +15 Qs (63→78), targeting the three high-weight-low-reference topics flagged in v1.4.4 coverage audit: ti 9 Rheum/MSK (+5, ratio was 4.36), ti 24 Peds-Acute/Infect (+5, ratio 6.25), ti 3 Pulm (+5, ratio 6.50). LBP red flags, knee OA ACR 2019, rotator cuff, gout ULT ACR 2020, RA window, FWS UTI priority, AOM <2y, strep testing, Kawasaki IVIG, infant meningitis empiric Abx, COPD GOLD 2024 ABE, PE Wells, asthma SMART GINA 2023, CAP CURB-65, Fleischner.',
     '🩻 Distractor autopsy gate in extend_seed_v145.mjs — validator rejects any Q where correct option is uniquely longest. Caught 7 anti-patterns on first pass before merge.',
