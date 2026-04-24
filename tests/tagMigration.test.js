@@ -13,7 +13,7 @@
  *      key is left untouched; a bad parse never throws.
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   migrateTags,
   migrateStoredTags,
