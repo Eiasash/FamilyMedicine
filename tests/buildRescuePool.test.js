@@ -44,7 +44,6 @@ beforeEach(() => {
   // topic 1: half right
   // topic 2: all right
   for (let idx = 0; idx < 10; idx++) {
-    const ti = G.QZ[idx].ti;
     G.S.sr[idx] = { n: 0, tot: 5, ok: 0 };
   }
   for (let idx = 10; idx < 20; idx++) {

@@ -13,6 +13,7 @@ cp -r data/ dist/data/
 cp harrison_chapters.json dist/
 cp goroll_chapters.json dist/
 cp nelson_chapters.json dist/
+cp lerner_chapters.json dist/
 
 # 2a. Merge AI-hard seed Qs into dist/data/questions.json (v1.4.0+)
 # Source-of-truth questions.json stays clean of generated content; seed lives alongside.
@@ -61,7 +62,7 @@ echo "  → CACHE=mishpacha-v${APP_VER}"
 cat > dist/sw.js << SWEOF
 const CACHE='mishpacha-v${APP_VER}';
 const SHELL_URLS=['mishpacha-mega.html','manifest.json','shared/fsrs.js'];
-const DATA_URLS=['data/questions.json','data/topics.json','data/notes.json','data/drugs.json','data/flashcards.json','data/tabs.json','data/afp_hari_index.json','data/nelson_notes.json','harrison_chapters.json','goroll_chapters.json','nelson_chapters.json'];
+const DATA_URLS=['data/questions.json','data/topics.json','data/notes.json','data/drugs.json','data/flashcards.json','data/tabs.json','data/afp_hari_index.json','data/nelson_notes.json','harrison_chapters.json','goroll_chapters.json','nelson_chapters.json','lerner_chapters.json'];
 const ALL_URLS=[...SHELL_URLS,...DATA_URLS];
 
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ALL_URLS)).then(()=>self.skipWaiting())));
