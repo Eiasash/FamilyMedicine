@@ -195,6 +195,10 @@ def validate(q):
     blob = q['q'] + ' '.join(q['o']) + q['e']
     for bad in ['**','##','```','→','←','↑','↓']:
         if bad in blob: return False, f"contains_{bad}"
+    # CJK / Cyrillic leak guard — Sonnet sometimes drops Chinese tokens
+    # mid-Hebrew word (e.g. v1.6.0 Q[1060] had 悸 between ו and לב).
+    if re.search(r'[\u4e00-\u9fff\u3040-\u30ff\u0400-\u04ff]', blob):
+        return False, "non_target_script_leak"
     return True, "ok"
 
 
