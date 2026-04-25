@@ -55,7 +55,7 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.5.0';
+export const APP_VERSION='1.6.0';
 export const BUILD_HASH='1010q-v1.5.0';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
