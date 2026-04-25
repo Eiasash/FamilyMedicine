@@ -55,11 +55,17 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.6.0';
-export const BUILD_HASH='1010q-v1.5.0';
+export const APP_VERSION='1.6.1';
+export const BUILD_HASH='1061q-v1.6.1';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
-    '1.5.0': [
+  '1.6.1': [
+    '🧹 Parser-bleed historical audit (mirrors Geriatrics v10.34 + Pnimit v9.81). The shared IMA Hebrew RTL PDF parser had a known bleed bug — when a next-Q marker (`<digit>.`) failed to render cleanly, the parser silently concatenated adjacent questions, wadding next-Q stem fragments into the previous Q\'s option D.',
+    '📊 Scan results across the 7 past-exam tags (2020/2021-Jun/2022-Jun/2023-Jun/2024-May/2024-Sep/2025-Jun, 950 Qs total): 0 next-Q-stem bleed pattern hits, 0 footer-cruft hits, 1 over-length option (idx 550, 2023-Jun, ti=26). Investigation: legitimate 4-patient comparison Q (home-hospitalization criteria, 2020 IL position paper) — all four options are clinical vignettes by design (lengths 176/256/200/176). Whitelisted, no surgery needed.',
+    '🛡️ tests/parserBleedGuard.test.js — 3 locks against future regressions: (a) no past-exam option contains next-Q-stem bleed pattern after pos 30, (b) no past-exam option contains page-footer cruft (date+שלב), (c) no past-exam option exceeds 250 chars (idx 550 whitelisted). \'FM-Core\' tag intentionally excluded — curated content, not parser output.',
+    '🏷️ BUILD_HASH 1010q-v1.5.0 → 1061q-v1.6.1 (corrects drift; v1.6.0 added +51 FM-Core but BUILD_HASH stayed at v1.5.0\'s 1010-Q baseline).',
+  ],
+  '1.5.0': [
       '🩺 Content sprint — +60 FM-Core Qs filling 6 syllabus gaps from v1.4.5 audit:',
       '   • Cancer screening (+12, ti=20): mammogram/colono/Pap/PSA/LDCT — IL MOH + USPSTF',
       '   • Vaccines / immunization (+12, ti=13): IL pediatric schedule + adult 65+ + pregnancy + travel + immunosuppressed',
