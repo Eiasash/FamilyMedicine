@@ -55,10 +55,15 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.6.1';
-export const BUILD_HASH='1061q-v1.6.1';
+export const APP_VERSION='1.7.0';
+export const BUILD_HASH='1061q-v1.7.0';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.7.0': [
+    '🐛 Built-in debug console: 5 הקשות ברצף (תוך 3 שניות) על הפינה הימנית-עליונה של המסך פותחות panel דיבוג חי. מציג: APP/SW versions, מצב נוכחי (tab/libSec/pool/qi/QZ), 10 שגיאות אחרונות עם stack traces, 50 שורות console (בצבעים לפי level), 20 קריאות fetch אחרונות (status+ms+URL), 30 פעולות משתמש אחרונות. כפתור "📋 Copy" מעתיק הכל כ-markdown ללוח. מצמצם את צורך USB-debugging מהטלפון.',
+    '🪝 Hooks: src/debug/console.js — first import ב-src/ui/app.js כך ש-console.{log,info,warn,error,debug} + window.fetch + onerror + unhandledrejection נעטפים לפני יתר ה-modules. document click capture (capture phase) רושם target+data-action+text. window.__debug_open() זמין מ-DevTools console.',
+    '🔧 Sibling-port (matches Geriatrics v10.38.0 + Pnimit v9.83). אין שינוי בלוגיקת האפליקציה — רק תוספת observability טהורה. Bundle size delta ≈ 7KB gz.',
+  ],
   '1.6.1': [
     '🧹 Parser-bleed historical audit (mirrors Geriatrics v10.34 + Pnimit v9.81). The shared IMA Hebrew RTL PDF parser had a known bleed bug — when a next-Q marker (`<digit>.`) failed to render cleanly, the parser silently concatenated adjacent questions, wadding next-Q stem fragments into the previous Q\'s option D.',
     '📊 Scan results across the 7 past-exam tags (2020/2021-Jun/2022-Jun/2023-Jun/2024-May/2024-Sep/2025-Jun, 950 Qs total): 0 next-Q-stem bleed pattern hits, 0 footer-cruft hits, 1 over-length option (idx 550, 2023-Jun, ti=26). Investigation: legitimate 4-patient comparison Q (home-hospitalization criteria, 2020 IL position paper) — all four options are clinical vignettes by design (lengths 176/256/200/176). Whitelisted, no surgery needed.',
