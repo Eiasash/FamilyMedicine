@@ -55,10 +55,13 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.7.0';
-export const BUILD_HASH='1061q-v1.7.0';
+export const APP_VERSION='1.7.1';
+export const BUILD_HASH='1061q-v1.7.1';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.7.1': [
+    '🐞 Debug console polish: report format עבר ל-=== DEBUG REPORT === בסגנון plain-text section headers (במקום markdown #/##), כולל URL ו-time ISO. הוספת window.__debug API: __debug.show() / __debug.report() / __debug.buffer / __debug.clear(). MAX_NETWORK 50→100, MAX_ACTIONS 50→100. לוגיקת click-action מזהה כעת data-action ו-onclick=fnName(...). tests/debugConsole.test.js + docs/DEBUG_CONSOLE.md סטנדרטי לכל שלושת ה-PWAs.',
+  ],
   '1.7.0': [
     '🐛 Built-in debug console: 5 הקשות ברצף (תוך 3 שניות) על הפינה הימנית-עליונה של המסך פותחות panel דיבוג חי. מציג: APP/SW versions, מצב נוכחי (tab/libSec/pool/qi/QZ), 10 שגיאות אחרונות עם stack traces, 50 שורות console (בצבעים לפי level), 20 קריאות fetch אחרונות (status+ms+URL), 30 פעולות משתמש אחרונות. כפתור "📋 Copy" מעתיק הכל כ-markdown ללוח. מצמצם את צורך USB-debugging מהטלפון.',
     '🪝 Hooks: src/debug/console.js — first import ב-src/ui/app.js כך ש-console.{log,info,warn,error,debug} + window.fetch + onerror + unhandledrejection נעטפים לפני יתר ה-modules. document click capture (capture phase) רושם target+data-action+text. window.__debug_open() זמין מ-DevTools console.',
