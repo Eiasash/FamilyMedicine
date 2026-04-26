@@ -55,10 +55,13 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.7.1';
-export const BUILD_HASH='1061q-v1.7.1';
+export const APP_VERSION='1.7.2';
+export const BUILD_HASH='1061q-v1.7.2';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.7.2': [
+    '🐛 callAI singleton AbortController fix (mirror of Geriatrics v10.38.2 + Pnimit v9.84.1). G._aiAbortController הוחלף ב-per-call AbortController + 30s safety timeout. בקשות מקבילות לא מבטלות זו את זו יותר. preventive port — לא דווח באג ב-Mishpacha אך אותו שורש קוד = אותו פגם.',
+  ],
   '1.7.1': [
     '🐞 Debug console polish: report format עבר ל-=== DEBUG REPORT === בסגנון plain-text section headers (במקום markdown #/##), כולל URL ו-time ISO. הוספת window.__debug API: __debug.show() / __debug.report() / __debug.buffer / __debug.clear(). MAX_NETWORK 50→100, MAX_ACTIONS 50→100. לוגיקת click-action מזהה כעת data-action ו-onclick=fnName(...). tests/debugConsole.test.js + docs/DEBUG_CONSOLE.md סטנדרטי לכל שלושת ה-PWAs.',
   ],
