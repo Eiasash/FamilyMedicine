@@ -20,7 +20,7 @@
 
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { allocateHours, schedule, render } from '../src/features/study_plan/algorithm.js';
+import { allocateHours, schedule, render, buildPlan, rampStages, defaultDailyQTarget } from '../src/features/study_plan/algorithm.js';
 
 const rootDir = resolve(import.meta.dirname, '..');
 const SYLLABUS_PATH = resolve(rootDir, 'src/features/study_plan/syllabus_data.json');
@@ -51,13 +51,20 @@ describe('study_plan algorithm — JS↔Python cross-language fixture (Mishpacha
     }
   });
 
-  test('schedule: week_used per cell matches Python (±0.05)', () => {
+  test('schedule: week_used per cell EXACTLY matches Python (≤ 1e-9 drift)', () => {
+    // Probed 2026-04-27: JS Math.round(x*10)/10 produces byte-identical output
+    // to Python round(x, 1) on this fixture (no .X5 edge-case inputs hit, and
+    // float-add accumulation across 16 weeks is bounded by ~16·ε·6 ≈ 2e-14).
+    // The previous ±0.05 tolerance was 7 orders of magnitude too loose and
+    // would have silently masked any single-topic rounding divergence.
+    // If this ever loosens, investigate before relaxing — it likely indicates
+    // real drift between the two implementations.
     const allocated = allocateHours(MISHPACHA_TOPICS, 89.6);
     const { used } = schedule(allocated, 8, 16);
     const expected = [6.0, 6.0, 6.0, 5.7, 6.1, 6.1, 6.0, 6.1, 5.8, 5.7, 6.0, 5.3, 5.9, 5.1, 1.3, 0.0];
     expect(used.length).toBe(expected.length);
     for (let i = 0; i < expected.length; i++) {
-      expect(Math.abs(used[i] - expected[i])).toBeLessThan(0.05);
+      expect(Math.abs(used[i] - expected[i])).toBeLessThan(1e-9);
     }
   });
 
@@ -104,12 +111,12 @@ describe('study_plan algorithm — render() shape', () => {
     expect(display.summary).toMatchObject({
       exam_date: examISO,
       total_weeks: 19,
-      daily_q_target: 25,
+      daily_q_target: 25, // explicitly passed → echoed back unchanged
     });
 
     const w0 = display.weeks[0];
     expect(w0).toMatchObject({ idx: 1, start_date: '2026-05-04', end_date: '2026-05-10' });
-    expect(Math.abs(w0.used_hours - 6.0)).toBeLessThan(0.05);
+    expect(Math.abs(w0.used_hours - 6.0)).toBeLessThan(1e-9);
     expect(w0.topics.length).toBeGreaterThan(0);
     for (const t of w0.topics) {
       expect(t).toHaveProperty('id');
@@ -119,10 +126,121 @@ describe('study_plan algorithm — render() shape', () => {
       expect(t).toHaveProperty('frequency_pct');
     }
 
+    // First ramp week is now stage[0] = Mock #1 (Hebrew label). The "Mock exam #N"
+    // English label was retired alongside the RAMP_ADVICE → RAMP_STAGES refactor.
     const r0 = display.ramp_weeks[0];
-    expect(r0).toMatchObject({ idx: 1, mock_label: 'Mock exam #1' });
+    expect(r0).toMatchObject({ idx: 1 });
+    expect(r0.mock_label).toBe('בחינת דמה #1');
     expect(typeof r0.advice).toBe('string');
+    expect(r0.advice.length).toBeGreaterThan(40);
     expect(r0.start_date).toBe('2026-08-24'); // start + 16 weeks = 2026-08-24
     expect(r0.end_date).toBe('2026-08-30');
+
+    // Last ramp week (idx 3) must always be the pre-exam taper, regardless of N.
+    const rLast = display.ramp_weeks[2];
+    expect(rLast.mock_label).toBe('הכנה אחרונה');
+  });
+});
+
+describe('study_plan algorithm — rampStages()', () => {
+  // The original implementation used a 3-element advice array clamped via
+  // Math.min(j, len-1), which silently re-used "Mock #3" advice for ramp_weeks
+  // 4..6. rampStages() replaces that with N distinct stages, taper always last.
+  test('rampStages(3) preserves backward-compatible Mock1/Mock2/Taper sequence', () => {
+    const stages = rampStages(3);
+    expect(stages.length).toBe(3);
+    expect(stages[0].label).toBe('בחינת דמה #1');
+    expect(stages[1].label).toBe('בחינת דמה #2');
+    expect(stages[2].label).toBe('הכנה אחרונה');
+  });
+
+  test('rampStages(1) collapses to taper-only', () => {
+    const stages = rampStages(1);
+    expect(stages.length).toBe(1);
+    expect(stages[0].label).toBe('הכנה אחרונה');
+  });
+
+  test('rampStages(6) emits 6 distinct labels with taper LAST', () => {
+    const stages = rampStages(6);
+    expect(stages.length).toBe(6);
+    const labels = stages.map((s) => s.label);
+    // All distinct
+    expect(new Set(labels).size).toBe(6);
+    // Last is always taper
+    expect(labels[5]).toBe('הכנה אחרונה');
+    // Earlier stages are NOT taper
+    for (let i = 0; i < 5; i++) {
+      expect(stages[i].label).not.toBe('הכנה אחרונה');
+    }
+  });
+
+  test('rampStages clamps out-of-range inputs to [1,6]', () => {
+    expect(rampStages(0).length).toBe(1);     // 0 → 1
+    expect(rampStages(-3).length).toBe(1);    // negative → 1
+    expect(rampStages(99).length).toBe(6);    // overshoot → 6
+  });
+
+  test('every stage has non-empty Hebrew advice', () => {
+    for (const n of [1, 2, 3, 4, 5, 6]) {
+      for (const s of rampStages(n)) {
+        expect(typeof s.advice).toBe('string');
+        expect(s.advice.length).toBeGreaterThan(40);
+      }
+    }
+  });
+});
+
+describe('study_plan algorithm — defaultDailyQTarget()', () => {
+  // 30% of weekly hours × 60min/hr / (2min/Q × 7days) ≈ hpw × 1.286.
+  // Floored at 5/day, ceilinged at 60.
+  test('matches the formula at typical inputs', () => {
+    expect(defaultDailyQTarget(8)).toBe(10);   // round(8 * 1.3) = 10
+    expect(defaultDailyQTarget(12)).toBe(16);  // round(12 * 1.3) = 16
+    expect(defaultDailyQTarget(16)).toBe(21);  // round(16 * 1.3) = 21
+    expect(defaultDailyQTarget(20)).toBe(26);  // round(20 * 1.3) = 26
+  });
+
+  test('floors small inputs at 5/day', () => {
+    expect(defaultDailyQTarget(1)).toBe(5);
+    expect(defaultDailyQTarget(3)).toBe(5);    // round(3*1.3)=4 → floored to 5
+  });
+
+  test('ceilings large inputs at 60/day', () => {
+    expect(defaultDailyQTarget(40)).toBe(52);  // still under 60
+    expect(defaultDailyQTarget(60)).toBe(60);  // round(78) → ceiling
+    expect(defaultDailyQTarget(100)).toBe(60);
+  });
+
+  test('returns sane fallback for invalid inputs', () => {
+    expect(defaultDailyQTarget(0)).toBe(10);
+    expect(defaultDailyQTarget(-5)).toBe(10);
+    expect(defaultDailyQTarget(NaN)).toBe(10);
+    expect(defaultDailyQTarget(undefined)).toBe(10);
+  });
+
+  test('buildPlan uses computed default when dailyQTarget omitted', () => {
+    const out = buildPlan({
+      topics: MISHPACHA_TOPICS,
+      startDateISO: '2026-05-04',
+      examDateISO:  '2026-09-21', // 19 weeks
+      hoursPerWeek: 8,
+      rampWeeks:    3,
+      // dailyQTarget omitted on purpose
+    });
+    expect(out.display.summary.daily_q_target).toBe(10); // 8 hpw → 10/day
+    expect(out.planJson.inputs.dailyQTarget).toBe(10);   // resolved value persisted
+  });
+
+  test('buildPlan respects explicit dailyQTarget override', () => {
+    const out = buildPlan({
+      topics: MISHPACHA_TOPICS,
+      startDateISO: '2026-05-04',
+      examDateISO:  '2026-09-21',
+      hoursPerWeek: 8,
+      rampWeeks:    3,
+      dailyQTarget: 50,
+    });
+    expect(out.display.summary.daily_q_target).toBe(50);
+    expect(out.planJson.inputs.dailyQTarget).toBe(50);
   });
 });
