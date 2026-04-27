@@ -55,10 +55,13 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.7.3';
-export const BUILD_HASH='1061q-v1.7.3';
+export const APP_VERSION='1.8.0';
+export const BUILD_HASH='1061q-v1.8.0';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.8.0': [
+    '👤 חשבונות משתמש — שם משתמש + סיסמה לחברי הצוות. Powered by Supabase pgcrypto bcrypt דרך RPC SECURITY DEFINER (auth_register_user / auth_login_user / auth_change_password). שם המשתמש הופך ל-uid: ההתקדמות, לוח התוצאות והגיבוי בענן עוקבים אחריך בין מכשירים. משתמשים אורחים (uid אקראי) ממשיכים לעבוד כרגיל — אין מיגרציה הכרחית. Lockout אחרי 5 נסיונות כושלים. Settings → 👤 חשבון.',
+  ],
   '1.7.3': [
     '🚀 Deploy unblock — APP_VERSION + sw.js CACHE were not bumped in the v1.7.3 commit (only package.json was). deployConfigGuard.test.js failed → CI red → GitHub Pages skipped → live stuck at v1.7.2 since 2026-04-26 morning. This commit re-aligns the trinity so the actual code reaches users.',
   ],
