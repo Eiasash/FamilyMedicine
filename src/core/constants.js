@@ -55,10 +55,13 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.7.2';
-export const BUILD_HASH='1061q-v1.7.2';
+export const APP_VERSION='1.7.3';
+export const BUILD_HASH='1061q-v1.7.3';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.7.3': [
+    '🚀 Deploy unblock — APP_VERSION + sw.js CACHE were not bumped in the v1.7.3 commit (only package.json was). deployConfigGuard.test.js failed → CI red → GitHub Pages skipped → live stuck at v1.7.2 since 2026-04-26 morning. This commit re-aligns the trinity so the actual code reaches users.',
+  ],
   '1.7.2': [
     '🐛 callAI singleton AbortController fix (mirror of Geriatrics v10.38.2 + Pnimit v9.84.1). G._aiAbortController הוחלף ב-per-call AbortController + 30s safety timeout. בקשות מקבילות לא מבטלות זו את זו יותר. preventive port — לא דווח באג ב-Mishpacha אך אותו שורש קוד = אותו פגם.',
   ],
