@@ -19,7 +19,9 @@ import SYLLABUS from './syllabus_data.json';
 const APP_KEY = 'mishpacha';
 const DEFAULT_HOURS_PER_WEEK = 8;
 const DEFAULT_RAMP_WEEKS     = 3;
-const DAILY_Q_TARGET          = 25;
+// dailyQTarget is no longer hardcoded — buildPlan() derives it from
+// hoursPerWeek via defaultDailyQTarget(). The previous fixed value of 25
+// was over-budget for hpw < 19 (Pnimit cohort avg ~2 min/Q).
 
 // In-memory per-page cache so the user can flip away from Settings and back
 // without losing their generated plan. We do NOT persist this to
@@ -279,7 +281,7 @@ async function _handleGenerate() {
       examDateISO,
       hoursPerWeek,
       rampWeeks,
-      dailyQTarget:  DAILY_Q_TARGET,
+      // dailyQTarget intentionally omitted → defaultDailyQTarget(hoursPerWeek)
     });
     display  = out.display;
     planJson = out.planJson;

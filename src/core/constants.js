@@ -55,10 +55,15 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.9.0';
-export const BUILD_HASH='1061q-v1.9.0';
+export const APP_VERSION='1.9.1';
+export const BUILD_HASH='1061q-v1.9.1';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.9.1': [
+    '🪜 שבועות חזרה (1-6) קיבלו ייעוץ ייחודי לכל שלב — לפני, מסע 4-6 שבועות החזרה כולל 3 גורם תכנון "Mock #3" זהה במקום אסטרטגיות מובחנות. עכשיו: מוקים, תרגול ממוקד, עיבוי, וטייפר — שבוע סיום תמיד = הכנה אחרונה.',
+    '🎯 יעד יומי שאלות מתואם אוטומטית לשעות לימוד — היה מקובע 25/יום, מיועד ל-19+ שעות שבועיות. עכשיו: hpw × 1.3 (8h→10/d, 12h→16/d, 16h→21/d). הצי שבועי מתואם לתקציב 30% של מנוע התכנית.',
+    '🧪 Cross-language fixture tightened from ±0.05 → ±1e-9 (zero drift verified between JS port and Python reference for the Mishpacha slice). +11 tests for rampStages() / defaultDailyQTarget(); 537 → 548 passing.',
+  ],
   '1.9.0': [
     '📅 תכנית לימוד בתוך האפליקציה — Settings → 📅 תכנית לימוד. בוחרים תאריך בחינה, שעות לימוד שבועיות (1-20), שבועות חזרה (1-6); המנוע מחלק את 27 הנושאים לפי תדירות אמפירית מ-1,061 שאלות עבר ובונה לוח שבועי. JS port verbatim של allocate_hours + schedule מ-auto-audit/scripts/generate_study_plan.py — fixture חוצה-שפות מאמת התאמה byte-identical (top-5 שעות + week_used לכל תא ±0.05). שמירה בענן דרך RPC SECURITY DEFINER (study_plan_upsert / study_plan_get); אורחים יוצרים תכנית מקומית עם רמז להתחבר. ייצוא .ics צד-לקוח לכל לוחות השנה (Google / Outlook / Apple) — אירועי שבוע + 3 מוקים + יום הבחינה. מיגרציית supabase 0002_study_plans.sql דורשת הרצה ידנית בלוח הבקרה לפני שהפיצ\'ר עובד למשתמשים מחוברים.',
   ],
