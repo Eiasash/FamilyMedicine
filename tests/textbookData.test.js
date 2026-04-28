@@ -244,9 +244,13 @@ describe('data/tabs.json — navigation', () => {
     tabs = loadData('tabs.json');
   });
 
-  it('is an array of exactly 4 tabs', () => {
+  it('is an array of exactly 5 tabs (Quiz / Learn / Library / Track / More — v1.10.0)', () => {
     expect(Array.isArray(tabs)).toBe(true);
-    expect(tabs.length).toBe(4);
+    expect(tabs.length).toBe(5);
+    // Anchor the order so a future reorder lands as a deliberate test edit,
+    // not a silent UX regression (Learn must sit between Quiz and Library
+    // for the 'progress + study' visual flow at the bottom of the screen).
+    expect(tabs.map((t) => t.id)).toEqual(['quiz', 'learn', 'lib', 'track', 'more']);
   });
 
   it('every tab has id (string), ic (string), l (string)', () => {

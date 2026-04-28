@@ -33,6 +33,7 @@ import { renderTrack, renderCalc, calcUp, calcEstScore, renderStudyPlan, renderE
 import { renderSearch, renderChat, sendChat, sendChatStarter, clearChat,
          showAnswerHardFail, renderSettings, toggleNotifOptIn, renderNotes,
          initMoreEvents } from './more-view.js';
+import { getCurrentUser } from '../features/auth.js';
 
 export function renderTabs(){
 // safe-innerhtml: G.TABS is a hardcoded array of tab definitions (id/label/icon); no user input
@@ -49,11 +50,29 @@ const sv={srchi:document.getElementById('srchi')?.value,nfilt:document.getElemen
 if(G.tab!==G.lastTab){el.classList.remove('fade-in');void el.offsetWidth;el.classList.add('fade-in');window.scrollTo({top:0});G.lastTab=G.tab;}
 switch(G.tab){
 case'quiz':el.innerHTML=G.onCallMode?renderOnCall():renderQuiz();break;
-// Learn tab removed — Study/Cards/Drugs folded into More sub-tabs
-case'learn':G.tab='more';G.moreSub=(['study','flash','drugs'].includes(G.learnSub)?G.learnSub:'study');el.innerHTML='';render();break;
-case'study':G.tab='more';G.moreSub='study';el.innerHTML='';render();break;
-case'flash':G.tab='more';G.moreSub='flash';el.innerHTML='';render();break;
-case'drugs':G.tab='more';G.moreSub='drugs';el.innerHTML='';render();break;
+// v1.10.0: Learn restored as a separate bottom-tab + view (was folded into More
+// and pushed More's sub-tab bar to 9 entries — too crowded). Now matches Pnimit:
+// Quiz / Learn / Library / Track / More, with Learn owning Study/Cards/Drugs and
+// More owning Calc/Search/Notes/Chat/Feedback/Settings.
+case'learn':
+  {const _subBar='<div style="display:flex;gap:4px;margin-bottom:12px;padding:4px;background:#f1f5f9;border-radius:12px">'+
+  [{id:'study',ic:'📚',l:'Study'},{id:'flash',ic:'🃏',l:'Cards'},{id:'drugs',ic:'💊',l:'Drugs'}].map(s=>
+    '<button data-action="learn-sub" data-sub="'+s.id+'" style="flex:1;padding:8px 4px;border:none;border-radius:10px;font-size:11px;font-weight:'+(G.learnSub===s.id?'700':'400')+';cursor:pointer;background:'+(G.learnSub===s.id?'#fff':'transparent')+';color:'+(G.learnSub===s.id?'#0f172a':'#64748b')+';box-shadow:'+(G.learnSub===s.id?'0 1px 3px rgba(0,0,0,.1)':'none')+'">'+s.ic+' '+s.l+'</button>'
+  ).join('')+'</div>';
+  let _body='';
+  // Default learnSub to 'study' if it was set to a non-Learn value while the
+  // tab was folded into More (legacy state from pre-1.10.0).
+  if(!['study','flash','drugs'].includes(G.learnSub))G.learnSub='study';
+  if(G.learnSub==='study')_body=renderStudy();
+  else if(G.learnSub==='flash')_body=renderFlash();
+  else if(G.learnSub==='drugs')_body=renderDrugs();
+  el.innerHTML=_subBar+_body;}break; // safe-innerhtml: _subBar is static HTML; _body from internal render*() functions (no user input)
+// Routing aliases — preserved so existing buttons / deeplinks that hit
+// case'study' / case'flash' / case'drugs' still work; they now route through
+// the dedicated Learn view instead of through More.
+case'study':G.tab='learn';G.learnSub='study';el.innerHTML='';render();break;
+case'flash':G.tab='learn';G.learnSub='flash';el.innerHTML='';render();break;
+case'drugs':G.tab='learn';G.learnSub='drugs';el.innerHTML='';render();break;
 case'lib':el.innerHTML=renderLibrary();break;
 case'articles':G.libSec='afphari';G.tab='lib';el.innerHTML=renderLibrary();break;
 case'track':
@@ -62,15 +81,18 @@ case'track':
   }
   el.innerHTML=renderTrack();break;
 case'more':
-  {const _moreBar='<div style="display:flex;gap:4px;margin-bottom:12px;padding:4px;background:#f1f5f9;border-radius:12px;overflow-x:auto;-webkit-overflow-scrolling:touch">'+
-  [{id:'study',ic:'📚',l:'Study'},{id:'flash',ic:'🃏',l:'Cards'},{id:'drugs',ic:'💊',l:'Drugs'},{id:'calc',ic:'🧮',l:'Calc'},{id:'search',ic:'🔍',l:'Search'},{id:'notes',ic:'📝',l:'Notes'},{id:'chat',ic:'💬',l:'Chat'},{id:'feedback',ic:'💡',l:'Feedback'},{id:'settings',ic:'⚙️',l:'Settings'}].map(s=>
-    '<button data-action="more-sub" data-sub="'+s.id+'" style="flex:0 0 auto;padding:8px 10px;border:none;border-radius:10px;font-size:11px;font-weight:'+(G.moreSub===s.id?'700':'400')+';cursor:pointer;background:'+(G.moreSub===s.id?'#fff':'transparent')+';color:'+(G.moreSub===s.id?'#0f172a':'#64748b')+';box-shadow:'+(G.moreSub===s.id?'0 1px 3px rgba(0,0,0,.1)':'none')+';white-space:nowrap">'+s.ic+' '+s.l+'</button>'
+  // v1.10.0: shrunk from 9 sub-tabs to 6 — Study/Cards/Drugs moved to the
+  // restored Learn tab. Matches Pnimit's More now.
+  // Repair stale G.moreSub from a pre-1.10.0 install whose last view was
+  // study/flash/drugs (it'd render the Calc 'undefined' state otherwise).
+  if(['study','flash','drugs'].includes(G.moreSub)){G.tab='learn';G.learnSub=G.moreSub;G.moreSub='settings';el.innerHTML='';render();break;}
+  if(!['calc','search','notes','chat','feedback','settings'].includes(G.moreSub))G.moreSub='calc';
+  {const _moreBar='<div style="display:flex;gap:4px;margin-bottom:12px;padding:4px;background:#f1f5f9;border-radius:12px">'+
+  [{id:'calc',ic:'🧮',l:'Calc'},{id:'search',ic:'🔍',l:'Search'},{id:'notes',ic:'📝',l:'Notes'},{id:'chat',ic:'💬',l:'Chat'},{id:'feedback',ic:'💡',l:'Feedback'},{id:'settings',ic:'⚙️',l:'Settings'}].map(s=>
+    '<button data-action="more-sub" data-sub="'+s.id+'" style="flex:1;padding:8px 4px;border:none;border-radius:10px;font-size:11px;font-weight:'+(G.moreSub===s.id?'700':'400')+';cursor:pointer;background:'+(G.moreSub===s.id?'#fff':'transparent')+';color:'+(G.moreSub===s.id?'#0f172a':'#64748b')+';box-shadow:'+(G.moreSub===s.id?'0 1px 3px rgba(0,0,0,.1)':'none')+'">'+s.ic+' '+s.l+'</button>'
   ).join('')+'</div>';
   let _mBody='';
-  if(G.moreSub==='study')_mBody=renderStudy();
-  else if(G.moreSub==='flash')_mBody=renderFlash();
-  else if(G.moreSub==='drugs')_mBody=renderDrugs();
-  else if(G.moreSub==='calc')_mBody=renderCalc();
+  if(G.moreSub==='calc')_mBody=renderCalc();
   else if(G.moreSub==='search')_mBody=renderSearch();
   else if(G.moreSub==='notes')_mBody=renderNotes();
   else if(G.moreSub==='chat')_mBody=renderChat();
@@ -90,7 +112,33 @@ if(sv.srchi!==undefined&&document.getElementById('srchi'))document.getElementByI
 if(sv.nfilt!==undefined&&document.getElementById('nfilt'))document.getElementById('nfilt').value=sv.nfilt;
 if(sv.dsrch!==undefined&&document.getElementById('dsrch'))document.getElementById('dsrch').value=sv.dsrch;
 if(focused){const fe=document.getElementById(focused);if(fe){fe.focus();if(fe.value)fe.setSelectionRange(fe.value.length,fe.value.length);}}
+updateAccountChip();
 }
+
+// Header account chip — shows user initial when logged in, 👤 when guest.
+// Click goes to More → Settings, where the account section lives.
+// Mirrors Pnimit v9.87.0; see InternalMedicine/src/ui/app.js for design notes.
+export function updateAccountChip(){
+  const btn=document.getElementById('hdr-account-btn');
+  if(!btn)return;
+  const u=getCurrentUser();
+  if(u){
+    const name=u.displayName||u.username||'?';
+    const initial=name.trim().charAt(0).toUpperCase();
+    btn.textContent=initial;
+    btn.style.background='#0D7377'; // teal
+    btn.style.color='#fff';
+    btn.style.fontWeight='700';
+    btn.title=name+' — Account';
+  }else{
+    btn.textContent='👤';
+    btn.style.background='rgba(255,255,255,0.08)';
+    btn.style.color='#fff';
+    btn.style.fontWeight='400';
+    btn.title='Log in / Register';
+  }
+}
+window.updateAccountChip=updateAccountChip;
 
 // ===== DARK MODE =====
 export function toggleDark(){document.body.classList.toggle('dark');G.S.dark=document.body.classList.contains('dark');if(G.S.dark&&document.body.classList.contains('study')){document.body.classList.remove('study');G.S.studyMode=false;}G.save();}
@@ -310,6 +358,13 @@ document.querySelector('.hdr').addEventListener('click', (e) => {
   if (el.dataset.action === 'toggle-dark') toggleDark();
   else if (el.dataset.action === 'toggle-study') toggleStudyMode();
   else if (el.dataset.action === 'show-help') showHelp();
+  else if (el.dataset.action === 'goto-account') {
+    G.tab = 'more';
+    G.moreSub = 'settings';
+    renderTabs();
+    render();
+    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+  }
 });
 
 // === Body-level delegation for overlays, banners, modals ===

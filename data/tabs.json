@@ -5,6 +5,11 @@
     "l": "Quiz"
   },
   {
+    "id": "learn",
+    "ic": "📚",
+    "l": "Learn"
+  },
+  {
     "id": "lib",
     "ic": "📖",
     "l": "Library"
