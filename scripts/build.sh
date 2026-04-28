@@ -79,7 +79,7 @@ fi
 echo "  → CACHE=mishpacha-v${APP_VER}"
 cat > dist/sw.js << SWEOF
 const CACHE='mishpacha-v${APP_VER}';
-const SHELL_URLS=['mishpacha-mega.html','manifest.json','shared/fsrs.js'];
+const SHELL_URLS=['mishpacha-mega.html','manifest.json','shared/fsrs.js','shared/tokens.css','shared/install-promo.js','shared/install-promo-config.js'];
 const DATA_URLS=['data/questions.json','data/topics.json','data/notes.json','data/drugs.json','data/flashcards.json','data/tabs.json','data/afp_hari_index.json','data/nelson_notes.json','harrison_chapters.json','goroll_chapters.json','nelson_chapters.json','lerner_chapters.json'];
 const ALL_URLS=[...SHELL_URLS,...DATA_URLS];
 
