@@ -55,10 +55,24 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.13.0';
+export const APP_VERSION='1.15.0';
 export const BUILD_HASH='1061q-v1.9.1';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.15.0': [
+    '🧱 Quiz tab rebuild from scratch — renderQuiz() main path replaced with semantic, class-driven HTML and ZERO inline style attributes. New src/ui/quiz-view.css owns the component layer (.quiz-stage, .quiz-question, .quiz-choices, .quiz-choice, .quiz-feedback, .quiz-actions); every dimension, color and radius resolves through var(--*) tokens — no hardcoded hex, no hardcoded px.',
+    '✒️ Question stem — Frank Ruhl Libre at --text-xl, leading-snug, generous --space-8 block-margin. Choices are hairline-bordered cards with a leading-edge A/B/C/D mono chip; selected gets the accent border + soft-green wash, post-submit "correct/wrong/correct-unchosen/muted" states are encoded as data-state attributes (no ad-hoc class names).',
+    '🪟 Reading column capped at min(640px, 100%) so lines stay readable; sticky action footer on mobile (Previous + Next) with a backdrop-blur band. Restrained motion: fade-in feedback panel over --motion-base, hover transitions over --motion-fast, all zeroed by prefers-reduced-motion.',
+    '🔌 Behavioral preservation — every data-action name kept identical (pick / check-answer / give-up / next-q / prev-q / ai-explain / share-q / toggle-bk / toggle-qnote / wrong-reason / diff-rating / read-chapter / open-source / filter / filter-year / topic-select / start-mock / start-sd / start-oncall / start-pomo / start-mini-exam / wrong-review-clear). Event delegation in initQuizEvents() unchanged. Sudden-Death + on-call paths intentionally deferred to a follow-up.',
+    '🧪 19 new tests in tests/quizViewMarkup.test.js — pin the new structure (.quiz-stage / .quiz-question / .quiz-choices / role=radiogroup / data-state=correct/wrong/correct-unchosen) and a regression guard that fails CI if any of the new component shells regrow inline style attributes. 622 → 641 passing.',
+  ],
+  '1.14.0': [
+    '🎨 Editorial Clinical redesign — warm cream + forest green palette, Frank Ruhl Libre display serif (Hebrew + Latin), Heebo body. Hairline cards (no drop shadows), underline tab indicator that slides between active tabs, three-tier button system (primary accent fill / secondary hairline / ghost). Shared tokens v2 + new shared/layout-primitives.css used across Geriatrics + Pnimit + Mishpacha (byte-identical, same precedent as fsrs.js).',
+    '🪧 Page header — slate gradient bar replaced with hairline-divided cream surface; "Family Medicine" eyebrow chip recoloured to forest-green-on-soft-green, version chip in monospace.',
+    '📑 Tab bar (THE #1 win) — pill buttons → underline tabs. New module src/ui/tabs.js exports wireUnderlineTabs() with ResizeObserver + MutationObserver + window.resize wiring; indicator slides on tab change with a 220ms ease-out transition.',
+    '🪪 Primary cards + buttons — .card now hairline-bordered + 24px padded with no shadow. .btn-p (primary CTA) takes the accent forest-green fill.',
+    '♿ Accessibility: tabs keep role="tab" + aria-selected, 44px tap minimum preserved, prefers-reduced-motion zeroes the indicator transition. No behavior changes — pure re-skin.',
+  ],
   '1.12.0': [
     '🗺️ Topic heatmap — 27-cell SVG grid colored by FSRS retention probability (R-value), 5-step Viridis colorblind-safe palette. Lives at the top of the Track tab; tap any cell to drill that topic. Replaces the legacy text-pill mastery map. New module src/ui/heatmap.js.',
     '❌ Wrong-answer review mode — new "Review wrong (N)" pill in the Quiz tab surfaces previously-wrong Qs sorted by recency × IMA topic weight. Persisted across reloads via G.S.wrongSet. Auto-evicts after 2 consecutive correct answers; manual Clear button on the in-mode banner. New module src/quiz/wrong-review.js.',
