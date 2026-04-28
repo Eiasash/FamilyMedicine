@@ -2,18 +2,20 @@
 
 Sibling PWA to **Shlav A Mega** (geriatrics) and **Pnimit Mega** (internal medicine). Shares engine, FSRS, Supabase, AI proxy.
 
-## Current state (v1.3.4, 23/04/26)
-- **950 Qs** across 7 exam sessions (2020=150, 2021-Jun=150, 2022-Jun=150, 2023-Jun=150, 2024-May=100, 2024-Sep=100, 2025-Jun=150)
+## Current state (v1.9.1, 28/04/26)
+- **1061 Qs** total — 950 across 7 exam sessions (2020=150, 2021-Jun=150, 2022-Jun=150, 2023-Jun=150, 2024-May=100, 2024-Sep=100, 2025-Jun=150) + 111 `FM-Core` curated textbook Qs
 - All 7 sessions CONFIRMED Family Medicine content (fork-bug remediated in v1.3.0 — see CHANGELOG)
-- **27 topics** (`ti` range 0-26), **12 drugs**, **0 flashcards** (unused so far)
-- **398 tests passing** (26 test files). Pnimit regression guards ported + Mishpacha-specific guards added
-- Goroll 239 ch (local PDF, 1-tap deep-link) + Nelson 165 ch (Drive PDF via progressive-upgrade schema) + Harrison 69 ch (cross-ref, in-app reader)
-- localStorage `mishpacha_mega`, SW cache `mishpacha-v1.3.4`
+- **27 topics** (`ti` range 0-26), **47 drugs**, **0 flashcards** (unused so far)
+- **34 test files** under `tests/`. Pnimit regression guards ported + Mishpacha-specific guards added
+- Goroll 239 ch (local PDF, 1-tap deep-link) + Nelson 165 ch (Drive PDF via progressive-upgrade schema) + Harrison 42 ch (cross-ref, in-app reader) + Lerner 2025 329 sections (Hebrew prose, 6th Library tab, added v1.4.3)
+- localStorage `mishpacha_mega`, SW cache `mishpacha-v1.9.1`
 - `shared/fsrs.js` is byte-identical with § D Geriatrics + § E Pnimit (canonical md5 `cea66a0435…`)
 
-## Recent (v1.3.3 + v1.3.4)
-- **v1.3.3 Nelson → Goroll parity** — Nelson Library tab is now 1-tap (chapter row → PDF opens at the right location), same UX as Goroll. Progressive href resolution: `{file}` → local `nelson/<file>` · `{page}` → Drive `#page=N` · else → Drive root. Chapters currently ship with just `{ch, title_en, notes_he}`, so taps go to Drive root; populating `page` numbers from the Nelson ToC will flip on deep-linking without any further code change.
-- **v1.3.4 BIDI hygiene pass** — `.heb` class no longer force-sets `direction:rtl`; uses `unicode-bidi:plaintext + text-align:start` so each paragraph's base direction comes from its own first strong char per UBA. English-majority AI explanations and drug names no longer reflow RTL. AI-flag banner, imgDep banner, teach-back textarea + header: `dir="rtl"` → `dir="auto"`; interpolated eFlag text wrapped in `<bdi>`.
+## Recent (v1.8.0 → v1.9.1)
+- **v1.9.1 study-plan tuning** — ramp stages 1-6, hpw-scaled daily Q target, tighter fixture for the in-app study plan generator.
+- **v1.9.0 in-app study plan generator** — see `src/features/study_plan/{algorithm,index}.js`; Supabase table backing in `supabase/migrations/0002_study_plans.sql`.
+- **v1.8.0 username/password accounts** — Supabase pgcrypto bcrypt RPCs (`src/services/supabaseAuth.js`); replaces magic-link-only flow.
+- **v1.7.x debug console + AI-call hardening** — built-in 5-tap debug console (`src/debug/console.js`, persisted to localStorage), and per-call AbortController + 30s safety timeout in `callAI` (preventive port from Geriatrics v10.38.2).
 
 ## v1.3.0 — fork-bug remediation (CRITICAL)
 Before v1.3.0, 5 of 7 exam sessions (2021-Jun, 2022-Jun, 2023-Jun, 2024-May, 2024-Sep) were accidentally ingested from **Internal Medicine** PDFs rather than Family Medicine — a copy-paste residue from the initial Pnimit fork. ~593 of 943 Qs were IM content masquerading as FM. v1.3.0 re-ingested all 5 sessions from correct FM PDFs via Sonnet-4.5 image-based extraction + official IMA post-appeal answer keys (~$11, ~30 min). 2025-Jun was cosmetically refreshed (data was FM but PDF was IM). EXAM_FREQ + IMA_WEIGHTS recalibrated for true 950-Q FM corpus — new emphasis: Peds-Acute 12%, MSK 11%, EBM 8%, Geri 5%. All 18 replaced PDFs verified "רפואת המשפחה" not "רפואה פנימית".
@@ -28,7 +30,7 @@ Before v1.3.0, 5 of 7 exam sessions (2021-Jun, 2022-Jun, 2023-Jun, 2024-May, 202
 - `vite.config.js` must have `base: '/FamilyMedicine/'` — NOT a sibling repo's name. This was the exact bug that stalled the v1.2.10 deploy (was `/InternalMedicine/`, causing all hashed assets to 404). The guard test fails CI if this regresses.
 
 ## Do NOT split the modular build
-Keep the 21-JS-module split in `src/`. Pnimit's pattern, mirror it exactly.
+Keep the 26-JS-module split in `src/` (was 21 at v1.3.4; grew with debug console, study-plan, supabaseAuth). Pnimit's pattern, mirror it exactly.
 
 ## Tag whitelist
 `2020`, `2021-Jun`, `2022-Jun`, `2023-Jun`, `2024-May`, `2024-Sep`, `2025-Jun`, `Goroll`, `Nelson`, `AFP`, `Exam`
@@ -57,5 +59,5 @@ Official IMA keys sometimes accept multiple letters. Store as `c_accept: [0,2]` 
 - **Nelson per-chapter PDFs** (optional upgrade) — drop individual PDFs into `nelson/` and set `{file: "Ch42.pdf"}` per entry to serve offline-capable from same origin (mirrors Harrison's pattern). Library UI prefers `file` > `page` > Drive root.
 - **Image ingestion** — audit for image-dep Qs across the 7 sessions; Supabase bucket `question-images` uses `mishpacha_` prefix
 - **Calibrate `IMA_WEIGHTS` + `EXAM_FREQ`** in `src/core/constants.js` from real tag distribution
-- **Add `weekly-audit.yml`** workflow (currently has ci + integrity-guard only)
+- ~~**Add `weekly-audit.yml`** workflow~~ — done; workflows now: ci, deploy, integrity-guard, distractor-autopsy, weekly-audit.
 - **Annotate `heDir(…)` innerHTML-pieces** — `scripts/check-innerhtml-pieces.py` flags two sites in `src/ai/explain.js:29` and `src/quiz/engine.js:197` (pre-existing from v1.2.16). Not wired into CI, doesn't block deploy, but add `// safe-innerhtml:` annotations or wrap in `sanitize()` to get the checker green.
