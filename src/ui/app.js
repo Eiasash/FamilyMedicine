@@ -34,12 +34,17 @@ import { renderSearch, renderChat, sendChat, sendChatStarter, clearChat,
          showAnswerHardFail, renderSettings, toggleNotifOptIn, renderNotes,
          initMoreEvents } from './more-view.js';
 import { getCurrentUser } from '../features/auth.js';
+import { wireUnderlineTabs } from './tabs.js';
 
 export function renderTabs(){
+const tb=document.getElementById('tb');
 // safe-innerhtml: G.TABS is a hardcoded array of tab definitions (id/label/icon); no user input
-document.getElementById('tb').innerHTML=G.TABS.map(t=>
-`<button class="${t.id===G.tab?'on':''}" data-action="go" data-tab="${t.id}" aria-label="${t.l}"><span class="ic">${t.ic}</span>${t.l}</button>`
+tb.innerHTML=G.TABS.map(t=>
+`<button class="${t.id===G.tab?'on':''}" role="tab" aria-selected="${t.id===G.tab?'true':'false'}" data-action="go" data-tab="${t.id}" aria-label="${t.l}"><span class="ic" aria-hidden="true">${t.ic}</span>${t.l}</button>`
 ).join('');
+// Editorial Clinical 2026-04 — underline indicator. wireUnderlineTabs() is
+// idempotent: re-running re-uses the existing indicator and just nudges it.
+try { wireUnderlineTabs(tb); } catch (_) { /* safe no-op for jsdom */ }
 }
 export function go(t){G.tab=t;renderTabs();render()}
 
