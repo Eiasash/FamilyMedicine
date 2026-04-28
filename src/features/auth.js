@@ -114,6 +114,7 @@ export function setAuthSession(username, displayName) {
   // The logged-in username becomes the cloud uid; existing leaderboard/backup
   // queries that read mishpacha_uid pick this up transparently.
   localStorage.setItem(UID_LS_KEY, username);
+  if (typeof window.updateAccountChip === 'function') window.updateAccountChip();
   return profile;
 }
 
@@ -129,6 +130,7 @@ export function logout() {
   // Same for device id used by cloud backup (so a logout doesn't accidentally write
   // user data to an old device row).
   localStorage.setItem(DEV_LS_KEY, 'dev_' + Math.random().toString(36).slice(2, 12));
+  if (typeof window.updateAccountChip === 'function') window.updateAccountChip();
 }
 
 // ───────────────────────────── UI ─────────────────────────────
