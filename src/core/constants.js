@@ -55,10 +55,16 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.11.0';
+export const APP_VERSION='1.12.0';
 export const BUILD_HASH='1061q-v1.9.1';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.12.0': [
+    '🗺️ Topic heatmap — 27-cell SVG grid colored by FSRS retention probability (R-value), 5-step Viridis colorblind-safe palette. Lives at the top of the Track tab; tap any cell to drill that topic. Replaces the legacy text-pill mastery map. New module src/ui/heatmap.js.',
+    '❌ Wrong-answer review mode — new "Review wrong (N)" pill in the Quiz tab surfaces previously-wrong Qs sorted by recency × IMA topic weight. Persisted across reloads via G.S.wrongSet. Auto-evicts after 2 consecutive correct answers; manual Clear button on the in-mode banner. New module src/quiz/wrong-review.js.',
+    '📚 Source-link in explanations — q.ref field is now a clickable chip that routes to the right reader (Goroll / Nelson / Lerner / Harrison / AFP). HARI guidelines and unknown sources render as plain text + 🔗 icon (no link). New module src/ui/source-link.js.',
+    '🧪 +74 tests across 3 new files (heatmap, wrongReview, sourceLink); 548 → 622 passing.',
+  ],
   '1.9.1': [
     '🪜 שבועות חזרה (1-6) קיבלו ייעוץ ייחודי לכל שלב — לפני, מסע 4-6 שבועות החזרה כולל 3 גורם תכנון "Mock #3" זהה במקום אסטרטגיות מובחנות. עכשיו: מוקים, תרגול ממוקד, עיבוי, וטייפר — שבוע סיום תמיד = הכנה אחרונה.',
     '🎯 יעד יומי שאלות מתואם אוטומטית לשעות לימוד — היה מקובע 25/יום, מיועד ל-19+ שעות שבועיות. עכשיו: hpw × 1.3 (8h→10/d, 12h→16/d, 16h→21/d). הצי שבועי מתואם לתקציב 30% של מנוע התכנית.',
