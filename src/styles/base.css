@@ -10,14 +10,11 @@
 }
 
 body {
-  /* Editorial Clinical 2026-04 — body baseline reads tokens.css (warm cream + warm near-black). */
-  font-family: var(--font-body, 'Heebo', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif);
-  font-size: var(--text-md, 1rem);
-  line-height: var(--leading-body, 1.55);
+  font-family: 'Heebo', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  background: var(--color-bg, #faf7f2);
-  color: var(--color-fg, #1a1817);
+  background: #f8fafc;
+  color: #1e293b;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }

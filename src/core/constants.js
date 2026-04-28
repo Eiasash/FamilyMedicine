@@ -55,17 +55,10 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.14.0';
+export const APP_VERSION='1.13.0';
 export const BUILD_HASH='1061q-v1.9.1';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
-  '1.14.0': [
-    '🎨 Editorial Clinical redesign — warm cream + forest green palette, Frank Ruhl Libre display serif (Hebrew + Latin), Heebo body. Hairline cards (no drop shadows), underline tab indicator that slides between active tabs, three-tier button system (primary accent fill / secondary hairline / ghost). Shared tokens v2 + new shared/layout-primitives.css used across Geriatrics + Pnimit + Mishpacha (byte-identical, same precedent as fsrs.js).',
-    '🪧 Page header — slate gradient bar replaced with hairline-divided cream surface; "Family Medicine" eyebrow chip recoloured to forest-green-on-soft-green, version chip in monospace.',
-    '📑 Tab bar (THE #1 win) — pill buttons → underline tabs. New module src/ui/tabs.js exports wireUnderlineTabs() with ResizeObserver + MutationObserver + window.resize wiring; indicator slides on tab change with a 220ms ease-out transition.',
-    '🪪 Primary cards + buttons — .card now hairline-bordered + 24px padded with no shadow. .btn-p (primary CTA) takes the accent forest-green fill.',
-    '♿ Accessibility: tabs keep role="tab" + aria-selected, 44px tap minimum preserved, prefers-reduced-motion zeroes the indicator transition. No behavior changes — pure re-skin.',
-  ],
   '1.12.0': [
     '🗺️ Topic heatmap — 27-cell SVG grid colored by FSRS retention probability (R-value), 5-step Viridis colorblind-safe palette. Lives at the top of the Track tab; tap any cell to drill that topic. Replaces the legacy text-pill mastery map. New module src/ui/heatmap.js.',
     '❌ Wrong-answer review mode — new "Review wrong (N)" pill in the Quiz tab surfaces previously-wrong Qs sorted by recency × IMA topic weight. Persisted across reloads via G.S.wrongSet. Auto-evicts after 2 consecutive correct answers; manual Clear button on the in-mode banner. New module src/quiz/wrong-review.js.',
