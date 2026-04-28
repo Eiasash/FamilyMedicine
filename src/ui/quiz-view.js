@@ -11,6 +11,8 @@ import { buildPool, check, next, prev, pick, checkMockIntercept, exitOnCallMode,
          startOnCallMode, _storeDiff } from '../quiz/engine.js';
 import { startPomodoro, stopPomodoro, startSuddenDeath, endSuddenDeath, speakQuestion, startNextBestStep } from '../quiz/modes.js';
 import { showAnswerHardFail } from './more-view.js';
+import { buildWrongReviewPool, getWrongAnswerCount, resetWrongSet } from '../quiz/wrong-review.js';
+import { renderSourceLink, openSource } from './source-link.js';
 
 export function toggleBk(){G.S.bk[G.pool[G.qi]]=!G.S.bk[G.pool[G.qi]];G.save();G.render();}
 export function toggleQNote(){
@@ -332,8 +334,12 @@ const filts=[['all',`הכל (${G.QZ.length})`],['2020','20'],['2021-Jun','Jun21'
 const _weakForPill=getWeakTopics(3);
 if(_weakForPill.length&&_weakForPill[0].pct!==null&&_weakForPill[0].pct<65)filts.push(['rescue','🚨 Rescue']);
 if(dueN>0)filts.push(['due',`🔄 Due (${dueN})`]);
+// Wrong-answer review pill (only visible when there's at least 1 wrong Q to review).
+const _wrongCount=getWrongAnswerCount();
+if(_wrongCount>0)filts.push(['wrong-review',`❌ Review wrong (${_wrongCount})`]);
 filts.forEach(([f,l])=>{
 if(f==='rescue')h+=`<span class="pill ${G.filt==='rescue'?'on':''}" data-action="filter-rescue">${l}</span>`;
+else if(f==='wrong-review')h+=`<span class="pill ${G.filt==='wrong-review'?'on':''}" data-action="filter-wrong-review" style="background:${G.filt==='wrong-review'?'#dc2626':'#fef2f2'};color:${G.filt==='wrong-review'?'#fff':'#991b1b'};font-weight:700">${l}</span>`;
 else if(f==='nbs')h+=`<span class="pill ${G.filt==='nbs'?'on':''}" data-action="filter-nbs">${l}</span>`;
 else if(EXAM_YEARS.includes(f)){
   const _yOn=_yearSel.includes(f);
@@ -363,8 +369,18 @@ const _tqCount=G.QZ.filter(q=>q.ti===G.topicFilt).length;
 h+=`<button class="btn btn-d" style="font-size:10px;padding:6px 12px;white-space:nowrap" data-action="start-mini-exam" data-ti="${G.topicFilt}" aria-label="Start topic mini-exam">🎯 Mini Exam (${Math.min(_tqCount,20)}q)</button>`;
 }
 h+=`</div>`;
+// Wrong-review mode banner: shows current count + Clear button. Eviction
+// is automatic at 2 consecutive correct (see src/quiz/wrong-review.js).
+if(G.filt==='wrong-review'){
+  const _wrCount=getWrongAnswerCount();
+  h+=`<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;margin-bottom:10px;font-size:11px;color:#991b1b">
+    <span style="font-weight:700">❌ Review wrong (${_wrCount})</span>
+    <span style="color:#64748b;font-size:10px;flex:1">Sorted by recency × topic weight · evicted after 2 in a row correct</span>
+    <button data-action="wrong-review-clear" style="font-size:10px;padding:4px 10px;background:#fff;border:1px solid #fecaca;border-radius:6px;color:#991b1b;cursor:pointer">Clear</button>
+  </div>`;
 }
-if(!G.pool.length){h+=`<div class="card" style="padding:24px;text-align:center"><p style="font-size:13px;color:#94a3b8">${G.filt==='due'?'🎉 No questions due for review!':'No questions match this filter.'}</p></div>`;return h;}
+}
+if(!G.pool.length){h+=`<div class="card" style="padding:24px;text-align:center"><p style="font-size:13px;color:#94a3b8">${G.filt==='due'?'🎉 No questions due for review!':G.filt==='wrong-review'?'🎉 No wrong answers to review — your set is empty!':'No questions match this filter.'}</p></div>`;return h;}
 h+=`<div class="progress-bar"><div class="fill" style="width:${Math.round((G.qi+1)/G.pool.length*100)}%"></div></div>`;
 h+=`<div class="card" style="padding:16px">`;
 if(G.timedMode&&!G.ans){
@@ -489,6 +505,12 @@ h+=`<div style="margin-top:8px;padding:10px 12px;background:${_eIss?'#fffbeb':'#
 if(_eIss){h+=`<div style="font-size:10px;font-weight:700;margin-bottom:6px;padding:4px 8px;background:#fef3c7;border-radius:6px;display:flex;align-items:center;gap:6px;justify-content:space-between"><span>⚠️ ההסבר הזה עלול להיות שגוי — AI איתר חוסר עקביות מול התשובה הנכונה</span><button data-action="mark-e-verified" data-idx="${G.pool[G.qi]}" style="font-size:9px;padding:3px 8px;background:#d97706;color:#fff;border:none;border-radius:6px;cursor:pointer;flex:0 0 auto">✓ מאומת</button></div>`;}
 h+=`<div style="font-weight:700;margin-bottom:4px;font-size:10px">📝 הסבר</div>`;
 h+=`<div style="unicode-bidi:plaintext" dir="${heDir(q.e)}">${remapExplanationLetters(q.e,_shuf).replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<b>$1</b>')}</div>`;
+// Source link (Goroll/Nelson/AFP/Lerner/Harrison/HARI). See src/ui/source-link.js.
+// q.ref populated for the AI-Hard seed Qs (63/63) and a growing share of the
+// curated FM-Core set; absent on most past-exam Qs.
+if(q.ref){
+  h+=`<div style="margin-top:8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;direction:ltr;unicode-bidi:isolate"><span style="font-size:9px;color:#64748b;font-weight:600">📚 Source:</span>${renderSourceLink(q.ref)}</div>`;
+}
 h+=`</div>`;
 }
 // Related AFP/הר"י articles — shown after answer is revealed, based on topic
@@ -684,6 +706,24 @@ export function initQuizEvents(container) {
     else if (action === 'filter-year-clear') { clearYearFilt(); }
     else if (action === 'filter-rescue') { buildRescuePool(); }
     else if (action === 'filter-nbs') { startNextBestStep(); }
+    else if (action === 'filter-wrong-review') { buildWrongReviewPool(); }
+    else if (action === 'wrong-review-clear') {
+      // Confirm-then-wipe is intentionally light-touch (toast-only) — undo path is
+      // cloud-backup → cloudRestore. UI lives in renderQuiz when filter is active.
+      resetWrongSet();
+      G.filt='all';
+      buildPool();
+      G.render();
+    }
+
+    // === Source-link clicks (data-action="open-source") — see src/ui/source-link.js
+    else if (action === 'open-source') {
+      const src = el.dataset.src;
+      const chRaw = el.dataset.ch;
+      const ch = chRaw != null && chRaw !== '' ? parseInt(chRaw, 10) : null;
+      const ref = el.dataset.ref || '';
+      openSource(src, ch, ref);
+    }
 
     // === Toggles ===
     else if (action === 'toggle-bk') { toggleBk(); }

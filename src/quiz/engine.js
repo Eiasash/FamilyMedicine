@@ -5,6 +5,7 @@ import { getDueQuestions, getTopicStats, isExamTrap, srScore } from '../sr/space
 import { callAI } from '../ai/client.js';
 import { buildRescuePool } from '../sr/spaced-repetition.js';
 import { aiAutopsy } from '../ai/explain.js';
+import { markWrong, markCorrect, getWrongAnswerPool } from './wrong-review.js';
 
 // Quiz engine — extracted from mishpacha-mega.html
 // Depends on: G.S, G.save (state.js), G.QZ, TOPICS, EXAM_FREQ (constants.js),
@@ -32,6 +33,12 @@ for(let i=G.pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[G.po
 G.qi=0;G.sel=null;G.ans=false;return;
 }
 if(G.filt==='rescue'){return;} // rescue G.pool already built by buildRescuePool()
+if(G.filt==='wrong-review'){
+  // Wrong-answer review pool: previously-wrong Qs sorted by recency × IMA weight.
+  // Persisted across reloads via G.S.wrongSet (see src/quiz/wrong-review.js).
+  G.pool=getWrongAnswerPool();
+  G.qi=0;G.sel=null;G.ans=false;return;
+}
 if(G.filt==='weak'){
 const ts=getTopicStats();
 const weakTopics=TOPICS.map((_,i)=>({i,s:ts[i]||{ok:0,no:0,tot:0}})).filter(p=>p.s.tot>=3).sort((a,b)=>{const pa=a.s.tot?a.s.ok/a.s.tot:0,pb=b.s.tot?b.s.ok/b.s.tot:0;return pa-pb;}).slice(0,10).map(p=>p.i);
@@ -213,7 +220,11 @@ if(!G.S.sr[G.pool[G.qi]].conf)G.S.sr[G.pool[G.qi]].conf={sure_ok:0,sure_no:0,uns
 const _ck=(G._confidence>=2?'sure':'unsure')+'_'+(isOk(q,G.sel)?'ok':'no');
 G.S.sr[G.pool[G.qi]].conf[_ck]++;
 }
-if(isOk(q,G.sel)){G.S.qOk++;srScore(G.pool[G.qi],true);}
+if(isOk(q,G.sel)){G.S.qOk++;srScore(G.pool[G.qi],true);
+  // Wrong-answer review: a correct answer on a previously-wrong Q advances its
+  // consecutive-correct streak; eviction happens at 2 in a row (see wrong-review.js).
+  try{markCorrect(G.pool[G.qi]);}catch(e){/* non-fatal */}
+}
 else{G.S.qNo++;
   // Store which distractor was chosen for future mistake-pattern analysis
   if(!G.S.sr[G.pool[G.qi]])G.S.sr[G.pool[G.qi]]={ef:2.5,n:0,next:0,ts:[],at:0,tot:0,ok:0};
@@ -221,6 +232,9 @@ else{G.S.qNo++;
   const _wci=String(G.sel);
   G.S.sr[G.pool[G.qi]].wc[_wci]=(G.S.sr[G.pool[G.qi]].wc[_wci]||0)+1;
   srScore(G.pool[G.qi],false);
+  // Wrong-answer review: record the index so it can be surfaced later via the
+  // "Review wrong (N)" filter pill (see src/quiz/wrong-review.js).
+  try{markWrong(G.pool[G.qi]);}catch(e){/* non-fatal */}
   // Feature 1: store wrong reason later via onclick
   const _apk='autopsy_'+G.pool[G.qi];
   if(!G._exCache[_apk]){setTimeout(()=>aiAutopsy(G.pool[G.qi]),400);}
