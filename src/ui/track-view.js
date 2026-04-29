@@ -465,28 +465,33 @@ ${last.worse?`<div style="font-size:10px">🔴 Worst: <b>${last.worse.name}</b> 
   }catch(e){return '';}
 }
 export function calcEstScore(){
-  // FSRS-aware estimated score: weight by retrievability for seen questions
+  // FSRS-aware estimated score: weighted by exam frequency, using ONLY topics
+  // with sufficient data (tot ≥ 3). Topics below threshold are excluded — we
+  // do not impute a neutral 60% (that produced misleading "60% Est. Score"
+  // readouts when the user had answered only a handful of questions).
+  // Returns null when fewer than 3 topics have ≥3 answers; UI renders "—".
   const now2=Date.now();
-  // Frequency weights from historical exam distribution
   const totalFreq=EXAM_FREQ.reduce((a,b)=>a+b,0);
   const tSt=G.S.ts||{};
   const due=new Set(getDueQuestions());
+
+  let topicsWithData=0;
+  EXAM_FREQ.forEach((freq,ti)=>{
+    if(!freq)return;
+    const s=tSt[ti]||{ok:0,no:0,tot:0};
+    if(s.tot>=3)topicsWithData++;
+  });
+  if(topicsWithData<3)return null;
 
   let weightedScore=0,totalWeight=0;
   EXAM_FREQ.forEach((freq,ti)=>{
     if(!freq)return;
     const s=tSt[ti]||{ok:0,no:0,tot:0};
+    if(s.tot<3)return; // skip — do not impute neutral default
     const weight=freq/totalFreq;
-    let acc;
-    if(s.tot<3){
-      // Not enough data — assume 60% (neutral)
-      acc=0.60;
-    } else {
-      acc=s.ok/s.tot;
-      // Penalize if due questions exist in this topic
-      const duePenalty=G.QZ.filter((_,i)=>G.QZ[i]?.ti===ti&&due.has(i)).length;
-      if(duePenalty>0)acc=Math.max(0,acc-duePenalty*0.02);
-    }
+    let acc=s.ok/s.tot;
+    const duePenalty=G.QZ.filter((_,i)=>G.QZ[i]?.ti===ti&&due.has(i)).length;
+    if(duePenalty>0)acc=Math.max(0,acc-duePenalty*0.02);
     weightedScore+=acc*weight;
     totalWeight+=weight;
   });

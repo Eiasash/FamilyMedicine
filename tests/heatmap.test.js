@@ -111,11 +111,11 @@ describe('getTopicMastery', () => {
     });
   });
 
-  it('computes rMean from FSRS state when present', () => {
-    // Seed topic 0 with two FSRS-tracked Qs (just-reviewed, S=10).
-    // R right after review (days=0) should be 1.0.
-    G.S.sr[0] = { fsrsS: 10, fsrsD: 5, lastReview: Date.now() };
-    G.S.sr[1] = { fsrsS: 10, fsrsD: 5, lastReview: Date.now() };
+  it('computes rMean from accuracy × R (3/3 correct + just-reviewed → ~1.0)', () => {
+    // Per-card mastery = (ok/tot) × R. With ok=3/tot=3 and S=10 just reviewed,
+    // R ≈ 1.0 → mastery ≈ 1.0.
+    G.S.sr[0] = { fsrsS: 10, fsrsD: 5, lastReview: Date.now(), ok: 3, tot: 3 };
+    G.S.sr[1] = { fsrsS: 10, fsrsD: 5, lastReview: Date.now(), ok: 3, tot: 3 };
     const m = getTopicMastery();
     const t0 = m.find((r) => r.ti === 0);
     expect(t0.attempted).toBe(true);
@@ -123,15 +123,34 @@ describe('getTopicMastery', () => {
     expect(t0.rMean).toBeGreaterThan(0.99); // ~1.0
   });
 
-  it('ignores SR entries without fsrsS (legacy SM-2 only)', () => {
-    G.S.sr[0] = { ef: 2.5, n: 1, tot: 1, ok: 1 }; // no fsrsS
+  it('regression: just-answered wrong card does NOT show 100% mastery', () => {
+    // The original bug — FSRS R alone gave ~1.0 for any card answered seconds ago,
+    // even if wrong. New mastery = (ok/tot)*R must be 0 when ok=0.
+    G.S.sr[0] = { fsrsS: 10, fsrsD: 5, lastReview: Date.now() - 60000, ok: 0, tot: 1 };
+    const m = getTopicMastery();
+    const t0 = m.find((r) => r.ti === 0);
+    expect(t0.attempted).toBe(true);
+    expect(t0.rMean).toBe(0);
+  });
+
+  it('falls back to raw hit-rate when FSRS state missing', () => {
+    // Legacy SM-2-only cards (no fsrsS) — use raw ok/tot.
+    G.S.sr[0] = { ef: 2.5, n: 1, tot: 4, ok: 2 };
+    const m = getTopicMastery();
+    const t0 = m.find((r) => r.ti === 0);
+    expect(t0.attempted).toBe(true);
+    expect(t0.rMean).toBe(0.5);
+  });
+
+  it('skips SR entries with tot=0 (never answered)', () => {
+    G.S.sr[0] = { fsrsS: 10, fsrsD: 5, lastReview: Date.now() }; // no tot/ok
     const m = getTopicMastery();
     const t0 = m.find((r) => r.ti === 0);
     expect(t0.attempted).toBe(false);
   });
 
   it('ignores SR entries pointing to deleted Qs', () => {
-    G.S.sr[999] = { fsrsS: 10, fsrsD: 5, lastReview: Date.now() };
+    G.S.sr[999] = { fsrsS: 10, fsrsD: 5, lastReview: Date.now(), ok: 1, tot: 1 };
     const m = getTopicMastery();
     const totalAttempted = m.filter((r) => r.attempted).length;
     expect(totalAttempted).toBe(0);
@@ -166,9 +185,8 @@ describe('renderHeatmap', () => {
   });
 
   it('uses VIRIDIS color when topics have data', () => {
-    G.S.sr[0] = { fsrsS: 10, fsrsD: 5, lastReview: Date.now() };
+    G.S.sr[0] = { fsrsS: 10, fsrsD: 5, lastReview: Date.now(), ok: 3, tot: 3 };
     const html = renderHeatmap();
-    // Should contain at least one Viridis color (the bright top bucket since R~1).
     expect(html).toContain(VIRIDIS_5[4]);
   });
 
@@ -178,9 +196,8 @@ describe('renderHeatmap', () => {
   });
 
   it('includes percentage labels for attempted topics', () => {
-    G.S.sr[0] = { fsrsS: 10, fsrsD: 5, lastReview: Date.now() };
+    G.S.sr[0] = { fsrsS: 10, fsrsD: 5, lastReview: Date.now(), ok: 3, tot: 3 };
     const html = renderHeatmap();
-    // 100% (just reviewed, S=10 → R=1.0)
     expect(html).toMatch(/>100%</);
   });
 
