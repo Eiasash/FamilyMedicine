@@ -20,7 +20,7 @@ export const SUPA_ANON='sb_publishable_tUuqQQ8RKMvLDwTz5cKkOg_o_y-rHtw';
 
 // Shared AI proxy (Netlify function on toranot.netlify.app)
 export const AI_PROXY='https://toranot.netlify.app/api/claude';
-export const AI_SECRET='shlav-a-mega-2026';
+export const AI_SECRET='shlav-a-mega-1f97f311d307-2026';
 
 // 27 topics for Family Medicine Shlav A (P0062-2025)
 // Order follows clinical-workflow clustering (adult → age-group → cross-cutting)
