@@ -55,10 +55,15 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.16.0';
+export const APP_VERSION='1.17.0';
 export const BUILD_HASH='1061q-v1.9.1';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.17.0': [
+    '🐛 תיקון קריטי — Topic Heatmap הציג mastery גבוהה על נושאים שזה עתה ענית עליהם, גם אם רוב התשובות היו שגויות. השורש: הנוסחה ב-heatmap.js השתמשה ב-FSRS R בלבד, שהוא דעיכת זמן (R≈1 מיד אחרי כל ביקורת — נכונה או שגויה). חישוב חדש: per-card mastery = (ok/tot) × R. תשובה שגויה מורידה מאסטרי ל-0 מיידית; תשובות נכונות ישנות דועכות עם R. Fallback ל-hit-rate גולמי כשמצב FSRS חסר (legacy SM-2). Mirror של Pnimit v9.92.0.',
+    '🐛 תיקון — Est. Score החזיר 60% מטעה כשרק נושאים בודדים נבחנו. השורש: הנוסחה הניחה 60% (neutral default) לכל נושא עם <3 תשובות. תיקון: נושאים עם <3 תשובות מודרים מהסכימה. מחזיר null כשפחות מ-3 נושאים יש להם נתונים — UI מציג "—".',
+    '🪝 Internal — heatmap.js getTopicMastery() עודכנה. heatmap.test.js: 5 cases חדשים כולל regression test "wrong-just-now ≠ 100%". 643 בדיקות עוברות.',
+  ],
   '1.15.0': [
     '🧱 Quiz tab rebuild from scratch — renderQuiz() main path replaced with semantic, class-driven HTML and ZERO inline style attributes. New src/ui/quiz-view.css owns the component layer (.quiz-stage, .quiz-question, .quiz-choices, .quiz-choice, .quiz-feedback, .quiz-actions); every dimension, color and radius resolves through var(--*) tokens — no hardcoded hex, no hardcoded px.',
     '✒️ Question stem — Frank Ruhl Libre at --text-xl, leading-snug, generous --space-8 block-margin. Choices are hairline-bordered cards with a leading-edge A/B/C/D mono chip; selected gets the accent border + soft-green wash, post-submit "correct/wrong/correct-unchosen/muted" states are encoded as data-state attributes (no ad-hoc class names).',

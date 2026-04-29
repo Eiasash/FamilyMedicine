@@ -1,20 +1,22 @@
 // Topic mastery heatmap — SVG grid of all 27 FM topics.
-// Colored by mean FSRS R (retention probability). 5-step Viridis colorblind-safe
-// scale. Cells are tappable → opens topic-filtered quiz.
+// Colored by competence-aware mastery: per-card mastery = (ok/tot) × FSRS R.
+// 5-step Viridis colorblind-safe scale. Cells are tappable → topic-filtered quiz.
 //
 // Public API:
 //   renderHeatmap()          → string of HTML containing an inline <svg>
 //   getTopicMastery()        → array of { ti, name, rMean, n, attempted } (27 entries)
-//   bucketize(r)             → 0..4 (which Viridis bucket the R-value falls into)
+//                              (rMean = mean per-card mastery, kept for compat)
+//   bucketize(r)             → 0..4 (which Viridis bucket the mastery falls into)
 //
 // Design notes:
-//   * R-value comes from FSRS (shared/fsrs.js → fsrsR). For each Q with FSRS state
-//     we compute R as of now, then average per topic. Topics with no answered
-//     questions show as "no data" (gray).
+//   * Per-card mastery = (ok/tot) × R. R alone is recency-decay (≈1 right after
+//     any review, right OR wrong) — multiplying by hit-rate makes wrong answers
+//     drop mastery instantly while letting old correct answers fade with R.
+//     Falls back to raw hit-rate when FSRS state is missing (legacy SM-2 cards).
 //   * 5-step Viridis is approximated to colorblind-safe palette
 //     ['#440154','#3b528b','#21918c','#5ec962','#fde725'].
-//     0 = darkest purple (R<0.5, weakest mastery)
-//     4 = bright yellow  (R>=0.9, strongest mastery)
+//     0 = darkest purple (mastery<0.5, weakest)
+//     4 = bright yellow  (mastery>=0.9, strongest)
 //   * Grid layout: 9 cols × 3 rows fits 27 topics cleanly in mobile width.
 //   * Click handler uses data-action="goto-quiz-topic" + data-ti — same as the
 //     legacy topic-mastery map in track-view, so no new event delegation needed.
@@ -42,9 +44,10 @@ export function bucketize(r) {
   return 4;
 }
 
-// Compute per-topic mastery from G.S.sr (FSRS state) and G.QZ (questions).
-// For each topic ti: take all answered Qs (have FSRS state), compute current R,
-// average. Returns sorted by ti so the grid order is stable.
+// Compute per-topic mastery from G.S.sr (review state) and G.QZ (questions).
+// Per-card mastery = (ok/tot) × FSRS R, falling back to raw hit-rate when FSRS
+// state missing. Wrong-just-now answers immediately drop mastery to 0.
+// Returns sorted by ti so the grid order is stable.
 export function getTopicMastery() {
   const out = [];
   const byTopic = {};
@@ -55,17 +58,27 @@ export function getTopicMastery() {
   Object.entries(sr).forEach(([idx, s]) => {
     const q = QZ[idx];
     if (!q || typeof q.ti !== 'number') return;
-    if (!s || typeof s.fsrsS !== 'number') return; // only FSRS-tracked items count
-    const days = s.lastReview ? Math.max(0, (Date.now() - s.lastReview) / 86400000) : 0;
-    let r;
-    try {
-      r = fsrsR(days, s.fsrsS);
-    } catch (e) {
-      r = NaN;
+    if (!s || typeof s !== 'object') return;
+    const tot = s.tot || 0;
+    if (tot === 0) return; // never answered → no mastery signal
+    const ok = s.ok || 0;
+    const accuracy = ok / tot;
+    let r = null;
+    if (typeof s.fsrsS === 'number' && s.fsrsS > 0) {
+      const days = s.lastReview ? Math.max(0, (Date.now() - s.lastReview) / 86400000) : 0;
+      try {
+        const rRaw = fsrsR(days, s.fsrsS);
+        if (typeof rRaw === 'number' && !isNaN(rRaw)) r = Math.max(0, Math.min(1, rRaw));
+      } catch (e) {
+        r = null;
+      }
     }
-    if (typeof r !== 'number' || isNaN(r)) return;
+    // Mastery = accuracy × R; fall back to raw accuracy if FSRS missing.
+    const mastery = r === null
+      ? Math.max(0, Math.min(1, accuracy))
+      : Math.max(0, Math.min(1, accuracy * r));
     if (!byTopic[q.ti]) byTopic[q.ti] = { sum: 0, n: 0 };
-    byTopic[q.ti].sum += r;
+    byTopic[q.ti].sum += mastery;
     byTopic[q.ti].n += 1;
   });
 
@@ -150,7 +163,7 @@ export function renderHeatmap() {
   return (
     `<div class="card" style="padding:14px;margin-bottom:10px">` +
     `<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:6px">` +
-    `<div style="font-size:12px;font-weight:700">🗺️ Topic Heatmap (FSRS retention)</div>` +
+    `<div style="font-size:12px;font-weight:700">🗺️ Topic Heatmap (accuracy × recency)</div>` +
     `<div style="font-size:9px;color:#94a3b8">${subtitle}</div>` +
     `</div>` +
     `<svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="xMidYMid meet" ` +
