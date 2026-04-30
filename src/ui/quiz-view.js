@@ -72,10 +72,17 @@ delete imgMap[qIdx];
 localStorage.setItem('mishpacha_q_images',JSON.stringify(imgMap));
 G.render();
 }
-// Load saved images on startup
+// Load saved images on startup. v1.20.0 fix: previous IIFE ran at module-load
+// time when G.QZ was still [] (data-loader is async), so persisted user
+// uploads never restored. Now we wait for G._dataPromise to resolve before
+// applying the localStorage map. Idempotent — safe to re-run.
 (function(){
-const imgMap=safeJSONParse('mishpacha_q_images',{});
-Object.entries(imgMap).forEach(([idx,url])=>{if(G.QZ[parseInt(idx)])G.QZ[parseInt(idx)].img=url;});
+  const apply=()=>{
+    const imgMap=safeJSONParse('mishpacha_q_images',{});
+    Object.entries(imgMap).forEach(([idx,url])=>{if(G.QZ[parseInt(idx)])G.QZ[parseInt(idx)].img=url;});
+  };
+  if(G._dataPromise&&typeof G._dataPromise.then==='function'){G._dataPromise.then(apply).catch(()=>{});}
+  else{apply();} // fallback: data already there (test env / cached)
 })();
 export function viewImg(src){
 const ov=document.createElement('div');
@@ -468,8 +475,20 @@ if(hasNote){
 }
 
 // ── Question image ──────────────────────────────────────────────────
+// v1.20.0 — fixes: (a) upload button was missing in the v1.15.0 rebuild
+// (only legacy path had it, this new path silently rendered nothing if no
+// q.img). (b) Bonus image-warning surface for AI-flagged image-dependent Qs.
 if(q.img){
+  h+=`<div class="quiz-image-wrap">`;
   h+=`<img class="quiz-image" src="${sanitize(q.img)}" alt="Question image" data-action="view-img" loading="lazy">`;
+  h+=`<button class="quiz-image-remove" data-action="remove-img" data-idx="${G.pool[G.qi]}" aria-label="הסר תמונה" title="הסר תמונה">✕</button>`;
+  h+=`</div>`;
+  if(q.imgDep){
+    h+=`<div class="quiz-image-dep" dir="auto"><span style="flex:1">⚠️ שאלה תלוית-תמונה: ההסבר עלול להיות שגוי.</span><button data-action="mark-verified" data-idx="${G.pool[G.qi]}">✓ מאומת</button></div>`;
+  }
+}else if(!G.examMode){
+  // No image attached — show inline upload affordance (legacy path had this; v1.15 dropped it accidentally).
+  h+=`<div class="quiz-image-attach"><button class="quiz-tool quiz-image-upload" data-action="upload-img" data-idx="${G.pool[G.qi]}" aria-label="צרף תמונה">📷 צרף תמונה</button><span id="img-status-${G.pool[G.qi]}" class="quiz-image-status"></span></div>`;
 }
 
 // ── Answer choices (radiogroup) ─────────────────────────────────────

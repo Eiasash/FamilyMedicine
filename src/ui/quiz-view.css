@@ -596,3 +596,126 @@
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * v1.20.0 — Theme bridge for FM
+ * ──────────────────────────────────────────────────────────────────────────
+ * The shared/tokens.css palette flips on `[data-theme="dark"]`, but FM's
+ * dark/study toggles set `body.dark`/`body.study` classes (legacy from
+ * pre-tokens days). Bug: in dark mode the new quiz UI rendered at
+ * --color-fg=#1a1916 (light-theme almost-black) on the dark body bg →
+ * unreadable question stem.
+ *
+ * This block bridges the two systems by overriding the CSS custom
+ * properties when the legacy body classes are present. No need to edit
+ * the byte-identical shared/tokens.css. Pnimit + Geri don't use the
+ * tokens system in their quiz views (yet), so they don't need this.
+ *
+ * Study mode is FM-only — Pnimit/Geri don't have it. Sepia palette
+ * mirrors body.study values from src/styles/theme.css.
+ * ────────────────────────────────────────────────────────────────────── */
+body.dark {
+  --color-bg:           #0e0e10;
+  --color-surface:      #18181b;
+  --color-surface-2:    #1f1f22;
+  --color-border:       #2a2a2e;
+  --color-border-strong:#44444a;
+  --color-fg:           #f1f0eb;
+  --color-fg-muted:     #b6b5ad;
+  --color-fg-subtle:    #7c7b73;
+  --color-accent-soft:  #2a234a;
+}
+body.study {
+  --color-bg:           #1a1008;
+  --color-surface:      #221508;
+  --color-surface-2:    #2a1e0d;
+  --color-border:       #3d2a12;
+  --color-border-strong:#7a5c30;
+  --color-fg:           #e8d5b0;
+  --color-fg-muted:     #c4a374;
+  --color-fg-subtle:    #a08060;
+  --color-accent:       #c48a3a;
+  --color-accent-soft:  #2a1e0d;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * Question image — wrap, remove button, dependency-warning, upload affordance
+ * ────────────────────────────────────────────────────────────────────── */
+.quiz-image-wrap {
+  position: relative;
+  text-align: center;
+  margin-block: var(--space-4);
+}
+.quiz-image {
+  max-inline-size: 100%;
+  max-block-size: 18rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  cursor: zoom-in;
+}
+.quiz-image-remove {
+  position: absolute;
+  inset-block-start: 0.25rem;
+  inset-inline-end: 0.25rem;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  line-height: 1;
+}
+.quiz-image-dep {
+  margin-block-start: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  color: #92400e;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  unicode-bidi: plaintext;
+}
+.quiz-image-dep button {
+  font-size: var(--text-xs);
+  padding: 0.2rem 0.6rem;
+  background: #d97706;
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+body.dark .quiz-image-dep,
+body.study .quiz-image-dep {
+  background: color-mix(in srgb, #fef3c7 20%, var(--color-surface));
+  border-color: #d97706;
+  color: #fde68a;
+}
+.quiz-image-attach {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-block: var(--space-3);
+}
+.quiz-image-upload {
+  font-size: var(--text-xs);
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-surface-2);
+  color: var(--color-fg-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.quiz-image-upload:hover {
+  background: var(--color-surface);
+  color: var(--color-fg);
+}
+.quiz-image-status {
+  font-size: var(--text-xs);
+  color: var(--color-fg-subtle);
+}
