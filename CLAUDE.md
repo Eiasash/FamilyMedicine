@@ -1,5 +1,16 @@
 # Claude instructions — Mishpacha Mega (Family Medicine Shlav A)
 
+<!-- working-rules-v1:start -->
+## Working Rules (user-mandated, non-negotiable)
+
+These four rules are the floor. They override any conflicting guidance later in this file. If a rule conflicts with what you're about to do, stop and surface it before proceeding.
+
+1. **Don't assume. Don't hide confusion. Surface tradeoffs.**
+2. **Minimum code that solves the problem. Nothing speculative.**
+3. **Touch only what you must. Clean up only your own mess.**
+4. **Define success criteria. Loop until verified.**
+<!-- working-rules-v1:end -->
+
 Sibling PWA to **Shlav A Mega** (geriatrics) and **Pnimit Mega** (internal medicine). Shares engine, FSRS, Supabase, AI proxy.
 
 ## Current state (v1.9.1, 28/04/26)
