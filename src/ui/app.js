@@ -147,10 +147,22 @@ export function updateAccountChip(){
 window.updateAccountChip=updateAccountChip;
 
 // ===== DARK MODE =====
-export function toggleDark(){document.body.classList.toggle('dark');G.S.dark=document.body.classList.contains('dark');if(G.S.dark&&document.body.classList.contains('study')){document.body.classList.remove('study');G.S.studyMode=false;}G.save();}
-export function toggleStudyMode(){document.body.classList.toggle('study');G.S.studyMode=document.body.classList.contains('study');if(G.S.studyMode&&document.body.classList.contains('dark')){document.body.classList.remove('dark');G.S.dark=false;}G.save();}
+// v1.21.0 — also sync `<html data-theme>` so shared/tokens.css's
+// `@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { ... } }`
+// fallback never fires when the user's OS is in dark mode but the app is in
+// light mode. Without this, every cream-on-white quiz screen surfaced the bug
+// that 1.20.0 left half-fixed (only body.dark/study were bridged).
+function _syncDataTheme(){
+  // Dark wins; otherwise Light is asserted explicitly. Study mode sets light
+  // (tokens.css has no study theme block) — body.study + the CSS bridge
+  // in quiz-view.css handles the sepia palette.
+  document.documentElement.dataset.theme = G.S.dark ? 'dark' : 'light';
+}
+export function toggleDark(){document.body.classList.toggle('dark');G.S.dark=document.body.classList.contains('dark');if(G.S.dark&&document.body.classList.contains('study')){document.body.classList.remove('study');G.S.studyMode=false;}_syncDataTheme();G.save();}
+export function toggleStudyMode(){document.body.classList.toggle('study');G.S.studyMode=document.body.classList.contains('study');if(G.S.studyMode&&document.body.classList.contains('dark')){document.body.classList.remove('dark');G.S.dark=false;}_syncDataTheme();G.save();}
 if(G.S.dark)document.body.classList.add('dark');
 if(G.S.studyMode)document.body.classList.add('study');
+_syncDataTheme(); // assert data-theme on first paint, before quiz-view renders
 
 // ===== FLASHCARD SPACED REP =====
 // fcRate moved to learn-view.js

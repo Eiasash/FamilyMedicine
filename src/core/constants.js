@@ -55,10 +55,15 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.20.0';
-export const BUILD_HASH='1061q-v1.20.0';
+export const APP_VERSION='1.21.0';
+export const BUILD_HASH='1061q-v1.21.0';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.21.0': [
+    '🐛 תיקון קריטי קומפליטרי ל-v1.20.0 — אם המכשיר במצב כהה ברמת מערכת ההפעלה אבל האפליקציה במצב Light, טקסט השאלה ופירוק הדיסטרקטורים נראו כקרם-על-לבן (בלתי-קריא לחלוטין). השורש: shared/tokens.css מכיל `@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { ... } }` שנכנס לפעולה כש-OS כהה ו-`[data-theme]` לא נקבע במפורש על הדף. v1.20.0 גישר רק את body.dark/body.study — לא את התרחיש הזה.',
+    '🩹 התיקון: `<html data-theme="light">` כברירת מחדל ב-HTML (מבטל את מדיה-קוורי לחלוטין על First Paint). JS מסנכרן `documentElement.dataset.theme` ב-toggleDark, toggleStudyMode, ובאתחול ראשון. תוצאה: light mode תמיד נשאר light אפילו כש-OS כהה.',
+    '🪝 Internal — `_syncDataTheme()` helper חדש ב-app.js. אין שינוי ב-shared/tokens.css (קובץ byte-identical, off-limits). אין שינוי ב-quiz-view.js. 673 בדיקות עוברות.',
+  ],
   '1.20.0': [
     '🐛 תיקון קריטי — טקסט השאלה היה כמעט בלתי-קריא ב-Dark Mode וב-Study Mode מאז v1.15.0 (28/04/26). השורש: quiz-view.css החדש (rebuild ב-v1.15.0) משתמש ב-CSS custom properties (`var(--color-fg)` וכו׳) המוגדרות ב-shared/tokens.css, אך הן מתחלפות רק כש-`[data-theme="dark"]` נקבע על ה-root. FM מחליפה מצב חשוך עם class על body (`body.dark`/`body.study`) — לא קבעה data-theme. תוצאה: --color-fg=#1a1916 (שחור-כמעט) על רקע כהה = טקסט שקוף.',
     '🩹 התיקון: הוספת bridge ב-quiz-view.css שמדריס את ה-CSS custom properties כש-body.dark או body.study פעילים. אין צורך לערוך את shared/tokens.css (זה קובץ byte-identical בין 3 ה-PWAs). מצב Study (סגנון נר חום, FM-only) מקבל פלטה מקבילה עם ערכי sepia מ-theme.css.',
