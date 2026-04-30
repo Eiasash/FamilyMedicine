@@ -31,10 +31,11 @@ import { renderTrack, renderCalc, calcUp, calcEstScore, renderStudyPlan, renderE
          renderDailyPlan, renderSessionCard, setExamDate, exportCheatSheet,
          saveSessionSummary, initTrackEvents } from './track-view.js';
 import { renderSearch, renderChat, sendChat, sendChatStarter, clearChat,
-         showAnswerHardFail, renderSettings, toggleNotifOptIn, renderNotes,
+         showAnswerHardFail, renderNotes,
          initMoreEvents } from './more-view.js';
 import { getCurrentUser } from '../features/auth.js';
 import { initPostLoginRestore } from '../features/post-login-restore.js';
+import { openSettings, bindSettingsEvents, refreshSettings } from './settings-overlay.js';
 
 export function renderTabs(){
 // safe-innerhtml: G.TABS is a hardcoded array of tab definitions (id/label/icon); no user input
@@ -51,45 +52,50 @@ const sv={srchi:document.getElementById('srchi')?.value,nfilt:document.getElemen
 if(G.tab!==G.lastTab){el.classList.remove('fade-in');void el.offsetWidth;el.classList.add('fade-in');window.scrollTo({top:0});G.lastTab=G.tab;}
 switch(G.tab){
 case'quiz':el.innerHTML=G.onCallMode?renderOnCall():renderQuiz();break;
-// v1.10.0: Learn restored as a separate bottom-tab + view (was folded into More
-// and pushed More's sub-tab bar to 9 entries — too crowded). Now matches Pnimit:
-// Quiz / Learn / Library / Track / More, with Learn owning Study/Cards/Drugs and
-// More owning Calc/Search/Notes/Chat/Feedback/Settings.
+// v1.19.0: Learn tab merged into Library. learnSub='flash' → Library Cards;
+// 'study' → Library Notes; 'drugs' → Library Drugs. Mirrors Pnimit v10.0 (PR #70)
+// but FM keeps the Drugs sub-tab — Family Medicine drug data is FM-specific
+// (pregnancy/peds/renal columns) and not duplicated in ward-helper.
 case'learn':
-  {const _subBar='<div style="display:flex;gap:4px;margin-bottom:12px;padding:4px;background:#f1f5f9;border-radius:12px">'+
-  [{id:'study',ic:'📚',l:'Study'},{id:'flash',ic:'🃏',l:'Cards'},{id:'drugs',ic:'💊',l:'Drugs'}].map(s=>
-    '<button data-action="learn-sub" data-sub="'+s.id+'" style="flex:1;padding:8px 4px;border:none;border-radius:10px;font-size:11px;font-weight:'+(G.learnSub===s.id?'700':'400')+';cursor:pointer;background:'+(G.learnSub===s.id?'#fff':'transparent')+';color:'+(G.learnSub===s.id?'#0f172a':'#64748b')+';box-shadow:'+(G.learnSub===s.id?'0 1px 3px rgba(0,0,0,.1)':'none')+'">'+s.ic+' '+s.l+'</button>'
+  G.tab='lib';
+  if(G.learnSub==='flash')G.S.libSub='cards';
+  else if(G.learnSub==='drugs')G.S.libSub='drugs';
+  else G.S.libSub='notes';
+  G.save&&G.save();
+  el.innerHTML='';render();break;
+case'study':G.tab='lib';G.S.libSub='notes';el.innerHTML='';render();break;
+case'flash':G.tab='lib';G.S.libSub='cards';el.innerHTML='';render();break;
+case'drugs':G.tab='lib';G.S.libSub='drugs';el.innerHTML='';render();break;
+case'lib':
+  {const _libSub=G.S.libSub||'read';
+  const _libBar='<div style="display:flex;gap:4px;margin-bottom:12px;padding:4px;background:#f1f5f9;border-radius:12px">'+
+  [{id:'read',ic:'📖',l:'Read'},{id:'cards',ic:'🃏',l:'Cards'},{id:'notes',ic:'📝',l:'Notes'},{id:'drugs',ic:'💊',l:'Drugs'}].map(s=>
+    '<button data-action="lib-sub" data-sub="'+s.id+'" style="flex:1;padding:8px 4px;border:none;border-radius:10px;font-size:11px;font-weight:'+(_libSub===s.id?'700':'400')+';cursor:pointer;background:'+(_libSub===s.id?'#fff':'transparent')+';color:'+(_libSub===s.id?'#0f172a':'#64748b')+';box-shadow:'+(_libSub===s.id?'0 1px 3px rgba(0,0,0,.1)':'none')+'">'+s.ic+' '+s.l+'</button>'
   ).join('')+'</div>';
-  let _body='';
-  // Default learnSub to 'study' if it was set to a non-Learn value while the
-  // tab was folded into More (legacy state from pre-1.10.0).
-  if(!['study','flash','drugs'].includes(G.learnSub))G.learnSub='study';
-  if(G.learnSub==='study')_body=renderStudy();
-  else if(G.learnSub==='flash')_body=renderFlash();
-  else if(G.learnSub==='drugs')_body=renderDrugs();
-  el.innerHTML=_subBar+_body;}break; // safe-innerhtml: _subBar is static HTML; _body from internal render*() functions (no user input)
-// Routing aliases — preserved so existing buttons / deeplinks that hit
-// case'study' / case'flash' / case'drugs' still work; they now route through
-// the dedicated Learn view instead of through More.
-case'study':G.tab='learn';G.learnSub='study';el.innerHTML='';render();break;
-case'flash':G.tab='learn';G.learnSub='flash';el.innerHTML='';render();break;
-case'drugs':G.tab='learn';G.learnSub='drugs';el.innerHTML='';render();break;
-case'lib':el.innerHTML=renderLibrary();break;
-case'articles':G.libSec='afphari';G.tab='lib';el.innerHTML=renderLibrary();break;
+  let _libBody='';
+  if(_libSub==='cards')_libBody=renderFlash();
+  else if(_libSub==='notes')_libBody=renderStudy();
+  else if(_libSub==='drugs')_libBody=renderDrugs();
+  else _libBody=renderLibrary();
+  el.innerHTML=_libBar+_libBody;}break; // safe-innerhtml: _libBar is static HTML; _libBody from internal render*() functions (no user input)
+case'articles':G.libSec='afphari';G.tab='lib';G.S.libSub='read';el.innerHTML='';render();break;
 case'track':
   if(!G._sessionSaved&&(G._sessionOk+G._sessionNo)>=5){
     saveSessionSummary();G._sessionSaved=true;
   }
   el.innerHTML=renderTrack();break;
 case'more':
+  // v1.19.0: Settings sub-tab removed — moved to gear-icon overlay (mirrors Pnimit v10.3.0).
   // v1.10.0: shrunk from 9 sub-tabs to 6 — Study/Cards/Drugs moved to the
-  // restored Learn tab. Matches Pnimit's More now.
-  // Repair stale G.moreSub from a pre-1.10.0 install whose last view was
+  // restored Learn tab. v1.19.0: Learn → Library, so legacy learnSub maps below.
+  // Repair stale G.moreSub from a pre-1.19.0 install whose last view was
   // study/flash/drugs (it'd render the Calc 'undefined' state otherwise).
-  if(['study','flash','drugs'].includes(G.moreSub)){G.tab='learn';G.learnSub=G.moreSub;G.moreSub='settings';el.innerHTML='';render();break;}
-  if(!['calc','search','notes','chat','feedback','settings'].includes(G.moreSub))G.moreSub='calc';
+  if(['study','flash','drugs'].includes(G.moreSub)){G.tab='lib';G.S.libSub=G.moreSub==='study'?'notes':(G.moreSub==='flash'?'cards':'drugs');G.moreSub='calc';el.innerHTML='';render();break;}
+  // 'settings' migrated to gear-icon overlay v1.19.0 — auto-redirect old state
+  if(G.moreSub==='settings')G.moreSub='calc';
+  if(!['calc','search','notes','chat','feedback'].includes(G.moreSub))G.moreSub='calc';
   {const _moreBar='<div style="display:flex;gap:4px;margin-bottom:12px;padding:4px;background:#f1f5f9;border-radius:12px">'+
-  [{id:'calc',ic:'🧮',l:'Calc'},{id:'search',ic:'🔍',l:'Search'},{id:'notes',ic:'📝',l:'Notes'},{id:'chat',ic:'💬',l:'Chat'},{id:'feedback',ic:'💡',l:'Feedback'},{id:'settings',ic:'⚙️',l:'Settings'}].map(s=>
+  [{id:'calc',ic:'🧮',l:'Calc'},{id:'search',ic:'🔍',l:'Search'},{id:'notes',ic:'📝',l:'Notes'},{id:'chat',ic:'💬',l:'Chat'},{id:'feedback',ic:'💡',l:'Feedback'}].map(s=>
     '<button data-action="more-sub" data-sub="'+s.id+'" style="flex:1;padding:8px 4px;border:none;border-radius:10px;font-size:11px;font-weight:'+(G.moreSub===s.id?'700':'400')+';cursor:pointer;background:'+(G.moreSub===s.id?'#fff':'transparent')+';color:'+(G.moreSub===s.id?'#0f172a':'#64748b')+';box-shadow:'+(G.moreSub===s.id?'0 1px 3px rgba(0,0,0,.1)':'none')+'">'+s.ic+' '+s.l+'</button>'
   ).join('')+'</div>';
   let _mBody='';
@@ -98,7 +104,6 @@ case'more':
   else if(G.moreSub==='notes')_mBody=renderNotes();
   else if(G.moreSub==='chat')_mBody=renderChat();
   else if(G.moreSub==='feedback')_mBody=renderFeedback();
-  else if(G.moreSub==='settings')_mBody=renderSettings();
   el.innerHTML=_moreBar+_mBody;}break; // safe-innerhtml: _moreBar is static HTML; _mBody from internal render*() functions (no user input)
 case'calc':G.tab='more';G.moreSub='calc';el.innerHTML='';render();break;
 case'search':G.tab='more';G.moreSub='search';el.innerHTML='';render();break;
@@ -344,28 +349,26 @@ const _ct = document.getElementById('ct');
 _ct.addEventListener('click', (e) => {
   const el = e.target.closest('[data-action]');
   if (!el) return;
-  if (el.dataset.action === 'more-sub') { G.moreSub = el.dataset.sub; render(); }
+  if (el.dataset.action === 'lib-sub') { G.S.libSub = el.dataset.sub; G.save&&G.save(); render(); }
+  else if (el.dataset.action === 'learn-sub') { G.learnSub = el.dataset.sub; render(); }
+  else if (el.dataset.action === 'more-sub') { G.moreSub = el.dataset.sub; render(); }
 });
 initMoreEvents(_ct);
 initLibraryEvents(_ct);
 initLearnEvents(_ct);
 initTrackEvents(_ct);
 initQuizEvents(_ct);
+bindSettingsEvents();
 
 // === Header button delegation (outside #ct) ===
 document.querySelector('.hdr').addEventListener('click', (e) => {
   const el = e.target.closest('[data-action]');
   if (!el) return;
-  if (el.dataset.action === 'toggle-dark') toggleDark();
-  else if (el.dataset.action === 'toggle-study') toggleStudyMode();
+  if (el.dataset.action === 'toggle-dark') { toggleDark(); refreshSettings(); }
+  else if (el.dataset.action === 'toggle-study') { toggleStudyMode(); refreshSettings(); }
+  else if (el.dataset.action === 'open-settings') openSettings();
   else if (el.dataset.action === 'show-help') showHelp();
-  else if (el.dataset.action === 'goto-account') {
-    G.tab = 'more';
-    G.moreSub = 'settings';
-    renderTabs();
-    render();
-    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
-  }
+  else if (el.dataset.action === 'goto-account') openSettings();
 });
 
 // === Body-level delegation for overlays, banners, modals ===

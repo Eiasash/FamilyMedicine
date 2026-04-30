@@ -55,10 +55,17 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.18.0';
-export const BUILD_HASH='1061q-v1.9.1';
+export const APP_VERSION='1.19.0';
+export const BUILD_HASH='1061q-v1.19.0';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.19.0': [
+    '🧹 איחוד נווט — חמש לשוניות הפכו לארבע: Quiz / Library / Track / More. לשונית "Learn" התמזגה בתוך Library כתת-לשונית. Library כעת מכילה: Read (ספרים) · Cards (פלאשים) · Notes (סיכומי לימוד) · Drugs (תרופות). Mirror של Pnimit v10.0.',
+    '⚙️ הגדרות עברו ל-overlay מסך-מלא — אייקון ⚙️ חדש בכותרת פותח עמוד הגדרות אחד במקום תת-לשונית במסך More. סדר ה-sections: Account · Study Plan · Theme (Light/Dark/Study) · 🔔 Reminders · API Key · Data · Feedback · About. Mirror של Pnimit v10.3.0.',
+    '🎨 Theme picker מאחד — Light / Dark / Study (sepia) באותו card. Study Mode (סגנון נר חום, לקריאת לילה) נשאר ייחודי ל-Mishpacha; שני הכפתורים בכרטיס אחד שמסביר את המצב הנוכחי.',
+    '🔁 Routing aliases — דפדוף ישן ל-`learn`/`study`/`flash`/`drugs` מנותב אוטומטית ל-`lib` עם תת-לשונית מתאימה. עומס legacy בעת `G.moreSub === \'settings\'` מנותב חזרה ל-`calc` (ההגדרות עברו ל-overlay).',
+    '🪝 Internal — חדש: `src/ui/settings-overlay.js` (343 שורות, mirror של Pnimit), `src/styles/settings.css` עם תוספת `body.study` parity, `<div id="settings-overlay" hidden>` ב-mishpacha-mega.html, `data/tabs.json` הצטמצם ל-4 פריטים. `app.js`: ה-Learn-block הוחלף ב-redirect-to-Library; הגעת `goto-account` מהכותרת פותחת overlay במקום לדלג ל-More→Settings. אין שינוי בנתונים: 1061 שאלות, 7 sessions ללא שינוי.',
+  ],
   '1.18.0': [
     '☁️ Auto-restore-on-login — מתחבר במכשיר חדש שאין בו עדיין נתונים? אנחנו מציעים לשחזר אוטומטית מהענן (תיבת דו-שיח אחת, שתי כפתורים: "שחזר" / "לא עכשיו"). הצעה מופיעה רק כש-(א) זה login, לא register; (ב) המכשיר ריק לחלוטין — qOk+qNo===0 ואין נתוני SR; (ג) קיים גיבוי בענן עבור שם המשתמש; (ד) לא ביקשנו את אותו דבר במכשיר הזה בעבר. סימון "לא להציג שוב" נשמר ב-localStorage לפי (מכשיר, שם משתמש), אז ההפעלה היא חד-פעמית גם אם בוחרים "לא עכשיו".',
     '🔌 Auth events — auth.js פולט כעת אירועי `mishpacha:auth` (CustomEvent על `window`) + API פנימי `subscribeAuthEvents(handler)`. פעולות: login / register / logout / change-password. מאפשר למודולים אחרים להגיב למעברי auth ללא תלות ב-UI. Mirror של ward-helper v1.32.0\'s `subscribeAuthChanges` — שמירה על עקביות ה-API בין 4 ה-PWAs.',
