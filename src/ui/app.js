@@ -34,6 +34,7 @@ import { renderSearch, renderChat, sendChat, sendChatStarter, clearChat,
          showAnswerHardFail, renderSettings, toggleNotifOptIn, renderNotes,
          initMoreEvents } from './more-view.js';
 import { getCurrentUser } from '../features/auth.js';
+import { initPostLoginRestore } from '../features/post-login-restore.js';
 
 export function renderTabs(){
 // safe-innerhtml: G.TABS is a hardcoded array of tab definitions (id/label/icon); no user input
@@ -395,8 +396,13 @@ window.APP_VERSION=APP_VERSION; // expose for debug-console
 // IDB migration → initial render
 migrateToIDB().then(()=>{
   renderTabs();render();
+  // Post-login auto-restore prompt (v1.18.0): subscribes to auth events and
+  // surfaces a one-tap restore modal when a user logs in on a fresh device.
+  // Must be initialized AFTER the first render so G.S is fully hydrated when
+  // the listener fires.
+  initPostLoginRestore();
   if(!localStorage.getItem('mishpacha_seen_help')){localStorage.setItem('mishpacha_seen_help','1');setTimeout(showHelp,500);}
-}).catch(e=>{console.error('IDB init failed, falling back to localStorage:',e);renderTabs();render();});
+}).catch(e=>{console.error('IDB init failed, falling back to localStorage:',e);renderTabs();render();initPostLoginRestore();});
 
 // Prevent accidental navigation during mock exam
 window.addEventListener('beforeunload', function(e){
