@@ -55,10 +55,15 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.17.1';
+export const APP_VERSION='1.18.0';
 export const BUILD_HASH='1061q-v1.9.1';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.18.0': [
+    '☁️ Auto-restore-on-login — מתחבר במכשיר חדש שאין בו עדיין נתונים? אנחנו מציעים לשחזר אוטומטית מהענן (תיבת דו-שיח אחת, שתי כפתורים: "שחזר" / "לא עכשיו"). הצעה מופיעה רק כש-(א) זה login, לא register; (ב) המכשיר ריק לחלוטין — qOk+qNo===0 ואין נתוני SR; (ג) קיים גיבוי בענן עבור שם המשתמש; (ד) לא ביקשנו את אותו דבר במכשיר הזה בעבר. סימון "לא להציג שוב" נשמר ב-localStorage לפי (מכשיר, שם משתמש), אז ההפעלה היא חד-פעמית גם אם בוחרים "לא עכשיו".',
+    '🔌 Auth events — auth.js פולט כעת אירועי `mishpacha:auth` (CustomEvent על `window`) + API פנימי `subscribeAuthEvents(handler)`. פעולות: login / register / logout / change-password. מאפשר למודולים אחרים להגיב למעברי auth ללא תלות ב-UI. Mirror של ward-helper v1.32.0\'s `subscribeAuthChanges` — שמירה על עקביות ה-API בין 4 ה-PWAs.',
+    '🪝 Internal — `cloud.js` מייצא כעת `peekCloudBackup()` (RPC backup_get ללא UI) ו-`applyRestorePayload(rowData)` (מיזוג G.S עם הגנת prototype-pollution דרך `filterRestorePayload`). `cloudRestore()` עבר refactor להשתמש ב-`applyRestorePayload`. New module `src/features/post-login-restore.js` + new test `tests/postLoginRestore.test.js` (16 cases).',
+  ],
   '1.17.0': [
     '🐛 תיקון קריטי — Topic Heatmap הציג mastery גבוהה על נושאים שזה עתה ענית עליהם, גם אם רוב התשובות היו שגויות. השורש: הנוסחה ב-heatmap.js השתמשה ב-FSRS R בלבד, שהוא דעיכת זמן (R≈1 מיד אחרי כל ביקורת — נכונה או שגויה). חישוב חדש: per-card mastery = (ok/tot) × R. תשובה שגויה מורידה מאסטרי ל-0 מיידית; תשובות נכונות ישנות דועכות עם R. Fallback ל-hit-rate גולמי כשמצב FSRS חסר (legacy SM-2). Mirror של Pnimit v9.92.0.',
     '🐛 תיקון — Est. Score החזיר 60% מטעה כשרק נושאים בודדים נבחנו. השורש: הנוסחה הניחה 60% (neutral default) לכל נושא עם <3 תשובות. תיקון: נושאים עם <3 תשובות מודרים מהסכימה. מחזיר null כשפחות מ-3 נושאים יש להם נתונים — UI מציג "—".',
