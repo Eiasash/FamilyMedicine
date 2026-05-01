@@ -65,29 +65,58 @@ describe('AFP/הר"י index — schema integrity', () => {
     expect(bad.slice(0, 5)).toEqual([]);
   });
 
-  it('paper.year is present on every AFP paper (HARI may legitimately lack year metadata)', () => {
-    // 2 הר"י papers have year='' (440, 452) — known data gap, see IMPROVEMENTS.
-    // Pin: missing year is allowed only on הר"י kind.
+  it('paper.year is either a string year or null — NEVER an empty string', () => {
+    // R2 cleanup (v1.21.2): empty-string years on הר"י papers were converted
+    // to explicit null sentinels (idx 440, 452 had no year discoverable from
+    // source frontmatter or PDF stem). All AFP papers have a year. We pin
+    // BOTH invariants in one assertion so a future re-ingest can't reintroduce
+    // empty-string contamination.
     const bad = [];
     afp.papers.forEach((p, i) => {
-      if (!p.year && p.kind === 'AFP') bad.push(`AFP papers[${i}].year missing`);
+      // empty string is the bad case
+      if (p.year === '') bad.push(`papers[${i}].year is empty string`);
+      // AFP kind must always have a year
+      if (p.kind === 'AFP' && (p.year == null || p.year === '')) {
+        bad.push(`AFP papers[${i}].year missing`);
+      }
+      // year must be string-parseable-to-int OR null
+      if (p.year != null) {
+        const n = parseInt(String(p.year), 10);
+        if (Number.isNaN(n)) bad.push(`papers[${i}].year not parseable: ${p.year}`);
+      }
     });
     expect(bad.slice(0, 5)).toEqual([]);
   });
 
-  it('AFP-kind papers have a parseable 4-digit year (legacy outliers from pre-2010 are tagged in IMPROVEMENTS)', () => {
+  it('AFP-kind papers have a parseable 4-digit year (legacy pre-2018 outliers are tagged)', () => {
     // Per the rolling 7-year window declared in CLAUDE.md (currently 2018-2025),
-    // AFP papers should fall in 2010-2030. Currently 4 legacy citations slipped
-    // through (2003, 1990, 2004, 2004) — flagged for re-ingest in IMPROVEMENTS.md.
-    // We assert the count does not GROW, not that it is 0.
-    const KNOWN_LEGACY_OUTLIERS = 4;
+    // AFP papers should fall in 2010-2030. The audit found 12 legacy citations
+    // slipped through (3 pre-2010: 1990, 2003, 2004; 9 in 2010-2017 range) —
+    // flagged for re-ingest in IMPROVEMENTS.md. We assert the count does not
+    // GROW, not that it is 0. Adjust this ceiling only when re-ingesting.
+    const KNOWN_LEGACY_OUTLIERS = 12;
     const bad = [];
     afp.papers.forEach((p, i) => {
       if (p.kind !== 'AFP') return;
       const y = parseInt(String(p.year), 10);
-      if (Number.isNaN(y) || y < 2010 || y > 2030) bad.push(i);
+      if (Number.isNaN(y) || y < 2018 || y > 2030) bad.push(i);
     });
     expect(bad.length).toBeLessThanOrEqual(KNOWN_LEGACY_OUTLIERS);
+  });
+
+  it('הר"י papers with year set use a year >= 2010 (post-fix sanity)', () => {
+    // R2 fixed 16 הר"י papers where the extractor pulled an unrelated 4-digit
+    // number from the body text. After the fix, every הר"י year (when set)
+    // should be a recent year matching the title/filename. Pin >= 2010.
+    const bad = [];
+    afp.papers.forEach((p, i) => {
+      if (p.kind !== 'הרי' || p.year == null) return;
+      const y = parseInt(String(p.year), 10);
+      if (Number.isNaN(y) || y < 2010 || y > 2030) {
+        bad.push(`papers[${i}].year=${p.year}: ${p.title}`);
+      }
+    });
+    expect(bad).toEqual([]);
   });
 
   it('every paper.specialty references a value listed in afp.specialties', () => {
