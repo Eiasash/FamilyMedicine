@@ -152,7 +152,9 @@ describe('honest stats — getTopicMastery', () => {
 
 describe('honest stats — source-level guard', () => {
   it('calcEstScore must NOT contain the literal "acc=0.60" imputation', () => {
-    const src = readFileSync(resolve(process.cwd(), 'src', 'ui', 'track-view.js'), 'utf-8');
+    // Normalize CRLF→LF so the regex works on Windows checkouts where line
+    // endings haven't been normalized to LF yet (gitattributes-dependent).
+    const src = readFileSync(resolve(process.cwd(), 'src', 'ui', 'track-view.js'), 'utf-8').replace(/\r\n/g, '\n');
     const calcEst = src.match(/export function calcEstScore\(\)[\s\S]*?\n\}\n/);
     expect(calcEst, 'calcEstScore function not found').not.toBeNull();
     expect(calcEst[0]).not.toMatch(/acc\s*=\s*0\.60/);

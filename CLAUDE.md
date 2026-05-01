@@ -13,13 +13,14 @@ These four rules are the floor. They override any conflicting guidance later in 
 
 Sibling PWA to **Shlav A Mega** (geriatrics) and **Pnimit Mega** (internal medicine). Shares engine, FSRS, Supabase, AI proxy.
 
-## Current state (v1.9.1, 28/04/26)
+## Current state (v1.21.1, 01/05/26)
 - **1061 Qs** total — 950 across 7 exam sessions (2020=150, 2021-Jun=150, 2022-Jun=150, 2023-Jun=150, 2024-May=100, 2024-Sep=100, 2025-Jun=150) + 111 `FM-Core` curated textbook Qs
 - All 7 sessions CONFIRMED Family Medicine content (fork-bug remediated in v1.3.0 — see CHANGELOG)
 - **27 topics** (`ti` range 0-26), **47 drugs**, **0 flashcards** (unused so far)
-- **34 test files** under `tests/`. Pnimit regression guards ported + Mishpacha-specific guards added
+- **42 test files / 723 tests** under `tests/`. Pnimit regression guards ported + Mishpacha-specific guards added + AFP topic-map and FSRS boundary tests (v1.21.1)
 - Goroll 239 ch (local PDF, 1-tap deep-link) + Nelson 165 ch (Drive PDF via progressive-upgrade schema) + Harrison 42 ch (cross-ref, in-app reader) + Lerner 2025 329 sections (Hebrew prose, 6th Library tab, added v1.4.3)
-- localStorage `mishpacha_mega`, SW cache `mishpacha-v1.9.1`
+- AFP/הר"י index: 542 papers across 23 specialties; full topic coverage after v1.21.1 expansion
+- localStorage `mishpacha_mega`, SW cache `mishpacha-v1.21.1`
 - `shared/fsrs.js` is byte-identical with § D Geriatrics + § E Pnimit (canonical md5 `cea66a0435…`)
 
 ## Recent (v1.8.0 → v1.9.1)
