@@ -55,10 +55,17 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.21.1';
-export const BUILD_HASH='1061q-v1.21.1';
+export const APP_VERSION='1.21.2';
+export const BUILD_HASH='1061q-v1.21.2';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.21.2': [
+    '🧹 ניקוי מטא-דאטה ב-data/afp_hari_index.json — 16 מאמרי הר"י עם שנים שגויות (חלץ הראשון של 4 ספרות מתוכן ה-PDF במקום הכותרת) מתוקנים על-פי כותרת/שם-קובץ; 2 מאמרים בלא שנה מקבלים sentinel `null` במקום מחרוזת ריקה. סכמה חדשה: year הוא string|null ולעולם לא ריק.',
+    '🎨 BIDI hygiene — שני בלוקים סטטיים ב-help-overlay (Quick Start + section template) מומרים מ-`dir="rtl"` ל-`dir="auto"`, להתאמה למוסכמה לרוחב הריפוזיטוריות (FamilyMedicine v1.3.4 BIDI hygiene pass).',
+    '🧪 הרחבת בדיקות R2 — קובץ חדש (round2DeepCoverage.test.js) עם 40 בדיקות שמכסות: quiz-engine multi-tag intersection, study-plan DST/calendar-edge boundaries, service-worker manifest invariants, IndexedDB round-trip mock, Hebrew bidi numerics, mutation-resistance של isOk/allocateHours/defaultDailyQTarget. סך הבדיקות: 723 → 764.',
+    '🔒 ביטחון — npm audit fix העלה את postcss מעבר ל-CVE GHSA-qx2v-qp2m-jg93 (XSS via unescaped </style>). transitive-only, לא משפיע על runtime של PWA.',
+    '✅ 764 בדיקות עוברות, 0 כשלים, 0 פגיעויות.',
+  ],
   '1.21.1': [
     '🧪 הרחבת בדיקות — שני קבצי vitest חדשים (afpTopicMap.test.js, fsrsBoundariesAndBidi.test.js) עם 50 בדיקות חדשות. הראשון מחבר את 23 התת-התמחויות ב-data/afp_hari_index.json עם 27 הנושאים בקווי-זוג מלאים (round-trip TOPIC_TO_AFP_SPECS ↔ AFP_SPEC_TO_TOPICS). השני מכסה את גבולות ה-FSRS (s≤0, t=0, ratings 1..4 clamps), ביידי-handling של מחרוזות עברית+אנגלית+ספרות.',
     '🗺️ תיקון מפה — 4 התת-התמחויות שהיו קוצצות (אא_ג, אונקולוגיה, כירורגיה, עיניים) מופות כעת לנושאי quiz רלוונטיים (22 — חירום במרפאה, 8 — המטולוגיה, וכו׳). תוצאה: כל 542 המאמרים ב-AFP/הר"י זמינים מנושאי quiz, גם ENT/oncology/surgery/ophth.',

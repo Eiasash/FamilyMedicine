@@ -221,7 +221,7 @@ ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;
 ov.onclick=e=>{if(e.target===ov)ov.remove();};
 const sec=(title,icon,color,items)=>`<div style="margin-bottom:14px">
 <div style="font-weight:700;font-size:12px;margin-bottom:6px;color:${color}">${icon} ${title}</div>
-<div dir="rtl" style="font-size:10px;line-height:1.8;unicode-bidi:plaintext">${items}</div></div>`;
+<div dir="auto" style="font-size:10px;line-height:1.8;unicode-bidi:plaintext">${items}</div></div>`;
 // safe-innerhtml: help-overlay content is fully static — only interpolated values are APP_VERSION and CHANGELOG entries (code-controlled constants, no user input).
 ov.innerHTML=`<div style="max-width:420px;margin:0 auto;background:#fff;border-radius:16px;padding:20px;color:#1e293b;font-size:11px;line-height:1.7">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
@@ -269,7 +269,7 @@ ${sec('Progress Tracking','📊','#f59e0b',
 )}
 <div style="padding:10px;background:#f0fdf4;border-radius:10px;margin-bottom:12px">
 <div style="font-weight:700;font-size:11px;margin-bottom:4px">🚀 Quick Start</div>
-<div dir="rtl" style="font-size:10px;line-height:1.7;unicode-bidi:plaintext">1. לחץ <bdi><b>Quiz</b></bdi> ← ענה על שאלות<br>2. עיין ב-<bdi><b>🔬 Distractor Autopsy</b></bdi> לניתוח AI<br>3. בלשונית <bdi><b>Track</b></bdi> ראה נקודות תורפה<br>4. סנן לפי <bdi><b>🔥 Hard</b></bdi> כדי לתרגל טעויות<br>5. קרא <bdi><b>Library → Goroll</b></bdi> לתוכן הפרק</div>
+<div dir="auto" style="font-size:10px;line-height:1.7;unicode-bidi:plaintext">1. לחץ <bdi><b>Quiz</b></bdi> ← ענה על שאלות<br>2. עיין ב-<bdi><b>🔬 Distractor Autopsy</b></bdi> לניתוח AI<br>3. בלשונית <bdi><b>Track</b></bdi> ראה נקודות תורפה<br>4. סנן לפי <bdi><b>🔥 Hard</b></bdi> כדי לתרגל טעויות<br>5. קרא <bdi><b>Library → Goroll</b></bdi> לתוכן הפרק</div>
 </div>
 <div style="text-align:center;font-size:9px;color:#94a3b8;line-height:1.5">
 صدقة جارية الى من نحب<br>Ceaseless Charity — To the People That We Love<br><br>
