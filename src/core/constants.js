@@ -55,10 +55,14 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.21.3';
-export const BUILD_HASH='1061q-v1.21.3';
+export const APP_VERSION='1.21.4';
+export const BUILD_HASH='1061q-v1.21.4';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.21.4': [
+    '⚡ LCP perf — `<link rel="preload" as="fetch" crossorigin>` for data/questions.json (~7MB). The browser starts the fetch at HTML-parse time instead of waiting for the JS module graph to load and Promise.all() in src/core/data-loader.js to start it. crossorigin is required for as="fetch" even same-origin (default fetch credentials mode = same-origin). Ported from Geriatrics v10.63.7. Skeleton-card half of that fix not ported — FM data-loader blocks render on Promise.all, so renderQuiz never runs with empty G.QZ; skeleton would require a loader refactor (deferred to a separate change). Expected mobile LCP: -1 to -2s.',
+    '🛡️ Internal — no engine, shared/fsrs.js, or test changes. HTML head + trinity bump only.',
+  ],
   '1.21.3': [
     '🩹 תיקון מפתח תשובות — שאלת המטוריה מיקרוסקופית (2022-Jun ti=5, idx 447): התשובה הסומנה כנכונה (option 1, "להפסיק Dabigatran") סתרה את ההסבר עצמו ("אינה מחייבת הפסקת הטיפול"). על פי AUA Microhematuria Guideline 2020 §3, אין לייחס המטוריה לטיפול בנוגד קרישה ולוותר על הבירור; קבוצת סיכון גבוה (גיל >60 + עישון) מחייבת ציסטוסקופיה + CTU. תוקן ל-c=2 (בן 65 מעשן → ציסטוסקופיה) + c_accept=[2] + הסבר מפורט עם מקור.',
     '🛡️ Internal — אין שינוי ב-engine, ב-shared/fsrs.js או ב-tests. תיקון תוכן בלבד ב-data/questions.json[447].',
