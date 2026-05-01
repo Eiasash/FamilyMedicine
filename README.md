@@ -1,4 +1,6 @@
-# Mishpacha Mega — Family Medicine Shlav A Board Prep
+# Family Medicine Board Prep — Shlav A
+
+*Mishpacha Mega — sibling of [Geriatrics Board Prep](https://github.com/Eiasash/Geriatrics) and [Internal Medicine Board Prep](https://github.com/Eiasash/InternalMedicine).*
 
 Hebrew/English PWA for the Israeli Family Medicine Stage A (שלב א') board exam.
 
@@ -20,7 +22,7 @@ Clones Pnimit Mega's modular build (21 JS modules, 8 CSS). Shares:
 - AI proxy at `toranot.netlify.app/api/claude` (no client-side API key)
 
 ## Status
-- **v1.0** scaffold launch — UI functional, 0 questions ingested, Goroll + Harrison readers live
+- **v1.x** — UI functional, **1,061 questions ingested**, Goroll + Harrison readers live
 - 7 past exam PDFs staged at `exams/pdf/` (2020, 2021-Jun, 2022-Jun, 2023-Jun, 2024-May, 2024-Sep, 2025-Jun)
 - 800 gold-standard answer keys extracted at `exams/answer_keys/*.json` (6 of 7 sessions complete)
 - Question ingestion pending (v1.x → ~900 Qs target)
