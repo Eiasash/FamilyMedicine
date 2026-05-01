@@ -55,10 +55,14 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.21.2';
-export const BUILD_HASH='1061q-v1.21.2';
+export const APP_VERSION='1.21.3';
+export const BUILD_HASH='1061q-v1.21.3';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.21.3': [
+    '🩹 תיקון מפתח תשובות — שאלת המטוריה מיקרוסקופית (2022-Jun ti=5, idx 447): התשובה הסומנה כנכונה (option 1, "להפסיק Dabigatran") סתרה את ההסבר עצמו ("אינה מחייבת הפסקת הטיפול"). על פי AUA Microhematuria Guideline 2020 §3, אין לייחס המטוריה לטיפול בנוגד קרישה ולוותר על הבירור; קבוצת סיכון גבוה (גיל >60 + עישון) מחייבת ציסטוסקופיה + CTU. תוקן ל-c=2 (בן 65 מעשן → ציסטוסקופיה) + c_accept=[2] + הסבר מפורט עם מקור.',
+    '🛡️ Internal — אין שינוי ב-engine, ב-shared/fsrs.js או ב-tests. תיקון תוכן בלבד ב-data/questions.json[447].',
+  ],
   '1.21.2': [
     '🧹 ניקוי מטא-דאטה ב-data/afp_hari_index.json — 16 מאמרי הר"י עם שנים שגויות (חלץ הראשון של 4 ספרות מתוכן ה-PDF במקום הכותרת) מתוקנים על-פי כותרת/שם-קובץ; 2 מאמרים בלא שנה מקבלים sentinel `null` במקום מחרוזת ריקה. סכמה חדשה: year הוא string|null ולעולם לא ריק.',
     '🎨 BIDI hygiene — שני בלוקים סטטיים ב-help-overlay (Quick Start + section template) מומרים מ-`dir="rtl"` ל-`dir="auto"`, להתאמה למוסכמה לרוחב הריפוזיטוריות (FamilyMedicine v1.3.4 BIDI hygiene pass).',
