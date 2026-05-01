@@ -41,6 +41,12 @@ Before v1.3.0, 5 of 7 exam sessions (2021-Jun, 2022-Jun, 2023-Jun, 2024-May, 202
 **Critical deploy config** (see `tests/deployConfigGuard.test.js`):
 - `vite.config.js` must have `base: '/FamilyMedicine/'` — NOT a sibling repo's name. This was the exact bug that stalled the v1.2.10 deploy (was `/InternalMedicine/`, causing all hashed assets to 404). The guard test fails CI if this regresses.
 
+## Release Invariants (run before declaring "shipped")
+1. **Local trinity** — `APP_VERSION + BUILD_HASH + sw.js CACHE + package.json` all aligned. Local guards: `scripts/verify-dist-sw.cjs` + `tests/deployConfigGuard.test.js`.
+2. **Tests + build** — `npm run verify` (vitest + build).
+3. **Live witness** — after `git push` lands and Pages rebuilds (~60–90s), `bash scripts/verify-deploy.sh` does a two-step check: fetches live HTML, extracts the hashed `assets/mishpacha-mega-*.js` bundle path, then greps the bundle for `q-v<version>` (the `BUILD_HASH` suffix from `src/core/constants.js`) AND verifies `sw.js` shows `CACHE='mishpacha-v<version>'`. **Don't claim "deployed" until this passes.**
+4. **Question content edits** — any change to `data/questions.json` `o[]` text, `c` index, or `e` explanation must quote the source (Goroll 8e / Nelson 22e / AFP) in the chat or commit message before the edit lands. Never paraphrase or fabricate option text — fork-bug remediation history (v1.3.0) shows how badly this can go wrong when sources blur between sibling repos.
+
 ## Do NOT split the modular build
 Keep the 26-JS-module split in `src/` (was 21 at v1.3.4; grew with debug console, study-plan, supabaseAuth). Pnimit's pattern, mirror it exactly.
 
