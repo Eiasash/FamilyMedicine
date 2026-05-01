@@ -29,7 +29,7 @@ const payload={uid,answered:totalAnswered,correct:totalCorrect,streak,readiness,
 try{
   const res=await fetch(SUPA_URL+'/rest/v1/mishpacha_leaderboard',{
     method:'POST',
-    headers:{'Content-Type':'application/json','apikey':SUPA_ANON,'Authorization':'Bearer '+SUPA_ANON,'Content-Profile':'internal_medicine','Prefer':'resolution=merge-duplicates'},
+    headers:{'Content-Type':'application/json','apikey':SUPA_ANON,'Authorization':'Bearer '+SUPA_ANON,'Prefer':'resolution=merge-duplicates'},
     body:JSON.stringify(payload)
   });
   if(!res.ok){console.warn('Leaderboard submit non-ok',res.status);return{submitted:false,status:res.status};}
@@ -39,7 +39,7 @@ try{
 export async function fetchLeaderboard(){
 try{
   const res=await fetch(SUPA_URL+'/rest/v1/mishpacha_leaderboard?select=uid,answered,correct,streak,readiness,accuracy,ts&order=accuracy.desc.nullslast,answered.desc&limit=20',{
-    headers:{'apikey':SUPA_ANON,'Accept-Profile':'internal_medicine'}
+    headers:{'apikey':SUPA_ANON}
   });
   return await res.json();
 }catch(e){console.warn('Leaderboard fetch failed',e);return[];}
@@ -118,7 +118,7 @@ localStorage.setItem('mishpacha_fb_sent',JSON.stringify(fb));
 try{
   await fetch(SUPA_URL+'/rest/v1/mishpacha_feedback',{
     method:'POST',
-    headers:{'Content-Type':'application/json','apikey':SUPA_ANON,'Authorization':'Bearer '+SUPA_ANON,'Content-Profile':'internal_medicine','Prefer':'return=minimal'},
+    headers:{'Content-Type':'application/json','apikey':SUPA_ANON,'Authorization':'Bearer '+SUPA_ANON,'Prefer':'return=minimal'},
     body:JSON.stringify({message:text,type,app_version:APP_VERSION})
   });
 }catch(e){console.warn('Feedback submit failed',e);}
@@ -153,7 +153,7 @@ export async function cloudBackup(){
     const payload={id:_sbDeviceId(),data:{...G.S,_mockHist:mockHist,_sessions:sessions},updated_at:new Date().toISOString()};
     const res=await fetch(SUPA_URL+'/rest/v1/mishpacha_backups',{
       method:'POST',
-      headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Content-Type':'application/json','Content-Profile':'internal_medicine','Prefer':'resolution=merge-duplicates'},
+      headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Content-Type':'application/json'},
       body:JSON.stringify(payload)
     });
     if(res.ok||res.status===409){
@@ -161,7 +161,7 @@ export async function cloudBackup(){
       if(res.status===409){
         const patchRes=await fetch(SUPA_URL+'/rest/v1/mishpacha_backups?id=eq.'+_sbDeviceId(),{
           method:'PATCH',
-          headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Content-Type':'application/json','Content-Profile':'internal_medicine'},
+          headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Content-Type':'application/json'},
           body:JSON.stringify({data:{...G.S,_mockHist:mockHist,_sessions:sessions},updated_at:new Date().toISOString()})
         });
         if(!patchRes.ok){const pe=await patchRes.text();toast('❌ Backup update failed: '+patchRes.status+'\n'+pe.slice(0,200),'info');return;}
@@ -338,7 +338,7 @@ let fb;try{fb=JSON.parse(localStorage.getItem('mishpacha_feedback')||'[]');}catc
 fb.push(payload);if(fb.length>50)fb.splice(0,fb.length-50);
 localStorage.setItem('mishpacha_feedback',JSON.stringify(fb));
 fetch(SUPA_URL+'/rest/v1/mishpacha_feedback',{
-method:'POST',headers:{'Content-Type':'application/json','apikey':SUPA_ANON,'Authorization':'Bearer '+SUPA_ANON,'Content-Profile':'internal_medicine','Prefer':'return=minimal'},
+method:'POST',headers:{'Content-Type':'application/json','apikey':SUPA_ANON,'Authorization':'Bearer '+SUPA_ANON,'Prefer':'return=minimal'},
 body:JSON.stringify({message:msg,diagnostics:diag,app_version:APP_VERSION,type,context})
 }).catch(()=>{});
 if(type==='wrong_answer'&&qObj){
