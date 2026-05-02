@@ -700,7 +700,13 @@ if(md==='__LOADING__'||md===undefined){
   // Bold + italic
   body=body.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/(?<!\*)\*([^*]+)\*(?!\*)/g,'<em>$1</em>');
   // Links (already escaped, so &lt; syntax) — only plain markdown links. Wrap in <bdi> so URLs don't flip RTL paragraphs.
-  body=body.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,'<bdi><a href="$2" target="_blank" rel="noopener" style="color:rgb(var(--sky));text-decoration:underline">$1</a></bdi>');
+  // URL char class excludes only `)` (CommonMark) — the prior `[^)\s]+` rejected
+  // spaces, which broke every AFP article link target containing a Hebrew folder
+  // name with embedded whitespace (e.g. `אא_ג, רפואת הפה והשיניים/AFP/...`).
+  // The browser tolerates spaces in href attributes; for stricter encoding we'd
+  // need explicit URL-encoding, but the cost-benefit isn't there for a markdown
+  // link to a local-relative path.
+  body=body.replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<bdi><a href="$2" target="_blank" rel="noopener" style="color:rgb(var(--sky));text-decoration:underline">$1</a></bdi>');
   // Horizontal rule
   body=body.replace(/^---+$/gm,'<hr style="border:0;border-top:1px solid #e2e8f0;margin:16px 0">');
   // Bullet lines (- or * at line start) → render as proper list-like blocks with dir=auto per item
@@ -924,7 +930,12 @@ export function initLibraryEvents(container) {
       G.render();
     }
     else if (action === 'ah-ai-summary') {
-      const ah = G._ahData;
+      // The AFP/הר"י index state lives in G._afpHari (set in the fetch at
+      // ~line 633 + read in the reader template at ~line 638-648). The
+      // earlier `G._ahData` reference was a refactor-leftover typo — the
+      // var doesn't exist at runtime, so `p` was always undefined and the
+      // button silently no-op'd. Reported by the user 2026-05-02.
+      const ah = G._afpHari;
       const p = ah && ah.papers && ah.papers[G.ahOpenIdx];
       if (p) aiSummarizeAfpPaper(p);
     }
