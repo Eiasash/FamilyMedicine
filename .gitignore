@@ -8,6 +8,9 @@ coverage/
 __pycache__/
 *.pyc
 
+# Local pre-edit snapshots of questions.json (created by audit scripts/edits)
+data/questions.json.bak-*
+
 # AFP / הר"י extraction pipeline — keep committed summaries, ignore raw pdftotext dumps
 docs/references/afp_hari/.raw/
 docs/references/afp_hari/**/.raw/

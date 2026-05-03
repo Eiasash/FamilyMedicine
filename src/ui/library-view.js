@@ -990,7 +990,7 @@ export function initLibraryEvents(container) {
         G.render();
         if (prev && prev.dataset && prev.dataset.action === 'ler-search') {
           const next = document.querySelector('[data-action="ler-search"]');
-          if (next) { next.focus(); next.setSelectionRange(next.value.length, next.value.length); }
+          if (next) { next.focus(); try { next.setSelectionRange(next.value.length, next.value.length); } catch (_) {} }
         }
       }, 120);
     }
@@ -1004,7 +1004,7 @@ export function initLibraryEvents(container) {
         // Restore focus + caret to the search input after re-render
         if (prev && prev.dataset && prev.dataset.action === 'nel-search') {
           const next = document.querySelector('[data-action="nel-search"]');
-          if (next) { next.focus(); next.setSelectionRange(next.value.length, next.value.length); }
+          if (next) { next.focus(); try { next.setSelectionRange(next.value.length, next.value.length); } catch (_) {} }
         }
       }, 120);
     }
@@ -1016,7 +1016,7 @@ export function initLibraryEvents(container) {
         G.render();
         if (prev && prev.dataset && prev.dataset.action === 'ah-search') {
           const next = document.querySelector('[data-action="ah-search"]');
-          if (next) { next.focus(); next.setSelectionRange(next.value.length, next.value.length); }
+          if (next) { next.focus(); try { next.setSelectionRange(next.value.length, next.value.length); } catch (_) {} }
         }
       }, 120);
     }
