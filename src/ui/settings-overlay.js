@@ -311,8 +311,13 @@ async function submitSettingsFeedback() {
   try { fb = JSON.parse(localStorage.getItem('mishpacha_fb_sent') || '[]'); } catch (e) {}
   fb.push(entry);
   localStorage.setItem('mishpacha_fb_sent', JSON.stringify(fb));
+  // Payload field names must match the live mishpacha_feedback table schema:
+  // (id, type, text, ts, version, uid, created_at, …). The earlier
+  // `{message, type, app_version}` shape was rejected by PostgREST with 400
+  // (no such columns) — and the silent `.catch` made it invisible to users.
+  let _serverOk = false;
   try {
-    await fetch(SUPA_URL + '/rest/v1/mishpacha_feedback', {
+    const res = await fetch(SUPA_URL + '/rest/v1/mishpacha_feedback', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -320,10 +325,19 @@ async function submitSettingsFeedback() {
         'Authorization': 'Bearer ' + SUPA_ANON,
         'Prefer': 'return=minimal',
       },
-      body: JSON.stringify({ message: text, type, app_version: APP_VERSION }),
+      body: JSON.stringify({ type, text, ts: entry.ts, version: APP_VERSION, uid }),
     });
-  } catch (e) { /* offline-tolerant */ }
-  toast('תודה — הפידבק נשמר', 'success');
+    _serverOk = !!(res && res.ok);
+    if (!_serverOk) {
+      const errBody = await (res && res.text ? res.text().catch(() => '') : Promise.resolve(''));
+      console.warn('Settings feedback submit non-ok', res && res.status, errBody && errBody.slice(0, 200));
+    }
+  } catch (e) { /* offline-tolerant — fall through and surface accurate toast */ }
+  if (_serverOk) {
+    toast('תודה — הפידבק נשלח', 'success');
+  } else {
+    toast('⚠️ הפידבק נשמר מקומית, השליחה לשרת נכשלה', 'info');
+  }
   const ta = document.getElementById('settings-fb-text');
   if (ta) ta.value = '';
 }

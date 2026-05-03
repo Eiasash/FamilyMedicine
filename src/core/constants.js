@@ -55,10 +55,15 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.21.9';
-export const BUILD_HASH='1061q-v1.21.9';
+export const APP_VERSION='1.21.10';
+export const BUILD_HASH='1061q-v1.21.10';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.21.10': [
+    '🐛 Feedback submission 400 fix — `submitFeedbackForm` (cloud.js), `submitSettingsFeedback` (settings-overlay.js) and `submitReport` (cloud.js, in-quiz wrong-answer report) sent `{message, app_version, diagnostics, context}` to PostgREST while the live `mishpacha_feedback` table only has `(id, type, text, ts, version, uid, created_at, status, processed_at, gh_issue_number, assessment)`. PostgREST rejected every submission with 400 "Could not find the X column". Renamed payload keys to match the schema (`message`→`text`, `app_version`→`version`, +`ts`+`uid`). For `submitReport`, folded `diagnostics`+`context` into the `text` field rather than expand the table.',
+    '🔔 Surface server failures — both feedback paths now toast on non-ok response and on network failure ("⚠️ הפידבק נשמר מקומית, השליחה לשרת נכשלה"). The settings overlay no longer claims success when the server rejected the row. Local persistence still happens first, so users do not lose typed feedback either way.',
+    '✅ Audit-only confirmation — cloudBackup 401 toast (Bug 1) is already in place at cloud.js:165-168 and `mishpacha_backups` schema matches the payload, so no change needed. Settings overlay sections (Bug 2) already use distinct `<section class="settings-section">` blocks with 👤/🔑/💾 emoji headers, so the API-key-vs-account confusion does not apply here.',
+  ],
   '1.21.9': [
     '🩺 Citation audit + chaos hardening (port from Geri PR #146-151). Staged canonical Harrison 22e TOC at data/harrison_22e_toc.json (505 chapters extracted from the 4273-page PDF) and added 4-layer Harrison citation guard in tests/textbookChapters.test.js: bound (≤505), dict-membership, title-token-match, self-consistency. FM has only 0 Harrison + 5 Goroll + 2 Nelson-21e citations today, so the guard is mainly a regression net for future content ports from sibling repos.',
     '📚 Citation fix — idx=4 (cataract Q, 2020-Jun) cited "גורול פרק 203 עמוד 1388" but Goroll 8e Ch 203 is "Evaluation of Common Visual Disturbances: Flashing Lights, Floaters", not cataract. Cataract is Goroll 8e Ch 208 (Management of Cataracts). Page 1388 was the older 7e numbering and now wrong. Corrected to "גורול פרק 208 (Management of Cataracts)". Audit log: .audit_logs/harrison_title_consistency.json + .audit_logs/audit_harrison_title_consistency.py. Nelson 21e citations (idx=7 Ch 373, idx=8 Ch 612) flagged as edition-mismatch with the 22e TOC but left unchanged — those page numbers are correct for 21e and the explanations cite the correct edition explicitly.',
