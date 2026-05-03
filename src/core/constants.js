@@ -55,10 +55,13 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.21.6';
-export const BUILD_HASH='1061q-v1.21.6';
+export const APP_VERSION='1.21.7';
+export const BUILD_HASH='1061q-v1.21.7';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.21.7': [
+    '🎯 First structured exam-key audit for FM (2022-Jun batch only) — built dataset→IMA-PDF Q-num mapping using the 2026-05-03 cross-specialty bundle parser. FM bundle session naming is messier than IM/Geri (most non-2022-Jun sessions tagged "unknown Stage A" by the upstream parser), so the audit only covers 125 of 1061 Qs reliably. Net: 5 new c_accept additions for verified post-appeal multi-accept questions in 2022-Jun. The 90 single-accept disagreements + 1 conflicted multi-accept (idx=320) logged in .audit_logs/fm_audit.json + fm_skipped_for_review.json — NOT auto-flipped per the curator-override pattern.',
+  ],
   '1.21.4': [
     '⚡ LCP perf — `<link rel="preload" as="fetch" crossorigin>` for data/questions.json (~7MB). The browser starts the fetch at HTML-parse time instead of waiting for the JS module graph to load and Promise.all() in src/core/data-loader.js to start it. crossorigin is required for as="fetch" even same-origin (default fetch credentials mode = same-origin). Ported from Geriatrics v10.63.7. Skeleton-card half of that fix not ported — FM data-loader blocks render on Promise.all, so renderQuiz never runs with empty G.QZ; skeleton would require a loader refactor (deferred to a separate change). Expected mobile LCP: -1 to -2s.',
     '🛡️ Internal — no engine, shared/fsrs.js, or test changes. HTML head + trinity bump only.',
