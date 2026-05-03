@@ -156,6 +156,8 @@ describe('cloudBackup', () => {
     const [url, init] = fetch.mock.calls[0];
     expect(url).toContain('/rest/v1/mishpacha_backups');
     expect(init.method).toBe('POST');
+    // Single POST upsert via PostgREST merge-duplicates header (replaces POST→409→PATCH dance, v1.21.9)
+    expect(init.headers.Prefer).toBe('resolution=merge-duplicates');
     const payload = JSON.parse(init.body);
     expect(payload.id).toMatch(/^dev_/);
     expect(payload.data._mockHist).toEqual([{ s: 1 }]);
@@ -175,16 +177,15 @@ describe('cloudBackup', () => {
     await expect(cloudBackup()).resolves.toBeUndefined();
   });
 
-  it('does a PATCH upsert on 409 conflict', async () => {
-    let call = 0;
-    globalThis.fetch.mockImplementation(async () => {
-      call++;
-      if (call === 1) return { ok: false, status: 409, text: () => Promise.resolve('') };
-      return { ok: true, status: 204, text: () => Promise.resolve('') };
-    });
+  it('uses single-POST upsert (merge-duplicates) — no PATCH fallback (v1.21.9)', async () => {
+    // The prior POST→409→PATCH dance has been replaced with a single POST
+    // carrying `Prefer: resolution=merge-duplicates` so PostgREST does the
+    // upsert atomically. No second fetch should occur on success.
+    globalThis.fetch.mockResolvedValue({ ok: true, status: 204, text: () => Promise.resolve('') });
     await cloudBackup();
-    expect(fetch).toHaveBeenCalledTimes(2);
-    expect(fetch.mock.calls[1][1].method).toBe('PATCH');
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch.mock.calls[0][1].method).toBe('POST');
+    expect(fetch.mock.calls[0][1].headers.Prefer).toBe('resolution=merge-duplicates');
   });
 });
 

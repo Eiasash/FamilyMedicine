@@ -117,7 +117,7 @@ default:G.tab='quiz';el.innerHTML=renderQuiz();break;
 if(sv.srchi!==undefined&&document.getElementById('srchi'))document.getElementById('srchi').value=sv.srchi;
 if(sv.nfilt!==undefined&&document.getElementById('nfilt'))document.getElementById('nfilt').value=sv.nfilt;
 if(sv.dsrch!==undefined&&document.getElementById('dsrch'))document.getElementById('dsrch').value=sv.dsrch;
-if(focused){const fe=document.getElementById(focused);if(fe){fe.focus();if(fe.value)fe.setSelectionRange(fe.value.length,fe.value.length);}}
+if(focused){const fe=document.getElementById(focused);if(fe){fe.focus();if(fe.value){try{fe.setSelectionRange(fe.value.length,fe.value.length);}catch(_){}}}}
 updateAccountChip();
 }
 
@@ -173,12 +173,12 @@ const q=G.QZ[G.pool[G.qi]];
 let txt=q.q+'\n';
 q.o.forEach((o,i)=>{txt+=(isOk(q,i)?'✅ ':'❌ ')+o+'\n';});
 if(navigator.share){navigator.share({title:'Mishpacha Mega — Question',text:txt}).catch(()=>{});}
-else if(navigator.clipboard)navigator.clipboard.writeText(txt).then(()=>{const b=document.getElementById('shbtn');if(b){b.textContent='✅ הועתק';setTimeout(()=>b.textContent='📋 שתף',1500)}});
+else if(navigator.clipboard)navigator.clipboard.writeText(txt).then(()=>{const b=document.getElementById('shbtn');if(b){b.textContent='✅ הועתק';setTimeout(()=>b.textContent='📋 שתף',1500)}}).catch(()=>{});
 }
 export function shareApp(){
 const url=location.href;
 if(navigator.share){navigator.share({title:'Mishpacha Mega — Family Medicine Board Prep',text:'Family Medicine Board Prep — Goroll 8e + AFP + Required Articles + Calculators + Spaced Repetition',url:url}).catch(()=>{});}
-else if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>toast('✅ Link copied!','success'));}
+else if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>toast('✅ Link copied!','success')).catch(()=>{});}
 }
 
 // ===== EXPORT PROGRESS =====

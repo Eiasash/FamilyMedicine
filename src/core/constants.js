@@ -55,10 +55,15 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.21.8';
-export const BUILD_HASH='1061q-v1.21.8';
+export const APP_VERSION='1.21.9';
+export const BUILD_HASH='1061q-v1.21.9';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.21.9': [
+    '🩺 Citation audit + chaos hardening (port from Geri PR #146-151). Staged canonical Harrison 22e TOC at data/harrison_22e_toc.json (505 chapters extracted from the 4273-page PDF) and added 4-layer Harrison citation guard in tests/textbookChapters.test.js: bound (≤505), dict-membership, title-token-match, self-consistency. FM has only 0 Harrison + 5 Goroll + 2 Nelson-21e citations today, so the guard is mainly a regression net for future content ports from sibling repos.',
+    '📚 Citation fix — idx=4 (cataract Q, 2020-Jun) cited "גורול פרק 203 עמוד 1388" but Goroll 8e Ch 203 is "Evaluation of Common Visual Disturbances: Flashing Lights, Floaters", not cataract. Cataract is Goroll 8e Ch 208 (Management of Cataracts). Page 1388 was the older 7e numbering and now wrong. Corrected to "גורול פרק 208 (Management of Cataracts)". Audit log: .audit_logs/harrison_title_consistency.json + .audit_logs/audit_harrison_title_consistency.py. Nelson 21e citations (idx=7 Ch 373, idx=8 Ch 612) flagged as edition-mismatch with the 22e TOC but left unchanged — those page numbers are correct for 21e and the explanations cite the correct edition explicitly.',
+    '🛡️ Chaos hardening (3 patterns, 8 sites). (a) `navigator.clipboard.writeText(...)` calls in src/ui/app.js: `shareQ` and `shareApp` now have `.catch(()=>{})` so the silent NotAllowedError outside a user-gesture no longer leaves the share button half-state-frozen. (b) `setSelectionRange(...)` calls in src/ui/library-view.js (3 sites — Lerner/Nelson/AFP search inputs) and src/ui/app.js (1 site — global focus restore) now wrapped in try/catch so they no longer throw on `<input type="range">`/date inputs that some bookmarklets/extensions inject. (c) src/features/cloud.js `cloudBackup()` POST→409→PATCH dance replaced with a single POST + `Prefer: resolution=merge-duplicates` header so PostgREST does the upsert atomically (closes a small race window when two devices backed up simultaneously and removed a redundant network round-trip). Test tests/cloudFeatures.test.js updated to pin the new single-request behavior and the merge-duplicates Prefer header.',
+  ],
   '1.21.8': [
     '🔤 remapExplanationLetters fix — explanations referencing options as bare labels (`**א\' שגויה**`, `ב\' נכונה`) were not remapped after option shuffle, only the explicit `תשובה X\'` form was. Fix: single-pass regex with two-branch alternation; mid-word gershayim (`מג\'ורי`, `ג\'נטיקה`) preserved via lookbehind. Same bug + fix as Geri v10.64.22 / IM v10.4.9. 7 new regression tests in tests/remapExplanationLetters.test.js.',
   ],
