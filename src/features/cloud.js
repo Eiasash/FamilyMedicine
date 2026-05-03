@@ -115,13 +115,18 @@ const entry={type,text,ts:Date.now(),version:APP_VERSION,uid:getUserId()};
 let fb=[];try{fb=JSON.parse(localStorage.getItem('mishpacha_fb_sent')||'[]');}catch(e){}
 fb.push(entry);
 localStorage.setItem('mishpacha_fb_sent',JSON.stringify(fb));
+// Payload field names must match the live mishpacha_feedback table schema:
+// (id, type, text, ts, version, uid, created_at, status, processed_at, gh_issue_number, assessment).
+// Earlier code sent {message,app_version} which PostgREST rejected with 400 (no such columns).
+// Mirror of IM v… equivalent fix surfaced from FM/IM/Geri Supabase-auth UX audit (2026-05-03).
 try{
-  await fetch(SUPA_URL+'/rest/v1/mishpacha_feedback',{
+  const res=await fetch(SUPA_URL+'/rest/v1/mishpacha_feedback',{
     method:'POST',
     headers:{'Content-Type':'application/json','apikey':SUPA_ANON,'Authorization':'Bearer '+SUPA_ANON,'Prefer':'return=minimal'},
-    body:JSON.stringify({message:text,type,app_version:APP_VERSION})
+    body:JSON.stringify({type,text,ts:entry.ts,version:APP_VERSION,uid:entry.uid})
   });
-}catch(e){console.warn('Feedback submit failed',e);}
+  if(!res.ok){const errBody=await res.text().catch(()=>'');console.warn('Feedback submit non-ok',res.status,errBody.slice(0,200));toast('⚠️ הפידבק נשמר מקומית, השליחה לשרת נכשלה ('+res.status+')','info');}
+}catch(e){console.warn('Feedback submit failed',e);toast('⚠️ הפידבק נשמר מקומית, אין חיבור לרשת','info');}
 try{
   const aiText=await callAI([{role:'user',content:'A user submitted this feedback for a medical study app. Briefly acknowledge it and assess feasibility in 1-2 sentences. Type: '+type+'. Feedback: '+text}],300);
   if(aiText){
@@ -332,9 +337,14 @@ const payload={type,msg,context,diag,ts:new Date().toISOString(),v:APP_VERSION};
 let fb;try{fb=JSON.parse(localStorage.getItem('mishpacha_feedback')||'[]');}catch(e){fb=[];}
 fb.push(payload);if(fb.length>50)fb.splice(0,fb.length-50);
 localStorage.setItem('mishpacha_feedback',JSON.stringify(fb));
+// Schema: (type, text, ts, version, uid, …). Fold diag + context into `text`
+// so they survive the round-trip without server-side schema changes; PostgREST
+// 400'd previously when we sent `message`/`diagnostics`/`app_version`/`context`
+// (no such columns).
+const _reportText=context?(msg+'\n\n— context —\n'+context+'\n\n— diagnostics —\n'+diag):(msg+'\n\n— diagnostics —\n'+diag);
 fetch(SUPA_URL+'/rest/v1/mishpacha_feedback',{
 method:'POST',headers:{'Content-Type':'application/json','apikey':SUPA_ANON,'Authorization':'Bearer '+SUPA_ANON,'Prefer':'return=minimal'},
-body:JSON.stringify({message:msg,diagnostics:diag,app_version:APP_VERSION,type,context})
+body:JSON.stringify({type,text:_reportText,ts:Date.now(),version:APP_VERSION,uid:getUserId()})
 }).catch(()=>{});
 if(type==='wrong_answer'&&qObj){
 if(st){st.textContent='🤖 AI verifying...';st.style.color='#8b5cf6';}
