@@ -151,21 +151,16 @@ export async function cloudBackup(){
     try{mockHist=JSON.parse(localStorage.getItem('mishpacha_mock_hist')||'[]');}catch(e){}
     try{sessions=JSON.parse(localStorage.getItem('mishpacha_sessions')||'[]');}catch(e){}
     const payload={id:_sbDeviceId(),data:{...G.S,_mockHist:mockHist,_sessions:sessions},updated_at:new Date().toISOString()};
+    // Single POST with `Prefer: resolution=merge-duplicates` performs upsert atomically
+    // on the server (PostgREST). Replaces the prior POST→409→PATCH dance which had a
+    // race window when two devices backed up simultaneously and was a single-flight bug.
+    // Mirror of Geri v10.64.x chaos hardening (PR #146-151).
     const res=await fetch(SUPA_URL+'/rest/v1/mishpacha_backups',{
       method:'POST',
-      headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Content-Type':'application/json'},
+      headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
       body:JSON.stringify(payload)
     });
-    if(res.ok||res.status===409){
-      // If 409, try upsert
-      if(res.status===409){
-        const patchRes=await fetch(SUPA_URL+'/rest/v1/mishpacha_backups?id=eq.'+_sbDeviceId(),{
-          method:'PATCH',
-          headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY,'Content-Type':'application/json'},
-          body:JSON.stringify({data:{...G.S,_mockHist:mockHist,_sessions:sessions},updated_at:new Date().toISOString()})
-        });
-        if(!patchRes.ok){const pe=await patchRes.text();toast('❌ Backup update failed: '+patchRes.status+'\n'+pe.slice(0,200),'info');return;}
-      }
+    if(res.ok){
       toast('✅ Progress backed up to cloud!\nDevice ID: '+_sbDeviceId().slice(0,12)+'...','info');
     } else {
       const err=await res.text();
