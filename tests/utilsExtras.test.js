@@ -90,13 +90,13 @@ describe('remapExplanationLetters — Hebrew branch', () => {
       .toBe('תשובה הx');
   });
 
-  it('known limitation: does NOT rewrite when Hebrew letter is followed by whitespace', () => {
-    // Locks the ASCII-only \b behaviour. If this ever starts rewriting
-    // (e.g. regex switches to a Unicode-aware boundary), this assertion
-    // will fail and the rewrite tests above should be updated.
+  it('rewrites Hebrew letter followed by whitespace (v1.21.8 fix)', () => {
+    // Was a "known limitation" of the old ASCII-only \b regex. v1.21.8
+    // switched to lookahead `(?=[^א-ת]|$)` which correctly handles
+    // whitespace, geresh, ASCII letters, punct, and EOL after the letter.
     const shuf = [1, 2, 0, 3];
     expect(remapExplanationLetters('תשובה א נכונה', shuf))
-      .toBe('תשובה א נכונה');
+      .toBe('תשובה ג נכונה');
   });
 
   it('leaves a Hebrew letter alone when not preceded by "תשובה"', () => {
