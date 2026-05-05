@@ -1,6 +1,6 @@
 import G from '../core/globals.js';
 import { SUPA_URL, SUPA_ANON, TOPICS, APP_VERSION } from '../core/constants.js';
-import { sanitize, fmtT, toast } from '../core/utils.js';
+import { sanitize, fmtT, toast, getApiKey, setApiKey } from '../core/utils.js';
 import { callAI } from '../ai/client.js';
 import { calcEstScore } from '../ui/track-view.js';
 import { getTopicStats, getDueQuestions } from '../sr/spaced-repetition.js';
@@ -155,7 +155,12 @@ export async function cloudBackup(){
     let mockHist=[],sessions=[];
     try{mockHist=JSON.parse(localStorage.getItem('mishpacha_mock_hist')||'[]');}catch(e){}
     try{sessions=JSON.parse(localStorage.getItem('mishpacha_sessions')||'[]');}catch(e){}
-    const _bundled={...G.S,_mockHist:mockHist,_sessions:sessions};
+    // v1.21.12: include the user's Anthropic API key in the cloud backup so it
+    // travels with their account across devices — sibling-paired with Geriatrics
+    // v10.64.48 / Pnimit v10.4.14. Plaintext-in-jsonb (RLS keeps it user-private).
+    // Restored via applyRestorePayload below on cross-device login.
+    const _apikey=getApiKey();
+    const _bundled={...G.S,_mockHist:mockHist,_sessions:sessions,_apikey};
     // v1.21.3 (Track-Q sibling propagation): write path migrated to SECURITY
     // DEFINER RPC backup_set, mirroring the Phase-2 read path (backup_get).
     // Direct PostgREST INSERT was returning 401/PG-42501 under the new
@@ -283,6 +288,9 @@ export function applyRestorePayload(rowData) {
   // Pull sibling localStorage bundles out of the payload before G.S whitelist
   try { if (Array.isArray(rowData._mockHist)) localStorage.setItem('mishpacha_mock_hist', JSON.stringify(rowData._mockHist.slice(-20))); } catch (e) {}
   try { if (Array.isArray(rowData._sessions)) localStorage.setItem('mishpacha_sessions', JSON.stringify(rowData._sessions.slice(-30))); } catch (e) {}
+  // v1.21.12: restore the user's Anthropic API key from the bundle. Backwards-compat:
+  // legacy backups without _apikey are ignored (typeof check). Empty string clears.
+  if (typeof rowData._apikey === 'string') setApiKey(rowData._apikey);
   const validated = filterRestorePayload(rowData, new Set(Object.keys(G.S)));
   Object.assign(G.S, validated);
   G.save();
