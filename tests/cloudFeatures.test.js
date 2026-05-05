@@ -147,22 +147,23 @@ describe('fetchLeaderboard', () => {
 // ---- cloudBackup -----------------------------------------------------------
 
 describe('cloudBackup', () => {
-  it('POSTs G.S plus sibling mock/sessions bundles and marks success', async () => {
+  it('POSTs G.S plus sibling mock/sessions bundles via backup_set RPC (v1.21.11)', async () => {
     localStorage.setItem('mishpacha_mock_hist', JSON.stringify([{ s: 1 }]));
     localStorage.setItem('mishpacha_sessions', JSON.stringify([{ x: 1 }]));
-    globalThis.fetch.mockResolvedValue({ ok: true, status: 201 });
+    globalThis.fetch.mockResolvedValue({ ok: true, status: 200, json: () => Promise.resolve({ ok: true, updated_at: '2026-05-05T00:00:00Z' }) });
     await cloudBackup();
     expect(fetch).toHaveBeenCalledTimes(1);
     const [url, init] = fetch.mock.calls[0];
-    expect(url).toContain('/rest/v1/mishpacha_backups');
+    // v1.21.11 (Track-Q): write path migrated to /rest/v1/rpc/backup_set
+    // (SECURITY DEFINER) because direct PostgREST table writes returned
+    // 401/PG-42501 under the new sb_publishable_* key format.
+    expect(url).toContain('/rest/v1/rpc/backup_set');
     expect(init.method).toBe('POST');
-    // Single POST upsert via PostgREST merge-duplicates header (replaces POST→409→PATCH dance, v1.21.9)
-    expect(init.headers.Prefer).toBe('resolution=merge-duplicates');
     const payload = JSON.parse(init.body);
-    expect(payload.id).toMatch(/^dev_/);
-    expect(payload.data._mockHist).toEqual([{ s: 1 }]);
-    expect(payload.data._sessions).toEqual([{ x: 1 }]);
-    expect(typeof payload.updated_at).toBe('string');
+    expect(payload.p_app).toBe('mishpacha');
+    expect(payload.p_id).toMatch(/^dev_/);
+    expect(payload.p_data._mockHist).toEqual([{ s: 1 }]);
+    expect(payload.p_data._sessions).toEqual([{ x: 1 }]);
   });
 
   it('surfaces server failures via toast instead of throwing', async () => {
@@ -177,15 +178,15 @@ describe('cloudBackup', () => {
     await expect(cloudBackup()).resolves.toBeUndefined();
   });
 
-  it('uses single-POST upsert (merge-duplicates) — no PATCH fallback (v1.21.9)', async () => {
-    // The prior POST→409→PATCH dance has been replaced with a single POST
-    // carrying `Prefer: resolution=merge-duplicates` so PostgREST does the
-    // upsert atomically. No second fetch should occur on success.
-    globalThis.fetch.mockResolvedValue({ ok: true, status: 204, text: () => Promise.resolve('') });
+  it('uses single-call SECURITY DEFINER RPC backup_set — no fallback (v1.21.11)', async () => {
+    // Track-Q sibling propagation: replaces v1.21.9's merge-duplicates direct
+    // table POST. SECURITY DEFINER bypasses RLS so the new sb_publishable_*
+    // key format works (it didn't on direct table writes, returning 401/42501).
+    globalThis.fetch.mockResolvedValue({ ok: true, status: 200, json: () => Promise.resolve({ ok: true }) });
     await cloudBackup();
     expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch.mock.calls[0][0]).toContain('/rest/v1/rpc/backup_set');
     expect(fetch.mock.calls[0][1].method).toBe('POST');
-    expect(fetch.mock.calls[0][1].headers.Prefer).toBe('resolution=merge-duplicates');
   });
 });
 

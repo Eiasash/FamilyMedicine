@@ -55,10 +55,13 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.21.10';
-export const BUILD_HASH='1061q-v1.21.10';
+export const APP_VERSION='1.21.11';
+export const BUILD_HASH='1061q-v1.21.11';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.21.11': [
+    '☁️ Cloud backup write path migrated to SECURITY DEFINER RPC — Track-Q sibling propagation. v1.21.9 added the merge-duplicates upsert; v1.21.10 noted that "the 401 toast was already in place" — but the underlying 401 is real and present. Phase 2 (2026-04-29) migrated reads to backup_get RPC and dropped public SELECT, but writes were left on direct POST /rest/v1/mishpacha_backups. The new sb_publishable_* key format evaluates RLS context differently than the legacy anon JWT — direct INSERTs return PostgREST 401 / PG 42501 even with permissive policies (with_check=true, role=public). Geri v10.64.42 root-caused this and added backup_set SECURITY DEFINER RPC in shared project krmlzwwelqvlfslwltol. Same RPC powers all 3 sibling apps; Mishpacha now uses p_app:"mishpacha". Server-side now() eliminates client clock-skew. Tested e2e on Geri (200 OK + correct read-back).',
+  ],
   '1.21.10': [
     '🐛 Feedback submission 400 fix — `submitFeedbackForm` (cloud.js), `submitSettingsFeedback` (settings-overlay.js) and `submitReport` (cloud.js, in-quiz wrong-answer report) sent `{message, app_version, diagnostics, context}` to PostgREST while the live `mishpacha_feedback` table only has `(id, type, text, ts, version, uid, created_at, status, processed_at, gh_issue_number, assessment)`. PostgREST rejected every submission with 400 "Could not find the X column". Renamed payload keys to match the schema (`message`→`text`, `app_version`→`version`, +`ts`+`uid`). For `submitReport`, folded `diagnostics`+`context` into the `text` field rather than expand the table.',
     '🔔 Surface server failures — both feedback paths now toast on non-ok response and on network failure ("⚠️ הפידבק נשמר מקומית, השליחה לשרת נכשלה"). The settings overlay no longer claims success when the server rejected the row. Local persistence still happens first, so users do not lose typed feedback either way.',
