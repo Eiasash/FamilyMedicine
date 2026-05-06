@@ -23,6 +23,12 @@ import { submitLeaderboardScore, fetchLeaderboard, showLeaderboard, renderFeedba
          saveAnswerReport, _sbDeviceId } from '../features/cloud.js';
 import { renderQuiz, toggleBk, uploadQImage, removeQImage, viewImg, pauseTimed,
          startTimedQ, stopTimedMode, sdCheck, sdNext, initQuizEvents } from './quiz-view.js';
+// v1.21.13: bind startTimedQ on G so engine.js can call G.startTimedQ() without
+// needing a direct import (which would create a circular dep:
+// engine.js → quiz-view.js → track-view.js → engine.js). 7h chaos run on
+// 2026-05-05 caught 16 ReferenceError pageerrors from engine.js calling the
+// unbound name; same root cause as Pnimit Mega's 38 hits, fixed in parallel.
+G.startTimedQ = startTimedQ;
 import { renderStudy, toggleNote, filterNotes, renderFlash, renderDrugs, initLearnEvents } from './learn-view.js';
 import { renderLibrary, openHarrisonChapter,
          toggleHarrisonAI, submitHarrisonAI, aiSummarizeChapter, quizMeOnChapter,

@@ -79,12 +79,16 @@ h+=`<div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
 if(G.voiceTranscript&&G.srchQ){h+=`<div style="font-size:10px;color:#64748b;margin-bottom:8px;padding:6px 10px;background:#f8fafc;border-radius:8px" dir="auto">🎤 "${G.voiceTranscript}"</div>`;}
 if(G.srchQ.length>=2){
 const q=G.srchQ.toLowerCase();
-// Search questions
-const qRes=[];G.QZ.forEach((item,i)=>{if(item.q.toLowerCase().includes(q)||item.o.some(o=>o.toLowerCase().includes(q)))qRes.push(i);});
+// v1.21.13: defensive (a||'').toLowerCase() — 7h chaos run caught 4,890
+// `'toLowerCase' of undefined` pageerrors. The previous form `item.q.toLowerCase()`
+// crashes if any record has a missing field (one bad record poisons every keystroke
+// since the search runs on every char). Wrapping all string-cells with `||''`
+// makes the search resilient to incomplete data.
+const qRes=[];G.QZ.forEach((item,i)=>{if((item.q||'').toLowerCase().includes(q)||(item.o||[]).some(o=>(o||'').toLowerCase().includes(q)))qRes.push(i);});
 // Search notes
-const nRes=G.NOTES.filter(n=>n.topic.toLowerCase().includes(q)||n.notes.toLowerCase().includes(q));
+const nRes=G.NOTES.filter(n=>(n.topic||'').toLowerCase().includes(q)||(n.notes||'').toLowerCase().includes(q));
 // Search drugs
-const dRes=G.DRUGS.filter(d=>d.name.toLowerCase().includes(q)||d.heb.includes(q)||d.risk.toLowerCase().includes(q));
+const dRes=G.DRUGS.filter(d=>(d.name||'').toLowerCase().includes(q)||(d.heb||'').includes(q)||(d.risk||'').toLowerCase().includes(q));
 
 h+=`<div style="font-size:11px;color:#64748b;margin-bottom:10px">${qRes.length} questions · ${nRes.length} topics · ${dRes.length} drugs</div>`;
 
