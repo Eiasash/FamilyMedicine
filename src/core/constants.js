@@ -59,6 +59,18 @@ export const APP_VERSION='1.21.14';
 export const BUILD_HASH='1061q-v1.21.14';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.21.14': [
+    '🔑 _handleLogin reads api_key from auth_login_user response — saves a cloudRestore round-trip on flaky networks. Companion to the 2026-05-06 Supabase migration that added api_key column to app_users + auto-sync trigger from cloudBackup writes. _handleLogin now calls setApiKey(r.api_key) on successful login, AFTER setAuthSession (typeof guard for backwards compat). Empty string clears. Sibling-paired with Geri v10.64.50 / Pnimit v10.4.17 — all three apps share the auth_login_user RPC contract on Supabase project krmlzwwelqvlfslwltol.',
+  ],
+  '1.21.13': [
+    '🛡️ P0 crash fixes from 7-hour chaos run on 2026-05-05 (5,135 pageerrors → 0). Three sibling-paired patterns:',
+    '   (a) toLowerCase undefined defensive — 4,890 chaos crashes. One bad data record (missing topic/name/option text) poisoned every keystroke in src/ui/more-view.js + learn-view.js. Wrapped item.q/n.topic/n.notes/d.name with (field||\'\').toLowerCase(). Sibling-shared with IM v10.4.16.',
+    '   (b) flashcards `f` undefined bounds-check — 245 chaos crashes. G.S.fci % G.FLASH.length when G.FLASH is empty/missing produces NaN → FLASH[NaN] → undefined.f throw. Added defensive early return in src/ui/learn-view.js when G.FLASH is empty/missing, plus FLASH[activeIdx]||FLASH[0] fallback for activeIdx out-of-bounds.',
+    '   (c) startTimedQ G-binding — same root cause as IM v10.4.15. setTimeout closure now uses G.startTimedQ via setTimeout(()=>G.startTimedQ&&G.startTimedQ(), 100); app.js binds startTimedQ on G after import.',
+  ],
+  '1.21.12': [
+    '☁️ Cloud-sync API key with user account — Anthropic API key (mishpacha_apikey localStorage) is now included in the cloudBackup() payload sent via backup_set RPC, and restored client-side in applyRestorePayload() during cloudRestore / post-login auto-restore. Effect: log in on a new device → API key arrives with the rest of your progress, no manual re-entry. Backwards compat: legacy backup rows without _apikey are ignored (typeof rowData._apikey === "string" guard) so existing users see no behavior change until their next backup. Sibling-paired with Geri v10.64.48 / Pnimit v10.4.14.',
+  ],
   '1.21.11': [
     '☁️ Cloud backup write path migrated to SECURITY DEFINER RPC — Track-Q sibling propagation. v1.21.9 added the merge-duplicates upsert; v1.21.10 noted that "the 401 toast was already in place" — but the underlying 401 is real and present. Phase 2 (2026-04-29) migrated reads to backup_get RPC and dropped public SELECT, but writes were left on direct POST /rest/v1/mishpacha_backups. The new sb_publishable_* key format evaluates RLS context differently than the legacy anon JWT — direct INSERTs return PostgREST 401 / PG 42501 even with permissive policies (with_check=true, role=public). Geri v10.64.42 root-caused this and added backup_set SECURITY DEFINER RPC in shared project krmlzwwelqvlfslwltol. Same RPC powers all 3 sibling apps; Mishpacha now uses p_app:"mishpacha". Server-side now() eliminates client clock-skew. Tested e2e on Geri (200 OK + correct read-back).',
   ],
