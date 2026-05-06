@@ -8,7 +8,7 @@ export function renderStudy(){
 let h=`<div class="sec-t">📚 Study Notes</div><div class="sec-s">Family Medicine Board Prep · Goroll 8e + AFP + Nelson</div>`;
 h+=`<input class="search-box" placeholder="Search topics..." data-action="filter-notes" id="nfilt">`;
 const fv=document.getElementById('nfilt')?.value?.toLowerCase()||'';
-G.NOTES.filter(n=>n.topic.toLowerCase().includes(fv)||n.notes.toLowerCase().includes(fv)).forEach(n=>{
+G.NOTES.filter(n=>(n.topic||'').toLowerCase().includes(fv)||(n.notes||'').toLowerCase().includes(fv)).forEach(n=>{
 const i=n.id;
 h+=`<div class="card"><button class="acc-h" data-action="toggle-note" data-id="${i}">
 <div style="display:flex;align-items:center;gap:8px"><span style="font-weight:700;font-size:12px">${n.topic}</span>
@@ -124,8 +124,12 @@ if(dueMode){
   }
 }
 const queueEmpty=dueMode&&(!G.S.fcQueue||G.S.fcQueue.length===0);
+// v1.21.13: bounds-check FLASH array. 7h chaos run caught 245 `'f' of undefined`
+// pageerrors — happens when G.FLASH is empty (data still loading) or activeIdx
+// resolves out-of-bounds. fci%0 = NaN → FLASH[NaN] = undefined.
+if(!G.FLASH||G.FLASH.length===0){return `<div class="sec-t">🃏 Flashcards</div><div class="card" style="text-align:center;padding:24px"><div style="font-size:32px">⏳</div><div style="font-size:12px;color:#64748b;margin-top:8px">טוען כרטיסיות...</div></div>`;}
 const activeIdx=dueMode?(G.S.fcQueue[G.S.fcQueuePos]??0):(G.S.fci%G.FLASH.length);
-const f=G.FLASH[activeIdx];
+const f=G.FLASH[activeIdx]||G.FLASH[0];
 const fcsr=G.S.fcsr||{};
 let fcKnown=0,fcLearning=0,fcNew=0,fcDue=0;
 const now=Date.now();
@@ -195,8 +199,8 @@ let drugSearch='';
 export function renderDrugs(){
 let h=`<div class="sec-t">💊 Drug Lookup</div><div class="sec-s">Family Medicine essentials — dosing · pregnancy · renal · peds</div>`;
 h+=`<input class="search-box" placeholder="Search drug, Hebrew name, class, or indication..." data-action="drug-search" value="${drugSearch}" id="dsrch">`;
-const fv=drugSearch.toLowerCase();
-const filtered=G.DRUGS.filter(d=>!fv||d.name.toLowerCase().includes(fv)||(d.heb||'').includes(fv)||(d.cat||'').toLowerCase().includes(fv)||(d.risk||'').toLowerCase().includes(fv));
+const fv=(drugSearch||'').toLowerCase();
+const filtered=G.DRUGS.filter(d=>!fv||(d.name||'').toLowerCase().includes(fv)||(d.heb||'').includes(fv)||(d.cat||'').toLowerCase().includes(fv)||(d.risk||'').toLowerCase().includes(fv));
 h+=`<div style="font-size:10px;color:#94a3b8;margin:4px 0 8px">${filtered.length} of ${G.DRUGS.length} drugs</div>`;
 h+=`<div class="card">`;
 if(!filtered.length)h+=`<div style="padding:16px;text-align:center;color:#94a3b8;font-size:12px">No drugs found</div>`;
