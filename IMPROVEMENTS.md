@@ -1,5 +1,51 @@
 # IMPROVEMENTS — mishpacha-mega (Family Medicine)
 
+## 2026-05-07 — v1.21.15 audit-fix-deploy (LCP fix + dev manifest cleanup)
+
+**Trigger:** user-supplied pre-rooted bug list from issues #25 (LCP killer) + #26 (a11y progressbar) + ad-hoc dev sw.js phantom audit. Single-lane FM deploy (web Claude was working other repos).
+
+**Outcome:** 🟢 shipped v1.21.15 → live (BUILD_HASH `q-v1.21.15` + SW `mishpacha-v1.21.15`). 801/801 tests green. verify-deploy.sh PASS in 57s. 12 files modified, +86/-33 lines.
+
+### Stash-pop conflict cleared on entry
+
+5 working-tree files were `UU` (mishpacha-mega.html, package.json, src/core/constants.js, src/ui/quiz-view.js, sw.js) from a months-old `git stash pop` of `stash@{2}: WIP on main: ba4d745 v1.4.2 — AI-Hard seed 32→39`. Conflict markers were `<<<<<<< Updated upstream` / `>>>>>>> Stashed changes` (stash-pop signature). All 5 resolved by `git checkout HEAD -- <file>` since current main was the correct base. Original stash content preserved at `stash@{2}` (stash entry NOT deleted on conflicted pop). v1.4.2-era values are stale; nothing of value lost.
+
+### Bugs shipped
+
+| Bug | File(s) | Mechanism |
+|---|---|---|
+| LCP killer (#25) | `scripts/build.sh` heredoc, `scripts/verify-dist-sw.cjs` | Split prod SW pre-cache: SHELL_URLS (atomic addAll) + CRITICAL_DATA (Promise.allSettled, 7 entries) + LAZY_DATA (cache-on-first-fetch, 6 entries, ~8 MB removed from install path). DATA_URLS preserved as spread for fetch-handler SWR. Verifier reads new 3-array layout. |
+| Phantom URLs (dev sw.js) | `sw.js` HTML_URLS / CSS_URLS | Dropped non-existent `src/ui/tabs.js` + `shared/layout-primitives.css`. |
+| Missing real modules (dev sw.js) | `sw.js` | Added `src/core/sw-update.js`, `src/core/tagMigration.js`, `src/features/post-login-restore.js`, `src/ui/settings-overlay.js` to HTML_URLS; `src/ui/quiz-view.css` + `src/styles/settings.css` to CSS_URLS. |
+| Regression guards | `tests/serviceWorker.test.js` | Two new test() blocks: every CSS_URLS entry on disk; every *.js in HTML_URLS on disk. |
+| A11y #26 — bare progressbar | `src/ui/quiz-view.js:435` | `aria-label="התקדמות במבחן"` added. Sweep confirmed 1 site total in src/. |
+| Console.* leaks | `src/features/cloud.js` (×6), `src/ui/library-view.js` (×6), `src/ui/settings-overlay.js` (×1), `src/ai/client.js` (×2) | Inline `if(import.meta.env.DEV)console.X(…)` matching existing codebase convention (data-loader.js:79-80, sw-update.js:52). |
+| Open audit pass — unwired data-action | `src/**` | 0 findings: 170 emitted data-action values, all resolve via `dataset.action`/`action`/`case` dispatch. The first sweep showed 143 false positives because the codebase's `else if(action === 'X')` pattern wasn't in my regex. |
+
+### Surfaced at user-handoff (per FM CLAUDE.md rule 1)
+
+- **`src/ui/quiz-view.css` placement deviation**: user prompt listed it in `HTML_URLS`, but it's a CSS file and the new "every entry in CSS_URLS resolves" guard catches it there cleanly. Landed in CSS_URLS. If the user intended a different layout (e.g., separate JS_URLS array), challenge and refile.
+- **CHANGELOG bullet 2 phrasing tightened**: clarified that the dev-sw.js URL-list cleanup does NOT touch prod, but the SHELL/CRITICAL/LAZY split (bullet 1) DOES.
+
+### `npm run verify` — clean
+- 49 test files / 801 tests passing (was 47/793 at v1.21.11 → 793 at v1.21.14 → 801 at v1.21.15 with the +2 SW regression guards)
+- `verify-dist-sw.cjs` reports `6 shell + 7 critical + 6 lazy = 19 cached paths` — new 3-array layout extracted correctly
+- `node scripts/sync-sw-version.cjs` reports `OK: version 1.21.15`
+- Live witness PASS in 57s
+
+### Side-tasks for follow-up sessions (NOT shipped today)
+
+| Item | Why deferred |
+|---|---|
+| **CLAUDE.md stale "isChronicFail() returns undefined" line** | Per `project_geriatrics_track_h_i_outcomes.md` memory and the 2026-05-01 R3 sibling-sync, that was patched. Out of scope this PR (FM CLAUDE.md rule 3 — touch only what you must). One-line fix for next CLAUDE.md drift refresh. |
+| **Stash@{2} cleanup** | Decision left to user. The original v1.4.2-era `WIP on main: ba4d745` stash is intact and unreferenced. Safe to `git stash drop stash@{2}` if user agrees. Not auto-dropping since it represents pre-existing user state. |
+| **Live "eyeball" verification** | Per `feedback_eyeball_console_ritual.md`, verify-deploy.sh confirms version strings but not real SW behavior, CSP, or LCP impact. User to open https://eiasash.github.io/FamilyMedicine/ in Chrome with DevTools and confirm: (a) Application → SW shows `mishpacha-v1.21.15` active, old caches purged; (b) Network tab — chapter JSONs (harrison/goroll/nelson/lerner/afp_hari) NOT in install request burst, only fetched when Library opens; (c) Console — no `console.warn`/`error` from cloud/library/settings-overlay/ai during normal flow; (d) Inspector — `aria-label="התקדמות במבחן"` on `.quiz-progress` element. |
+| **Other ungated console.* recovery diagnostics** | core/data-loader.js:41/73/83, core/state.js:31/101, core/sw-update.js:36, core/utils.js:19, features/post-login-restore.js:158, app.js:426 (already known) — all are recovery-path diagnostics (same pattern as the protected app.js:426). Per scope rule 3 not gated this pass. Could be moved to a single `devLog()` helper in a follow-up cleanup. |
+| **Lighthouse a11y < 100** | Beyond #25/#26: contrast issues + content audit not addressed. Out of scope for this single-lane LCP+a11y ship. |
+| **Concurrent FM commit `9509a90`** | `test: pin FSRS canonical drift + add property sweeps (#38)` landed during my session — rebased cleanly, no conflict. Confirms the cross-repo FSRS sibling-sync work is active in parallel sessions. |
+
+---
+
 ## 2026-05-05 — v1.21.11 deep audit (audit-only, no behavior change)
 
 **Trigger:** workspace-wide deep audit pass across the 4 medical PWAs. FM's just-shipped state is v1.21.11 (Track-Q sibling propagation, cloud backup write path 401 fix landed today).
