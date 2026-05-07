@@ -55,10 +55,15 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.21.15';
-export const BUILD_HASH='1061q-v1.21.15';
+export const APP_VERSION='1.21.16';
+export const BUILD_HASH='1061q-v1.21.16';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.21.16': [
+    '🔑 שגיאות auth מציגות כעת קוד + הודעה במקום `שגיאה` ריק — port מ-ward-helper PR #100 (AccountSection.tsx ChangePasswordForm). _formatAuthError helper חדש ב-src/features/auth.js נקרא משלושת הזרימות (login / register / change-password) עם per-call contextMap לקודים מוכרים (invalid_credentials → "שם משתמש או סיסמה שגויים", invalid_password → "סיסמה ישנה שגויה", weak_password → "סיסמה חדשה חלשה — לפחות 6 תווים, לא רק ספרות.", network/http_5xx → "בעיית רשת. בדוק חיבור ונסה שוב."), נופל אחורה ל-`שגיאה (${code}): ${message}` עבור הכול. גם תיקן את ה-toast ב-_handleChangePassword מ-tone="info" ל-"error" (היה צובע כשלי סיסמה כחול-אינפו במקום אדום).',
+    '🍞 Diagnostic breadcrumbs — הוספת console.info(`<flow>.start`/`.ok`) ו-console.warn(`<flow>.err`, code, message) ב-_handleLogin / _handleRegister / _handleChangePassword. נלכדים אוטומטית ב-debug console buffer (5-tap top-right) — מאפשר לדבג כשלי auth מהפקה ללא DevTools.',
+    '🛡️ Internal — אין שינוי ב-engine, ב-shared/fsrs.js או בלוגיקת ה-RPC. UX-only port; +30 שורות ב-auth.js, אפס תוכן בחינה נגוע.',
+  ],
   '1.21.15': [
     '🚀 SW install resilient + LCP fix (issue #25) — split the prod SW pre-cache into SHELL_URLS (atomic addAll, must succeed) + CRITICAL_DATA (Promise.allSettled, best-effort) + LAZY_DATA (cache-on-first-fetch only, NOT in install). Removed ~8 MB of chapter JSONs from the install path: harrison_chapters.json (2.3 MB), goroll_chapters.json (28 KB), nelson_chapters.json (16 KB), lerner_chapters.json (3.7 MB), data/afp_hari_index.json (1.97 MB), data/nelson_notes.json (21 KB) — all now SWR-cached on first Library visit. One transient 5xx on a chapter JSON no longer kills SW install. DATA_URLS preserved as [...CRITICAL_DATA,...LAZY_DATA] so the fetch handler\'s SWR matches still cover both sets. scripts/verify-dist-sw.cjs updated to extract the new 3-array layout.',
     '🐛 Dev sw.js URL manifest cleanup — dropped phantom paths that were cached but did not exist on disk: src/ui/tabs.js (HTML_URLS), shared/layout-primitives.css (CSS_URLS). Added 5 real-but-uncached modules: src/core/sw-update.js, src/core/tagMigration.js, src/features/post-login-restore.js, src/ui/settings-overlay.js. Added src/ui/quiz-view.css and src/styles/settings.css to CSS_URLS. (URL-list-only fix — prod dist/sw.js uses a separate build-time-generated manifest, so this bullet does NOT touch prod; the SHELL/CRITICAL/LAZY split above DOES ship to prod.)',

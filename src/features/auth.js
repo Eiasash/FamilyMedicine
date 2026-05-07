@@ -254,6 +254,24 @@ function _setStatus(msg, tone) {
                   : '#64748b';
 }
 
+// Cross-ported from ward-helper PR #100 (AccountSection.tsx ChangePasswordForm).
+// Bare `שגיאה` is a UX dead-end — when an auth RPC fails, surface the error
+// code + message so the user can act on it (or report it precisely). Per-call
+// `contextMap` covers known codes with friendly Hebrew; everything else falls
+// through to a structured fallback. Mirrors siblings' shared shape.
+function _formatAuthError(r, contextMap) {
+  const code = r && r.error;
+  const message = r && r.message;
+  if (code && contextMap && contextMap[code]) return contextMap[code];
+  if (code === 'network' || (code && code.startsWith && code.startsWith('http_'))) {
+    return `בעיית רשת. בדוק חיבור ונסה שוב.${message ? ` (${message})` : ''}`;
+  }
+  if (code && message) return `שגיאה (${code}): ${message}`;
+  if (code) return `שגיאה: ${code}`;
+  if (message) return `שגיאת שרת: ${message}`;
+  return 'שגיאה לא ידועה. נסה שוב או דווח על הבעיה.';
+}
+
 function _switchTab(which) {
   const tabs = document.getElementById('auth-tabs');
   if (!tabs) return;
@@ -279,6 +297,7 @@ async function _handleLogin() {
   const p = (document.getElementById('auth-li-pwd')  || {}).value || '';
   if (!u || !p) { _setStatus('נא למלא שם משתמש וסיסמה', 'error'); return; }
   _setStatus('מתחבר…');
+  console.info('login.start');
   const r = await authLogin(u, p);
   if (!r.ok) {
     const map = {
@@ -286,9 +305,11 @@ async function _handleLogin() {
       locked: 'יותר מדי ניסיונות כושלים. נסה שוב בעוד 15 דקות.',
       bad_response: 'שגיאת רשת — נסה שוב',
     };
-    _setStatus(map[r.error] || r.message || ('שגיאה: ' + r.error), 'error');
+    console.warn('login.err', r.error || '?', r.message || '');
+    _setStatus(_formatAuthError(r, map), 'error');
     return;
   }
+  console.info('login.ok');
   setAuthSession(r.username, r.display_name);
   // v1.21.14: app_users.api_key now travels in the login response (Supabase
   // migration 2026-05-06). If the user has an api key on file, restore it
@@ -306,6 +327,7 @@ async function _handleRegister() {
   const n = (document.getElementById('auth-rg-name') || {}).value || '';
   if (!u || !p) { _setStatus('שם משתמש וסיסמה הם שדות חובה', 'error'); return; }
   _setStatus('יוצר חשבון…');
+  console.info('register.start');
   const r = await authRegister(u, p, n);
   if (!r.ok) {
     const map = {
@@ -314,9 +336,11 @@ async function _handleRegister() {
       username_taken: 'שם המשתמש כבר תפוס',
       bad_response: 'שגיאת רשת — נסה שוב',
     };
-    _setStatus(map[r.error] || r.message || ('שגיאה: ' + r.error), 'error');
+    console.warn('register.err', r.error || '?', r.message || '');
+    _setStatus(_formatAuthError(r, map), 'error');
     return;
   }
+  console.info('register.ok');
   // Auto-login after register (the RPC already verifies password hash).
   setAuthSession(r.username, r.display_name);
   _dispatchAuthEvent('register');
@@ -331,16 +355,20 @@ async function _handleChangePassword() {
   if (!oldPwd) return;
   const newPwd = window.prompt('הקלד סיסמה חדשה (לפחות 6 תווים):');
   if (!newPwd) return;
+  console.info('changePassword.start');
   const r = await authChangePassword(user.username, oldPwd, newPwd);
   if (r.ok) {
+    console.info('changePassword.ok');
     _dispatchAuthEvent('change-password');
     toast('✅ הסיסמה שונתה', 'success');
   } else {
     const map = {
-      invalid_credentials: 'הסיסמה הנוכחית שגויה',
-      weak_password: 'הסיסמה החדשה קצרה מדי',
+      invalid_password: 'סיסמה ישנה שגויה',
+      invalid_credentials: 'סיסמה ישנה שגויה',
+      weak_password: 'סיסמה חדשה חלשה — לפחות 6 תווים, לא רק ספרות.',
     };
-    toast('❌ ' + (map[r.error] || r.message || r.error), 'info');
+    console.warn('changePassword.err', r.error || '?', r.message || '');
+    toast('❌ ' + _formatAuthError(r, map), 'error');
   }
 }
 
