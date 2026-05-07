@@ -22,8 +22,8 @@ body:JSON.stringify({model,max_tokens:maxTokens,messages}),
 signal
 });
 if(pr.ok){const d=await pr.json();return d.content?.[0]?.text||'';}
-console.warn('Proxy status:',pr.status);
-}catch(e){if(e&&e.name==='AbortError')throw e;console.warn('Proxy:',e.message);}
+if(import.meta.env.DEV)console.warn('Proxy status:',pr.status);
+}catch(e){if(e&&e.name==='AbortError')throw e;if(import.meta.env.DEV)console.warn('Proxy:',e.message);}
 // Fallback to personal API key with correct model name
 const apiKey=getApiKey();
 if(!apiKey)throw new Error('no_key');

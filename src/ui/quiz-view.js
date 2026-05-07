@@ -432,7 +432,7 @@ if(!G.pool.length){
 }
 
 // ── Progress sliver ─────────────────────────────────────────────────
-h+=`<div class="quiz-progress" role="progressbar" aria-valuenow="${G.qi+1}" aria-valuemin="1" aria-valuemax="${G.pool.length}">`+
+h+=`<div class="quiz-progress" role="progressbar" aria-label="התקדמות במבחן" aria-valuenow="${G.qi+1}" aria-valuemin="1" aria-valuemax="${G.pool.length}">`+
    `<span class="quiz-progress__fill" data-progress="${Math.round((G.qi+1)/G.pool.length*100)}"></span>`+
    `</div>`;
 

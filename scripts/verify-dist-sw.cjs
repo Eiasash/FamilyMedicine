@@ -32,10 +32,12 @@ function extractList(src, name) {
   return [...m[1].matchAll(/'([^']+)'/g)].map(x => x[1]);
 }
 const shell = extractList(distSw, 'SHELL_URLS');
-const data = extractList(distSw, 'DATA_URLS');
+const critical = extractList(distSw, 'CRITICAL_DATA');
+const lazy = extractList(distSw, 'LAZY_DATA');
 if (!shell) fatal('SHELL_URLS array not found in dist/sw.js');
-if (!data) fatal('DATA_URLS array not found in dist/sw.js');
-const all = [...shell, ...data];
+if (!critical) fatal('CRITICAL_DATA array not found in dist/sw.js (split landed v1.21.15)');
+if (!lazy) fatal('LAZY_DATA array not found in dist/sw.js (split landed v1.21.15)');
+const all = [...shell, ...critical, ...lazy];
 
 const missing = all.filter(p => !fs.existsSync(path.join('dist', p)));
 if (missing.length) {
@@ -47,6 +49,6 @@ if (missing.length) {
 
 // Also sanity-check that the cache-populated set has no duplicates (cache.addAll rejects)
 const dupes = all.filter((v, i, a) => a.indexOf(v) !== i);
-if (dupes.length) fatal(`duplicate entries in ALL_URLS: ${dupes.join(', ')}`);
+if (dupes.length) fatal(`duplicate entries: ${dupes.join(', ')}`);
 
-console.log(`[verify-dist-sw] OK — CACHE=mishpacha-v${mCache[1]}, ${all.length} cached paths verified (${shell.length} shell + ${data.length} data)`);
+console.log(`[verify-dist-sw] OK — CACHE=mishpacha-v${mCache[1]}, ${all.length} cached paths verified (${shell.length} shell + ${critical.length} critical + ${lazy.length} lazy)`);

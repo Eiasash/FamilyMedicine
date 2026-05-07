@@ -330,7 +330,7 @@ async function submitSettingsFeedback() {
     _serverOk = !!(res && res.ok);
     if (!_serverOk) {
       const errBody = await (res && res.text ? res.text().catch(() => '') : Promise.resolve(''));
-      console.warn('Settings feedback submit non-ok', res && res.status, errBody && errBody.slice(0, 200));
+      if(import.meta.env.DEV)console.warn('Settings feedback submit non-ok', res && res.status, errBody && errBody.slice(0, 200));
     }
   } catch (e) { /* offline-tolerant — fall through and surface accurate toast */ }
   if (_serverOk) {
