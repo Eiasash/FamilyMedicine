@@ -80,10 +80,26 @@ echo "  → CACHE=mishpacha-v${APP_VER}"
 cat > dist/sw.js << SWEOF
 const CACHE='mishpacha-v${APP_VER}';
 const SHELL_URLS=['mishpacha-mega.html','manifest.json','shared/fsrs.js','shared/tokens.css','shared/install-promo.js','shared/install-promo-config.js'];
-const DATA_URLS=['data/questions.json','data/topics.json','data/notes.json','data/drugs.json','data/flashcards.json','data/tabs.json','data/afp_hari_index.json','data/nelson_notes.json','harrison_chapters.json','goroll_chapters.json','nelson_chapters.json','lerner_chapters.json'];
-const ALL_URLS=[...SHELL_URLS,...DATA_URLS];
+// CRITICAL_DATA: pre-cached on install (best-effort — Promise.allSettled).
+// One transient 5xx must NOT kill SW install — these files are also fetched
+// at runtime via stale-while-revalidate, so a missed pre-cache self-heals.
+const CRITICAL_DATA=['data/questions.json','data/topics.json','data/notes.json','data/drugs.json','data/flashcards.json','data/tabs.json','data/distractors.json'];
+// LAZY_DATA: NOT pre-cached on install (~8 MB total). Cached on first fetch via
+// the stale-while-revalidate handler below. Removes 8 MB of network from the
+// install path so SW activates fast even on slow mobile (LCP fix, issue #25).
+const LAZY_DATA=['data/afp_hari_index.json','data/nelson_notes.json','harrison_chapters.json','goroll_chapters.json','nelson_chapters.json','lerner_chapters.json'];
+// DATA_URLS preserved so the fetch handler's stale-while-revalidate match still
+// covers both critical and lazy entries (cache-on-first-fetch for LAZY items).
+const DATA_URLS=[...CRITICAL_DATA,...LAZY_DATA];
 
-self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ALL_URLS)).then(()=>self.skipWaiting())));
+self.addEventListener('install',e=>e.waitUntil(
+  caches.open(CACHE).then(async c=>{
+    // SHELL is atomic — if it fails the SW is unusable, fail loud.
+    await c.addAll(SHELL_URLS);
+    // CRITICAL is best-effort — runtime SWR will heal anything that missed.
+    await Promise.allSettled(CRITICAL_DATA.map(u=>c.add(u)));
+  }).then(()=>self.skipWaiting())
+));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 
 self.addEventListener('fetch',e=>{

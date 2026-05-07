@@ -51,6 +51,34 @@ describe('service worker (sw.js)', () => {
     });
   });
 
+  // v1.21.15 broader guard — every entry in CSS_URLS must exist on disk
+  // (the old test only matched src/styles/*.css, missing shared/*.css and
+  // src/ui/*.css; that's how 'shared/layout-primitives.css' phantom slipped
+  // past pre-v1.21.15 audits — it was cached but didn't exist on disk).
+  test('every entry in CSS_URLS resolves on disk', () => {
+    const cssUrlsMatch = sw.match(/CSS_URLS\s*=\s*\[([^\]]+)\]/);
+    expect(cssUrlsMatch).not.toBeNull();
+    const urls = [...cssUrlsMatch[1].matchAll(/'([^']+)'/g)].map(m => m[1]);
+    expect(urls.length).toBeGreaterThan(0);
+    urls.forEach(clean => {
+      expect(existsSync(resolve(rootDir, clean)), `CSS_URLS phantom: ${clean}`).toBe(true);
+    });
+  });
+
+  // v1.21.15 — same guard for *.js entries in HTML_URLS (the SW manifest
+  // mixes JS shell modules under HTML_URLS by convention). The pre-existing
+  // 'all cached HTML files' test only matches *.html, so a phantom JS path
+  // like 'src/ui/tabs.js' (file does not exist) was not caught.
+  test('every *.js entry in HTML_URLS resolves on disk', () => {
+    const htmlUrlsMatch = sw.match(/HTML_URLS\s*=\s*\[([^\]]+)\]/);
+    expect(htmlUrlsMatch).not.toBeNull();
+    const jsUrls = [...htmlUrlsMatch[1].matchAll(/'([^']+\.js)'/g)].map(m => m[1]);
+    expect(jsUrls.length).toBeGreaterThan(0);
+    jsUrls.forEach(clean => {
+      expect(existsSync(resolve(rootDir, clean)), `HTML_URLS phantom JS: ${clean}`).toBe(true);
+    });
+  });
+
   test('defines JSON_DATA_URLS for all data files', () => {
     expect(sw).toMatch(/JSON_DATA_URLS\s*=\s*\[/);
     expect(sw).toContain('data/questions.json');

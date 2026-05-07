@@ -32,9 +32,9 @@ try{
     headers:{'Content-Type':'application/json','apikey':SUPA_ANON,'Authorization':'Bearer '+SUPA_ANON,'Prefer':'resolution=merge-duplicates'},
     body:JSON.stringify(payload)
   });
-  if(!res.ok){console.warn('Leaderboard submit non-ok',res.status);return{submitted:false,status:res.status};}
+  if(!res.ok){if(import.meta.env.DEV)console.warn('Leaderboard submit non-ok',res.status);return{submitted:false,status:res.status};}
   return{submitted:true};
-}catch(e){console.warn('Leaderboard submit failed',e);return{submitted:false,error:String(e)};}
+}catch(e){if(import.meta.env.DEV)console.warn('Leaderboard submit failed',e);return{submitted:false,error:String(e)};}
 }
 export async function fetchLeaderboard(){
 try{
@@ -42,7 +42,7 @@ try{
     headers:{'apikey':SUPA_ANON}
   });
   return await res.json();
-}catch(e){console.warn('Leaderboard fetch failed',e);return[];}
+}catch(e){if(import.meta.env.DEV)console.warn('Leaderboard fetch failed',e);return[];}
 }
 let _leaderboardData=null;
 export async function showLeaderboard(){
@@ -125,8 +125,8 @@ try{
     headers:{'Content-Type':'application/json','apikey':SUPA_ANON,'Authorization':'Bearer '+SUPA_ANON,'Prefer':'return=minimal'},
     body:JSON.stringify({type,text,ts:entry.ts,version:APP_VERSION,uid:entry.uid})
   });
-  if(!res.ok){const errBody=await res.text().catch(()=>'');console.warn('Feedback submit non-ok',res.status,errBody.slice(0,200));toast('⚠️ הפידבק נשמר מקומית, השליחה לשרת נכשלה ('+res.status+')','info');}
-}catch(e){console.warn('Feedback submit failed',e);toast('⚠️ הפידבק נשמר מקומית, אין חיבור לרשת','info');}
+  if(!res.ok){const errBody=await res.text().catch(()=>'');if(import.meta.env.DEV)console.warn('Feedback submit non-ok',res.status,errBody.slice(0,200));toast('⚠️ הפידבק נשמר מקומית, השליחה לשרת נכשלה ('+res.status+')','info');}
+}catch(e){if(import.meta.env.DEV)console.warn('Feedback submit failed',e);toast('⚠️ הפידבק נשמר מקומית, אין חיבור לרשת','info');}
 try{
   const aiText=await callAI([{role:'user',content:'A user submitted this feedback for a medical study app. Briefly acknowledge it and assess feasibility in 1-2 sentences. Type: '+type+'. Feedback: '+text}],300);
   if(aiText){
@@ -386,6 +386,6 @@ method:'POST',
 headers:{'apikey':SUPA_ANON,'Authorization':'Bearer '+SUPA_ANON,'Content-Type':'application/json','Prefer':'return=minimal'},
 body:JSON.stringify({app:'mishpacha',question_idx:qIdx,question_text:(q.q||'').slice(0,200),current_answer:q.c,reported_answer:(userReason||'').slice(0,50),user_reason:userReason||'',ai_verdict:aiVerdict||'',device_id:_sbDeviceId()})
 });
-}catch(e){console.warn('Report save failed:',e.message);}
+}catch(e){if(import.meta.env.DEV)console.warn('Report save failed:',e.message);}
 }
 

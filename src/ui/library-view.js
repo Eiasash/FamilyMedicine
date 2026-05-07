@@ -397,7 +397,7 @@ h+=`</div>`;
 // ===== GOROLL 8e — PDF fragment reader (239 chapters) =====
 if(G.libSec==='goroll'){
 if(!G._gorollData){
-  fetch('goroll_chapters.json').then(r=>r.json()).then(d=>{G._gorollData=d;G.render();}).catch(e=>console.error('Goroll load failed',e));
+  fetch('goroll_chapters.json').then(r=>r.json()).then(d=>{G._gorollData=d;G.render();}).catch(e=>{if(import.meta.env.DEV)console.error('Goroll load failed',e);});
   h+=`<div class="card" style="padding:40px;text-align:center"><div style="font-size:13px;color:#64748b">⏳ Loading Goroll chapters...</div></div>`;
 }else{
 h+=`<div class="card" style="padding:14px">
@@ -425,14 +425,14 @@ h+=`</div>`;
 // adds page numbers to nelson_chapters.json, the UI upgrades automatically.
 else if(G.libSec==='nelson'){
 if(!G._nelData){
-  fetch('nelson_chapters.json').then(r=>r.json()).then(d=>{G._nelData=d;G.render();}).catch(e=>console.error('Nelson load failed',e));
+  fetch('nelson_chapters.json').then(r=>r.json()).then(d=>{G._nelData=d;G.render();}).catch(e=>{if(import.meta.env.DEV)console.error('Nelson load failed',e);});
   h+=`<div class="card" style="padding:40px;text-align:center"><div style="font-size:13px;color:#64748b">⏳ Loading Nelson chapters...</div></div>`;
 }else{
 const NELSON_DRIVE='https://drive.google.com/file/d/1KK7xcN5JHgo8LVUpppHvxlZrg3Ol4VnU/view';
 const nelHref=(c)=>c.file?`nelson/${encodeURIComponent(c.file)}`:(c.page?`${NELSON_DRIVE}#page=${c.page}`:NELSON_DRIVE);
 // Lazy-load canned Hebrew board notes once. Used for ✨ badge + inline "📖" expand button.
 if(!G._nelNotes){
-  fetch('data/nelson_notes.json').then(r=>r.json()).then(d=>{G._nelNotes=d;G.render();}).catch(e=>{console.error('Nelson notes load failed',e);G._nelNotes={_error:true};});
+  fetch('data/nelson_notes.json').then(r=>r.json()).then(d=>{G._nelNotes=d;G.render();}).catch(e=>{if(import.meta.env.DEV)console.error('Nelson notes load failed',e);G._nelNotes={_error:true};});
 }
 G._nelOpenNotes=G._nelOpenNotes||new Set();
 const nq=(G.nelSearch||'').trim().toLowerCase();
@@ -579,7 +579,7 @@ ${typeof ch.ti==='number'?`<button data-action="drill-topic" data-ti="${ch.ti}" 
 <div class="heb" style="font-size:12px;line-height:1.9;color:#1e293b;text-align:right;unicode-bidi:plaintext;white-space:pre-wrap" dir="auto">${sanitize(ch.body)}</div>
 </div>`;
 }else if(!G._lerData){
-  fetch('lerner_chapters.json').then(r=>r.json()).then(d=>{G._lerData=d;G.render();}).catch(e=>{console.error('Lerner load failed',e);G._lerData={_error:true};});
+  fetch('lerner_chapters.json').then(r=>r.json()).then(d=>{G._lerData=d;G.render();}).catch(e=>{if(import.meta.env.DEV)console.error('Lerner load failed',e);G._lerData={_error:true};});
   h+=`<div class="card" style="padding:40px;text-align:center"><div style="font-size:13px;color:#64748b">⏳ טוען את סיכום לרנר...</div></div>`;
 }else if(G._lerData._error){
   h+=`<div class="card" style="padding:20px;text-align:center;font-size:12px;color:#dc2626">Failed to load Lerner summary. Check lerner_chapters.json.</div>`;
@@ -630,7 +630,7 @@ h+=`</div>`;
 // ===== AFP + הר"י — 542-paper browser (7-year syllabus window 2018-06 → 2025-05) =====
 if(G.libSec==='afphari'){
 if(!G._afpHari){
-  fetch('data/afp_hari_index.json').then(r=>r.json()).then(d=>{G._afpHari=d;G.render();}).catch(e=>{console.error('AFP/הרי load failed',e);G._afpHari={error:true};});
+  fetch('data/afp_hari_index.json').then(r=>r.json()).then(d=>{G._afpHari=d;G.render();}).catch(e=>{if(import.meta.env.DEV)console.error('AFP/הרי load failed',e);G._afpHari={error:true};});
   h+=`<div class="card" style="padding:40px;text-align:center"><div style="font-size:13px;color:#64748b">⏳ Loading AFP + הר"י index...</div></div>`;
 }else if(G._afpHari.error){
   h+=`<div class="card" style="padding:20px;text-align:center;font-size:12px;color:#dc2626">Failed to load AFP/הר"י index. Check data/afp_hari_index.json.</div>`;
@@ -854,7 +854,7 @@ try{
 const r=await fetch('harrison_chapters.json');
 G._harData=await r.json();
 }catch(e){
-console.error('Failed to load Harrison chapters',e);
+if(import.meta.env.DEV)console.error('Failed to load Harrison chapters',e);
 G._harData={};
 }
 G._harLoading=false;

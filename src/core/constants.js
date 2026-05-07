@@ -55,10 +55,17 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.21.14';
-export const BUILD_HASH='1061q-v1.21.14';
+export const APP_VERSION='1.21.15';
+export const BUILD_HASH='1061q-v1.21.15';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.21.15': [
+    '🚀 SW install resilient + LCP fix (issue #25) — split the prod SW pre-cache into SHELL_URLS (atomic addAll, must succeed) + CRITICAL_DATA (Promise.allSettled, best-effort) + LAZY_DATA (cache-on-first-fetch only, NOT in install). Removed ~8 MB of chapter JSONs from the install path: harrison_chapters.json (2.3 MB), goroll_chapters.json (28 KB), nelson_chapters.json (16 KB), lerner_chapters.json (3.7 MB), data/afp_hari_index.json (1.97 MB), data/nelson_notes.json (21 KB) — all now SWR-cached on first Library visit. One transient 5xx on a chapter JSON no longer kills SW install. DATA_URLS preserved as [...CRITICAL_DATA,...LAZY_DATA] so the fetch handler\'s SWR matches still cover both sets. scripts/verify-dist-sw.cjs updated to extract the new 3-array layout.',
+    '🐛 Dev sw.js URL manifest cleanup — dropped phantom paths that were cached but did not exist on disk: src/ui/tabs.js (HTML_URLS), shared/layout-primitives.css (CSS_URLS). Added 5 real-but-uncached modules: src/core/sw-update.js, src/core/tagMigration.js, src/features/post-login-restore.js, src/ui/settings-overlay.js. Added src/ui/quiz-view.css and src/styles/settings.css to CSS_URLS. (URL-list-only fix — prod dist/sw.js uses a separate build-time-generated manifest, so this bullet does NOT touch prod; the SHELL/CRITICAL/LAZY split above DOES ship to prod.)',
+    '🛡️ Two new SW regression guards in tests/serviceWorker.test.js — (a) every entry in CSS_URLS resolves on disk (broader than the pre-existing src/styles/*.css-only check, which is exactly how the shared/layout-primitives.css phantom slipped past); (b) every *.js entry in HTML_URLS resolves on disk (the pre-existing test only checked *.html, missing JS phantoms like the dropped src/ui/tabs.js).',
+    '♿ Lighthouse a11y issue #26 — added aria-label="התקדמות במבחן" to the role="progressbar" element in src/ui/quiz-view.js so screen readers announce the quiz progress sliver. Sweep of all role="progressbar" in src/ confirmed only this one site needed the fix.',
+    '🧹 DEV-gated 14 console.* leaks across src/features/cloud.js (×6 — leaderboard submit/fetch + feedback submit + report save), src/ui/library-view.js (×6 — Goroll/Nelson/Nelson-notes/Lerner/AFP-הרי/Harrison chapter loaders), src/ui/settings-overlay.js (×1 — settings feedback non-ok warn), src/ai/client.js (×2 — proxy status + proxy error). Pattern matches existing codebase convention: `if(import.meta.env.DEV)console.X(...)` inline. Recovery diagnostics in core/data-loader, core/state, core/sw-update, core/utils, features/post-login-restore left intentionally unguarded (same rationale as the pre-existing app.js:426 IDB-init recovery log).',
+  ],
   '1.21.14': [
     '🔑 _handleLogin reads api_key from auth_login_user response — saves a cloudRestore round-trip on flaky networks. Companion to the 2026-05-06 Supabase migration that added api_key column to app_users + auto-sync trigger from cloudBackup writes. _handleLogin now calls setApiKey(r.api_key) on successful login, AFTER setAuthSession (typeof guard for backwards compat). Empty string clears. Sibling-paired with Geri v10.64.50 / Pnimit v10.4.17 — all three apps share the auth_login_user RPC contract on Supabase project krmlzwwelqvlfslwltol.',
   ],
