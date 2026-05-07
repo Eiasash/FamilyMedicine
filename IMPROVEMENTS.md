@@ -1,5 +1,144 @@
 # IMPROVEMENTS — mishpacha-mega (Family Medicine)
 
+## 2026-05-07 (evening) — Cross-sibling leaderboard zero-write bug (top-line, NOT chaos-related)
+
+Discovered during the chaos-run cleanup verification (web Claude SELECT counts via Supabase MCP). Independent of the chaos work itself — surfacing here as a strategic finding.
+
+**State across the three medical PWAs that share `krmlzwwelqvlfslwltol`:**
+
+| App | Leaderboard table | Row count ever | `submitLeaderboardScore` write path |
+|---|---|---:|---|
+| Geriatrics (shlav-a-mega) | `shlav_leaderboard` | **4** | direct `POST /rest/v1/shlav_leaderboard` (verified at `shlav-a-mega.html:4144`) |
+| FamilyMedicine (mishpacha) | `mishpacha_leaderboard` | **0 ever** | direct `POST /rest/v1/mishpacha_leaderboard` (verified at `src/features/cloud.js:30`) |
+| InternalMedicine (pnimit) | `pnimit_leaderboard` | **0 ever** | direct `POST /rest/v1/pnimit_leaderboard` (assumed from sibling parity, not directly verified) |
+
+**Likely root cause (corrected from initial draft):** **all three siblings use direct table POST for leaderboard — none of them use an RPC.** The earlier draft of this entry incorrectly attributed Geri's 4 rows to a v10.64.42 Track-Q RPC migration; that's wrong on verification. Track-Q (commit `69e91e1`) migrated `samega_backups` to a `backup_set` RPC, **not** `shlav_leaderboard`. The leaderboard write path was untouched.
+
+The most likely explanation for Geri having 4 rows while FM+Pnimit have 0:
+- The 4 Geri rows likely **predate the `sb_publishable_*` key migration** (commit `99361cf` — "security: migrate Supabase client from legacy JWT anon key to publishable key"). On the legacy anon JWT, direct table POST under permissive RLS worked. After the key migration, the same write path returns silent 401 / PG 42501 — same class as Track-Q caught for backups.
+- FM and Pnimit either migrated to publishable key with no rows ever inserted, or they had stricter RLS from the start, or they had different historical write timing. **Not directly verified** — needs a per-table policy + insert-time inspection.
+
+What this means in practice: **leaderboard is dead silent on all three siblings *now***. Geri's 4 rows are historical artifacts; nothing is being added today on any of them.
+
+**Schema drift (user-reported, not independently verified in this session):**
+- `mishpacha_leaderboard` reportedly has both `updated_at` + `ts bigint`
+- `shlav_leaderboard` and `pnimit_leaderboard` reportedly have `ts timestamptz` only
+
+If accurate, the schema converge has to happen alongside the write-path fix — picking one timestamp shape across the three. (Verify before scoping the fix; my memory of these schemas isn't independent.)
+
+**Scope (estimate, not commitment):** the right fix appears to be a `leaderboard_upsert(p_app, p_uid, p_payload)` SECURITY DEFINER RPC modeled on Track-Q's `backup_set`, plus client migrations in all **three** sibling `submitLeaderboardScore` callsites, plus the schema converge. **Loose estimate ~1 day of work for the FM+Pnimit client side; Geri also needs the same client migration even though it has 4 historical rows.** Schema-converge touches production tables (currently empty for FM+Pnimit, populated for Geri) — **migration plan needs review before it runs**, not a casual sibling-port.
+
+**Open follow-ups:**
+- Verify the schema drift claim against the actual Supabase project before scoping (web Claude or MCP-authed terminal can do this in 2 min).
+- Audit similar surfaces (`cloudBackup`, `answer_reports`, `mishpacha_feedback`) — all 4 wrote 0 rows from the chaos run despite ~7-10 expected leaderboard submits. **Two competing hypotheses to disambiguate**: (a) the same RLS-class bug hits all FM direct-POST paths, OR (b) `start-mock` mode silences these triggers (the bot never reaches the code paths that fire `submitLeaderboardScore` / `cloudBackup`). The v4 chaos bot's "force session-end + manual cloudBackup" design will tell us which.
+- For users running v1.21.x today: leaderboard never has worked. The feature is dead silent. Surface to the user-population in next changelog or quietly dormant the UI until fixed.
+
+---
+
+## 2026-05-07 (evening) — v1.21.16 AI-judge chaos run (Phase 4b doctor-bot)
+
+**Trigger:** Phase 4b chaos plan against live FM v1.21.15, escalated mid-session by user to "improve the bots / 10 full upgrades / human-like / answer questions / judge medicine / write stuff / check sources." Built `chaos-doctor-bot.mjs` (v3 — AI-judge bot) on top of `chaos-live-bot-v2.mjs` (v2 — human-like click-bot), launched 10 workers × 30 min against the live URL.
+
+**Mid-session live shipped to v1.21.16** (commit `b379011`, auth-error UX port from ward-helper PR #100) — bot's selectors had to retarget on the fly: `sd-check`/`sd-next` (v1.21.15 sudden-death path) → `check-answer`/`next-q` (v1.21.16 main quiz path). Both kept in code with backward-compat OR-selector for older renders.
+
+### Run results
+
+| Metric | Value |
+|---|---|
+| Duration / users / questions | 30 min × 10 workers × **585 Qs answered** |
+| AI calls | pick=937, judge=585, source=0 (total 1522, 0 hard failures) |
+| ai-parse-errors (model returned non-JSON) | **352 (~38% of pick attempts)** |
+| Tokens / cost | 708,316 in + 203,046 out = **$5.17** at Sonnet 4.6 list price |
+| Pageerrors (P0 candidates) | **0** |
+| Direct AI-vs-app disagreements | 0 (**but detector was flawed — see below**) |
+| Judge-flagged Qs | 7 occurrences of **1 unique question** (mammography screening) |
+| Per-worker spread | Workers 2,3,4,5,6,7,9 cleared 60-83 Qs each; 8/1/10 stalled on parse-errors (0/1/42 Qs, 154/139/59 bugs) |
+| Feedback / answer_reports submissions | 0 each (selectors didn't fire — needs investigation) |
+
+### Methodology bugs to fix before next chaos run
+
+1. **Exam-mode `appIdx` detection is wrong.** Bot clicks `start-mock` → exam mode. In exam mode `data-state="correct"` is set on the **picked** option, not the answer key (per `src/ui/quiz-view.js:511`). So `appIdx === aiIdx` always, and the disagreement-count is meaningless. **Fix**: switch ensureOnQuiz to prefer `start-sd` (sudden-death single-Q, non-exam mode) so `data-state="correct"` reflects `q.c`. Or detect both `correct` AND `correct-unchosen` since the unchosen-but-correct option carries the actual key.
+2. **38% AI parse-error rate** = Sonnet sometimes wraps strict-JSON in code fences or adds prose. **Fix**: tolerant JSON extractor (regex-strip `^```json` and `^```` fences before parsing) + on parse-fail issue a single repair call with the raw text and "extract just the JSON".
+3. **0 source-checks fired** = the citation regex `/(Goroll|Harrison|Nelson|Lerner|הר['"]י|AFP)\s*…\s*\d{1,3}/` never matched. Either explanations don't carry these patterns at the moment of capture, or `extractExplanation` (`.card` first innerText) doesn't reach the citation paragraph. **Fix**: extract explanation more reliably (look for the explanation card by data-attribute or sibling-of-options), and broaden regex.
+4. **Feedback / answer_reports selectors didn't fire**. The `[data-action*="feedback"]` / `[data-action*="report"]` greps probably miss the actual v1.21.16 submission paths. **Fix**: read FM's current source for canonical action names before next run.
+5. **Bot wrote 0 rows to ALL FOUR cloud-write tables** (`mishpacha_leaderboard`, `mishpacha_feedback`, `mishpacha_backups`, `answer_reports`) per web-Claude SELECT verification. Two competing hypotheses: (a) `start-mock` mode never fires `submitLeaderboardScore` / `cloudBackup` hooks (only fires on session-end events the bot doesn't trigger); (b) the same RLS-class bug that hits real users (sb_publishable_* + direct table POST = silent 401 — see top-line leaderboard finding above) blocks the writes. **Fix for v4**: at session end, force a manual `showLeaderboard()` call and a manual `cloudBackup()` trigger via `[data-action="cloud-backup"]` / equivalent — actually exercise those paths so we can disambiguate (a) vs (b).
+
+### "Why I defaulted to 2 workers initially" — captured per user ask
+
+For the FIRST chaos run today (v1, killed before completion), I used `CHAOS_USERS=2` because that's the bot's default (`Math.max(1, Number(process.env.CHAOS_USERS || 2))`) and the smoke command snippet propagated it. **I did NOT make a deliberate engineering call** — I copied the default and never reconsidered. The honest cost: rare-bug crash-discovery coverage was ~1/15 the v1.21.13 baseline (7h × 15 users) for that pass. The user surfaced this immediately ("Why 2 bots instead of 15") and corrected to 10 × 30 min for v3.
+
+**Lesson for the bot defaults file (next chaos refactor):** change the default in `chaos-doctor-bot.mjs` from `users: 2` to `users: 10`, OR make it explicit-required-no-default so future-me has to specify. The default-of-least-resistance bias is a real failure mode — the cure is to remove the convenient default.
+
+### The 1 unique Sev-3 candidate — clean methodology false-positive (NOT A BUG)
+
+**The question is fine. The bot was wrong. The AI judge then reasoned coherently against the wrong premise.** That nuance matters for any future reader skimming this entry: do not infer that idx=853 was ever suspect — it was not. The 7 flags were a chain of bot/detector failures upstream of any data, and they had zero contact with the question's content quality.
+
+After lookup against `data/questions.json`, the question is **idx=853** (tag `2025-Jun`, ti=20).
+
+| Field | Verbatim |
+|---|---|
+| Options | [0] annual mammography 50-75 (distractor) · [1] self-exam every 6mo from 30 (distractor) · [2] add US to every mammo (distractor) · **[3] "בגילאי 49-40 אין המלצה גורפת לביצוע ממוגרפיה עקב שכיחות גבוהה של תוצאות חיוביות כזבניות"** |
+| `c` / `c_accept` | **3 / [3]** — option D is the answer key |
+| Explanation | "המלצות הסקר הישראליות קובעות ממוגרפיה **דו-שנתית** (biennial) בגילאי 50-74…" — already correctly states biennial |
+
+The answer key is D (about ages 40-49), and the explanation explicitly says biennial for 50-74. Both align with the Israeli Task Force on Health Promotion & Preventive Medicine's actual recommendation.
+
+**The 7 AI-judge flags were a downstream cascade of methodology bug #1 (exam-mode `appIdx` detection):**
+1. Bot picked option C (idx 2 = "add US to every mammogram") — wrong.
+2. Bot clicked C; in exam mode, FM renders the *picked* option (not the *correct* option) with `data-state="correct"`.
+3. My flawed `detectAppCorrectIdx` returned `appIdx=2` and reported it to the judge AI as "the app's correct answer is C."
+4. Judge AI then reasoned about "app claims C is correct" — but C says "add US to every mammo," which has nothing to do with annual-vs-biennial.
+5. Judge AI got confused trying to reconcile that, and ended up critiquing option A's "annual" wording while *believing* it was critiquing C. Its 62-82% confidence reflects its own confusion, not real medical disagreement with the question.
+
+**Lesson for the v4 chaos run:** with `start-sd` (sudden-death, non-exam) mode, `data-state="correct-unchosen"` will mark the actual answer key when the bot picks wrong. Then `appIdx` will be trustworthy and the judge will reason on real data, not bot-induced false premise.
+
+No data edit needed and none should be implied. The artifact at `chaos-reports/upgraded-run/full/flagged_for_review.json` is preserved as a methodology-bug case study, not as a question-quality case.
+
+### Cost-baseline data point for future runs
+
+$5.17 / 585 Qs ≈ **$0.009/Q** on Sonnet 4.6 with 2-3 calls/Q (pick + judge + occasional source-check) at ~1,500 input tokens / Q. Useful for budgeting future doctor-bot runs:
+- 1h × 15 users × ~80 Qs/h/worker ≈ 1,200 Qs ≈ **$11**
+- 6h × 15 users overnight ≈ ~7,000 Qs ≈ **$65**
+
+Pricing scales linearly. The dominant cost is the judge call (longer prompt with explanation snippet); pick alone is ~30% of total.
+
+### Operational lessons captured
+
+- **Two distinct "dirty file but git diff is empty" classes hit this session — labeled separately so a future reader doesn't conflate them:**
+
+  - **Class (a) — *phantom*** — hit the **13-file revert** at session start. Files showed `M` in `git status` but `git diff -w --ignore-cr-at-eol` was empty. There was no committed content for these "edits"; git's stat cache was simply lying. Self-cleared (or `git update-index --refresh` clears it). **Investigation of root cause is warranted only for this class** — possibilities: file-watcher / sync tool / Windows mtime drift. Did not chase per "log it, don't hunt" instruction.
+
+  - **Class (b) — *real-but-pre-pulled*** — hit `src/features/auth.js`. File showed `M` in `git status`, but `git diff` was empty. Unlike (a), the file *did* contain real recent edits — they were just **already in HEAD** because commit `b379011` (v1.21.16, PR #39 "auth-error UX port from ward-helper PR #100") had landed during the session. The dirty marker was stale stat info sitting on top of already-committed content. `git update-index --refresh` cleared it because the on-disk content matched HEAD, but the underlying cause was different from (a): a fast-forward pulled new content under a still-cached stat from before the pull.
+
+  - Both classes clear identically with `git update-index --refresh`. But the diagnostic stories are distinct: (a) is "git is hallucinating," (b) is "git's stat cache lagged behind a legitimate pull." Don't conflate them in a runbook — the remediation is the same but the root-cause hunt is only meaningful for (a).
+- **Selector drift between v1.21.15 and v1.21.16** broke the bot mid-build: stem class `.heb` → `h2.quiz-question`; check `sd-check` → `check-answer`; next `sd-next` → `next-q`. Bot now tries both via OR-selector. **For next chaos run, grep the live source first** rather than relying on cached source from an earlier read.
+- **Pipeline `tee` exit-code noise**: my launch command piped `node | tee stdout.log` but the report dir didn't exist when tee opened the file → tee exit 1 → bg task notification said "failed" even though node completed cleanly. **Fix for next launch**: `mkdir -p` the dir before launching, or drop the `tee` (the bot writes its own report).
+- **`start-mock` is not the right mode for AI-judge runs** — see methodology bug #1. Sudden-death mode is the correct fit because it reveals the answer key per question.
+
+### Run artifacts preserved
+
+| Path | Purpose |
+|---|---|
+| `chaos-reports/upgraded-run/full/chaos-doctor-2026-05-07T18-50-35-457Z.{json,md}` | Final aggregate report |
+| `chaos-reports/upgraded-run/full/medical_findings_ai.jsonl` | 585 per-Q AI verdicts (pick + judge + optional source) |
+| `chaos-reports/upgraded-run/full/flagged_for_review.json` | 7 judge-flagged occurrences of the 1 unique Sev-3 candidate |
+| `chaos-reports/upgraded-run/full/worker-*-pageerror.png` | None (zero pageerrors) |
+| `chaos-reports/upgraded-run/full/supabase-cleanup.sql` | Timestamp-based DELETE block, ROLLBACK default. **UNEXECUTED — no rows.** Web Claude verified via Supabase MCP: 0 rows across all 4 tables (`mishpacha_leaderboard`, `mishpacha_feedback`, `mishpacha_backups`, `answer_reports`) for the chaos window. Bot's write-path observations were correct; nothing landed, nothing to clean. SQL kept as a methodology artifact for future runs that DO produce rows. |
+| `chaos-reports/full-run-v1-killed-at-33min/` | v1 (Geri-style click bot) partial data, 110 screenshots, all action-error |
+| `scripts/chaos-live-bot-v2.mjs` | v2 click-bot (human-like timing, FM-aware) |
+| `scripts/chaos-doctor-bot.mjs` | v3 doctor-bot (AI-judge: pick / judge / source-check) |
+
+### Open follow-ups (NOT shipped tonight)
+
+| Item | Why deferred |
+|---|---|
+| **Mammography Q (idx=853) answer-key review** | RESOLVED — not a bug. Answer key D + biennial-correct explanation already match Israeli Task Force. The 7 AI flags were methodology-bug #1 artifact. No action. |
+| **Methodology bug fixes for v4 doctor-bot** | Now 5 items (mode, JSON parse, source regex, feedback selectors, force cloud-write triggers at session end). Code-only, ~2h work. Queue for next chaos session — do NOT start v4 without explicit go. |
+| **Supabase chaos-row cleanup** | RESOLVED — bot wrote 0 rows; web Claude verified 0 rows in all 4 tables for the chaos window. SQL preserved as methodology artifact. |
+| **Cross-sibling leaderboard zero-write bug** | Top-line section above. 1-day FM+Pnimit RPC port + schema-converge work. |
+
+---
+
 ## 2026-05-07 — v1.21.15 audit-fix-deploy (LCP fix + dev manifest cleanup)
 
 **Trigger:** user-supplied pre-rooted bug list from issues #25 (LCP killer) + #26 (a11y progressbar) + ad-hoc dev sw.js phantom audit. Single-lane FM deploy (web Claude was working other repos).
