@@ -436,6 +436,24 @@ Validate the APP's claimed answer ${appLetter} against board-level family-medici
     log.actions.push({ at: nowIso(), type: 'next' });
   }
   await sleep(rand(800, 1700));
+  // Leaderboard hook: every 25th successful answer per worker, trigger
+  // window.showLeaderboard() which internally calls submitLeaderboardScore.
+  // The RPC needs ≥20 answered + a non-null calcEstScore — we hit both
+  // at this point. No-op if window.showLeaderboard not bound (Geri-style).
+  log._lbCount = (log._lbCount || 0) + 1;
+  if (log._lbCount % 25 === 0) {
+    try {
+      const fired = await page.evaluate(() => {
+        if (typeof window.showLeaderboard === 'function') {
+          window.showLeaderboard();
+          return true;
+        }
+        return false;
+      });
+      if (fired) log.actions.push({ at: nowIso(), type: 'leaderboard-submit', after: log._lbCount });
+    } catch (_) { /* swallow — not critical to bot run */ }
+    await sleep(rand(800, 1500));
+  }
   return { advanced: true, stemHash };
 }
 
