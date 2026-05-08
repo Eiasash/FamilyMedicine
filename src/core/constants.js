@@ -55,10 +55,13 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.21.17';
-export const BUILD_HASH='1061q-v1.21.17';
+export const APP_VERSION='1.21.18';
+export const BUILD_HASH='1061q-v1.21.18';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.21.18': [
+    '🪟 window.submitLeaderboardScore exposed alongside existing window.showLeaderboard — enables programmatic submit (chaos-bot leaderboard hook) without going through the open-modal-then-submit path that returns early when #leaderboard-box DOM is not mounted.',
+  ],
   '1.21.17': [
     '🏆 Leaderboard write goes through SECURITY DEFINER RPC (mishpacha_leaderboard_upsert). Old direct-POST path silently failed — root cause was ts column type mismatch (bigint epoch ms vs ISO string sent by client), not the sb_publishable_* RLS issue the v3 chaos cleanup commit guessed at. RPC accepts ts as ISO string, casts server-side to bigint epoch. accuracy still computed server-side (real-typed in this app, not generated). 0 historical rows in mishpacha_leaderboard means no migration concern. Sibling-aligned with pnimit/shlav RPCs.',
   ],
