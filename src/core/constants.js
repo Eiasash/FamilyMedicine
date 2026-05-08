@@ -55,10 +55,13 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.21.16';
-export const BUILD_HASH='1061q-v1.21.16';
+export const APP_VERSION='1.21.17';
+export const BUILD_HASH='1061q-v1.21.17';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.21.17': [
+    '🏆 Leaderboard write goes through SECURITY DEFINER RPC (mishpacha_leaderboard_upsert). Old direct-POST path silently failed — root cause was ts column type mismatch (bigint epoch ms vs ISO string sent by client), not the sb_publishable_* RLS issue the v3 chaos cleanup commit guessed at. RPC accepts ts as ISO string, casts server-side to bigint epoch. accuracy still computed server-side (real-typed in this app, not generated). 0 historical rows in mishpacha_leaderboard means no migration concern. Sibling-aligned with pnimit/shlav RPCs.',
+  ],
   '1.21.16': [
     '🔑 שגיאות auth מציגות כעת קוד + הודעה במקום `שגיאה` ריק — port מ-ward-helper PR #100 (AccountSection.tsx ChangePasswordForm). _formatAuthError helper חדש ב-src/features/auth.js נקרא משלושת הזרימות (login / register / change-password) עם per-call contextMap לקודים מוכרים (invalid_credentials → "שם משתמש או סיסמה שגויים", invalid_password → "סיסמה ישנה שגויה", weak_password → "סיסמה חדשה חלשה — לפחות 6 תווים, לא רק ספרות.", network/http_5xx → "בעיית רשת. בדוק חיבור ונסה שוב."), נופל אחורה ל-`שגיאה (${code}): ${message}` עבור הכול. גם תיקן את ה-toast ב-_handleChangePassword מ-tone="info" ל-"error" (היה צובע כשלי סיסמה כחול-אינפו במקום אדום).',
     '🍞 Diagnostic breadcrumbs — הוספת console.info(`<flow>.start`/`.ok`) ו-console.warn(`<flow>.err`, code, message) ב-_handleLogin / _handleRegister / _handleChangePassword. נלכדים אוטומטית ב-debug console buffer (5-tap top-right) — מאפשר לדבג כשלי auth מהפקה ללא DevTools.',
