@@ -14,3 +14,15 @@ data/questions.json.bak-*
 # AFP / הר"י extraction pipeline — keep committed summaries, ignore raw pdftotext dumps
 docs/references/afp_hari/.raw/
 docs/references/afp_hari/**/.raw/
+
+# Chaos bot run artifacts — large per-run jsonl + screenshots, regenerable
+chaos-reports/v4-overnight-*/
+chaos-reports/upgraded-run/
+chaos-reports/full-run-v1-killed-at-33min/
+chaos-reports/smoke*/
+chaos-reports/*.log
+chaos-reports/*.jsonl
+
+# Auto-audit / triage snapshots — local-only working state
+.audit_logs/
+*.local-backup.json
