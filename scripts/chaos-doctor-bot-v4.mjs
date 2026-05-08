@@ -180,7 +180,12 @@ async function extractQuestion(page) {
 }
 
 async function detectAppCorrectIdx(page) {
-  let okLoc = page.locator('[data-action="pick"][data-state="correct"]');
+  // FM dist bundle marks the correct option with one of two values:
+  //   data-state="correct"          → bot picked the right answer
+  //   data-state="correct-unchosen"  → bot picked WRONG (most board questions)
+  // v4 originally only matched "correct", missing 80%+ of records when the bot
+  // disagreed with the app. Match both. .ok is the older sd-path fallback.
+  let okLoc = page.locator('[data-action="pick"][data-state="correct"], [data-action="pick"][data-state="correct-unchosen"]');
   if ((await okLoc.count().catch(() => 0)) === 0) {
     okLoc = page.locator('[data-action="pick"].ok');
   }
