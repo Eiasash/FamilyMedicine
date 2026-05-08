@@ -29,6 +29,21 @@ Sibling PWA to **Shlav A Mega** (geriatrics) and **Pnimit Mega** (internal medic
 - **v1.8.0 username/password accounts** — Supabase pgcrypto bcrypt RPCs (`src/services/supabaseAuth.js`); replaces magic-link-only flow.
 - **v1.7.x debug console + AI-call hardening** — built-in 5-tap debug console (`src/debug/console.js`, persisted to localStorage), and per-call AbortController + 30s safety timeout in `callAI` (preventive port from Geriatrics v10.38.2).
 
+## Chaos doctor-bot v4 (2026-05-08)
+
+`scripts/chaos-doctor-bot-v4.mjs` — board-grade Israeli family-medicine physician chaos bot, replaces v3's contract bug. Per-question: AI picks A/B/C/D, app reveals correct option, AI judge validates the **app's** answer (not blends with its own pick). v3's flaw was 100% appIdx=null because it entered the app via `start-mock` (exam mode hides the answer-reveal); v4 uses practice mode + matches both `data-state="correct"` and `data-state="correct-unchosen"`.
+
+- **Pure helper**: `scripts/lib/extractJson.mjs` — brace-balanced JSON extractor with markdown-fence stripping. 10 unit tests in `tests/chaosBotV4ExtractJson.test.js`.
+- **Run**: `CLAUDE_API_KEY=$key CHAOS_USERS=10 CHAOS_DURATION_MS=21600000 CHAOS_HEADLESS=1 CHAOS_COST_CAP_USD=8 node scripts/chaos-doctor-bot-v4.mjs`
+- **Output**: `chaos-reports/v4-overnight-<timestamp>/medical_findings_ai_v4.jsonl` (one JSON object per question with appIdx, aiIdx, judge verdict, optional source-check).
+- **Cost-cap kill switch**: `CHAOS_COST_CAP_USD` env (default $25) — workers self-terminate when ledger crosses cap.
+- **Sibling**: `InternalMedicine/scripts/chaos-doctor-bot-v4.mjs` (same lib, IM-specific selectors: `.explain-box` instead of `.quiz-feedback__body`, quiz-tab navigation step).
+- **First overnight run** 2026-05-08: surfaced 46 distinct flagged FM questions where AI judge said the app's answer was wrong. Top hits include internal explanation-vs-c-index contradictions (NNT math, ALI compression-stockings vs heparin) and board-textbook disagreements. See `~/repos/FINDINGS_v4_2026-05-08.md`.
+
+## Leaderboard RPC (v1.21.17)
+
+`mishpacha_leaderboard_upsert(p_uid,p_answered,p_correct,p_streak,p_readiness,p_ts)` — SECURITY DEFINER RPC at `/rest/v1/rpc/mishpacha_leaderboard_upsert`. Replaces direct `/rest/v1/mishpacha_leaderboard` POST that silently failed under the new column-type mismatch (table `ts` is `bigint` epoch but client sent ISO string). RPC accepts ISO and casts server-side. Migration: `supabase/migrations/0003_leaderboard_upsert.sql`. Sibling-aligned with pnimit/shlav RPCs.
+
 ## v1.3.0 — fork-bug remediation (CRITICAL)
 Before v1.3.0, 5 of 7 exam sessions (2021-Jun, 2022-Jun, 2023-Jun, 2024-May, 2024-Sep) were accidentally ingested from **Internal Medicine** PDFs rather than Family Medicine — a copy-paste residue from the initial Pnimit fork. ~593 of 943 Qs were IM content masquerading as FM. v1.3.0 re-ingested all 5 sessions from correct FM PDFs via Sonnet-4.5 image-based extraction + official IMA post-appeal answer keys (~$11, ~30 min). 2025-Jun was cosmetically refreshed (data was FM but PDF was IM). EXAM_FREQ + IMA_WEIGHTS recalibrated for true 950-Q FM corpus — new emphasis: Peds-Acute 12%, MSK 11%, EBM 8%, Geri 5%. All 18 replaced PDFs verified "רפואת המשפחה" not "רפואה פנימית".
 
