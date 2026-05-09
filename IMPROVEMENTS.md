@@ -1,5 +1,44 @@
 # IMPROVEMENTS — mishpacha-mega (Family Medicine)
 
+## 2026-05-10 — audit-fix-deploy § C pass (clean — no version bump)
+
+**Result: AUDIT CLEAN.** No code changes shipped. No version bump needed. Live verify-deploy PASSES at v1.21.18.
+
+**Findings (all green):**
+
+| Check | Expected | Actual | Status |
+|---|---|---|---|
+| Version trinity | constants.js APP_VERSION === sw.js CACHE === package.json | All three at `1.21.18` | PASS |
+| BUILD_HASH (FM quartet) | `<Qcount>q-v<APP_VERSION>` | `1061q-v1.21.18` | PASS |
+| Q count | matches BUILD_HASH | 1061 | PASS |
+| Per-tag breakdown | 7 sessions + FM-Core | 2020/2021-Jun/2022-Jun/2023-Jun=150 each, 2024-May/2024-Sep=100 each, 2025-Jun=150, FM-Core=111 | PASS |
+| Topic coverage | every ti 0..26 ≥1, flag <3 | All 27 topics ≥16 Qs (min ti=19 at 16, max ti=24 at 115) | PASS |
+| Tests | ≥315 | **845 across 53 files**, all passing | PASS |
+| `shared/fsrs.js` sibling contract | git hash-object = `89aa3940a942c03201d9d89db02a90665b2910a8` | matches Geriatrics + InternalMedicine + FamilyMedicine | PASS |
+| Build → dist/ | all assets present | data/, shared/, exams/ (67), harrison/ (69), goroll/ (1), docs/references/afp_hari/ (566) | PASS |
+| `dist/sw.js` CACHE | `mishpacha-v1.21.18` | OK (verify-dist-sw.cjs: 19 cached paths, 6 shell + 7 critical + 6 lazy) | PASS |
+| Live verify-deploy.sh | exit 0 | bundle BUILD_HASH `q-v1.21.18` PASS + SW CACHE `mishpacha-v1.21.18` PASS | PASS |
+| TODO/FIXME in src/ | none | none | PASS |
+| console.log leaks (non-DEV) | none | none | PASS |
+| `dir="rtl"` in src/ui/ | prefer `dir="auto"` | none found | PASS |
+| `render()` detach antipattern (`onchange/onclick=...;render()`) | none | none | PASS |
+| Skipped tests (`.skip(`/`.todo(`) | none | none | PASS |
+
+**Skill text drift surfaced (not blocking — informational):**
+The audit-fix-deploy SKILL.md § C still says: `950 questions … 2021-Jun=149, 2022-Jun=147, 2023-Jun=147 … 398 tests across 26 files … APP_VERSION='1.3.4'`. Actual reality is 1061 Qs / 150 per year for those three / 845 tests across 53 files / v1.21.18. The repo has moved 11 minor versions and ~447 tests beyond what the skill document remembers. Per the canonical pipeline, that is a skill-text update concern, not a repo concern.
+
+**Currency drift in CLAUDE.md (fixed in this pass):**
+- Test count was `49 / 801`, updated to actual `53 / 845`.
+- Date stamp `08/05/26` → `10/05/26`.
+- `shared/fsrs.js` md5 reference was the pre-LF-normalization `cea66a0435…`; updated to current canonical (`git hash-object 89aa3940…`, md5 `71f9f2d4…` post-2026-04-22 LF normalization, with the old md5 retained for historical reference).
+
+**Why no code change shipped:** the FM repo is genuinely in a clean state. v1.21.18 closed the chaos-bot-v4 served↔canonical option-frame bug (PR #44, 7f1304c, 2026-05-08). No new audit-finding to address. Adding tests "for the sake of testing" violates Working Rule 2 ("Minimum code that solves the problem. Nothing speculative.") — the existing 845-test floor already exceeds the 315 baseline by 2.7× and covers every regression guard, FSRS boundary, parser bleed, leaderboard hook, and chaos-bot extractor.
+
+**Open follow-ups (not addressed this pass — pre-existing):**
+- Skill-text drift in `~/.claude/skills/audit-fix-deploy/SKILL.md` § C (line 399, 401, 402, 415-418).
+- Pre-existing `// safe-innerhtml:` annotation TODO in `src/ai/explain.js:29` and `src/quiz/engine.js:197` (per CLAUDE.md "Pending work" — not wired into CI, doesn't block deploy).
+- Schema converge for the cross-sibling leaderboard table-shape mismatch (separate workstream — see 2026-05-07 entry below).
+
 ## 2026-05-07 (evening) — Cross-sibling leaderboard zero-write bug (top-line, NOT chaos-related)
 
 Discovered during the chaos-run cleanup verification (web Claude SELECT counts via Supabase MCP). Independent of the chaos work itself — surfacing here as a strategic finding.
