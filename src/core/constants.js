@@ -55,10 +55,13 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.21.22';
-export const BUILD_HASH='1061q-v1.21.22';
+export const APP_VERSION='1.21.23';
+export const BUILD_HASH='1061q-v1.21.23';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.21.23': [
+    '📚 Citation backfill batch 2 — 27 Diabetes (ti=6) explanations gain a verified Goroll 8e source citation. 21 Qs cite פרק 102 (Approach to the Patient with Diabetes Mellitus, pp 2893-2992) for management/complications topics; 6 Qs cite פרק 93 (Screening for Type 2 Diabetes Mellitus, pp 2742-2769) for diagnostic-criteria/screening/prevention topics. Each chapter mapping was anchor-verified against locally extracted Goroll 8e PDF text BEFORE the citation was appended (per release-invariant §4). 4 of 31 ti=6 uncited Qs intentionally SKIPPED — no anchor found in Goroll DM section: idx=112 (insulinoma — Goroll Ch 99 hypoglycemia territory), idx=485 (Fournier-gangrene SGLT2i side effect — FDA warning post-Goroll-8e), idx=505 (HIV+DM screening — Goroll has no HIV cross-ref in Ch 93), idx=886 (CGM Time-in-Range targets — modern ADA target not in Goroll body or refs). Format follows the existing pilot pattern ("מקור: Goroll 8e פרק N."). Append-only on q.e — no q.c, q.o, or pre-existing q.e content modified. tests/citationCoveragePilot.test.js extended with batch-2 pinning (DM_BATCH_CITATIONS) so the 27 specific cites cannot silently regress. Cumulative campaign progress: 16 (HTN/Lipid v1.21.22) + 27 (DM v1.21.23) = 43 of ~957 uncited Qs verified-cited (4.5% of remaining gap).',
+  ],
   '1.21.22': [
     '📚 Citation backfill pilot — 16 HTN/Lipid (ti=2) explanations gain a verified Goroll 8e source citation. 12 Qs cite פרק 26 (Management of Hypertension), 4 cite פרק 19 (Evaluation of Hypertension). Each chapter mapping was anchor-verified against the locally extracted Goroll 8e PDF text (chapter pp 469-497 + pp 676-735) before the cite was appended — anchors include thiazide/glucose, hypertensive urgency, non-dipper / nocturnal BP, white-coat / masked HTN, DASH / lifestyle / aerobic exercise, sexual dysfunction by class, resistant HTN + OSA, beta-blocker in elderly. Format follows the existing v1.21.x pattern ("מקור: Goroll 8e פרק N."). No q.c, q.o, or pre-existing q.e content modified — append-only single sentence at the tail. New regression test (tests/citationCoveragePilot.test.js) pins the 16 specific Goroll citations + the v1.21.21 baseline so future content edits can\'t silently regress them. This is the first batch of a planned multi-session campaign — see .audit_logs/fm_citation_backfill_pilot_2026-05-10.md for the per-Q anchor evidence and the structural ceiling on remaining clusters (peds ti=23/24/25 ~158 Qs and EBM ti=26 ~73 Qs cannot be cited from Goroll because the textbook is adult-internal; Nelson + AFP indices needed for those).',
   ],
