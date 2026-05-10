@@ -55,10 +55,13 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.21.26';
-export const BUILD_HASH='1061q-v1.21.26';
+export const APP_VERSION='1.21.27';
+export const BUILD_HASH='1061q-v1.21.27';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.21.27': [
+    '♿ Header toolbar dark-on-dark fix — 4 of 5 `.dm-btn` toolbar buttons (🌓 🕯️ ⚙️ ❓) were rendering at default browser ButtonText color (typically `rgb(0,0,0)`) on the .hdr dark slate gradient (#0f172a→#1e293b). Contrast ~1:1 → invisible buttons. Only the 👤 account button had explicit `color:#fff` inline. Browser-tested 2026-05-10 at 390×844 via Playwright. Fix: added `color:#fff; background:rgba(255,255,255,0.12); border-radius:50%; width:32px; height:32px;` to the .dm-btn rule + a `:hover` opacity bump. Sibling-aligned with Geri v10.64.90 (which had the same bug class — slate-800 text on slate-800 gradient end-stop) and IM v10.4.24 (PR forthcoming, identical fix in src/styles/layout.css line 6). Trinity bumped 1.21.26 → 1.21.27.',
+  ],
   '1.21.26': [
     '♿ Mobile out-of-bounds fix — `.skip-link` no longer uses `left:-9999px`. Browser-tested 2026-05-10 at 390×844 viewport via Playwright: legacy off-screen-positioning inflated `documentElement.scrollWidth` to 10385px (= 9999 abs(x) + 386 body width, exact). Body had `overflow-x:hidden` so users did not see lateral scroll, but `<html>` had `overflow-x:visible` so the phantom width still affected Lighthouse audits, pinch-zoom math, and any JS reading scrollWidth. Switched `src/styles/utilities.css` to the WCAG canonical visually-hidden clip pattern (`width:1px; height:1px; clip:rect(0,0,0,0); overflow:hidden; white-space:nowrap`); `:focus` restores `width:auto; height:auto; clip:auto`. Sibling-aligned with Geri v10.64.89 + IM v10.4.23. 3 new regression guards in tests/a11yContrast2026-05-10.test.js asserting (1) no `left:-\\d{3,}` literal in `.skip-link` rule, (2) `clip:rect(0,0,0,0)` present, (3) `:focus` restores width/height/clip.',
   ],
