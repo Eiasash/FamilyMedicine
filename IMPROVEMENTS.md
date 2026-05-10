@@ -1,5 +1,99 @@
 # IMPROVEMENTS — mishpacha-mega (Family Medicine)
 
+## 2026-05-10 — ESLint 10 warning categorization (audit-only memo)
+
+**Read-only triage of the lint surface revealed by PR #46 (Vite 8 + ESLint 10 majors upgrade).** No source-code edits in this pass. Goal: size the drain, identify what can be auto-fixed, and surface what cannot.
+
+**Actual counts** (from `npx eslint . --format json` on commit at `claude/term-lint-categorization-audit-2026-05-10` head):
+
+| Severity | Count |
+|---|---|
+| Warnings | 187 |
+| Errors | 63 |
+| **Total** | **250** |
+
+(The brief mentioned "187 warnings + 7 errors" — the warning count matches; the error count is 63, not 7. Worth flagging for the next audit pass.)
+
+### By rule
+
+| Rule | Severity | Count | Top files |
+|---|---|---|---|
+| `no-unused-vars` | error | 185 | `src/ui/app.js` (86), `src/features/cloud.js` (15), `src/ui/library-view.js` (13), `src/ui/track-view.js` (13), `src/quiz/engine.js` (9) |
+| `no-undef` | error | 51 | `sw.js` (34), `chaos-reports/full-run-v1-killed-at-33min/aggregate-findings.cjs` (9), `chaos-reports/full-run-v1-killed-at-33min/medical-content-scan.cjs` (8) |
+| `no-useless-escape` | error | 9 | `chaos-reports/full-run-v1-killed-at-33min/medical-content-scan.cjs` (4), `tests/textbookChapters.test.js` (3), `src/core/constants.js` (2) |
+| `prefer-const` | warn | 4 | `src/core/state.js`, `src/features/cloud.js`, `src/quiz/engine.js`, `src/ui/library-view.js` (1 each) |
+| `no-empty` | error | 1 | `shared/install-promo.js` |
+
+**Note on severity vs warning/error split:** ESLint 10's recommended config promotes `no-unused-vars`, `no-undef`, `no-useless-escape`, `no-empty` to **error** by default. `prefer-const` is the only true warn-level rule firing. CI is presumably green only because lint isn't gating CI yet.
+
+### `no-unused-vars` subcategorization (185 total)
+
+| Sub-pattern | Count | Auto-fixable? |
+|---|---|---|
+| `unused-binding` (`'X' is defined but never used`) | 170 | No — ESLint 10 does not auto-fix declared variables (semantically unsafe — could hide intentional declarations or destructuring patterns). |
+| `assigned-but-unused` (`'X' is assigned a value but never used`) | 9 | No |
+| `unused-arg` (`'X' is defined but never used. Allowed unused args must match /^_/u`) | 6 | No — but trivially satisfiable by renaming param to `_X` |
+
+**`no-undef` is environment-config noise, not real bugs:**
+- `sw.js` (34) — uses `self`, `caches`, `fetch`, `clients`, `URL`, `indexedDB`. Service-worker globals; needs `env: { serviceworker: true }` (or `globals: globals.serviceworker`) in `eslint.config.js`.
+- `chaos-reports/full-run-v1-killed-at-33min/*.cjs` (17) — uses `__dirname`, `console`, `process`. Node CommonJS globals; either ignore `chaos-reports/**` (it's generated/legacy report tooling) or add a node-globals override for `*.cjs`.
+
+### Auto-fix reality check
+
+`npx eslint . --fix` will only clear **4 warnings** (the `prefer-const` set). Per ESLint's `fix` field on each message:
+
+| Rule | Reported | Has `fix` payload | Has only `suggestions` |
+|---|---|---|---|
+| `prefer-const` | 4 | 4 | 0 |
+| `no-useless-escape` | 9 | 0 | 9 (suggestions only — needs `--fix-suggestions` or manual review per regex site) |
+| `no-empty` | 1 | 0 | 1 |
+| `no-unused-vars` | 185 | 0 | 0 |
+| `no-undef` | 51 | 0 | 0 |
+
+`no-useless-escape` is *not* auto-applied by `--fix` because the regex semantics can change (`\.` vs `.` in a character class, `\/` vs `/` outside delimiters). Each site needs eyeball review.
+
+### By drain difficulty
+
+| Bucket | Count | Effort estimate |
+|---|---|---|
+| **TRIVIAL** — `prefer-const` (auto-fix), `no-undef` (config-only fix in `eslint.config.js`) | 4 + 51 = **55** | ~10 min total: one `--fix` invocation + one config-file edit (sw.js → serviceworker globals; `chaos-reports/**` → ignore or node-cjs override) |
+| **SAFE-MANUAL** — `unused-arg` rename to `_X`, `assigned-but-unused` deletion | 6 + 9 = **15** | ~30s/site = **~8 min**, but needs human eyes on each "assigned-but-unused" to confirm the side-effect-free RHS isn't load-bearing (e.g. lazy getter) |
+| **MEDIUM-MANUAL** — `unused-binding` (declared but never read; could be unused imports / dead exports / leftover destructuring / catch params) | **170** | ~1 min/site = **~170 min** if treated as bulk delete; faster if grouped by file (86 sit in `src/ui/app.js` alone — likely many obsoleted handler imports) |
+| **RISKY** — `no-useless-escape` in regex contexts (`src/core/constants.js` is hot path; `tests/textbookChapters.test.js` parses real Hebrew refs) | **9** | ~5 min/site = **~45 min**, must check that the regex still matches the same strings before & after each escape change. Regex over Hebrew/medical-text is exactly where "harmless" escape removals silently change matches. |
+| **DEFER** — `no-empty` in `shared/install-promo.js:82` | **1** | <2 min, but `shared/install-promo.js` is a workspace-level cross-repo file — see `.shared/README.md`. Fix in `.shared/` and propagate, not in FM in isolation. |
+
+### Recommended drain strategy
+
+| PR | Scope | Risk | Reviewer cost |
+|---|---|---|---|
+| **PR1 (autonomous)** | `eslint.config.js` only — add `serviceworker` globals for `sw.js`, ignore `chaos-reports/**` (or add node-cjs override). Clears **51 `no-undef`** with zero source-code touch. | Low (config-only) | <2 min |
+| **PR2 (autonomous)** | `npx eslint . --fix` — clears **4 `prefer-const`** in 4 files. Diff is 4 `let → const` lines. | Trivial | <2 min |
+| **PR3 (semi-auto)** | Rename **6 `unused-arg`** params to `_<name>` per `Allowed unused args must match /^_/u` convention. Mechanical edit, but each site needs a glance to confirm the param is part of an externally-imposed signature (Promise constructor, event handler) rather than dead code. | Low | ~5 min |
+| **PR4 (semi-auto)** | Delete **9 `assigned-but-unused`** assignments. Each one is `const x = expr;` where `expr` may have side effects. Per-site spot check. | Medium | ~10 min |
+| **PR5 (manual, file-batched)** | Drain **170 `unused-binding`** by file — e.g. one PR for `src/ui/app.js` (86 sites), one for the long-tail (84 sites across ~15 files). Half the binding-only warnings are likely dead imports left over from the v1.21.x quiz-engine refactor. Visual diff per file. | Medium-Low (most are dead imports) | ~30 min/PR × 2 PRs |
+| **(deferred)** | **9 `no-useless-escape`** + **1 `no-empty`**. Per-site review only. `shared/install-promo.js` `no-empty` should land in `.shared/` first, then propagate to all 6 sibling repos in one coordinated bump. | Risky in regex context | Per-site, no batching |
+
+**Net**: PR1 + PR2 alone clear **55 of 250** (22%) for ~5 min of autonomous work and a near-zero-risk diff. PR3 + PR4 clear another **15 / 250** (6%) with ~15 min of light review. Bulk of the surface (170 unused bindings) is mechanical-but-volume work, best batched by file.
+
+### What I am NOT recommending
+
+- **Single mega-PR clearing all 250** — review fatigue, revert risk on a semantically-loaded rule like `no-unused-vars` where each "dead" binding could be a load-bearing destructuring slot (e.g. tuple position) or an intentional re-export.
+- **Forcing `--fix-suggestions`** on `no-useless-escape` — will silently change regex behavior in `src/core/constants.js` (hot path, AFP/Goroll/Nelson/Harrison ref parsers) and `tests/textbookChapters.test.js`. Each site needs to be eyeballed against the strings it's parsing.
+- **Bumping lint to a CI-gating step in this pass** — current state is that 250 lint reports do not block CI. Promoting lint-to-CI before draining the queue would mass-fail every existing PR. PR1+PR2 should land first; CI-gate is a separate later decision.
+- **Editing `shared/install-promo.js` in FM directly** — that file is workspace-shared per `.shared/README.md`. The `no-empty` fix needs to land in `.shared/install-promo.js` and be propagated to all 6 siblings in the same session, or `auto-audit` will open issues within 30 min.
+- **Touching `chaos-reports/**` source** — it's generated/checkpoint artifact tooling from a 33-min killed run, not production code. Cheaper to ignore-glob it than to drain it.
+
+### Mechanical reproducer for the next audit
+```bash
+cd C:\Users\User\repos\FamilyMedicine
+npx eslint . --format json > .fm_lint.json 2>/dev/null
+# then run .lint_summarize.py / .lint_subcat.py / .lint_fixable.py (transient scripts; not committed)
+```
+
+**No version bump.** **No quartet bump.** Memo-only PR; live verify-deploy still PASSES at v1.21.18.
+
+---
+
 ## 2026-05-10 — audit-fix-deploy § C pass (clean — no version bump)
 
 **Result: AUDIT CLEAN.** No code changes shipped. No version bump needed. Live verify-deploy PASSES at v1.21.18.
