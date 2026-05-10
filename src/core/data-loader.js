@@ -1,5 +1,6 @@
 import G from './globals.js';
 import { safeJSONParse, sanitize } from './utils.js';
+import { TOPICS } from './constants.js';
 
 // Data loader + data arrays — extracted from mishpacha-mega.html
 // Depends on: safeJSONParse (utils.js), sanitize (utils.js), takeWeeklySnapshot (still in HTML)
@@ -57,7 +58,6 @@ G._dataPromise = (async function loadDataArrays() {
     // notes.json is NOT aligned with TOPICS[] positional index (21/24 mismatches).
     // Match by normalized topic-name string (strip " — suffix", case-insensitive).
     try {
-      const { TOPICS } = await import('./constants.js');
       const normalize = s => String(s||'').split('—')[0].trim().toLowerCase();
       G.NOTES_BY_TI = {};
       const topicKeys = TOPICS.map(normalize);
