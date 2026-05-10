@@ -7,7 +7,7 @@ import { TOPIC_REF } from './track-view.js';
 import { submitReport } from '../features/cloud.js';
 import { buildPool } from '../quiz/engine.js';
 
-let sylSec='haz';
+const sylSec='haz';
 let _pendingAiQs=null; // temp storage for add-to-bank delegation
 const SYL_HAZ_EXCLUDED=new Set([2,3,4,5,6,34,62]);
 const SYL_HAZ=[];
