@@ -55,10 +55,13 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.21.19';
-export const BUILD_HASH='1061q-v1.21.19';
+export const APP_VERSION='1.21.20';
+export const BUILD_HASH='1061q-v1.21.20';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.21.20': [
+    '♿ Accessibility — port of Geri v10.64.82-87 a11y campaign patterns to FM. Live playwright re-audit on v1.21.19 found 5 actionable contrast violations (gradient-blindspot false positives on h1+dm-btns excluded). Six minimum-code edits: (1) <html dir="rtl"> added (was lang="he" without dir — same fix as Geri v10.64.82). (2) Skip-link bg #3b82f6 → #2563eb (3.68:1 → 4.78:1, WCAG AA pass). (3) Header "Family Medicine" subtitle inline color #d97706 → #92400e (3.07:1 amber-600 on yellow-50 → 7.14:1 amber-800 AAA). (4) #headerVer date span color #64748b → #cbd5e1 (slate-500 was 2.99:1 on the .hdr dark slate gradient → slate-300 6.13:1 strong AA). (5) Mishpacha-skin scoped override `html[data-skin="mishpacha"] .tabs button.on { color: #92400e }` — the geri-skin amber-700 pattern adapted for FM\'s mishpacha skin where --app-primary is amber-600 (#d97706) at 3.13:1 on white tabs. Dark-mode preserved via body.dark[data-skin="mishpacha"] override falling back to --app-primary. (6) .quiz-controls__label var(--color-fg-subtle) → var(--color-fg-muted) (3.27:1 → 6.49:1 AAA) — the subtle token (#8d8b80) is now reserved for decorative text only. Trinity bumped 1.21.19 → 1.21.20. Sibling-fork heads-up: same patterns may apply to Pnimit (also amber-themed in some surfaces) — separate audit needed before porting.',
+  ],
   '1.21.19': [
     '🧹 questions.json mechanical formatting cleanup — 3 character-level fixes flagged by comprehensive quality audit: idx 829 trailing space on q stripped, idx 100 ("FEV1/FVC% >0.7  FEV1") and idx 353 ("של  סרטן") collapsed internal double-space to single. Strict autofix scope only — no q.c flips, no q.e fabrication, no q.o[] semantic edits. See IMPROVEMENTS.md for the full audit findings: schema completeness clean across 1061 Qs, per-tag distribution matches CLAUDE.md spec, no per-topic underflow, source-citation coverage 17% by broad pattern (textbook/society/MoH/guideline) — the bulk of unsourced explanations are pedagogically substantive but uncited, not missing.',
   ],
