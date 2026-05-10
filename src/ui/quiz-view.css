@@ -56,7 +56,8 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   letter-spacing: 0.04em;
-  color: var(--color-fg-subtle);
+  /* v1.21.21 a11y fix: --color-fg-subtle (3.27:1) → --color-fg-muted (6.49:1 AAA), same pattern as quiz-controls__label. */
+  color: var(--color-fg-muted);
 }
 
 /* ── Filter bar (controls strip above the question) ───────────────────────── */
