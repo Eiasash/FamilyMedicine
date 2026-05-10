@@ -1,5 +1,63 @@
 # IMPROVEMENTS — mishpacha-mega (Family Medicine)
 
+## 2026-05-10 — FM source-citation backfill — BAILED (dataset unreliable)
+
+**Goal.** Use `.audit_logs/topic_analysis_2026-05-03/sources_extracted.csv` (advertised: "1231 source rows extracted from FM exam source-reference PDFs") to close the 83% citation-coverage gap surfaced in PR #53 (878/1061 FM Qs without recognizable source).
+
+**Bail decision: dataset is structurally unusable for per-Q citation backfill.** No `q.e` edits made. No follow-up batch backfill PR is recommended against this dataset — fix the upstream extractor first, or pull citations directly from the source-reference PDFs in a separate authorized workstream.
+
+### What is in `sources_extracted.csv`
+
+- 1231 rows, columns: `specialty, session, year, stage_or_track, source_pdf, question_number, answer_in_source_doc, reference_type, chapter, source_text`.
+- Reference-type distribution looks plausible at first glance: Goroll 492, AFP/Article 294, Nelson 154, Unclassified 118, Guideline/Law 81, ADA 45, Israeli preventive 22.
+- **But only 367/1231 rows (29.8%) populate `question_number` at all** — 864 rows have a citation string but no Q-linkage.
+
+### Why the 367 rows that DO have Q-numbers are still unusable (RTL parse bug)
+
+Cross-checked 5 sampled rows with `question_number` against the upstream PDF text in `inventory.csv`. All 5 are mis-parsed:
+
+| Row | Bot says | PDF actually says (from inventory `sample`) | Bot bug |
+|---|---|---|---|
+| 1 | q=202 (2020 exam) | n/a | impossible — 2020 FM has 150 Qs |
+| 2 | q=376, source="376 עמוד46 גורול פרק" | "1ב גורול פרק46 עמוד376" = Q1 ans-ב, Goroll ch46 p376 | grabbed PAGE NUMBER (376) as Q-num |
+| 3 | q=139, source="1397 עמ' 207 פרק 7 גורול מהדורה ב 2" | "2ב גורול מהדורה7 , פרק207 ,עמ ' 1397" = Q2, Goroll 7e ch207 p1397 | grabbed truncated page (1397→139) as Q-num |
+| 4 | q=124, source="1245 עמ' 973 עמוד 134 גורול פרק ד,א 3" | "3א,ד גורול פרק134 עמוד973 , עמ ' 1245" = Q3, Goroll ch134 p973-1245 | grabbed truncated page (1245→124) as Q-num |
+| 5 | q=138, source="1388 עמ' 203 גורול פרק א 5" | "5א גורול פרק203 ,עמ ' 1388" = Q5, Goroll ch203 p1388 | grabbed truncated page (1388→138) as Q-num |
+
+**Root cause: the upstream extractor regexed in left-to-right order on RTL Hebrew text.** In Hebrew RTL the leading character is the Q-number (`1ב`, `2ב`, `3א,ד`...); the trailing digits are the page number. The bot anchored on the trailing run instead, so every "question_number" in the dataset is actually a page number — and `source_text` is also reversed/scrambled because the columns were extracted in the wrong direction.
+
+**Same bug class** as the Geriatrics qnum-matcher v1 incident (per memory `project_geriatrics_qnum_matcher_unreliable`): RTL/BIDI parser shipped without verification produces a "+1 shift" / wrong-end-of-line capture that looks plausible until you cross-reference the source.
+
+### Sample-verify result
+
+Reliability gate: **0/5 HIGH, 0/5 AMBIGUOUS, 5/5 WRONG**. No need to sample more — the bug is structural, not noise. Per spec ("<5/10 HIGH → BAIL"), bail.
+
+### Secondary issues (would block backfill even if Q-nums were correct)
+
+1. **Session column collapses** to bare year (`2020`) instead of session label (`2020-06 Stage A`) — even with valid Q-nums, this prevents disambiguating which of 7 FM exam sessions a citation belongs to. Multiple sessions per year exist (2024 has both 2024-May and 2024-Sep).
+2. **864 rows with no Q-num at all** (70%) are pure citation strings without exam linkage.
+3. The `sources_extracted.csv` "rows" appear to be one-row-per-line in the PDF rather than one-row-per-Q — option text and stem fragments leak in alongside the citation rows (see rows 2-15 of the file: "ב .צילום של מפרק הירך AP" is option text from Q-stem, not a source citation).
+
+### What IS recoverable (recommendation, not this PR)
+
+The raw signal exists, just not in this CSV. The 8 `source_reference` PDFs (`pdf_type=source_reference` in inventory.csv: 643320, 643328, 643333, 643337, 643342, 643343, 643344, 749663) contain clean `<qnum><answer-letter> <reference>` tables in `מס שאלה / מראה מקום` format. A re-extraction pass against those 8 PDFs — with proper RTL handling, mirroring Geri's v3 token-overlap matcher pattern — would yield the per-Q citation table this PR was meant to consume. That is a separate authorized workstream, not a stretch of this one.
+
+### Action
+
+This PR ships the audit memo only:
+- No `q.e` edits.
+- No `q.c` touches (the 51 `answer_key_changes.csv` entries remain untouched and out of scope).
+- No quartet bump (memo-only PR).
+- IMPROVEMENTS.md updated (this section).
+
+### Open follow-up (requires explicit user authorization)
+
+1. **Fix the upstream RTL extractor** (or rebuild it from the source-reference PDFs with RTL-aware parsing) — produces a correct `qnum → reference` mapping for the ~7 FM exam sessions covered by source-reference PDFs.
+2. Once a verified mapping exists: ship a follow-up PR that prepends a `[Goroll 8e ch 47 p612]`-style citation prefix to the existing `q.e` for each mapped Q, in batches of ~50, with the source quote in each commit message.
+3. Any sessions without a source-reference PDF (per inventory: 2021-06 Stage B, 2024-Sep, possibly others) cannot be backfilled from this dataset — they would need direct PDF source-pull from `.audit_logs/exam_pdfs/` per session.
+
+---
+
 ## 2026-05-10 — questions.json comprehensive quality audit (audit + minimal autofix)
 
 **Scope.** Read-only multi-dimensional scan of all 1061 Qs across schema completeness, source-citation coverage, explanation coverage, format hygiene (beyond existing 10 regression guards), distribution health, and cross-field consistency. Then a strictly-mechanical fix pass for whitespace-only defects. NO `q.c` flips, NO `q.e` fabrication, NO `q.o[]` text changes — those would require a per-Q source-pull pass that is out of scope for one PR (and would repeat the v9.81 idx 510 incident class).
