@@ -55,10 +55,13 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.21.18';
-export const BUILD_HASH='1061q-v1.21.18';
+export const APP_VERSION='1.21.19';
+export const BUILD_HASH='1061q-v1.21.19';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.21.19': [
+    '🧹 questions.json mechanical formatting cleanup — 3 character-level fixes flagged by comprehensive quality audit: idx 829 trailing space on q stripped, idx 100 ("FEV1/FVC% >0.7  FEV1") and idx 353 ("של  סרטן") collapsed internal double-space to single. Strict autofix scope only — no q.c flips, no q.e fabrication, no q.o[] semantic edits. See IMPROVEMENTS.md for the full audit findings: schema completeness clean across 1061 Qs, per-tag distribution matches CLAUDE.md spec, no per-topic underflow, source-citation coverage 17% by broad pattern (textbook/society/MoH/guideline) — the bulk of unsourced explanations are pedagogically substantive but uncited, not missing.',
+  ],
   '1.21.18': [
     '🪟 window.submitLeaderboardScore exposed alongside existing window.showLeaderboard — enables programmatic submit (chaos-bot leaderboard hook) without going through the open-modal-then-submit path that returns early when #leaderboard-box DOM is not mounted.',
   ],
