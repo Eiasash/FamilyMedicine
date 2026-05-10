@@ -1,5 +1,122 @@
 # IMPROVEMENTS — mishpacha-mega (Family Medicine)
 
+## 2026-05-10 — questions.json comprehensive quality audit (audit + minimal autofix)
+
+**Scope.** Read-only multi-dimensional scan of all 1061 Qs across schema completeness, source-citation coverage, explanation coverage, format hygiene (beyond existing 10 regression guards), distribution health, and cross-field consistency. Then a strictly-mechanical fix pass for whitespace-only defects. NO `q.c` flips, NO `q.e` fabrication, NO `q.o[]` text changes — those would require a per-Q source-pull pass that is out of scope for one PR (and would repeat the v9.81 idx 510 incident class).
+
+**Baseline at start.** v1.21.18, 1061 Qs, 53 test files / 845 tests passing. The existing 10 regression guards (ð-mojibake, Latin-1 adjacency, Hebrew+digit missing-space, ?heb wrong-side, fragment bleed, dupes, c-vs-explanation drift, stem/option length, c_accept schema, deploy-config) are clean — meaning the format-hygiene dimensions they cover are at zero defects. This audit covers untested dimensions.
+
+### Schema completeness — CLEAN
+
+| Dimension | Count |
+|---|---|
+| Missing `q` (stem) | 0 |
+| Missing `o` (options array) | 0 |
+| `o.length` outside [2, 5] | 0 |
+| Missing `c` | 0 |
+| `c` out of range vs `o.length` | 0 |
+| Missing `c_accept` | 0 |
+| Missing `t` (year tag) | 0 |
+| Missing `ti` (topic idx) | 0 |
+| `ti` outside [0, 26] | 0 |
+| `c_accept` does not include `c` | 0 |
+
+Zero schema gaps across 1061 Qs. Nothing to surface.
+
+### Mechanical fixes shipped (this PR)
+
+| Fix | Count | Sample idx |
+|---|---|---|
+| Whitespace trim on `q` (trailing space) | 1 | 829 |
+| Internal double-space collapse on `q` | 2 | 100, 353 |
+
+That's it. Three character-level changes.
+
+### Format quality — surfaced but NOT auto-changed (verified deliberate content)
+
+The audit also surfaced these patterns. Spot-checking each confirmed they are intentional content rather than noise — the renderer or domain treats them as semantic, so stripping them would degrade content:
+
+| Pattern | Count | Why NOT auto-fixed |
+|---|---|---|
+| `**bold**` markdown in `q.e` | 50 | `src/ui/quiz-view.js:538` renders `**...**` → `<b>...</b>`. This is a supported convention. |
+| `**bold**` markdown in `o[]` | 5 | Same — option text passes through the same renderer. |
+| Unicode arrows (`→ ← ↑ ↓`) in `q.e` | 10 | Clinical algorithm/sequence notation (e.g. Raynaud `לבן→כחול→אדום`, Kübler-Ross stages, vaccine sequences `PCV15→PPSV23`). |
+| Unicode arrows in `o[]` | 2 | Same — clinical sequences inside option text. |
+| `q` ending without `?.!:` | 6 | All end with `]` (image refs like `[שאלה תלוית תמונה]`), `Olson` (model name), or `-` (dash list continuation). Real punctuation; not defects. |
+| Hebrew letter + digit (no space) | 2 | `כ3 ס"מ` and `1כ-1 ס"מ` — typo-style but rare and localized; mass auto-rewrite risks breaking measurements. |
+
+### Surfaced for direction (NOT shipped — requires source-citation pass)
+
+#### Source coverage — most explanations are pedagogically substantive but unsourced
+
+`q.e` is FM's only carrier of source citation (no separate `q.ref` field exists in this schema, unlike some siblings). Two passes were run with widening regex sets:
+
+**Narrow pass (textbook-only):** Goroll 22 + Nelson 3 + AFP 4 + UpToDate 3 + CDC 6 + WHO 11 + Harrison 0 + הר"י 0 = ~46 Qs cite a textbook by name.
+
+**Broad pass (textbook OR society guideline OR Israeli law/MoH OR generic "הנחיות" mention):** 183 / 1061 Qs (17%) match at least one source/authority/guideline pattern.
+
+The remaining 878 Qs (83%) have substantive multi-sentence Hebrew explanations grounded in correct medicine but do not cite a recognizable source — they read as authoritative didactic prose ("על פי ההמלצות…", "התיאור מתאים ל…", "הטיפול המומלץ…"). This is a documentation gap, not a content gap.
+
+| Source family (broad pass, in `q.e`) | Count |
+|---|---|
+| Goroll | 22 |
+| Nelson | 3 |
+| Harrison | 0 |
+| AFP / American Family Physician | 4 |
+| הר"י / IMA task force | 2 |
+| UpToDate / Up-To-Date | 3 |
+| NICE / CDC / WHO / USPSTF | 38 |
+| Israeli law / MoH guideline | 19 |
+| Society guidelines (AAD/AHA/ACC/ACOG/ACS/ADA/AAP) | 30 |
+| Generic "הנחיות" / "המלצות" / "פרוטוקול" / "guideline" | 94 |
+| Page reference (`עמ' N` / `p. N`) | 4 |
+| **Union (Qs matching ≥1 above)** | **183 / 1061 (17%)** |
+
+#### Explanation depth — generally healthy
+
+| Pattern | Count |
+|---|---|
+| Missing `e` entirely | 0 |
+| Weak `e` (<50 chars) | 0 |
+| Short `e` (<100 chars) | 2 |
+| `e` mostly repeats the chosen option text | 0 |
+
+`q.e` coverage is essentially complete and substantive. Two short explanations exist but are not pathological — they're concise rather than placeholder.
+
+#### Per-tag distribution — matches CLAUDE.md spec
+
+| Tag | Count | Spec target |
+|---|---|---|
+| 2020 | 150 | 150 |
+| 2021-Jun | 150 | 150 |
+| 2022-Jun | 150 | 150 |
+| 2023-Jun | 150 | 150 |
+| 2024-May | 100 | 100 |
+| 2024-Sep | 100 | 100 |
+| 2025-Jun | 150 | 150 |
+| FM-Core | 111 | 111 |
+
+Per CLAUDE.md, exact match. No tag drift.
+
+#### Per-topic distribution — no underflow
+
+All 27 `ti` slots have ≥ 16 Qs; none below 5 Qs threshold. Distribution clusters around `ti=24` Peds-Acute (115), `ti=9` MSK (100), `ti=26` EBM (75) — consistent with the `EXAM_FREQ` calibration in `src/core/constants.js`. Lightest topics: `ti=19` Addictions (16), `ti=0` Adult Cardiology (20), `ti=16` Mens Health (20), `ti=21` Pain/Palliative (20).
+
+### Recommended drain strategy (NOT in this PR)
+
+| Workstream | Out of scope here because |
+|---|---|
+| Source-citation backfill (878 Qs without recognized source) | Requires per-Q PDF cross-ref against Goroll 8e / Nelson 22e / AFP / Israeli MoH guidelines. Cannot be auto-generated without grounding. The `.audit_logs/topic_analysis_2026-05-03/` bundle (FM 1231 sources for 642 Qs) is the staging point if/when a future drain PR opens. |
+| Explanation strengthening for 2 short `q.e` cases | Per § 4 release invariants: changes to `q.e` must quote the source. Hand-pull the 2 Qs in a future content PR. |
+| Per-topic enrichment for the 3 lightest topics (Addictions 16, MSK-baseline-cardiology 20, Mens Health 20) | Author new Qs from the FM PDFs in `.audit_logs/exam_pdfs/`; not a one-touch fix. |
+| Suspect `q.c` review | Per the chaos-doctor v4 first run findings (46 distinct flagged FM Qs), each flag needs human medical verification. The bot-flag→curator-override pattern from sibling Geri's Track-J/L/O (~70% of bot flags were false-positive — IMA/key was right) means automated `c` flips are unsafe. Surface, do not flip. |
+
+### Audit methodology (preserved out-of-tree)
+
+The audit script `tmp_quality_audit.cjs` and its outputs `audit_output.txt` / `audit_output.json` / `audit_source_broad.json` are gitignored and removed before commit (single-use; rerun by re-creating from this memo's spec if needed).
+
+---
+
 ## 2026-05-10 — ESLint 10 warning categorization (audit-only memo)
 
 **Read-only triage of the lint surface revealed by PR #46 (Vite 8 + ESLint 10 majors upgrade).** No source-code edits in this pass. Goal: size the drain, identify what can be auto-fixed, and surface what cannot.
