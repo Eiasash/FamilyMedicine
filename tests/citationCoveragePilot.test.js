@@ -162,3 +162,130 @@ describe('FM v1.21.23 Goroll DM citation batch (27 ti=6 Qs)', () => {
     expect(count).toBe(6);
   });
 });
+
+// ============================================================================
+// v1.21.24 — Lerner ti=26 batch (32 EBM/Communication/Family-Systems Qs)
+//
+// First non-Goroll batch — Goroll 8e doesn't cover ti=26 per the pilot doc.
+// Pivots to the locally-staged Israeli FM textbook: ד"ר נטלי לרנר,
+// Family Medicine Summary, 2025, 860pp, indexed in lerner_chapters.json.
+// 8 Lerner chapters carry ti=26 natively.
+//
+// Subagent-driven matching (proposal at
+// .audit_logs/legal_policy_2026-05-10/lerner_ti26_proposal.json) classified
+// each Q's sub-topic and required ≥3 distinctive Hebrew/English anchors AND
+// sub-topic-correct chapter pick for HIGH confidence; only HIGH shipped here.
+// 32 MEDIUM proposals NOT shipped (need per-Q hand review).
+//
+// Format: `מקור: לרנר 2025 — "<chapter title>".`
+// ============================================================================
+const LERNER_TI26_BATCH = {
+  // chap 306 — חוק ואתיקה (law/ethics: involuntary commitment, informed
+  // consent, confidentiality, ועדת אתיקה, מיופה כח, mandatory reporting)
+  11:  'חוק ואתיקה',
+  21:  'חוק ואתיקה',
+  71:  'חוק ואתיקה',
+  279: 'חוק ואתיקה',
+  389: 'חוק ואתיקה',
+  460: 'חוק ואתיקה',
+  480: 'חוק ואתיקה',
+  510: 'חוק ואתיקה',
+  550: 'חוק ואתיקה',
+  589: 'חוק ואתיקה',
+  708: 'חוק ואתיקה',
+  810: 'חוק ואתיקה',
+  948: 'חוק ואתיקה',
+  // chap 316 — הערכת תקפות מחקרים (study-validity: RR/HR/CI, Case-Control,
+  // selection bias, ITT, generalizability)
+  87:  'הערכת תקפות מחקרים',
+  261: 'הערכת תקפות מחקרים',
+  298: 'הערכת תקפות מחקרים',
+  424: 'הערכת תקפות מחקרים',
+  435: 'הערכת תקפות מחקרים',
+  466: 'הערכת תקפות מחקרים',
+  496: 'הערכת תקפות מחקרים',
+  517: 'הערכת תקפות מחקרים',
+  699: 'הערכת תקפות מחקרים',
+  762: 'הערכת תקפות מחקרים',
+  923: 'הערכת תקפות מחקרים',
+  // chap 317 — ניתוח בדיקות אבחנתיות (sens/spec/PPV/NPV, ROC, screening
+  // test interpretation, Bayesian post-test probability)
+  139: 'ניתוח בדיקות אבחנתיות',
+  910: 'ניתוח בדיקות אבחנתיות',
+  // chap 318 — ניסויים קליניים (RCT design, blinding, randomization,
+  // intention-to-treat)
+  530: 'ניסויים קליניים',
+  712: 'ניסויים קליניים',
+  // chap 320 — משפחה והיבטים פסיכוסוציאליים (Minuchin, SCREEEM,
+  // family-lifecycle, psychosocial models)
+  70:  'משפחה והיבטים פסיכוסוציאליים',
+  144: 'משפחה והיבטים פסיכוסוציאליים',
+  254: 'משפחה והיבטים פסיכוסוציאליים',
+  // chap 326 — BATHE (interview structure for life-events / psychosocial
+  // probing in primary care)
+  499: '– BATHEתחקור והתייחסות למאורעות חיים בשיח הרפואי',
+};
+
+describe('FM v1.21.24 Lerner ti=26 citation batch (32 EBM/law/family Qs)', () => {
+  for (const [posStr, title] of Object.entries(LERNER_TI26_BATCH)) {
+    const pos = Number(posStr);
+    it(`pos=${pos} cites Lerner "${title}" at q.e tail (ti=26 batch)`, () => {
+      const q = QS[pos];
+      expect(q, `Q at pos=${pos} missing`).toBeDefined();
+      const e = (q.e || '').trim();
+      expect(e, `pos=${pos} q.e empty`).not.toBe('');
+      // Escape regex meta-chars in the Hebrew title
+      const titleEsc = title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      expect(e).toMatch(new RegExp(`מקור: לרנר 2025 — "${titleEsc}"\\.$`));
+      // ti must be 26 for every Lerner-batch Q
+      expect(q.ti, `pos=${pos} ti drifted`).toBe(26);
+    });
+  }
+
+  it('Lerner-2025 citation count is at least 32 (Lerner-batch floor)', () => {
+    // v1.21.23 baseline: 0 instances of "מקור: לרנר 2025" pattern.
+    // Lerner batch adds 32. Allow >= so future hand-additions don't churn.
+    const re = /מקור: לרנר 2025 — "[^"]+"\./g;
+    let total = 0;
+    for (const q of QS) {
+      const e = q.e || '';
+      const matches = e.match(re);
+      if (matches) total += matches.length;
+    }
+    expect(total).toBeGreaterThanOrEqual(32);
+  });
+
+  it('cumulative cited-Q count is at least 75 (pilot+DM+Lerner floor)', () => {
+    // v1.21.22 (16 Goroll HTN/Lipid) + v1.21.23 (27 Goroll DM) +
+    // v1.21.24 (32 Lerner ti=26) = 75. Allow >= so future batches extend.
+    const reGoroll = /מקור: Goroll 8e פרק \d+\./g;
+    const reLerner = /מקור: לרנר 2025 — "[^"]+"\./g;
+    let total = 0;
+    for (const q of QS) {
+      const e = q.e || '';
+      const g = e.match(reGoroll);
+      const l = e.match(reLerner);
+      if (g) total += g.length;
+      if (l) total += l.length;
+    }
+    expect(total).toBeGreaterThanOrEqual(75);
+  });
+
+  it('chap 306 (חוק ואתיקה) citation count is exactly 13 (law/ethics sub-batch)', () => {
+    const re = /מקור: לרנר 2025 — "חוק ואתיקה"\.$/;
+    let count = 0;
+    for (const q of QS) {
+      if (re.test((q.e || '').trim())) count++;
+    }
+    expect(count).toBe(13);
+  });
+
+  it('chap 316 (הערכת תקפות מחקרים) citation count is exactly 11 (EBM-validity sub-batch)', () => {
+    const re = /מקור: לרנר 2025 — "הערכת תקפות מחקרים"\.$/;
+    let count = 0;
+    for (const q of QS) {
+      if (re.test((q.e || '').trim())) count++;
+    }
+    expect(count).toBe(11);
+  });
+});
