@@ -87,3 +87,27 @@ describe('a11y v1.21.20 — .quiz-controls__label', () => {
     expect(ruleMatch[0]).not.toContain('color: var(--color-fg-subtle)');
   });
 });
+
+describe('a11y v1.21.21 — residual contrast clears', () => {
+  it('.hdr p uses slate-300 (#cbd5e1) for the dark gradient bg, not slate-500 (#64748b)', () => {
+    // The .hdr clock/subtitle was rendering slate-500 on dark slate gradient
+    // at 3.75:1. slate-300 hits ~12:1 (AAA) on the same surface.
+    expect(layoutCss).toMatch(/\.hdr p \{[^}]*color: #cbd5e1/);
+    expect(layoutCss).not.toMatch(/\.hdr p \{[^}]*color: #64748b/);
+  });
+
+  it('.tabs button:not(.on) uses slate-500 (#64748b, 4.65:1 AA), not slate-400 (#94a3b8, 2.69:1)', () => {
+    // Inactive bottom-tab labels (📖 Library, 🩺 Track, etc.) were failing AA.
+    expect(layoutCss).toMatch(/\.tabs button:not\(\.on\) \{[^}]*color: #64748b/);
+    expect(layoutCss).not.toMatch(/\.tabs button:not\(\.on\) \{[^}]*color: #94a3b8/);
+  });
+
+  it('.quiz-meta__counter uses --color-fg-muted (6.49:1 AAA), not --color-fg-subtle (3.27:1)', () => {
+    // Same pattern as the v1.21.20 .quiz-controls__label fix. The counter
+    // ("1 / 1139") is functional UI text, not decorative.
+    const ruleMatch = quizViewCss.match(/\.quiz-meta__counter\s*\{[^}]+\}/);
+    expect(ruleMatch).toBeTruthy();
+    expect(ruleMatch[0]).toContain('color: var(--color-fg-muted)');
+    expect(ruleMatch[0]).not.toContain('color: var(--color-fg-subtle)');
+  });
+});
