@@ -255,9 +255,10 @@ describe('FM v1.21.24 Lerner ti=26 citation batch (32 EBM/law/family Qs)', () =>
     expect(total).toBeGreaterThanOrEqual(32);
   });
 
-  it('cumulative cited-Q count is at least 75 (pilot+DM+Lerner floor)', () => {
+  it('cumulative cited-Q count is at least 93 (pilot+DM+Lerner+MentalHealth floor)', () => {
     // v1.21.22 (16 Goroll HTN/Lipid) + v1.21.23 (27 Goroll DM) +
-    // v1.21.24 (32 Lerner ti=26) = 75. Allow >= so future batches extend.
+    // v1.21.24 (32 Lerner ti=26) + v1.21.25 (18 Goroll Mental Health) = 93.
+    // Allow >= so future batches extend.
     const reGoroll = /מקור: Goroll 8e פרק \d+\./g;
     const reLerner = /מקור: לרנר 2025 — "[^"]+"\./g;
     let total = 0;
@@ -268,7 +269,7 @@ describe('FM v1.21.24 Lerner ti=26 citation batch (32 EBM/law/family Qs)', () =>
       if (g) total += g.length;
       if (l) total += l.length;
     }
-    expect(total).toBeGreaterThanOrEqual(75);
+    expect(total).toBeGreaterThanOrEqual(93);
   });
 
   it('chap 306 (חוק ואתיקה) citation count is exactly 13 (law/ethics sub-batch)', () => {
@@ -287,5 +288,84 @@ describe('FM v1.21.24 Lerner ti=26 citation batch (32 EBM/law/family Qs)', () =>
       if (re.test((q.e || '').trim())) count++;
     }
     expect(count).toBe(11);
+  });
+});
+
+// ============================================================================
+// v1.21.25 — Mental Health batch (19 ti=18 Qs cite Goroll 8e Section XV)
+// Each entry was anchor-verified against locally extracted Goroll Ch 226-235
+// (Section XV — Psychiatric and Behavioral Problems, pp 5354-5734) BEFORE
+// the cite was appended. ≥2 distinct anchor hits required for any cite.
+// 13 of the 32 ti=18 uncited Qs were SKIPPED for this batch — 7 are Israeli
+// psychiatric-law specific (involuntary admission, ועדת בדיקה כפויה), 5 are
+// FM-Core IPV/abuse Qs that need Israeli law sources, 1 (pos=54 chronic
+// fatigue syndrome) is outside Section XV. Those will be a future Lerner
+// batch. See commit message for the per-Q anchor evidence.
+// ============================================================================
+const MENTAL_HEALTH_BATCH = {
+  // Ch 226 — Approach to the Patient with Anxiety
+  170: 226, // adjustment disorder + retirement stressor
+  812: 226, // PTSD delayed onset
+  863: 226, // panic attack symptomatology
+  // Ch 227 — Approach to the Patient with Depression
+  63:  227, // suicide risk epidemiology
+  262: 227, // bipolar disorder pharmacotherapy (lithium/valproate)
+  // pos=339 (LGBT-suicide-risk Q) deliberately NOT pinned: Ch 227's 322
+  // raw "suicide"+"depression" hits were saturation on chapter-wide
+  // common terms, not actual LGBT/sexual-minority content. Deferred to
+  // a future Lerner / AFP batch.
+  502: 227, // PHQ-2 / PHQ-9 depression screening
+  594: 227, // suicide prevention + safety planning (no-suicide contract not effective)
+  612: 227, // SSRI sexual dysfunction profile
+  616: 227, // adjustment disorder with depressed mood
+  791: 227, // SSRI cardiovascular safety (vs venlafaxine)
+  798: 227, // lithium monitoring (renal + thyroid)
+  832: 227, // lithium-thiazide-NSAID interactions
+  885: 227, // duloxetine for depression + neuropathic pain
+  // Ch 230 — Approach to the Patient with Somatic Symptom Disorder
+  772: 230, // factitious disorder (insulin self-injection)
+  // Ch 232 — Approach to the Patient with Insomnia
+  666: 232, // delayed sleep phase + sleep hygiene
+  826: 232, // chronic insomnia + CBT-I stimulus control
+  // Ch 233 — Approach to Eating Disorders
+  352: 233, // anorexia nervosa workup (prolactin/FSH/LH)
+  468: 233, // anorexia nervosa hospitalization criteria
+};
+
+describe('FM v1.21.25 Goroll Mental Health citation batch (18 ti=18 Qs)', () => {
+  for (const [posStr, ch] of Object.entries(MENTAL_HEALTH_BATCH)) {
+    const pos = Number(posStr);
+    it(`pos=${pos} cites Goroll פרק ${ch} at q.e tail (Mental Health batch)`, () => {
+      const q = QS[pos];
+      expect(q, `Q at pos=${pos} missing`).toBeDefined();
+      const e = (q.e || '').trim();
+      expect(e, `pos=${pos} q.e empty`).not.toBe('');
+      expect(e).toMatch(new RegExp(`מקור: Goroll 8e פרק ${ch}\\.$`));
+      // ti must be 18 (Mental Health) for every Mental-Health-batch Q
+      expect(q.ti, `pos=${pos} ti drifted`).toBe(18);
+    });
+  }
+
+  it('Goroll-8e citation count is at least 61 (cumulative pilot+DM+MentalHealth floor)', () => {
+    // v1.21.23 floor was 43 Goroll cites; Mental Health batch adds 18 → ≥ 61.
+    const re = /Goroll 8e פרק \d+\./g;
+    let total = 0;
+    for (const q of QS) {
+      const e = q.e || '';
+      const matches = e.match(re);
+      if (matches) total += matches.length;
+    }
+    expect(total).toBeGreaterThanOrEqual(61);
+  });
+
+  it('Ch 227 citation count is at least 10 (Depression sub-batch floor)', () => {
+    // 10 Mental Health Qs cite Ch 227 (was 11 before pos=339 dropped).
+    // Allow >= so future batches extend.
+    const re = /מקור: Goroll 8e פרק 227\.$/;
+    let count = 0;
+    for (const q of QS) {
+      if (re.test((q.e || '').trim())) count++;
+    }
+    expect(count).toBeGreaterThanOrEqual(10);
   });
 });
