@@ -55,10 +55,13 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.21.21';
-export const BUILD_HASH='1061q-v1.21.21';
+export const APP_VERSION='1.21.22';
+export const BUILD_HASH='1061q-v1.21.22';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.21.22': [
+    '📚 Citation backfill pilot — 16 HTN/Lipid (ti=2) explanations gain a verified Goroll 8e source citation. 12 Qs cite פרק 26 (Management of Hypertension), 4 cite פרק 19 (Evaluation of Hypertension). Each chapter mapping was anchor-verified against the locally extracted Goroll 8e PDF text (chapter pp 469-497 + pp 676-735) before the cite was appended — anchors include thiazide/glucose, hypertensive urgency, non-dipper / nocturnal BP, white-coat / masked HTN, DASH / lifestyle / aerobic exercise, sexual dysfunction by class, resistant HTN + OSA, beta-blocker in elderly. Format follows the existing v1.21.x pattern ("מקור: Goroll 8e פרק N."). No q.c, q.o, or pre-existing q.e content modified — append-only single sentence at the tail. New regression test (tests/citationCoveragePilot.test.js) pins the 16 specific Goroll citations + the v1.21.21 baseline so future content edits can\'t silently regress them. This is the first batch of a planned multi-session campaign — see .audit_logs/fm_citation_backfill_pilot_2026-05-10.md for the per-Q anchor evidence and the structural ceiling on remaining clusters (peds ti=23/24/25 ~158 Qs and EBM ti=26 ~73 Qs cannot be cited from Goroll because the textbook is adult-internal; Nelson + AFP indices needed for those).',
+  ],
   '1.21.21': [
     '♿ Accessibility — v1.21.20 follow-up clearing 3 residual contrast violations surfaced by improved playwright re-audit (gradient-detection upgraded to extract first stop color, exposing real residuals masked by the prior fallback-to-white). Three minimum-code edits: (1) `.hdr p { color: #64748b }` → `#cbd5e1` — the header clock/subtitle (#hdr-sub) was rendering slate-500 on the .hdr dark gradient at 3.75:1; slate-300 fixes to ~12:1 AAA. (2) `.tabs button:not(.on) { color: #94a3b8 }` → `#64748b` — inactive bottom-tab icons + labels (📖 Library, 🩺 Track, etc.) were slate-400 on white at 2.69:1; slate-500 hits 4.65:1 AA. (3) `.quiz-meta__counter` `var(--color-fg-subtle)` → `var(--color-fg-muted)` — same pattern as v1.21.20 quiz-controls__label fix; the counter ("1 / 1139") was at 3.27:1, now 6.49:1 AAA. Trinity bumped 1.21.20 → 1.21.21. Closes the FM a11y campaign at 0 actionable contrast violations on the home screen.',
   ],
