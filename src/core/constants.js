@@ -55,10 +55,13 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.21.20';
-export const BUILD_HASH='1061q-v1.21.20';
+export const APP_VERSION='1.21.21';
+export const BUILD_HASH='1061q-v1.21.21';
 export const SYLLABUS_VERSION='P0062-2025';
 export const CHANGELOG={
+  '1.21.21': [
+    '♿ Accessibility — v1.21.20 follow-up clearing 3 residual contrast violations surfaced by improved playwright re-audit (gradient-detection upgraded to extract first stop color, exposing real residuals masked by the prior fallback-to-white). Three minimum-code edits: (1) `.hdr p { color: #64748b }` → `#cbd5e1` — the header clock/subtitle (#hdr-sub) was rendering slate-500 on the .hdr dark gradient at 3.75:1; slate-300 fixes to ~12:1 AAA. (2) `.tabs button:not(.on) { color: #94a3b8 }` → `#64748b` — inactive bottom-tab icons + labels (📖 Library, 🩺 Track, etc.) were slate-400 on white at 2.69:1; slate-500 hits 4.65:1 AA. (3) `.quiz-meta__counter` `var(--color-fg-subtle)` → `var(--color-fg-muted)` — same pattern as v1.21.20 quiz-controls__label fix; the counter ("1 / 1139") was at 3.27:1, now 6.49:1 AAA. Trinity bumped 1.21.20 → 1.21.21. Closes the FM a11y campaign at 0 actionable contrast violations on the home screen.',
+  ],
   '1.21.20': [
     '♿ Accessibility — port of Geri v10.64.82-87 a11y campaign patterns to FM. Live playwright re-audit on v1.21.19 found 5 actionable contrast violations (gradient-blindspot false positives on h1+dm-btns excluded). Six minimum-code edits: (1) <html dir="rtl"> added (was lang="he" without dir — same fix as Geri v10.64.82). (2) Skip-link bg #3b82f6 → #2563eb (3.68:1 → 4.78:1, WCAG AA pass). (3) Header "Family Medicine" subtitle inline color #d97706 → #92400e (3.07:1 amber-600 on yellow-50 → 7.14:1 amber-800 AAA). (4) #headerVer date span color #64748b → #cbd5e1 (slate-500 was 2.99:1 on the .hdr dark slate gradient → slate-300 6.13:1 strong AA). (5) Mishpacha-skin scoped override `html[data-skin="mishpacha"] .tabs button.on { color: #92400e }` — the geri-skin amber-700 pattern adapted for FM\'s mishpacha skin where --app-primary is amber-600 (#d97706) at 3.13:1 on white tabs. Dark-mode preserved via body.dark[data-skin="mishpacha"] override falling back to --app-primary. (6) .quiz-controls__label var(--color-fg-subtle) → var(--color-fg-muted) (3.27:1 → 6.49:1 AAA) — the subtle token (#8d8b80) is now reserved for decorative text only. Trinity bumped 1.21.19 → 1.21.20. Sibling-fork heads-up: same patterns may apply to Pnimit (also amber-themed in some surfaces) — separate audit needed before porting.',
   ],
