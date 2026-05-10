@@ -10,6 +10,10 @@
 .tabs button { flex: 0 0 auto; min-width: 52px; min-height: 44px; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 6px 6px; transition: .15s; font-size: 10px; font-weight: 600 }
 .tabs button.on { color: var(--app-primary) }
 .tabs button:not(.on) { color: #94a3b8 }
+/* v1.21.20 a11y fix: mishpacha-skin --app-primary is #d97706 (amber-600) which is 3.13:1 against the white tabs bar — fails WCAG AA. Override TEXT-on-light usage with amber-800 (#92400e = 6.59:1, AAA). Background usages of --app-primary (.pill.on / .btn-p where dark-text-on-amber pairs at 7+ :1) are unaffected. Dark mode falls back to --app-primary which becomes amber-400 #fbbf24 — strong on dark slate. */
+html[data-skin="mishpacha"] .tabs button.on { color: #92400e }
+body.dark[data-skin="mishpacha"] .tabs button.on,
+html[data-skin="mishpacha"] body.dark .tabs button.on { color: var(--app-primary) }
 .tabs .ic { font-size: 18px }
 
 /* === Content Area === */

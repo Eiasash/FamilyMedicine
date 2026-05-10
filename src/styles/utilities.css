@@ -4,7 +4,7 @@
 @keyframes slideUp { from { transform: translateY(100%) } to { transform: translateY(0) } }
 
 /* === Accessibility === */
-.skip-link { position: absolute; left: -9999px; top: 4px; z-index: 9999; padding: 6px 12px; background: #3b82f6; color: #fff; border-radius: 6px; font-size: 12px; font-weight: 700; text-decoration: none }
+.skip-link { position: absolute; left: -9999px; top: 4px; z-index: 9999; padding: 6px 12px; background: #2563eb; color: #fff; border-radius: 6px; font-size: 12px; font-weight: 700; text-decoration: none }
 .skip-link:focus { left: 4px }
 :focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px }
 
