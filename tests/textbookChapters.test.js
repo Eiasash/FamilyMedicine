@@ -47,7 +47,7 @@ function strongTokens(s) {
   return out;
 }
 
-const HR_TITLED = /Harrison\s*Ch\s*(\d+)\s*(?:[—–\-]|\()\s*([^·\n)]{3,150}?)\s*(?:[·\n)]|$)/gi;
+const HR_TITLED = /Harrison\s*Ch\s*(\d+)\s*(?:[—–-]|\()\s*([^·\n)]{3,150}?)\s*(?:[·\n)]|$)/gi;
 const HR_ANY = /Harrison\s*Ch\s*(\d+)/gi;
 
 describe('Harrison citation guards (data/questions.json)', () => {
@@ -102,7 +102,7 @@ describe('Harrison citation guards (data/questions.json)', () => {
         for (const m of v.matchAll(HR_TITLED)) {
           const n = parseInt(m[1], 10);
           if (!Object.prototype.hasOwnProperty.call(harrison, String(n))) continue;
-          const cited = (m[2] || '').trim().replace(/[*—–\-]+$/, '').trim();
+          const cited = (m[2] || '').trim().replace(/[*—–-]+$/, '').trim();
           if (cited.length < 3) continue;
           const canonEntry = harrison[String(n)];
           const canon = (canonEntry && typeof canonEntry === 'object' && canonEntry.title) || String(canonEntry || '');
@@ -125,7 +125,7 @@ describe('Harrison citation guards (data/questions.json)', () => {
         const v = q[field] || '';
         for (const m of v.matchAll(HR_TITLED)) {
           const n = parseInt(m[1], 10);
-          const t = (m[2] || '').trim().replace(/[*—–\-]+$/, '').trim();
+          const t = (m[2] || '').trim().replace(/[*—–-]+$/, '').trim();
           if (t.length < 3) continue;
           if (!map.has(n)) map.set(n, []);
           map.get(n).push({ idx: i, field, title: t });
