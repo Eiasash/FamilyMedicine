@@ -31,7 +31,7 @@
  *     forced (corrupts mixed Hebrew+English drug names) or RTL.
  */
 
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { heDir, sanitize, isMetaOption } from '../src/core/utils.js';
