@@ -58,16 +58,35 @@ jobs:
       - name: Check for conflicting duplicates
         run: |
           python3 << 'PYEOF'
+          # Compare CHOSEN OPTION TEXT, not just index. Many "duplicate"
+          # questions are the same Q with re-ordered options — different `c`
+          # but same actual correct answer. Also respect c_accept (100% of
+          # FM Qs carry it): if one Q's c is in the other's c_accept, the
+          # chosen answers are cross-accepted, not conflicting.
           import json, sys
           qs = json.load(open('data/questions.json'))
           seen = {}
           conflicts = []
+          reorder_skipped = 0
+          c_accept_skipped = 0
           for i, q in enumerate(qs):
               key = q['q'].strip()[:80]
               if key in seen:
                   j = seen[key]
-                  if qs[i]['c'] != qs[j]['c']:
-                      conflicts.append((j, i, key[:60]))
+                  qi, qj = qs[i], qs[j]
+                  if qi['c'] == qj['c']:
+                      continue
+                  # Re-ordered duplicate: same chosen-option text at different indices.
+                  ti_text = qi['o'][qi['c']].strip() if qi['c'] < len(qi['o']) else None
+                  tj_text = qj['o'][qj['c']].strip() if qj['c'] < len(qj['o']) else None
+                  if ti_text and tj_text and ti_text == tj_text:
+                      reorder_skipped += 1
+                      continue
+                  # c_accept compatibility: chosen answers cross-accepted.
+                  if qi['c'] in qj.get('c_accept', []) or qj['c'] in qi.get('c_accept', []):
+                      c_accept_skipped += 1
+                      continue
+                  conflicts.append((j, i, key[:60]))
               else:
                   seen[key] = i
           if conflicts:
@@ -75,7 +94,13 @@ jobs:
               for j, i, k in conflicts:
                   print(f'  Q{j} vs Q{i}: {k}...')
               sys.exit(1)
-          print('OK: No conflicting duplicates')
+          msg = 'OK: No conflicting duplicates'
+          extras = []
+          if reorder_skipped: extras.append(f'{reorder_skipped} re-ordered pairs')
+          if c_accept_skipped: extras.append(f'{c_accept_skipped} c_accept-compatible pairs')
+          if extras:
+              msg += f' ({", ".join(extras)} skipped)'
+          print(msg)
           PYEOF
 
       - name: Check topic coverage (min 5 per topic)
