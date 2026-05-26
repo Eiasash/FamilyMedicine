@@ -3,7 +3,7 @@
  * check-syllabus-sync.cjs — fail-closed cross-repo drift gate.
  *
  * Fetches Geriatrics main's data/syllabus_data.json and verifies that this
- * repo's data/.corpus_manifest.json matches the Pnimit section (totals AND
+ * repo's data/.corpus_manifest.json matches the Mishpacha section (totals AND
  * per-topic n_questions). Exits 1 on any drift.
  *
  * Pairs with scripts/regen_manifest.cjs (the manifest emitter). The flow:
@@ -120,8 +120,8 @@ async function main() {
   for (const d of drifts) console.error(`  ${d}`);
   console.error('');
   console.error('Resolution (one of):');
-  console.error('  1. If FM corpus is the source of truth: open a Geri PR running scripts/regen_cross_repo_syllabus.cjs to update Pnimit.');
-  console.error('  2. If Geri syllabus is the source of truth: revert the IM questions.json change that caused this drift.');
+  console.error('  1. If FM corpus is the source of truth: open a Geri PR running scripts/regen_cross_repo_syllabus.cjs to update Mishpacha.');
+  console.error('  2. If Geri syllabus is the source of truth: revert the FM questions.json change that caused this drift.');
   process.exit(1);
 }
 
