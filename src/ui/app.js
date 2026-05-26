@@ -221,6 +221,13 @@ export function takeWeeklySnapshot(){
 // ===== SHARED AI PROXY =====
 
 export function showHelp(){
+// Dedupe — if a #help-overlay is already mounted, no-op. Without this,
+// the deferred first-visit autoshow (rIC+setTimeout, ~2-3s after page load)
+// can race with a manual click on the Help button: user clicks → showHelp()
+// mounts overlay #1 → user reads/dismisses → 2s later deferred callback
+// fires → showHelp() mounts a SECOND stacked overlay. Caught by Codex P2
+// on PR #76.
+if(document.getElementById('help-overlay'))return;
 const ov=document.createElement('div');
 ov.id='help-overlay';
 ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px';
