@@ -18,6 +18,16 @@ q.ti=best>=0?best:8;
 // ===== DATA LOADER (v10.0) =====
 G._dataPromise = (async function loadDataArrays() {
   const basePath = './data/';
+  // LCP fix (issue #25): distractors.json is ~1.7MB and is only consumed
+  // in quiz-view.js:618 AFTER the user answers a question (`if(G.ans &&
+  // !G.examMode)`). Eager-loading it in the startup Promise.all gates
+  // first-paint on a fetch the user doesn't need for several seconds.
+  // Strategy: load the critical 6 in the startup batch, then kick off
+  // DIS on idle (requestIdleCallback / setTimeout fallback). quiz-view.js
+  // already handles G.DIS being undefined — `const _dist=(G.DIS&&G.DIS[_qIdx])||null;`
+  // — so the Distractor Autopsy block silently falls back to a generic
+  // "correct answer" line until DIS arrives. The next render after load
+  // shows the full rationales.
   const files = {
     QZ: 'questions.json',
     TK: 'topics.json',
@@ -25,7 +35,6 @@ G._dataPromise = (async function loadDataArrays() {
     DRUGS: 'drugs.json',
     FLASH: 'flashcards.json',
     TABS: 'tabs.json',
-    DIS: 'distractors.json',
   };
   try {
     const entries = Object.entries(files);
@@ -33,14 +42,9 @@ G._dataPromise = (async function loadDataArrays() {
       entries.map(([varName, fileName]) =>
         fetch(basePath + fileName).then(r => {
           if (!r.ok) {
-            // DIS is optional: missing distractors.json should not break data load
-            if (varName === 'DIS') return {};
             throw new Error(varName + ': ' + r.status);
           }
           return r.json();
-        }).catch(err => {
-          if (varName === 'DIS') { console.warn('distractors.json unavailable:', err.message); return {}; }
-          throw err;
         })
       )
     );
@@ -51,9 +55,34 @@ G._dataPromise = (async function loadDataArrays() {
       else if (varName === 'DRUGS') G.DRUGS = results[i];
       else if (varName === 'FLASH') G.FLASH = results[i];
       else if (varName === 'TABS') G.TABS = results[i];
-      else if (varName === 'DIS') G.DIS = results[i];
       });
     G._dataReady = true;
+    // Deferred lazy-load of distractors.json — kick off after critical
+    // payload arrives, on idle. Failure is non-fatal: G.DIS stays
+    // undefined and quiz-view.js falls back gracefully.
+    G.DIS = undefined;
+    const loadDistractors = () => {
+      fetch(basePath + 'distractors.json').then(r => {
+        if (!r.ok) {
+          if (r.status === 404) { G.DIS = {}; return; }
+          throw new Error('DIS: ' + r.status);
+        }
+        return r.json();
+      }).then(d => {
+        if (d) G.DIS = d;
+        if (typeof G.render === 'function') {
+          try { G.render(); } catch { /* render guard */ }
+        }
+      }).catch(err => {
+        console.warn('distractors.json deferred load failed:', err && err.message);
+        G.DIS = {};
+      });
+    };
+    if (typeof requestIdleCallback === 'function') {
+      requestIdleCallback(loadDistractors, { timeout: 3000 });
+    } else {
+      setTimeout(loadDistractors, 500);
+    }
     // Build NOTES_BY_TI: map topic index → note object
     // notes.json is NOT aligned with TOPICS[] positional index (21/24 mismatches).
     // Match by normalized topic-name string (strip " — suffix", case-insensitive).
