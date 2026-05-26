@@ -250,7 +250,7 @@ ${sec('Quiz Filters','📝','#047857',
 '<b>📋 Exam</b> — מבחן מדומה 150 שאלות (3 שעות)<br>'+
 '<b>💀 Sudden Death</b> — טעות אחת = סוף המשחק'
 )}
-${sec('AI Study Tools','🤖','#8b5cf6',
+${sec('AI Study Tools','🤖','#6d28d9',
 'כל יכולות ה-AI עובדות בלי מפתח API — דרך פרוקסי משותף.<br><br>'+
 '<b>🤖 AI Explain</b> — הסבר בעברית לתשובה הנכונה<br>'+
 '<b>🔬 Distractor Autopsy</b> — AI מסביר למה כל הסחות דעת שגויה ומתי הייתה נכונה<br>'+
