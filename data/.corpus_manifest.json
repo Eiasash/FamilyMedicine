@@ -1,0 +1,115 @@
+{
+  "schema": "corpus-manifest-v1",
+  "repo": "FamilyMedicine",
+  "total_questions": 1061,
+  "topics": [
+    {
+      "id": 0,
+      "n_questions": 20
+    },
+    {
+      "id": 1,
+      "n_questions": 23
+    },
+    {
+      "id": 2,
+      "n_questions": 29
+    },
+    {
+      "id": 3,
+      "n_questions": 38
+    },
+    {
+      "id": 4,
+      "n_questions": 41
+    },
+    {
+      "id": 5,
+      "n_questions": 27
+    },
+    {
+      "id": 6,
+      "n_questions": 31
+    },
+    {
+      "id": 7,
+      "n_questions": 24
+    },
+    {
+      "id": 8,
+      "n_questions": 28
+    },
+    {
+      "id": 9,
+      "n_questions": 100
+    },
+    {
+      "id": 10,
+      "n_questions": 41
+    },
+    {
+      "id": 11,
+      "n_questions": 22
+    },
+    {
+      "id": 12,
+      "n_questions": 21
+    },
+    {
+      "id": 13,
+      "n_questions": 50
+    },
+    {
+      "id": 14,
+      "n_questions": 68
+    },
+    {
+      "id": 15,
+      "n_questions": 42
+    },
+    {
+      "id": 16,
+      "n_questions": 20
+    },
+    {
+      "id": 17,
+      "n_questions": 46
+    },
+    {
+      "id": 18,
+      "n_questions": 32
+    },
+    {
+      "id": 19,
+      "n_questions": 16
+    },
+    {
+      "id": 20,
+      "n_questions": 41
+    },
+    {
+      "id": 21,
+      "n_questions": 20
+    },
+    {
+      "id": 22,
+      "n_questions": 39
+    },
+    {
+      "id": 23,
+      "n_questions": 24
+    },
+    {
+      "id": 24,
+      "n_questions": 115
+    },
+    {
+      "id": 25,
+      "n_questions": 28
+    },
+    {
+      "id": 26,
+      "n_questions": 75
+    }
+  ]
+}
