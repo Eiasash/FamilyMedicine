@@ -46,7 +46,7 @@ import { openSettings, bindSettingsEvents, refreshSettings } from './settings-ov
 export function renderTabs(){
 // safe-innerhtml: G.TABS is a hardcoded array of tab definitions (id/label/icon); no user input
 document.getElementById('tb').innerHTML=G.TABS.map(t=>
-`<button class="${t.id===G.tab?'on':''}" data-action="go" data-tab="${t.id}" aria-label="${t.l}"><span class="ic">${t.ic}</span>${t.l}</button>`
+`<button class="${t.id===G.tab?'on':''}" data-action="go" data-tab="${t.id}" role="tab" aria-selected="${t.id===G.tab?'true':'false'}" aria-label="${t.l}"><span class="ic">${t.ic}</span>${t.l}</button>`
 ).join('');
 }
 export function go(t){G.tab=t;renderTabs();render()}
@@ -240,7 +240,7 @@ ov.innerHTML=`<div style="max-width:420px;margin:0 auto;background:#fff;border-r
 <div style="font-size:10px;line-height:1.7;color:#047857">
 ${(CHANGELOG[APP_VERSION]||CHANGELOG[Object.keys(CHANGELOG).sort().pop()]||['No changelog available']).map(c=>'<b>'+c.split(' — ')[0]+'</b>'+(c.includes(' — ')?' — '+c.split(' — ').slice(1).join(' — '):'')).join('<br>')}
 </div></div>
-${sec('Quiz Filters','📝','#059669',
+${sec('Quiz Filters','📝','#047857',
 '<b>הכל</b> — כל '+G.QZ.length.toLocaleString()+' השאלות, מעורבב<br>'+
 '<b>2020–Jun25</b> — סינון לפי מועד מבחן<br>'+
 '<b>🔥 Hard</b> — שאלות שטעית בהן, הגרועות קודם<br>'+
