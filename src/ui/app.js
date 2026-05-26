@@ -221,6 +221,13 @@ export function takeWeeklySnapshot(){
 // ===== SHARED AI PROXY =====
 
 export function showHelp(){
+// Dedupe — if a #help-overlay is already mounted, no-op. Without this,
+// the deferred first-visit autoshow (rIC+setTimeout, ~2-3s after page load)
+// can race with a manual click on the Help button: user clicks → showHelp()
+// mounts overlay #1 → user reads/dismisses → 2s later deferred callback
+// fires → showHelp() mounts a SECOND stacked overlay. Caught by Codex P2
+// on PR #76.
+if(document.getElementById('help-overlay'))return;
 const ov=document.createElement('div');
 ov.id='help-overlay';
 ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px';
@@ -423,7 +430,24 @@ migrateToIDB().then(()=>{
   // Must be initialized AFTER the first render so G.S is fully hydrated when
   // the listener fires.
   initPostLoginRestore();
-  if(!localStorage.getItem('mishpacha_seen_help')){localStorage.setItem('mishpacha_seen_help','1');setTimeout(showHelp,500);}
+  if(!localStorage.getItem('mishpacha_seen_help')){
+    localStorage.setItem('mishpacha_seen_help','1');
+    // v1.21.x perf (#25): defer the first-visit help-overlay autoshow until
+    // the page is idle so it doesn't become the LCP element. With the prior
+    // setTimeout(showHelp,500) the large help overlay (multiple sec() blocks
+    // + CHANGELOG list) painted ~600ms after first render and Lighthouse
+    // picked the CHANGELOG block as LCP → 7.3s LCP. Deferring to
+    // requestIdleCallback lets the quiz content paint and stabilize first;
+    // LCP element becomes the small quiz card, expected LCP < 3s. Help still
+    // autoshows for first-time users — just ~2-3s later, after they've seen
+    // the app. 3000ms timeout fallback ensures it appears on slow devices
+    // that never become idle within the budget.
+    if(typeof requestIdleCallback==='function'){
+      requestIdleCallback(()=>setTimeout(showHelp,300),{timeout:3000});
+    }else{
+      setTimeout(showHelp,1500);
+    }
+  }
 }).catch(e=>{console.error('IDB init failed, falling back to localStorage:',e);renderTabs();render();initPostLoginRestore();});
 
 // Prevent accidental navigation during mock exam
