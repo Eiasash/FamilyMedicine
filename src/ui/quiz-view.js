@@ -644,7 +644,13 @@ if(!G.examMode){
     h+=`<div class="quiz-aux__body" dir="auto">${_aiTxt}</div>`;
   } else {
     h+=`<p class="quiz-aux__body">Loading distractor analysis…</p>`;
-    setTimeout(()=>{ if(!G._exCache['autopsy_'+_qIdx])aiAutopsy(_qIdx); },100);
+    // _distLoading guard (added with PR #71 deferred-fetch refactor):
+    // when distractors.json is still in-flight from the data-loader's
+    // requestIdleCallback fetch, do NOT fall through to aiAutopsy —
+    // that would burn a paid AI call for a question whose curated
+    // rationale is about to arrive. data-loader calls G.render() once
+    // G.DIS lands, which re-enters this branch with _dist populated.
+    if (!G._distLoading) setTimeout(()=>{ if(!G._exCache['autopsy_'+_qIdx])aiAutopsy(_qIdx); },100);
   }
   h+=`</aside>`;
 }

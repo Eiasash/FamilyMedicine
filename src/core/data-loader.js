@@ -60,7 +60,15 @@ G._dataPromise = (async function loadDataArrays() {
     // Deferred lazy-load of distractors.json — kick off after critical
     // payload arrives, on idle. Failure is non-fatal: G.DIS stays
     // undefined and quiz-view.js falls back gracefully.
+    //
+    // G._distLoading guards against quiz-view.js scheduling aiAutopsy()
+    // (a remote AI call) during the deferred window. Codex review on
+    // PR #71 flagged: without the guard, a user who answers before
+    // distractors.json arrives triggers an unnecessary AI request and
+    // sees AI-generated rationales instead of the curated ones that
+    // arrive moments later.
     G.DIS = undefined;
+    G._distLoading = true;
     const loadDistractors = () => {
       fetch(basePath + 'distractors.json').then(r => {
         if (!r.ok) {
@@ -70,12 +78,14 @@ G._dataPromise = (async function loadDataArrays() {
         return r.json();
       }).then(d => {
         if (d) G.DIS = d;
+        G._distLoading = false;
         if (typeof G.render === 'function') {
           try { G.render(); } catch { /* render guard */ }
         }
       }).catch(err => {
         console.warn('distractors.json deferred load failed:', err && err.message);
         G.DIS = {};
+        G._distLoading = false;
       });
     };
     if (typeof requestIdleCallback === 'function') {
