@@ -242,11 +242,11 @@ export function renderDailyContract(dueN){
     </div>`;
   // 1. Due reviews
   h+=row('🔄',`Due reviews (${dueN})`,dueAvail?'Spaced repetition — most efficient study time':'🎉 Nothing due right now',
-    dueAvail?btn('daily-due','Start','#ef4444'):btn('daily-mark-due','Skip','#94a3b8'),dc.dueDone);
+    dueAvail?btn('daily-due','Start','#ef4444'):btn('daily-mark-due','Skip','#64748b'),dc.dueDone);
   // 2. Weak drill
   h+=row('🎯',drillAvail?`Weak drill · ${weakestName}`:'Weak drill',
     drillAvail?`${weak.length} weakest topics · ~21 Qs`:'Answer more Qs first',
-    drillAvail?btn('daily-drill','Drill','#7c3aed'):btn('daily-mark-drill','Skip','#94a3b8'),dc.drillDone);
+    drillAvail?btn('daily-drill','Drill','#7c3aed'):btn('daily-mark-drill','Skip','#64748b'),dc.drillDone);
   // 3. Required reading
   h+=row('📄',readAvail?`Read: ${dc.readTitle}`:'Required reading',
     readAvail?`From weakest topic · ${weakestName}`:'Loading…',
@@ -508,7 +508,7 @@ _shuf.forEach((origI,dispJ)=>{
   }
   const stateAttr=state?` data-state="${state}"`:'';
   const lockAttr=G.ans?' disabled':'';
-  h+=`<li><button class="quiz-choice" role="radio" aria-checked="${isChecked?'true':'false'}"${stateAttr}${lockAttr} data-action="pick" data-i="${origI}" aria-label="Option ${LETTERS[dispJ]}: ${sanitize(o)}">`+
+  h+=`<li role="presentation"><button class="quiz-choice" role="radio" aria-checked="${isChecked?'true':'false'}"${stateAttr}${lockAttr} data-action="pick" data-i="${origI}" aria-label="Option ${LETTERS[dispJ]}: ${sanitize(o)}">`+
        `<span class="quiz-choice__letter" aria-hidden="true">${LETTERS[dispJ]}</span>`+
        `<span class="quiz-choice__text" dir="auto">${sanitize(o)}</span>`+
        `</button></li>`;
@@ -520,7 +520,7 @@ if(!G.ans){
   h+=`<footer class="quiz-actions">`;
   h+=`<button class="btn btn--primary quiz-actions__primary" data-action="check-answer"${G.sel===null?' disabled':''} aria-label="Check answer">Check</button>`;
   if(!G.examMode){
-    h+=`<button class="btn btn--ghost" data-action="give-up" aria-label="Show answer">I don't know</button>`;
+    h+=`<button class="btn btn--ghost" data-action="give-up" aria-label="I don't know — show me the answer">I don't know</button>`;
   }
   h+=`</footer>`;
   h+='</section>';
