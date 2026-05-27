@@ -448,15 +448,26 @@ migrateToIDB().then(()=>{
     //
     // Combined with the showHelp() dedupe shipped in #76, this is safe
     // even if the user manually clicks Help before the autoshow fires.
+    //
+    // EVENT CHOICE — only events that fire AFTER the user's intended action
+    // completes:
+    //   click     — fires after mousedown+mouseup; button activation done
+    //   keyup     — fires after key release; key's own handler done
+    //   scroll    — fires during scroll, but scroll doesn't intercept any
+    //               other tap target so it's safe
+    // Codex P2 (#77) ruled out touchstart/pointerdown/keydown because they
+    // fire BEFORE the corresponding click/keyup/action — on slow devices
+    // the 50ms autoshow could mount the overlay over the user's tap target
+    // before its click handler ran, swallowing the first intended action.
     let _autoshowFired=false;
     const _tryAutoshow=()=>{
       if(_autoshowFired)return;
       _autoshowFired=true;
-      // Small delay (50ms) after interaction so the user's tap-target fires
-      // first, not the overlay backdrop intercepting it.
+      // Small delay so the click handler that triggered us has fully done
+      // its work (state updates, navigation, etc.) before the overlay mounts.
       setTimeout(showHelp,50);
     };
-    const _events=['click','keydown','scroll','touchstart','pointerdown'];
+    const _events=['click','keyup','scroll'];
     _events.forEach(ev=>window.addEventListener(ev,_tryAutoshow,{once:true,passive:true}));
     // Safety net: show even if user never interacts. 12s puts the paint past
     // Lighthouse's LCP measurement window.
