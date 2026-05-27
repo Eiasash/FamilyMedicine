@@ -82,7 +82,7 @@ describe('renderQuiz — new structural shell (v1.15.0)', () => {
   it('renders the .quiz-stage section wrapper', () => {
     const html = renderQuiz();
     expect(html).toContain('class="quiz-stage"');
-    expect(html).toContain('aria-label="Question"');
+    expect(html).toContain('aria-label="שאלה"');
   });
 
   it('renders the question stem inside h2.quiz-question with dir="auto"', () => {
