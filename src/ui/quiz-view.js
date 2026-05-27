@@ -198,21 +198,39 @@ export function renderDailyContract(dueN){
   const weak=getWeakTopics(2);
   const weakestTi=weak.length?weak[0].ti:null;
   const weakestName=weakestTi!=null?(TOPICS[weakestTi]||''):'';
-  // Pick a stable daily required-reading article from AFP/הר"י index (if loaded)
-  if(!dc.readIdx&&G._afpHari&&G._afpHari.papers&&weakestTi!=null){
-    const specs=TOPIC_TO_AFP_SPECS[weakestTi]||[];
-    if(specs.length){
-      const pool=G._afpHari.papers.map((p,i)=>({p,i})).filter(x=>specs.includes(x.p.specialty));
-      if(pool.length){
-        // Deterministic pick: hash date + topic so same article all day
-        const seed=(today+'|'+weakestTi).split('').reduce((h,c)=>((h<<5)-h+c.charCodeAt(0))|0,0);
-        const pick=pool[Math.abs(seed)%pool.length];
-        dc.readIdx=pick.i;
-        dc.readTitle=pick.p.title||pick.p.file||'מאמר';
-        dc.drillTopic=weakestName;
-        G.save();
+  // Pick a stable daily required-reading article from AFP/הר"י index (if loaded).
+  // Path 1: weakest topic exists → pick from that topic's specialties.
+  // Path 2: no weakest topic yet (cold-start user, <3 Qs per topic) but AFP IS
+  //         loaded → fall back to a deterministic random pick from any specialty.
+  //         Previously this path left dc.readIdx null forever, stranding the row
+  //         in "Loading…" state even though data was loaded — a cold-start user
+  //         would never see an article recommendation until they answered 3+ Qs
+  //         in a topic, which is exactly when they need exam-prep reading most.
+  if(!dc.readIdx&&G._afpHari&&G._afpHari.papers&&G._afpHari.papers.length){
+    let pickIdx=null,pickTitle=null;
+    if(weakestTi!=null){
+      const specs=TOPIC_TO_AFP_SPECS[weakestTi]||[];
+      if(specs.length){
+        const pool=G._afpHari.papers.map((p,i)=>({p,i})).filter(x=>specs.includes(x.p.specialty));
+        if(pool.length){
+          // Deterministic pick: hash date + topic so same article all day
+          const seed=(today+'|'+weakestTi).split('').reduce((h,c)=>((h<<5)-h+c.charCodeAt(0))|0,0);
+          const pick=pool[Math.abs(seed)%pool.length];
+          pickIdx=pick.i;pickTitle=pick.p.title||pick.p.file||'מאמר';
+        }
       }
     }
+    // Cold-start fallback: any specialty, deterministic by date alone.
+    if(pickIdx===null){
+      const seed=today.split('').reduce((h,c)=>((h<<5)-h+c.charCodeAt(0))|0,0);
+      const pick=G._afpHari.papers[Math.abs(seed)%G._afpHari.papers.length];
+      const idx=G._afpHari.papers.indexOf(pick);
+      pickIdx=idx;pickTitle=pick.title||pick.file||'מאמר';
+    }
+    dc.readIdx=pickIdx;
+    dc.readTitle=pickTitle;
+    dc.drillTopic=weakestName;
+    G.save();
   }else if(G._afpHari===undefined&&!G._afpHariLoading){
     // Kick off AFP/הר"י index load so we can fill reading on next render
     G._afpHariLoading=true;
@@ -281,11 +299,15 @@ function renderQuizControls(dueN){
     ['all',`All (${G.QZ.length})`],
     ['2020','2020'],['2021-Jun','Jun 21'],['2022-Jun','Jun 22'],['2023-Jun','Jun 23'],
     ['2024-May','May 24'],['2024-Sep','Sep 24'],['2025-Jun','Jun 25'],
-    ['AI-Ch',`AI (${_aiCount})`],
-    ['AI-Hard-G',`Hard-G (${_aiHardGCount})`],
-    ['AI-Hard-AFP',`Hard-AFP (${_aiHardAfpCount})`],
+    // Conditional pills — only show when their bucket has questions. Showing
+    // "AI (0)" or "Traps (0)" is confusing for cold-start users: tap → empty
+    // result → looks like a broken filter. Hide instead.
+    ...(_aiCount>0?[['AI-Ch',`AI (${_aiCount})`]]:[]),
+    ...(_aiHardGCount>0?[['AI-Hard-G',`Hard-G (${_aiHardGCount})`]]:[]),
+    ...(_aiHardAfpCount>0?[['AI-Hard-AFP',`Hard-AFP (${_aiHardAfpCount})`]]:[]),
     ['hard','Hard'],['slow','Slow'],['weak','Weak'],['due','Due'],
-    ['traps',`Traps (${_trapCount})`],['nbs','Next best step']
+    ...(_trapCount>0?[['traps',`Traps (${_trapCount})`]]:[]),
+    ['nbs','Next best step']
   ];
   const _weakForPill=getWeakTopics(3);
   if(_weakForPill.length&&_weakForPill[0].pct!==null&&_weakForPill[0].pct<65)filts.push(['rescue','Rescue']);
