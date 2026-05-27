@@ -20,6 +20,20 @@
      doesn't rewrite it to a hashed bundle path that wouldn't match the
      runtime fetch. Ported from Geriatrics v10.63.7. -->
 <link rel="preload" href="/FamilyMedicine/data/questions.json" as="fetch" type="application/json" crossorigin>
+<!-- Preload the Heebo Latin weights used by the <h1> (LCP element). The
+     h1 "Mishpacha Mega" uses Heebo 700 (browser default for h1), the
+     "Family Medicine" badge span uses 600 (inline style), the version
+     span uses 400. Without these preloads, the fonts arrive after FCP
+     and h1 re-paints with new metrics — Lighthouse re-times LCP to that
+     paint, producing the bimodal 3.3s / 7.0s pattern observed across
+     5-run samples. Preloads issue fetches in parallel with HTML download
+     so the fonts are ready by the time h1 paints, eliminating the swap.
+     IMPORTANT: paths use the source-tree `fonts/` location; Vite rewrites
+     to the hashed /assets/ path at build time, matching the @font-face
+     src urls below. -->
+<link rel="preload" href="fonts/heebo-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/heebo-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/heebo-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <title>Mishpacha Mega — Family Medicine Board Prep</title>
 <link rel="stylesheet" href="shared/tokens.css">
 <style id="clinical-kit">
