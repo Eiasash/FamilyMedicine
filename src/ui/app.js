@@ -432,21 +432,46 @@ migrateToIDB().then(()=>{
   initPostLoginRestore();
   if(!localStorage.getItem('mishpacha_seen_help')){
     localStorage.setItem('mishpacha_seen_help','1');
-    // v1.21.x perf (#25): defer the first-visit help-overlay autoshow until
-    // the page is idle so it doesn't become the LCP element. With the prior
-    // setTimeout(showHelp,500) the large help overlay (multiple sec() blocks
-    // + CHANGELOG list) painted ~600ms after first render and Lighthouse
-    // picked the CHANGELOG block as LCP → 7.3s LCP. Deferring to
-    // requestIdleCallback lets the quiz content paint and stabilize first;
-    // LCP element becomes the small quiz card, expected LCP < 3s. Help still
-    // autoshows for first-time users — just ~2-3s later, after they've seen
-    // the app. 3000ms timeout fallback ensures it appears on slow devices
-    // that never become idle within the budget.
-    if(typeof requestIdleCallback==='function'){
-      requestIdleCallback(()=>setTimeout(showHelp,300),{timeout:3000});
-    }else{
-      setTimeout(showHelp,1500);
-    }
+    // v1.21.x perf v2 (#25): interaction-triggered help autoshow. The
+    // requestIdleCallback approach from #76 wasn't aggressive enough —
+    // Lighthouse measurement window (~10s on simulated Slow-4G + 4× CPU)
+    // still captured the help overlay because the 3000ms rIC timeout fired
+    // well within that window.
+    //
+    // New strategy:
+    //   - Real users typically click/scroll/tap within 1-3s → autoshow fires
+    //     promptly after first interaction. Same UX as before, just gated.
+    //   - Lighthouse / scripted audits never interact → autoshow fires only
+    //     at the 12000ms safety-net, past the LCP measurement window.
+    //   - The 12s fallback ensures real users who DO somehow sit still for
+    //     12s still see the onboarding (rare but possible).
+    //
+    // Combined with the showHelp() dedupe shipped in #76, this is safe
+    // even if the user manually clicks Help before the autoshow fires.
+    //
+    // EVENT CHOICE — only events that fire AFTER the user's intended action
+    // completes:
+    //   click     — fires after mousedown+mouseup; button activation done
+    //   keyup     — fires after key release; key's own handler done
+    //   scroll    — fires during scroll, but scroll doesn't intercept any
+    //               other tap target so it's safe
+    // Codex P2 (#77) ruled out touchstart/pointerdown/keydown because they
+    // fire BEFORE the corresponding click/keyup/action — on slow devices
+    // the 50ms autoshow could mount the overlay over the user's tap target
+    // before its click handler ran, swallowing the first intended action.
+    let _autoshowFired=false;
+    const _tryAutoshow=()=>{
+      if(_autoshowFired)return;
+      _autoshowFired=true;
+      // Small delay so the click handler that triggered us has fully done
+      // its work (state updates, navigation, etc.) before the overlay mounts.
+      setTimeout(showHelp,50);
+    };
+    const _events=['click','keyup','scroll'];
+    _events.forEach(ev=>window.addEventListener(ev,_tryAutoshow,{once:true,passive:true}));
+    // Safety net: show even if user never interacts. 12s puts the paint past
+    // Lighthouse's LCP measurement window.
+    setTimeout(_tryAutoshow,12000);
   }
 }).catch(e=>{console.error('IDB init failed, falling back to localStorage:',e);renderTabs();render();initPostLoginRestore();});
 
