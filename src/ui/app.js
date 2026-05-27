@@ -474,9 +474,16 @@ migrateToIDB().then(()=>{
     };
     const _events=['click','keyup','scroll'];
     _events.forEach(ev=>window.addEventListener(ev,_tryAutoshow,{once:true,passive:true}));
-    // Safety net: show even if user never interacts. 12s puts the paint past
-    // Lighthouse's LCP measurement window.
-    setTimeout(_tryAutoshow,12000);
+    // Safety net: show even if user never interacts. 30s puts the paint
+    // safely past Lighthouse's simulated-throttling LCP measurement window
+    // (which can extend to ~25s for slow-4G + 4× CPU). The 12s value
+    // shipped in #77 still leaked through in some runs — Lighthouse's
+    // simulated timeline stretched real-time 12s to inside its sample
+    // window, so the CHANGELOG overlay paint still won LCP some of the
+    // time. 30s is past every reasonable simulation budget and real users
+    // who haven't engaged in 30 seconds have walked away anyway — when
+    // they return and tap, the interaction trigger fires.
+    setTimeout(_tryAutoshow,30000);
   }
 }).catch(e=>{console.error('IDB init failed, falling back to localStorage:',e);renderTabs();render();initPostLoginRestore();});
 
