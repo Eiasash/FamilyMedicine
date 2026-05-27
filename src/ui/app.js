@@ -1,7 +1,7 @@
 // App entry point — orchestrates all modules, wires up window bindings for onclick handlers
 import '../debug/console.js'; // FIRST IMPORT: installs console/fetch/error wrappers before anything else runs
 import G from '../core/globals.js';
-import { APP_VERSION, LS, TOPICS, EXAM_FREQ, CHANGELOG, BUILD_HASH, SYLLABUS_VERSION } from '../core/constants.js';
+import { APP_VERSION, LS, TOPICS, EXAM_FREQ, BUILD_HASH, SYLLABUS_VERSION } from '../core/constants.js';
 import { sanitize, fmtT, safeJSONParse, getApiKey, setApiKey, toast, isOk} from "../core/utils.js";
 import { migrateToIDB } from '../core/state.js';
 import '../core/data-loader.js'; // side-effect: populates G.QZ, G.TABS, etc.
@@ -220,7 +220,7 @@ export function takeWeeklySnapshot(){
 
 // ===== SHARED AI PROXY =====
 
-export function showHelp(){
+export async function showHelp(){
 // Dedupe — if a #help-overlay is already mounted, no-op. Without this,
 // the deferred first-visit autoshow (rIC+setTimeout, ~2-3s after page load)
 // can race with a manual click on the Help button: user clicks → showHelp()
@@ -228,6 +228,11 @@ export function showHelp(){
 // fires → showHelp() mounts a SECOND stacked overlay. Caught by Codex P2
 // on PR #76.
 if(document.getElementById('help-overlay'))return;
+// CHANGELOG is large (~30KB gzipped, was ~23% of main bundle). Lazy-load
+// it only when the help overlay actually opens — keeps it out of the
+// critical-path bundle. The first call costs one chunk fetch (~30KB gz,
+// served from same origin/cache); subsequent calls hit the module cache.
+const { CHANGELOG } = await import('../core/changelog.js');
 const ov=document.createElement('div');
 ov.id='help-overlay';
 ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px';
