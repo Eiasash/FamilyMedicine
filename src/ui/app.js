@@ -465,8 +465,26 @@ migrateToIDB().then(()=>{
     // the 50ms autoshow could mount the overlay over the user's tap target
     // before its click handler ran, swallowing the first intended action.
     let _autoshowFired=false;
-    const _tryAutoshow=()=>{
+    const _tryAutoshow=(e)=>{
       if(_autoshowFired)return;
+      // ROOT-CAUSE FIX (post-#79 deploy verify): even with the 30s safety
+      // net, FM was still showing the help overlay as LCP in 2 of 3
+      // Lighthouse runs (LCP=7.2s, snippet=CHANGELOG entry). Trace: the
+      // first render() call hits src/ui/app.js:58
+      //   `if(G.tab!==G.lastTab){... window.scrollTo({top:0}); G.lastTab=G.tab;}`
+      // which programmatically fires a `scroll` event. The `scroll` listener
+      // here treats that as engagement and triggers the autoshow inside
+      // Lighthouse's LCP window. Lighthouse itself never simulates user
+      // events — every event it observes is either browser-generated
+      // (isTrusted=true) or app-generated (isTrusted=false).
+      //
+      // Gate on isTrusted to count only genuine user-initiated events.
+      // Synthetic events from app code (scrollTo, dispatchEvent, focus(),
+      // .click()) have isTrusted=false and don't trigger.
+      //
+      // Safety-net calls with no argument; `e` is undefined → !e is true →
+      // proceeds, which is correct (safety net is intentional and runs at 30s).
+      if(e && e.isTrusted===false) return;
       _autoshowFired=true;
       // Small delay so the click handler that triggered us has fully done
       // its work (state updates, navigation, etc.) before the overlay mounts.
@@ -475,14 +493,7 @@ migrateToIDB().then(()=>{
     const _events=['click','keyup','scroll'];
     _events.forEach(ev=>window.addEventListener(ev,_tryAutoshow,{once:true,passive:true}));
     // Safety net: show even if user never interacts. 30s puts the paint
-    // safely past Lighthouse's simulated-throttling LCP measurement window
-    // (which can extend to ~25s for slow-4G + 4× CPU). The 12s value
-    // shipped in #77 still leaked through in some runs — Lighthouse's
-    // simulated timeline stretched real-time 12s to inside its sample
-    // window, so the CHANGELOG overlay paint still won LCP some of the
-    // time. 30s is past every reasonable simulation budget and real users
-    // who haven't engaged in 30 seconds have walked away anyway — when
-    // they return and tap, the interaction trigger fires.
+    // safely past Lighthouse's simulated-throttling LCP measurement window.
     setTimeout(_tryAutoshow,30000);
   }
 }).catch(e=>{console.error('IDB init failed, falling back to localStorage:',e);renderTabs();render();initPostLoginRestore();});
