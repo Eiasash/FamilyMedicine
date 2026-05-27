@@ -467,33 +467,31 @@ migrateToIDB().then(()=>{
     let _autoshowFired=false;
     const _tryAutoshow=(e)=>{
       if(_autoshowFired)return;
-      // ROOT-CAUSE FIX (post-#79 deploy verify): even with the 30s safety
-      // net, FM was still showing the help overlay as LCP in 2 of 3
-      // Lighthouse runs (LCP=7.2s, snippet=CHANGELOG entry). Trace: the
-      // first render() call hits src/ui/app.js:58
-      //   `if(G.tab!==G.lastTab){... window.scrollTo({top:0}); G.lastTab=G.tab;}`
-      // which programmatically fires a `scroll` event. The `scroll` listener
-      // here treats that as engagement and triggers the autoshow inside
-      // Lighthouse's LCP window. Lighthouse itself never simulates user
-      // events — every event it observes is either browser-generated
-      // (isTrusted=true) or app-generated (isTrusted=false).
-      //
-      // Gate on isTrusted to count only genuine user-initiated events.
-      // Synthetic events from app code (scrollTo, dispatchEvent, focus(),
-      // .click()) have isTrusted=false and don't trigger.
-      //
-      // Safety-net calls with no argument; `e` is undefined → !e is true →
-      // proceeds, which is correct (safety net is intentional and runs at 30s).
+      // Defense-in-depth: reject events known to be synthetic (dispatchEvent,
+      // .click()). Note however that browser-generated events from API calls
+      // like window.scrollTo() are STILL isTrusted=true in Chromium/Firefox
+      // because the scroll event is emitted by the user agent regardless of
+      // who triggered it. So we cannot rely on this alone to suppress the
+      // first-render programmatic scroll — see _events trigger list below.
       if(e && e.isTrusted===false) return;
       _autoshowFired=true;
       // Small delay so the click handler that triggered us has fully done
       // its work (state updates, navigation, etc.) before the overlay mounts.
       setTimeout(showHelp,50);
     };
-    const _events=['click','keyup','scroll'];
+    // Trigger list: ONLY click + keyup. Both are events fired by genuine
+    // user actions (post-action: after the click completes, after the key
+    // releases). scroll was REMOVED in this revision — Codex P1 on #80
+    // pointed out that src/ui/app.js:58's first-render
+    // `window.scrollTo({top:0})` produces a scroll event with isTrusted=true
+    // (browser-generated), so the isTrusted gate above won't suppress it.
+    // And the {once:true} registration means the synthetic event consumes
+    // the listener, breaking real subsequent user scrolls too (Codex P2 on
+    // sibling PRs). Real users click or type within seconds — scroll was
+    // a redundant trigger.
+    const _events=['click','keyup'];
     _events.forEach(ev=>window.addEventListener(ev,_tryAutoshow,{once:true,passive:true}));
-    // Safety net: show even if user never interacts. 30s puts the paint
-    // safely past Lighthouse's simulated-throttling LCP measurement window.
+    // Safety net 30s — past Lighthouse's simulated-throttling LCP window.
     setTimeout(_tryAutoshow,30000);
   }
 }).catch(e=>{console.error('IDB init failed, falling back to localStorage:',e);renderTabs();render();initPostLoginRestore();});
