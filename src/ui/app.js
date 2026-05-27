@@ -465,24 +465,33 @@ migrateToIDB().then(()=>{
     // the 50ms autoshow could mount the overlay over the user's tap target
     // before its click handler ran, swallowing the first intended action.
     let _autoshowFired=false;
-    const _tryAutoshow=()=>{
+    const _tryAutoshow=(e)=>{
       if(_autoshowFired)return;
+      // Defense-in-depth: reject events known to be synthetic (dispatchEvent,
+      // .click()). Note however that browser-generated events from API calls
+      // like window.scrollTo() are STILL isTrusted=true in Chromium/Firefox
+      // because the scroll event is emitted by the user agent regardless of
+      // who triggered it. So we cannot rely on this alone to suppress the
+      // first-render programmatic scroll — see _events trigger list below.
+      if(e && e.isTrusted===false) return;
       _autoshowFired=true;
       // Small delay so the click handler that triggered us has fully done
       // its work (state updates, navigation, etc.) before the overlay mounts.
       setTimeout(showHelp,50);
     };
-    const _events=['click','keyup','scroll'];
+    // Trigger list: ONLY click + keyup. Both are events fired by genuine
+    // user actions (post-action: after the click completes, after the key
+    // releases). scroll was REMOVED in this revision — Codex P1 on #80
+    // pointed out that src/ui/app.js:58's first-render
+    // `window.scrollTo({top:0})` produces a scroll event with isTrusted=true
+    // (browser-generated), so the isTrusted gate above won't suppress it.
+    // And the {once:true} registration means the synthetic event consumes
+    // the listener, breaking real subsequent user scrolls too (Codex P2 on
+    // sibling PRs). Real users click or type within seconds — scroll was
+    // a redundant trigger.
+    const _events=['click','keyup'];
     _events.forEach(ev=>window.addEventListener(ev,_tryAutoshow,{once:true,passive:true}));
-    // Safety net: show even if user never interacts. 30s puts the paint
-    // safely past Lighthouse's simulated-throttling LCP measurement window
-    // (which can extend to ~25s for slow-4G + 4× CPU). The 12s value
-    // shipped in #77 still leaked through in some runs — Lighthouse's
-    // simulated timeline stretched real-time 12s to inside its sample
-    // window, so the CHANGELOG overlay paint still won LCP some of the
-    // time. 30s is past every reasonable simulation budget and real users
-    // who haven't engaged in 30 seconds have walked away anyway — when
-    // they return and tap, the interaction trigger fires.
+    // Safety net 30s — past Lighthouse's simulated-throttling LCP window.
     setTimeout(_tryAutoshow,30000);
   }
 }).catch(e=>{console.error('IDB init failed, falling back to localStorage:',e);renderTabs();render();initPostLoginRestore();});
