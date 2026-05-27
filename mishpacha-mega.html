@@ -169,7 +169,14 @@ body.study .badge-info    {background:#1e2a3d;color:#a0c8f0}
 <div id="settings-overlay" hidden></div>
 
 <!-- FSRS shared library (plain script, shared with Geriatrics repo) -->
-<script src="shared/fsrs.js"></script>
+<!-- defer keeps fsrs.js out of the render-blocking critical path while
+     preserving execution order before src/ui/app.js. fsrs.js is a classic
+     script that sets window.FSRS_* globals consumed by src/sr/fsrs-bridge.js
+     at module-evaluate time. Per HTML spec, classic-defer scripts and module
+     scripts both run after document parse, in tree order — so fsrs.js still
+     executes before app.js. Lighthouse render-blocking-resources audit
+     attributed ~150ms wasted to this without defer. -->
+<script src="shared/fsrs.js" defer></script>
 <!-- App entry point (ES module — imports all other modules) -->
 <script type="module" src="src/ui/app.js"></script>
 <!-- Shared PWA install promo (canonical .shared/install-promo.js) -->
