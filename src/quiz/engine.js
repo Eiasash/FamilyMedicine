@@ -398,15 +398,15 @@ export function showMockExamResult(pct,correct,tot,elapsed,byTopic,wrongIdxs){
   const wn=(wrongIdxs&&wrongIdxs.length)||0;
   // Stash on window so the handler can read it back (avoid inline JSON.stringify in onclick)
   window.__mishpachaLastMockWrong=wrongIdxs||[];
-  const html=`<div style="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;overflow-y:auto;padding:16px" id="mexModal">
+  const html=`<div style="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;overflow-y:auto;padding:16px" id="mexModal" dir="rtl">
 <div style="background:#fff;border-radius:16px;max-width:480px;margin:0 auto;padding:20px;font-family:Inter,sans-serif">
 <div style="text-align:center;margin-bottom:16px">
   <div style="font-size:48px">${pass?'🎉':'💪'}</div>
   <div style="font-size:28px;font-weight:700;color:${pass?'#059669':'#dc2626'}">${pct}%</div>
-  <div style="font-size:13px;color:#64748b">${correct}/${tot} correct · ${fmtT(elapsed)}</div>
-  <div style="font-size:14px;font-weight:700;margin-top:4px;color:${pass?'#059669':'#dc2626'}">${pass?'PASS ✓':'NEEDS WORK ✗'} (pass ≥60%)</div>
+  <div style="font-size:13px;color:#64748b">${correct}/${tot} נכון · ${fmtT(elapsed)}</div>
+  <div style="font-size:14px;font-weight:700;margin-top:4px;color:${pass?'#059669':'#dc2626'}">${pass?'עבר ✓':'דורש עבודה ✗'} (עובר ≥60%)</div>
 </div>
-<div style="font-weight:700;font-size:12px;margin-bottom:8px;color:#475569">TOPIC BREAKDOWN (worst first):</div>
+<div style="font-weight:700;font-size:12px;margin-bottom:8px;color:#475569">פירוט לפי נושאים (חלשים קודם):</div>
 ${rows.map(r=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #f1f5f9">
   <div style="font-size:11px;flex:1">${r.name}</div>
   <div style="font-size:10px;color:#64748b">${r.ok}/${r.n}</div>
@@ -415,8 +415,8 @@ ${rows.map(r=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 0
   </div>
   <div style="font-size:10px;font-weight:700;color:${r.acc>=70?'#059669':r.acc>=50?'#d97706':'#dc2626'};min-width:28px;text-align:right">${r.acc}%</div>
 </div>`).join('')}
-${wn?`<button data-action="replay-mock-wrong" style="margin-top:14px;width:100%;padding:10px;background:#dc2626;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer" aria-label="Review wrong answers">🔁 Review ${wn} wrong answers</button>`:''}
-<button data-action="close-mock-modal" style="margin-top:10px;width:100%;padding:10px;background:#0f172a;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer" aria-label="Close exam results">Close</button>
+${wn?`<button data-action="replay-mock-wrong" style="margin-top:14px;width:100%;padding:10px;background:#dc2626;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer" aria-label="סקור תשובות שגויות">🔁 סקור ${wn} טעויות</button>`:''}
+<button data-action="close-mock-modal" style="margin-top:10px;width:100%;padding:10px;background:#0f172a;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer" aria-label="סגור תוצאות מבחן">סגור</button>
 </div></div>`;
   document.body.insertAdjacentHTML('beforeend',html);
 }

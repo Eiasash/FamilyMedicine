@@ -252,23 +252,23 @@ export function renderDailyContract(dueN){
   const btn=(action,txt,color)=>`<button data-action="${action}" class="btn" style="font-size:10px;padding:4px 10px;background:${color};color:#fff;border:none;border-radius:6px;font-weight:700;white-space:nowrap;cursor:pointer">${txt}</button>`;
   let h=`<div style="margin-bottom:12px;padding:12px 14px;background:linear-gradient(135deg,#eff6ff 0%,#f5f3ff 100%);border:1px solid #c7d2fe;border-radius:12px" dir="auto">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <div style="font-weight:700;font-size:12px;color:#4338ca">📅 Daily Contract <span style="font-weight:400;color:#6366f1;font-size:10px">· ${today}</span></div>
+      <div style="font-weight:700;font-size:12px;color:#4338ca">📅 חוזה יומי <span style="font-weight:400;color:#6366f1;font-size:10px">· ${today}</span></div>
       <div style="display:flex;gap:6px;align-items:center">
         <div style="font-size:10px;color:#6366f1;font-weight:700">${doneCount}/3</div>
-        <button data-action="dismiss-daily" class="btn" style="font-size:9px;padding:3px 7px;background:#fff;color:#6366f1;border:1px solid #c7d2fe;border-radius:5px" aria-label="Dismiss daily contract for today">×</button>
+        <button data-action="dismiss-daily" class="btn" style="font-size:9px;padding:3px 7px;background:#fff;color:#6366f1;border:1px solid #c7d2fe;border-radius:5px" aria-label="בטל חוזה יומי להיום">×</button>
       </div>
     </div>`;
   // 1. Due reviews
-  h+=row('🔄',`Due reviews (${dueN})`,dueAvail?'Spaced repetition — most efficient study time':'🎉 Nothing due right now',
-    dueAvail?btn('daily-due','Start','#ef4444'):btn('daily-mark-due','Skip','#64748b'),dc.dueDone);
+  h+=row('🔄',`חזרות (${dueN})`,dueAvail?'חזרה מרווחת — זמן הלימוד היעיל ביותר':'🎉 אין חזרות כרגע',
+    dueAvail?btn('daily-due','התחל','#ef4444'):btn('daily-mark-due','דלג','#64748b'),dc.dueDone);
   // 2. Weak drill
-  h+=row('🎯',drillAvail?`Weak drill · ${weakestName}`:'Weak drill',
-    drillAvail?`${weak.length} weakest topics · ~21 Qs`:'Answer more Qs first',
-    drillAvail?btn('daily-drill','Drill','#7c3aed'):btn('daily-mark-drill','Skip','#64748b'),dc.drillDone);
+  h+=row('🎯',drillAvail?`תרגול חולשות · ${weakestName}`:'תרגול חולשות',
+    drillAvail?`${weak.length} נושאים חלשים · ~21 שאלות`:'ענה על עוד שאלות קודם',
+    drillAvail?btn('daily-drill','תרגל','#7c3aed'):btn('daily-mark-drill','דלג','#64748b'),dc.drillDone);
   // 3. Required reading
-  h+=row('📄',readAvail?`Read: ${dc.readTitle}`:'Required reading',
-    readAvail?`From weakest topic · ${weakestName}`:'Loading…',
-    readAvail?btn('daily-read','Open','#059669'):'',dc.readDone);
+  h+=row('📄',readAvail?`קרא: ${dc.readTitle}`:'קריאה נדרשת',
+    readAvail?`מהנושא החלש ביותר · ${weakestName}`:'טוען…',
+    readAvail?btn('daily-read','פתח','#059669'):'',dc.readDone);
   h+=`</div>`;
   return h;
 }
@@ -279,16 +279,16 @@ export function renderDailyContract(dueN){
 // Extracted from renderQuiz so the main render path stays readable.
 // All markup uses tokenized classes; no inline styles.
 function renderQuizControls(dueN){
-  let h='<nav class="quiz-controls" aria-label="Quiz filters">';
+  let h='<nav class="quiz-controls" aria-label="פילטרים לחידון">';
   h+='<div class="quiz-controls__row">';
-  h+='<span class="quiz-controls__label">Mode</span>';
-  h+='<button class="btn btn--secondary" data-action="start-mock" aria-label="Start mock exam">Mock exam</button>';
-  h+='<button class="btn btn--ghost" data-action="start-sd" aria-label="Start sudden death">Sudden death</button>';
-  h+='<button class="btn btn--ghost" data-action="start-oncall" aria-label="Start on-call mode">On-call</button>';
-  if(!G.pomoActive)h+='<button class="btn btn--ghost" data-action="start-pomo" aria-label="Start pomodoro timer">Pomodoro</button>';
+  h+='<span class="quiz-controls__label">מצב</span>';
+  h+='<button class="btn btn--secondary" data-action="start-mock" aria-label="התחל מבחן סימולציה">סימולציה</button>';
+  h+='<button class="btn btn--ghost" data-action="start-sd" aria-label="התחל מוות פתאומי">מוות פתאומי</button>';
+  h+='<button class="btn btn--ghost" data-action="start-oncall" aria-label="התחל מצב תורנות">תורנות</button>';
+  if(!G.pomoActive)h+='<button class="btn btn--ghost" data-action="start-pomo" aria-label="התחל טיימר פומודורו">פומודורו</button>';
   h+='</div>';
   h+='<div class="quiz-controls__row">';
-  h+='<span class="quiz-controls__label">Filter</span>';
+  h+='<span class="quiz-controls__label">סינון</span>';
   const _trapCount=G.QZ.filter((_,i)=>isExamTrap(i)).length;
   const _aiCount=G.QZ.filter(qq=>qq.t==='AI-Ch').length;
   const _yearSel=Array.isArray(G.years)?G.years:[];
@@ -296,7 +296,7 @@ function renderQuizControls(dueN){
   const _aiHardGCount=G.QZ.filter(qq=>qq.t==='AI-Hard-G').length;
   const _aiHardAfpCount=G.QZ.filter(qq=>qq.t==='AI-Hard-AFP').length;
   const filts=[
-    ['all',`All (${G.QZ.length})`],
+    ['all',`הכל (${G.QZ.length})`],
     ['2020','2020'],['2021-Jun','Jun 21'],['2022-Jun','Jun 22'],['2023-Jun','Jun 23'],
     ['2024-May','May 24'],['2024-Sep','Sep 24'],['2025-Jun','Jun 25'],
     // Conditional pills — only show when their bucket has questions. Showing
@@ -305,15 +305,15 @@ function renderQuizControls(dueN){
     ...(_aiCount>0?[['AI-Ch',`AI (${_aiCount})`]]:[]),
     ...(_aiHardGCount>0?[['AI-Hard-G',`Hard-G (${_aiHardGCount})`]]:[]),
     ...(_aiHardAfpCount>0?[['AI-Hard-AFP',`Hard-AFP (${_aiHardAfpCount})`]]:[]),
-    ['hard','Hard'],['slow','Slow'],['weak','Weak'],['due','Due'],
-    ...(_trapCount>0?[['traps',`Traps (${_trapCount})`]]:[]),
-    ['nbs','Next best step']
+    ['hard','קשות'],['slow','איטיות'],['weak','חלשות'],['due','לחזרה'],
+    ...(_trapCount>0?[['traps',`מלכודות (${_trapCount})`]]:[]),
+    ['nbs','השלב הבא']
   ];
   const _weakForPill=getWeakTopics(3);
-  if(_weakForPill.length&&_weakForPill[0].pct!==null&&_weakForPill[0].pct<65)filts.push(['rescue','Rescue']);
-  if(dueN>0)filts.push(['due',`Due (${dueN})`]);
+  if(_weakForPill.length&&_weakForPill[0].pct!==null&&_weakForPill[0].pct<65)filts.push(['rescue','חילוץ']);
+  if(dueN>0)filts.push(['due',`לחזרה (${dueN})`]);
   const _wrongCount=getWrongAnswerCount();
-  if(_wrongCount>0)filts.push(['wrong-review',`Review wrong (${_wrongCount})`]);
+  if(_wrongCount>0)filts.push(['wrong-review',`סקור טעויות (${_wrongCount})`]);
   filts.forEach(([f,l])=>{
     if(f==='rescue'){
       h+=`<span class="pill" data-state="${G.filt==='rescue'?'on':''}" data-action="filter-rescue">${sanitize(l)}</span>`;
@@ -323,7 +323,7 @@ function renderQuizControls(dueN){
       h+=`<span class="pill" data-state="${G.filt==='nbs'?'on':''}" data-action="filter-nbs">${sanitize(l)}</span>`;
     } else if(EXAM_YEARS.includes(f)){
       const _yOn=_yearSel.includes(f);
-      h+=`<span class="pill" data-state="${_yOn?'on':''}" data-action="filter-year" data-f="${f}" title="Click to toggle — multi-select allowed">${sanitize(l)}${_yOn?' ✓':''}</span>`;
+      h+=`<span class="pill" data-state="${_yOn?'on':''}" data-action="filter-year" data-f="${f}" title="לחץ להחלפה — בחירה מרובה אפשרית">${sanitize(l)}${_yOn?' ✓':''}</span>`;
     } else if(f==='all'){
       h+=`<span class="pill" data-state="${G.filt==='all'&&!_inYearMode?'on':''}" data-action="filter" data-f="${f}">${sanitize(l)}</span>`;
     } else {
@@ -331,30 +331,30 @@ function renderQuizControls(dueN){
     }
   });
   if(_yearSel.length>=2){
-    h+=`<span class="pill" data-action="filter-year-clear" title="Clear exam year filter">Clear ${_yearSel.length} years</span>`;
+    h+=`<span class="pill" data-action="filter-year-clear" title="נקה סינון שנים">נקה ${_yearSel.length} שנים</span>`;
   }
   h+='</div>';
   h+='<div class="quiz-controls__row">';
-  h+='<span class="quiz-controls__label">Topic</span>';
-  h+=`<select class="quiz-controls__select" data-action="topic-select" aria-label="Filter by topic">`;
-  h+=`<option value="-1"${G.filt!=='topic'?' selected':''}>All topics</option>`;
+  h+='<span class="quiz-controls__label">נושא</span>';
+  h+=`<select class="quiz-controls__select" data-action="topic-select" aria-label="סנן לפי נושא">`;
+  h+=`<option value="-1"${G.filt!=='topic'?' selected':''}>כל הנושאים</option>`;
   TOPICS.forEach((t,i)=>{ h+=`<option value="${i}"${G.filt==='topic'&&G.topicFilt===i?' selected':''}>${sanitize(t)}</option>`; });
   h+='</select>';
   if(G.filt==='topic'&&G.topicFilt>=0){
     const _tqCount=G.QZ.filter(qq=>qq.ti===G.topicFilt).length;
-    h+=`<button class="btn btn--secondary" data-action="start-mini-exam" data-ti="${G.topicFilt}" aria-label="Start topic mini-exam">Mini exam (${Math.min(_tqCount,20)})</button>`;
+    h+=`<button class="btn btn--secondary" data-action="start-mini-exam" data-ti="${G.topicFilt}" aria-label="התחל מבחן מיני לנושא">מיני מבחן (${Math.min(_tqCount,20)})</button>`;
   }
   h+='</div>';
   h+='<div class="quiz-controls__row">';
-  h+='<span class="quiz-controls__label">Drill</span>';
-  h+=`<label class="btn btn--ghost"><input type="checkbox" ${G.blindRecall?'checked':''} data-action="toggle-blind"> Cover options</label>`;
-  h+=`<label class="btn btn--ghost"><input type="checkbox" ${G.timedMode?'checked':''} data-action="toggle-timed"> Timed (90s)</label>`;
+  h+='<span class="quiz-controls__label">תרגול</span>';
+  h+=`<label class="btn btn--ghost"><input type="checkbox" ${G.blindRecall?'checked':''} data-action="toggle-blind"> כסה תשובות</label>`;
+  h+=`<label class="btn btn--ghost"><input type="checkbox" ${G.timedMode?'checked':''} data-action="toggle-timed"> טיימר (90 שנ׳)</label>`;
   h+='</div>';
   if(G.filt==='wrong-review'){
     const _wrCount=getWrongAnswerCount();
     h+=`<div class="quiz-controls__row">`+
-       `<span class="pill pill--danger">Wrong-review mode · ${_wrCount}</span>`+
-       `<button class="btn btn--ghost" data-action="wrong-review-clear">Clear</button>`+
+       `<span class="pill pill--danger">מצב סקירת טעויות · ${_wrCount}</span>`+
+       `<button class="btn btn--ghost" data-action="wrong-review-clear">נקה</button>`+
        `</div>`;
   }
   h+='</nav>';
@@ -415,14 +415,14 @@ const pct=tot?Math.round(G.S.qOk/tot*100)+'%':'—';
 const bk=G.S.bk[G.pool[G.qi]];
 const dueN=getDueQuestions().length;
 
-let h='<section class="quiz-stage" aria-label="Question">';
+let h='<section class="quiz-stage" aria-label="שאלה">';
 
 // ── Pomodoro banner ─────────────────────────────────────────────────
 if(G.pomoActive){
   h+=`<div class="quiz-banner quiz-banner--pomo">`+
-     `<span class="quiz-banner__label">Pomodoro</span>`+
+     `<span class="quiz-banner__label">פומודורו</span>`+
      `<span class="quiz-banner__timer" id="pomo-time">${fmtT(G.pomoSec)}</span>`+
-     `<button class="btn btn--ghost" data-action="stop-pomo" aria-label="Stop pomodoro timer">Stop</button>`+
+     `<button class="btn btn--ghost" data-action="stop-pomo" aria-label="עצור טיימר פומודורו">עצור</button>`+
      `</div>`;
 }
 
@@ -431,7 +431,7 @@ if(G.examMode){
   const isMock=!!G.mockExamResults;
   const totalQ=isMock?G.pool.length:150;
   h+=`<div class="quiz-banner quiz-banner--exam">`+
-     `<span class="quiz-banner__label">${isMock?'Mock Exam':'Exam'}</span>`+
+     `<span class="quiz-banner__label">${isMock?'סימולציה':'מבחן'}</span>`+
      `<span class="quiz-banner__timer" id="etimer">${fmtT(G.examSec)}</span>`+
      `<span>${G.qi+1} / ${totalQ}</span>`+
      `</div>`;
@@ -480,11 +480,11 @@ if(topicName)h+=`<span class="pill pill--accent">${sanitize(topicName)}</span>`;
 h+=`<span class="quiz-meta__counter">${G.qi+1} / ${G.pool.length}</span>`;
 h+=`</div>`;
 h+=`<div class="quiz-tools">`;
-h+=`<button class="quiz-tool" data-action="speak-q" title="Read aloud" aria-label="Read question aloud">♫</button>`;
-h+=`<button class="quiz-tool" data-action="share-q" id="shbtn" title="Share" aria-label="Share question">↗</button>`;
+h+=`<button class="quiz-tool" data-action="speak-q" title="הקרא בקול" aria-label="הקרא שאלה בקול">♫</button>`;
+h+=`<button class="quiz-tool" data-action="share-q" id="shbtn" title="שתף" aria-label="שתף שאלה">↗</button>`;
 const hasNote=!!(G.S.qnotes&&G.S.qnotes[G.pool[G.qi]]);
-h+=`<button class="quiz-tool" data-action="toggle-qnote" aria-pressed="${hasNote}" aria-label="Note" title="Note">✎</button>`;
-h+=`<button class="quiz-tool" data-action="toggle-bk" aria-pressed="${!!bk}" aria-label="Bookmark" title="Bookmark">${bk?'★':'☆'}</button>`;
+h+=`<button class="quiz-tool" data-action="toggle-qnote" aria-pressed="${hasNote}" aria-label="הערה" title="הערה">✎</button>`;
+h+=`<button class="quiz-tool" data-action="toggle-bk" aria-pressed="${!!bk}" aria-label="סמן" title="סמן">${bk?'★':'☆'}</button>`;
 h+=`</div>`;
 h+=`</div>`;
 
@@ -540,9 +540,9 @@ h+=`</ol>`;
 // ── Pre-answer footer ───────────────────────────────────────────────
 if(!G.ans){
   h+=`<footer class="quiz-actions">`;
-  h+=`<button class="btn btn--primary quiz-actions__primary" data-action="check-answer"${G.sel===null?' disabled':''} aria-label="Check answer">Check</button>`;
+  h+=`<button class="btn btn--primary quiz-actions__primary" data-action="check-answer"${G.sel===null?' disabled':''} aria-label="בדוק תשובה">בדוק</button>`;
   if(!G.examMode){
-    h+=`<button class="btn btn--ghost" data-action="give-up" aria-label="I don't know — show me the answer">I don't know</button>`;
+    h+=`<button class="btn btn--ghost" data-action="give-up" aria-label="לא יודע — הצג לי את התשובה">לא יודע</button>`;
   }
   h+=`</footer>`;
   h+='</section>';
@@ -688,11 +688,11 @@ h+=`<div class="quiz-stats">`+
 // ── Action footer ──────────────────────────────────────────────────
 h+=`<footer class="quiz-actions">`;
 if(!G.examMode){
-  h+=`<button class="btn btn--secondary" data-action="prev-q" aria-label="Previous question"${G.qi<=0?' disabled':''}>Previous</button>`;
+  h+=`<button class="btn btn--secondary" data-action="prev-q" aria-label="שאלה קודמת"${G.qi<=0?' disabled':''}>הקודמת</button>`;
 }
 h+=`<span class="quiz-actions__spacer"></span>`;
-const nextLabel=G.examMode&&G.qi+1>=150?'Finish':'Next';
-const nextAria=G.examMode&&G.qi+1>=150?'Finish exam':'Next question';
+const nextLabel=G.examMode&&G.qi+1>=150?'סיים':'הבאה';
+const nextAria=G.examMode&&G.qi+1>=150?'סיים מבחן':'שאלה הבאה';
 h+=`<button class="btn btn--primary quiz-actions__primary" data-action="next-q" aria-label="${nextAria}">${nextLabel}</button>`;
 h+=`</footer>`;
 
