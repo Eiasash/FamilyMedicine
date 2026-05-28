@@ -1,7 +1,25 @@
-// Service-worker registration + update-banner UI.
+// Service-worker registration + auto-update.
 // Extracted from src/ui/app.js to mirror Geriatrics' src/sw-update.js.
+//
+// Update model (v1.21.38): updates apply SILENTLY and AUTOMATICALLY. When a new
+// SW finishes installing and an old one is already in control, we immediately
+// tell it to skipWaiting; the resulting `controllerchange` triggers a single
+// page reload onto the fresh assets. This fixes the recurring "stale bundle"
+// trap where users saw the new version label (HTML is network-first) while
+// still running old cache-first JS/CSS (dead Check button, old colors).
+//
+// Two guards keep it safe:
+//   • _hadController — true only if a SW already controlled the page at load.
+//     First-install activation also fires controllerchange (clients.claim in
+//     sw.js), and we must NOT reload then (that's the "no-first-install-reload"
+//     behavior). We reload only when this was an UPDATE.
+//   • _refreshing — prevents a reload loop if controllerchange fires twice.
+// The manual banner is kept purely as a fallback for the rare case where the
+// silent path is blocked; it is no longer the primary mechanism.
 
 let _dismissKey;
+let _refreshing = false;
+let _hadController = false;
 
 export function showUpdateBanner() {
   if (document.getElementById('update-banner')) return;
@@ -47,18 +65,43 @@ export function initSWUpdate(appVersion) {
   if (!('serviceWorker' in navigator)) return Promise.resolve(null);
   _dismissKey = 'mishpacha_update_dismissed_' + appVersion;
 
+  // Snapshot control state BEFORE registration: a SW controlling the page now
+  // means any later controllerchange is an update (reload), not a first install.
+  _hadController = !!navigator.serviceWorker.controller;
+
+  // Single reload when a NEW worker takes control (update only, never first install).
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (_refreshing) return;
+    // First-install claim (no prior controller): don't reload, but mark the page
+    // as controlled so a LATER update in this same session does reload.
+    if (!_hadController) { _hadController = true; return; }
+    _refreshing = true;
+    window.location.reload();
+  });
+
+  // Auto-activate a waiting worker (no user tap needed).
+  const _autoApply = (worker) => {
+    if (worker) { try { worker.postMessage({ type: 'SKIP_WAITING' }); } catch (e) { /* noop */ } }
+  };
+
   caches.keys().then(ks => {
     const old = ks.filter(k => k.startsWith('mishpacha-') && k !== 'mishpacha-v' + appVersion);
     old.forEach(k => { caches.delete(k); if(import.meta.env.DEV)console.log('Deleted old cache:', k); });
   });
 
   return navigator.serviceWorker.register('sw.js').then(reg => {
-    if (reg.waiting && navigator.serviceWorker.controller) showUpdateBanner();
+    // A worker is already waiting from a previous load → activate it now.
+    if (reg.waiting && navigator.serviceWorker.controller) { _autoApply(reg.waiting); showUpdateBanner(); }
     reg.addEventListener('updatefound', () => {
       const nw = reg.installing;
       if (!nw) return;
       nw.addEventListener('statechange', () => {
-        if (nw.state === 'installed' && navigator.serviceWorker.controller) showUpdateBanner();
+        if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+          // Update finished installing while an old SW controls the page:
+          // activate immediately → controllerchange → silent reload.
+          _autoApply(nw);
+          showUpdateBanner(); // fallback cue; usually the reload wins the race
+        }
       });
     });
     reg.update().catch(() => {});
