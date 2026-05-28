@@ -1,5 +1,5 @@
 /* === Header === */
-.hdr { background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff; padding: 10px 16px; position: sticky; top: 0; z-index: 40 }
+.hdr { background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff; padding: max(10px, env(safe-area-inset-top)) 16px 10px; position: sticky; top: 0; z-index: 40 }
 .hdr h1 { font-size: 16px; font-weight: 700; letter-spacing: -.5px }
 /* v1.21.21 a11y fix: .hdr is a dark slate gradient (#0f172a→#1e293b). slate-500 (#64748b) on it is ~3:1 — fails WCAG AA. slate-300 (#cbd5e1) is 12:1 (AAA) on the same bg. */
 .hdr p { font-size: 11px; color: #cbd5e1; margin-top: 1px }
