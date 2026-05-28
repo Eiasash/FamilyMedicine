@@ -1060,11 +1060,11 @@ h+=`<div class="card" style="padding:14px;margin-top:12px">
 <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap">
 <button class="btn btn-p" data-action="export-progress" aria-label="Export progress">📥 Export Progress</button>
 <button class="btn btn-g" data-action="import-progress" aria-label="Import progress">📤 Import Progress</button>
-<button class="btn btn-o" data-action="reset-all" aria-label="Reset all data">🗑️ Reset</button>
+<button class="btn" style="background:#fef2f2;color:#991b1b" data-action="reset-all" aria-label="Reset all data">🗑️ Reset</button>
 </div>
 <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:8px">
 <button id="cloud-backup-btn" class="btn" style="background:#e0f2fe;color:#0284c7" data-action="cloud-backup" aria-label="Backup to cloud">☁️ Backup to Cloud</button>
-<button class="btn" style="background:#f0fdf4;color:#15803d" data-action="cloud-restore" aria-label="Restore from cloud">☁️ Restore from Cloud</button>
+<button class="btn" style="background:#e0f2fe;color:#0284c7" data-action="cloud-restore" aria-label="Restore from cloud">☁️ Restore from Cloud</button>
 </div>
 <div style="font-size:9px;color:#94a3b8;text-align:center;margin-top:6px">Cloud sync · progress keyed by device ID</div>
 </div></div>`;
