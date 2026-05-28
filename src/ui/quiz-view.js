@@ -368,7 +368,7 @@ if(G.sdQi>=G.sdPool.length)G.sdQi=0;
 const q=G.QZ[G.sdPool[G.sdQi]];
 let h=`<div class="sudden-death-banner"><span style="font-weight:700;font-size:13px">💀 Sudden Death</span>
 <span style="font-size:16px;font-weight:700">🔥 ${G.sdStreak}</span>
-<button class="btn" style="background:rgba(255,255,255,.2);color:#fff;font-size:10px;padding:4px 10px" data-action="quit-sd" aria-label="Quit sudden death mode">Quit</button></div>`;
+<button class="btn" style="background:rgba(255,255,255,.2);color:#fff;font-size:10px;padding:4px 10px" data-action="quit-sd" aria-label="צא ממצב מוות פתאומי">צא</button></div>`;
 h+=`<div class="card" style="padding:16px">`;
 if(G.timedMode&&!G.ans){
   h+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
@@ -448,7 +448,7 @@ if(!G.pool.length){
   const msg=G.filt==='due'?'No questions due for review.'
     :G.filt==='wrong-review'?'No wrong answers to review — your set is empty.'
     :'No questions match this filter.';
-  h+=`<div class="quiz-empty"><p class="quiz-empty__title">All caught up</p><p>${msg}</p></div>`;
+  h+=`<div class="quiz-empty"><p class="quiz-empty__title">סיימת הכל</p><p>${msg}</p></div>`;
   h+='</section>';
   return h;
 }
@@ -561,7 +561,7 @@ if(!G.examMode&&q.e){
   h+=`<p class="quiz-feedback__body" dir="auto">${rendered}</p>`;
 }
 if(!G.examMode&&q.ref){
-  h+=`<div class="quiz-source"><span class="quiz-source__label">Source</span>${renderSourceLink(q.ref)}</div>`;
+  h+=`<div class="quiz-source"><span class="quiz-source__label">מקור</span>${renderSourceLink(q.ref)}</div>`;
 }
 if(!G.examMode){
   const _aiIdx=G.pool[G.qi];
@@ -580,12 +580,12 @@ h+=`</aside>`;
 // ── Wrong-reason chips ──────────────────────────────────────────────
 if(!G.examMode&&!correct&&!G._wrongReason){
   h+=`<div class="quiz-wrong-reason">`+
-     `<span class="quiz-wrong-reason__label">Why did you get it wrong?</span>`+
+     `<span class="quiz-wrong-reason__label">למה טעית?</span>`+
      `<div class="quiz-wrong-reason__row">`+
-     `<button class="btn btn--secondary" data-action="wrong-reason" data-r="no_knowledge">Didn't know</button>`+
-     `<button class="btn btn--secondary" data-action="wrong-reason" data-r="misread">Misread</button>`+
-     `<button class="btn btn--secondary" data-action="wrong-reason" data-r="between_2">Between two</button>`+
-     `<button class="btn btn--secondary" data-action="wrong-reason" data-r="silly">Silly</button>`+
+     `<button class="btn btn--secondary" data-action="wrong-reason" data-r="no_knowledge">לא ידעתי</button>`+
+     `<button class="btn btn--secondary" data-action="wrong-reason" data-r="misread">קריאה שגויה</button>`+
+     `<button class="btn btn--secondary" data-action="wrong-reason" data-r="between_2">היסוס בין שתיים</button>`+
+     `<button class="btn btn--secondary" data-action="wrong-reason" data-r="silly">טעות טיפשית</button>`+
      `</div></div>`;
 }
 
@@ -593,7 +593,7 @@ if(!G.examMode&&!correct&&!G._wrongReason){
 if(!G.examMode&&!correct&&q.ti>=0){
   const _chRef=TOPIC_REF[q.ti];
   if(_chRef&&_chRef.s==='har'){
-    h+=`<button class="btn btn--secondary" data-action="read-chapter" aria-label="Read chapter ${sanitize(_chRef.l||'')}">Read: ${sanitize(_chRef.l||'')}</button>`;
+    h+=`<button class="btn btn--secondary" data-action="read-chapter" aria-label="קרא פרק ${sanitize(_chRef.l||'')}">קרא: ${sanitize(_chRef.l||'')}</button>`;
   }
 }
 
@@ -601,10 +601,10 @@ if(!G.examMode&&!correct&&q.ti>=0){
 if(!G.examMode){
   const dr=G._diffRating;
   h+=`<div class="quiz-difficulty">`+
-     `<span class="quiz-difficulty__label">Difficulty</span>`+
-     `<button class="btn btn--secondary" data-action="diff-rating" data-d="easy" aria-pressed="${dr==='easy'}">Easy</button>`+
-     `<button class="btn btn--secondary" data-action="diff-rating" data-d="med" aria-pressed="${dr==='med'}">Medium</button>`+
-     `<button class="btn btn--secondary" data-action="diff-rating" data-d="hard" aria-pressed="${dr==='hard'}">Hard</button>`+
+     `<span class="quiz-difficulty__label">דרגת קושי</span>`+
+     `<button class="btn btn--secondary" data-action="diff-rating" data-d="easy" aria-pressed="${dr==='easy'}">קלה</button>`+
+     `<button class="btn btn--secondary" data-action="diff-rating" data-d="med" aria-pressed="${dr==='med'}">בינונית</button>`+
+     `<button class="btn btn--secondary" data-action="diff-rating" data-d="hard" aria-pressed="${dr==='hard'}">קשה</button>`+
      `</div>`;
 }
 
@@ -612,19 +612,19 @@ if(!G.examMode){
 if(!G.examMode&&correct){
   if(!G.teachBackState){
     h+=`<aside class="quiz-aux">`+
-       `<span class="quiz-aux__title">Teach-back</span>`+
-       `<p class="quiz-aux__body">Explain why this is the right answer.</p>`+
-       `<textarea id="tbInput" class="quiz-teachback__input" dir="auto" placeholder="Type your explanation…" aria-label="Teach-back explanation"></textarea>`+
+       `<span class="quiz-aux__title">לַמֵּד בחזרה</span>`+
+       `<p class="quiz-aux__body">הסבר מדוע זו התשובה הנכונה.</p>`+
+       `<textarea id="tbInput" class="quiz-teachback__input" dir="auto" placeholder="הקלד את ההסבר שלך…" aria-label="הסבר למד-בחזרה"></textarea>`+
        `<div class="quiz-feedback__row">`+
-       `<button class="btn btn--primary" data-action="grade-teachback" aria-label="Grade teach-back with AI">Grade with AI</button>`+
-       `<button class="btn btn--ghost" data-action="skip-teachback" aria-label="Skip teach-back">Skip</button>`+
-       `<button class="btn btn--ghost" data-action="voice-teachback" id="tb-mic-btn" aria-label="Record voice teach-back">Voice</button>`+
+       `<button class="btn btn--primary" data-action="grade-teachback" aria-label="דרג למד-בחזרה עם AI">דרג עם AI</button>`+
+       `<button class="btn btn--ghost" data-action="skip-teachback" aria-label="דלג על למד-בחזרה">דלג</button>`+
+       `<button class="btn btn--ghost" data-action="voice-teachback" id="tb-mic-btn" aria-label="הקלט למד-בחזרה קולי">קול</button>`+
        `</div></aside>`;
   } else if(G.teachBackState==='grading'){
-    h+=`<aside class="quiz-aux"><p class="quiz-aux__body">Grading…</p></aside>`;
+    h+=`<aside class="quiz-aux"><p class="quiz-aux__body">מדרג…</p></aside>`;
   } else if(G.teachBackState!=='skip'){
     const sc=G.teachBackState.score;
-    const scoreLabel=sc===3?'Excellent':sc===2?'Partial':'Needs work';
+    const scoreLabel=sc===3?'מצוין':sc===2?'חלקי':'דורש עבודה';
     h+=`<aside class="quiz-aux">`+
        `<span class="quiz-aux__title">${scoreLabel}</span>`;
     if(G.teachBackState.feedback){
@@ -640,7 +640,7 @@ if(!G.examMode){
   const _dist=(G.DIS&&G.DIS[_qIdx])||null;
   const _apKey='autopsy_'+_qIdx;
   const _aiTxt=G._exCache[_apKey];
-  h+=`<aside class="quiz-aux"><span class="quiz-aux__title">Distractor breakdown</span>`;
+  h+=`<aside class="quiz-aux"><span class="quiz-aux__title">ניתוח מסיחים</span>`;
   if(_dist){
     q.o.forEach((opt,i)=>{
       const _isCorrect=isOk(q,i);
