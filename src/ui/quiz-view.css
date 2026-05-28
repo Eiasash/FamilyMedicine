@@ -687,6 +687,10 @@ body.study {
   --color-fg-muted:     #c4a374;
   --color-fg-subtle:    #a08060;
   --color-accent:       #c48a3a;
+  /* v1.21.28: study mode swaps accent to sepia (#c48a3a). White text on it is
+     ~2.98:1 (fails AA). Dark fg (#1a1008) on #c48a3a is ~7.3:1 (AAA). Required
+     so the new .btn--primary CTAs (Check/Next/Grade) stay readable here. */
+  --color-accent-fg:    #1a1008;
   --color-accent-soft:  #2a1e0d;
 }
 
