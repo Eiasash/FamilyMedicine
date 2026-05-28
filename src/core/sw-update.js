@@ -71,7 +71,10 @@ export function initSWUpdate(appVersion) {
 
   // Single reload when a NEW worker takes control (update only, never first install).
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (_refreshing || !_hadController) return;
+    if (_refreshing) return;
+    // First-install claim (no prior controller): don't reload, but mark the page
+    // as controlled so a LATER update in this same session does reload.
+    if (!_hadController) { _hadController = true; return; }
     _refreshing = true;
     window.location.reload();
   });
