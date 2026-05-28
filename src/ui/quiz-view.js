@@ -477,7 +477,7 @@ h+=`<div class="quiz-header">`;
 h+=`<div class="quiz-meta__group">`;
 h+=`<span class="pill">${sanitize(tagLabel)}</span>`;
 if(topicName)h+=`<span class="pill pill--accent">${sanitize(topicName)}</span>`;
-h+=`<span class="quiz-meta__counter">${G.qi+1} / ${G.pool.length}</span>`;
+h+=`<span class="quiz-meta__counter" dir="ltr">${G.qi+1} / ${G.pool.length}</span>`;
 h+=`</div>`;
 h+=`<div class="quiz-tools">`;
 h+=`<button class="quiz-tool" data-action="speak-q" title="הקרא בקול" aria-label="הקרא שאלה בקול">♫</button>`;
