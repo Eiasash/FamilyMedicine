@@ -361,6 +361,56 @@
   background: var(--color-accent-soft);
 }
 
+/* ── Button modifiers (.btn--primary / --secondary / --ghost) ───────────────
+   v1.21.28 fix: the v1.15.0 quiz rebuild switched all action buttons to BEM
+   modifier classes (btn--primary / btn--secondary / btn--ghost) but the
+   modifier styles were never added to any stylesheet — only the base .btn
+   (from components.css) existed. Result: 26 buttons across the Quiz tab
+   (Check, Next, Previous, Mock exam, Sudden death, On-call, Pomodoro, the
+   filter mode toggles, Cover-options/Timed checkboxes, etc.) rendered with
+   NO background, NO border — just bold text. The primary "בדוק" (Check)
+   button looked like inert plain text, which read as "the button doesn't
+   work." These rules give each modifier a real, tappable appearance.
+   quiz-view.css loads AFTER components.css so these win the cascade. */
+.btn--primary {
+  background: var(--color-accent);
+  color: var(--color-accent-fg);
+  border: 1px solid var(--color-accent);
+  min-block-size: 44px;            /* WCAG 2.5.5 touch target */
+  cursor: pointer;
+}
+.btn--primary:hover:not(:disabled) { filter: brightness(1.08); }
+.btn--primary:active:not(:disabled) { filter: brightness(0.94); }
+.btn--primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn--secondary {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  border: 1px solid transparent;
+  min-block-size: 44px;
+  cursor: pointer;
+}
+.btn--secondary:hover:not(:disabled) { background: color-mix(in srgb, var(--color-accent-soft) 80%, var(--color-accent)); }
+.btn--secondary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-fg-muted);
+  border: 1px solid var(--color-border);
+  min-block-size: 40px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.btn--ghost:hover:not(:disabled) { background: var(--color-bg); color: var(--color-fg); border-color: var(--color-border-strong); }
+.btn--ghost:disabled { opacity: 0.4; cursor: not-allowed; }
+/* Checkbox-bearing ghost buttons (Cover options / Timed) read as toggle chips */
+.btn--ghost input[type="checkbox"] { accent-color: var(--color-accent); inline-size: 16px; block-size: 16px; }
+.btn--primary:focus-visible,
+.btn--secondary:focus-visible,
+.btn--ghost:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
 /* ── Pomodoro / Exam-mode banners (top of stage) ────────────────────────── */
 .quiz-banner {
   display: flex;
