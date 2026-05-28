@@ -34,6 +34,9 @@
 <link rel="preload" href="fonts/heebo-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high">
 <link rel="preload" href="fonts/heebo-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high">
 <link rel="preload" href="fonts/heebo-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high">
+<!-- fsrs.js must execute (blocking) before the deferred app.js module that Vite
+     hoists into <head>; preload it here so only ~ms of parse blocks, not fetch. -->
+<link rel="preload" href="shared/fsrs.js" as="script" fetchpriority="high">
 <title>Mishpacha Mega — Family Medicine Board Prep</title>
 <link rel="stylesheet" href="shared/tokens.css">
 <style id="clinical-kit">
@@ -190,14 +193,18 @@ body.study .badge-info    {background:#1e2a3d;color:#a0c8f0}
 <div id="settings-overlay" hidden></div>
 
 <!-- FSRS shared library (plain script, shared with Geriatrics repo) -->
-<!-- defer keeps fsrs.js out of the render-blocking critical path while
-     preserving execution order before src/ui/app.js. fsrs.js is a classic
-     script that sets window.FSRS_* globals consumed by src/sr/fsrs-bridge.js
-     at module-evaluate time. Per HTML spec, classic-defer scripts and module
-     scripts both run after document parse, in tree order — so fsrs.js still
-     executes before app.js. Lighthouse render-blocking-resources audit
-     attributed ~150ms wasted to this without defer. -->
-<script src="shared/fsrs.js" defer></script>
+<!-- MUST be a blocking (non-defer) classic script. It sets window.FSRS_* /
+     window.fsrs* globals that src/sr/fsrs-bridge.js captures at module-eval
+     time; those bindings are read during app.js boot (initial render) AND on
+     every answer check (srScore → fsrsUpdate/fsrsIntervalWithDeadline).
+     Vite HOISTS the app.js module entry into <head>, so a *deferred* fsrs.js
+     (runs after parse, document order AFTER the head module) would evaluate
+     the bridge with undefined globals → "X is not a function" crash on boot
+     and on check. A blocking script here runs DURING parse, before the
+     deferred module — globals guaranteed first. Preloaded in <head> so the
+     blocking cost is ~ms of parse, not fetch. DO NOT re-add defer/async —
+     guarded by tests/fsrsLoadOrder.test.js. -->
+<script src="shared/fsrs.js"></script>
 <!-- App entry point (ES module — imports all other modules) -->
 <script type="module" src="src/ui/app.js"></script>
 <!-- Shared PWA install promo (canonical .shared/install-promo.js) -->
