@@ -7,6 +7,13 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.21.28': [
+    '🌐 תרגום מלא לעברית של לשונית החידון — הניווט התחתון (חידון/ספרייה/מעקב/עוד), תוויות המצב (מצב/סינון/נושא/תרגול), כפתורי המצבים (סימולציה/מוות פתאומי/תורנות/פומודורו), גלולות הסינון (קשות/איטיות/חלשות/לחזרה/השלב הבא/מלכודות/חילוץ/סקור טעויות), כפתורי הפעולה (בדוק/לא יודע/הקודמת/הבאה/סיים), החוזה היומי, פאנל החשיפה שאחרי תשובה (סיבת טעות/דרגת קושי/למד-בחזרה), ומודל תוצאות הסימולציה. נשמרו באנגלית: קודי שנים, Hard-G/Hard-AFP, AI. (#86/#87/#88)',
+    '🔘 תיקון קריטי — כפתורי הפעולה לא נראו ככפתורים. בנייה מחדש של v1.15.0 העבירה את כל הכפתורים למחלקות BEM (.btn--primary/--secondary/--ghost) אך הסגנונות מעולם לא הוגדרו — רק .btn הבסיסי קיים. 26 כפתורים (כולל "בדוק") הוצגו כטקסט מודגש ללא רקע, ונראו לא-לחיצים. הוגדרו שלושת המודיפיירים ב-quiz-view.css עם מצבי hover/active/disabled/focus ויעדי מגע 44px. תוקן גם הניגודיות במצב לילה (--color-accent-fg כהה על הספיה #c48a3a, ~7.3:1).',
+    '📌 כותרת דביקה + safe-area — ה-.hdr נשא inline `position:relative` ש-override את ה-`position:sticky` שב-CSS, כך שהכותרת נגללה החוצה והתוכן נדחף מתחת לשורת המצב של הטלפון. שונה ל-sticky + `padding-top:max(10px, env(safe-area-inset-top))`. כפתורי הסרגל נשארים מעוגנים (sticky מספק containing block).',
+    '🔢 מונה השאלות "2 / 1139" התהפך ל-"1139 / 2" בהקשר RTL — נוסף `dir="ltr"`.',
+    '🔄 SW cache bump 1.21.27 → 1.21.28 כדי לדחוף את כל התיקונים ל-PWA מותקנות.',
+  ],
   '1.21.27': [
     '♿ Header toolbar dark-on-dark fix — 4 of 5 `.dm-btn` toolbar buttons (🌓 🕯️ ⚙️ ❓) were rendering at default browser ButtonText color (typically `rgb(0,0,0)`) on the .hdr dark slate gradient (#0f172a→#1e293b). Contrast ~1:1 → invisible buttons. Only the 👤 account button had explicit `color:#fff` inline. Browser-tested 2026-05-10 at 390×844 via Playwright. Fix: added `color:#fff; background:rgba(255,255,255,0.12); border-radius:50%; width:32px; height:32px;` to the .dm-btn rule + a `:hover` opacity bump. Sibling-aligned with Geri v10.64.90 (which had the same bug class — slate-800 text on slate-800 gradient end-stop) and IM v10.4.24 (PR forthcoming, identical fix in src/styles/layout.css line 6). Trinity bumped 1.21.26 → 1.21.27.',
   ],
