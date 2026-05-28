@@ -669,10 +669,10 @@ if(md==='__LOADING__'||md===undefined){
 }else if(typeof md==='string'&&md.startsWith('__ERROR__')){
   // Fallback to the index-level summary when the .md isn't reachable
   h+=`<div style="padding:10px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;font-size:10px;color:#991b1b;margin-bottom:12px">Full article file couldn't load (${sanitize(md.replace('__ERROR__',''))}). Showing index summary instead.</div>`;
-  if(p.abstract)h+=`<div style="font-size:11.5px;font-weight:700;color:#2563eb;margin:14px 0 6px" dir="auto">Abstract</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;text-align:start;unicode-bidi:plaintext" dir="auto">${sanitize(p.abstract)}</p>`;
+  if(p.abstract)h+=`<div style="font-size:11.5px;font-weight:700;color:#2563eb;margin:14px 0 6px" dir="auto">תקציר</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;text-align:start;unicode-bidi:plaintext" dir="auto">${sanitize(p.abstract)}</p>`;
   if(p.sort)h+=`<div style="font-size:11.5px;font-weight:700;color:#7c3aed;margin:18px 0 6px" dir="auto">SORT — Key Recommendations</div><pre style="font-size:10.5px;line-height:1.7;white-space:pre-wrap;background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:12px;color:#1e293b;font-family:'Courier New',ui-monospace,monospace;unicode-bidi:plaintext" dir="auto">${sanitize(p.sort)}</pre>`;
   if(p.he)h+=`<div style="font-size:11.5px;font-weight:700;color:#0d9488;margin:18px 0 6px" dir="auto">תקציר / Summary</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;unicode-bidi:plaintext" dir="auto">${sanitize(p.he)}</p>`;
-  if(p.opening&&!p.abstract)h+=`<div style="font-size:11.5px;font-weight:700;color:#64748b;margin:18px 0 6px" dir="auto">Opening</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;text-align:start;unicode-bidi:plaintext" dir="auto">${sanitize(p.opening)}</p>`;
+  if(p.opening&&!p.abstract)h+=`<div style="font-size:11.5px;font-weight:700;color:#64748b;margin:18px 0 6px" dir="auto">פתיחה</div><p style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;text-align:start;unicode-bidi:plaintext" dir="auto">${sanitize(p.opening)}</p>`;
 }else{
   // Strip YAML frontmatter and the first H1 (we already show the title in the reader chrome)
   let body=md.replace(/^---[\s\S]*?---\s*\n/,'').replace(/^#\s+[^\n]+\n+/,'');
@@ -787,7 +787,7 @@ if(isSyllabus){
   if(sylFiltered.length===0)h+=`<div style="padding:20px;text-align:center;font-size:11px;color:#94a3b8">No syllabus items match.</div>`;
 }else{
   h+=`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px">
-<span class="pill ${!specFilter?'on':''}" style="font-size:10px;cursor:pointer" data-action="ah-spec" data-spec="">All specialties</span>`;
+<span class="pill ${!specFilter?'on':''}" style="font-size:10px;cursor:pointer" data-action="ah-spec" data-spec="">כל ההתמחויות</span>`;
   ah.specialties.forEach(s=>{
     h+=`<span class="pill ${specFilter===s?'on':''}" style="font-size:10px;cursor:pointer" data-action="ah-spec" data-spec="${sanitize(s)}" dir="auto">${sanitize(s)} <span style="opacity:0.6">${specCounts[s]||0}</span></span>`;
   });

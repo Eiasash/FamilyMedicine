@@ -668,7 +668,7 @@ export function renderStudyPlan(){
     <div style="display:flex;align-items:center;gap:8px;flex:1">
       <div style="font-size:16px">📅</div>
       <div style="flex:1">
-        <div style="font-weight:700;font-size:13px;margin-bottom:2px">Study Plan — Family Medicine</div>
+        <div style="font-weight:700;font-size:13px;margin-bottom:2px">תוכנית לימוד — רפואת המשפחה</div>
         <div style="font-size:9px;color:#64748b">${checkedTopics}/${totalTopics} topics (${spPct}%)</div>
       </div>
     </div>
@@ -768,7 +768,7 @@ export function renderDrillTargetCard(){
       <div style="display:flex;align-items:center;gap:10px">
         <span style="font-size:24px">🎯</span>
         <div style="flex:1">
-          <div style="font-weight:700;font-size:12px;color:#1d4ed8">Calibration drill</div>
+          <div style="font-weight:700;font-size:12px;color:#1d4ed8">תרגול כיול</div>
           <div style="font-size:10px;color:#64748b">Answer 15 Qs across all topics — I'll then auto-pick your weakest one each day.</div>
         </div>
         <button data-action="drill-calibration" class="btn" style="font-size:11px;padding:8px 14px;background:#1d4ed8;color:#fff;border:none;border-radius:10px;font-weight:700">Start</button>
@@ -812,19 +812,19 @@ const streak=getStudyStreak();
 let h=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">
 <div class="card" style="padding:10px;text-align:center">
 <div style="font-size:22px;font-weight:800;color:${readiness===null?'#94a3b8':readiness>=70?'#059669':readiness>=50?'#d97706':'#dc2626'}">${readiness!==null?readiness+'%':'—'}</div>
-<div style="font-size:9px;color:#64748b">Est. Score</div>
+<div style="font-size:9px;color:#64748b">ציון משוער</div>
 </div>
 <div class="card" style="padding:10px;text-align:center">
 <div style="font-size:22px;font-weight:800;color:#7c3aed">${streak}</div>
-<div style="font-size:9px;color:#64748b">Day Streak</div>
+<div style="font-size:9px;color:#64748b">רצף ימים</div>
 </div>
 <div class="card" style="padding:10px;text-align:center">
 <div style="font-size:22px;font-weight:800;color:#0ea5e9">${tot}</div>
-<div style="font-size:9px;color:#64748b">Answered</div>
+<div style="font-size:9px;color:#64748b">נענו</div>
 </div>
 <div class="card" style="padding:10px;text-align:center">
 <div style="font-size:22px;font-weight:800;color:${pctN>=70?'#059669':'#d97706'}">${pct}</div>
-<div style="font-size:9px;color:#64748b">Accuracy</div>
+<div style="font-size:9px;color:#64748b">דיוק</div>
 </div>
 </div>`;
 // SRS due alert
@@ -833,7 +833,7 @@ h+=`<div class="card" style="padding:12px;margin-bottom:8px;background:#fef2f2;b
 <div style="display:flex;align-items:center;gap:8px">
 <span style="font-size:18px">🔔</span>
 <div style="flex:1"><div style="font-size:12px;font-weight:700;color:#dc2626">${dueN} questions due for review</div>
-<div style="font-size:10px;color:#64748b">Spaced repetition items ready now</div></div>
+<div style="font-size:10px;color:#64748b">פריטי חזרה מרווחת מוכנים כעת</div></div>
 <button data-action="goto-quiz-build" data-filt="due" class="btn" style="font-size:10px;padding:6px 12px;background:#dc2626;color:#fff;border:none;border-radius:8px">▶ Review</button>
 </div></div>`;
 }
@@ -845,7 +845,7 @@ h+=renderStudyPlan();
 if(!G.S.examDate&&!localStorage.getItem('mishpacha_exam_date')){
 h+=`<div class="card" style="padding:14px;margin-bottom:10px;text-align:center">
 <div style="font-size:12px;font-weight:700;margin-bottom:6px">📅 When is your exam?</div>
-<button class="btn btn-p" data-action="set-exam-date" style="font-size:11px">Set Exam Date</button>
+<button class="btn btn-p" data-action="set-exam-date" style="font-size:11px">הגדר תאריך מבחן</button>
 </div>`;
 }else{
 h+=renderDailyPlan();
@@ -875,7 +875,7 @@ h+=`<div class="card" style="padding:14px;margin-bottom:10px;background:linear-g
 <div style="display:flex;align-items:center;gap:10px">
 <span style="font-size:24px">🚨</span>
 <div style="flex:1">
-<div style="font-weight:700;font-size:12px;color:#dc2626">Rescue Drill</div>
+<div style="font-weight:700;font-size:12px;color:#dc2626">תרגול חילוץ</div>
 <div style="font-size:10px;color:#64748b">${_weakTopics.map(w=>TOPICS[w.ti]+' ('+w.pct+'%)').join(' \u00b7 ')}</div>
 </div>
 <button data-action="rescue-drill" class="btn" style="font-size:11px;padding:8px 16px;background:#dc2626;color:#fff;border:none;border-radius:10px;font-weight:700">GO</button>
@@ -911,10 +911,10 @@ h+=`</div>`;
 h+=`<div class="card" style="padding:14px;margin-bottom:10px">
 <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
 <span style="font-size:14px">🏆</span>
-<div style="font-size:12px;font-weight:700;flex:1">Leaderboard</div>
-<button data-action="show-leaderboard" style="font-size:9px;padding:4px 10px;background:#f59e0b;color:#fff;border:none;border-radius:6px;cursor:pointer">Refresh</button>
+<div style="font-size:12px;font-weight:700;flex:1">טבלת מובילים</div>
+<button data-action="show-leaderboard" style="font-size:9px;padding:4px 10px;background:#f59e0b;color:#fff;border:none;border-radius:6px;cursor:pointer">רענן</button>
 </div>
-<div id="leaderboard-box" style="font-size:10px;color:#94a3b8;text-align:center">Tap refresh to load</div>
+<div id="leaderboard-box" style="font-size:10px;color:#94a3b8;text-align:center">הקש רענן לטעינה</div>
 </div>`;
 // v10.50.0 alignment with Geri: removed duplicate "Progress" stats grid +
 // standalone streak badge — Topics/Quiz/EstScore/Due-SR overlapped with the
@@ -1050,7 +1050,7 @@ h+=`</div></div>`;
 // Share with friends
 h+=`<div class="card" style="padding:14px;text-align:center;margin-top:12px">
 <div style="font-weight:700;font-size:12px;margin-bottom:8px">🔗 Share with Friends</div>
-<div style="font-size:10px;color:#64748b;margin-bottom:10px">Share this app with fellow family medicine residents</div>
+<div style="font-size:10px;color:#64748b;margin-bottom:10px">שתף את האפליקציה עם מתמחים אחרים ברפואת המשפחה</div>
 <button class="btn btn-p" data-action="share-app" style="margin-bottom:8px" aria-label="Share app link">📤 Share App Link</button>
 </div>`;
 // Data management
