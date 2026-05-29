@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.21.47': [
+    'fix(quiz): show the attach-photo / image UI only on questions that actually reference an image (q.imgPending — the 2020 and Jun-2023 image-album exams). Previously the photo button rendered on every text question, which was pointless clutter and confusing (a photo prompt on questions that never had one). Pure-text questions now render nothing in the image slot.'
+  ],
   '1.21.46': [
     'fix(quiz): exclude soft-retired duplicate questions from the Sudden Death pool. Sudden Death builds its own G.sdPool separately from the main G.pool, so the v1.21.45 render-time dedup guard did not cover it; G.sdPool is now filtered at build the same way. Completes the dedup pool coverage flagged in review.'
   ],
