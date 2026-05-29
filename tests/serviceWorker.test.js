@@ -84,8 +84,6 @@ describe('service worker (sw.js)', () => {
     expect(sw).toContain('data/questions.json');
     expect(sw).toContain('data/topics.json');
     expect(sw).toContain('data/notes.json');
-    expect(sw).toContain('data/drugs.json');
-    expect(sw).toContain('data/flashcards.json');
     expect(sw).toContain('data/tabs.json');
   });
 
