@@ -156,8 +156,8 @@ Regression guard: array non-empty, unique, in-bounds, **primary `c` MUST be in `
 - `scripts/extract_afp_hari.py` — AFP/הר"י index regenerator (warning: extractor pulls first 4-digit number it sees; verify year metadata after run)
 - `scripts/fix_afp_hari_years.py` — year cleanup pass (R2 added)
 
-## Test count baseline (v1.21.2)
-- 43 test files / 764 tests, all passing
+## Test count baseline (v1.22.3)
+- 57 test files / 964 tests, all passing
 - Baseline coverage: ~35% statements (UI is the bulk uncovered)
 - Target growth: write tests at the boundary of every PR; never let coverage regress
 
