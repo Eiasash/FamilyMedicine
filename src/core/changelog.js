@@ -7,6 +7,10 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.22.1': [
+    'fix(content): repaired Q64 of the 2020 family-medicine exam (suicide-risk) — the single question left quarantined in v1.22.0 because the 2020 source paper was not yet in the source set. Using the official 2020 IMA paper (verified against the rasterized source page, since the RTL-digit quirk makes text extraction unreliable), restored the garbled correct option to \u201cכ-50% מניסיונות ההתאבדות קורים אצל חולים במחלות גופניות\u201d and aligned option ב to the source wording (\u201cפי 3-4\u201d). The answer (ג) already matched the official key.',
+    'Rewrote the explanation, which was wrong: it described mood disorders, but the keyed-correct option is about physical illness. Quarantine lifted — the bank now has 0 quarantined questions.'
+  ],
   '1.22.0': [
     'fix(content): repaired 455 questions corrupted by bad OCR/transcription, using the official IMA family-medicine exam papers and answer keys (2021-Jun through 2025-Jun) as the authoritative source.',
     'Stems and options were replaced with verified source text and correct answers set from the official key — 449 via an automated parser+matcher with a content-plus-position dual cross-check, 6 hand-extracted from merged-OCR regions. 7 of 8 previously-quarantined questions restored; the 2020 paper was not in the source set so one question stays quarantined. 2 answers that disagreed with the official key were corrected.',
