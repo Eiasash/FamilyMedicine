@@ -295,10 +295,16 @@ function renderQuizControls(dueN){
   const _inYearMode=G.filt==='years'&&_yearSel.length>0;
   const _aiHardGCount=G.QZ.filter(qq=>qq.t==='AI-Hard-G').length;
   const _aiHardAfpCount=G.QZ.filter(qq=>qq.t==='AI-Hard-AFP').length;
-  const filts=[
-    ['all',`הכל (${G.QZ.length})`],
+  // Exam-year pills collapse behind a "📅 לפי שנה ▾" toggle to de-clutter the row.
+  // Multi-select preserved; group auto-opens when years are active.
+  const _yearFilts=[
     ['2020','2020'],['2021-Jun','Jun 21'],['2022-Jun','Jun 22'],['2023-Jun','Jun 23'],
     ['2024-May','May 24'],['2024-Sep','Sep 24'],['2025-Jun','Jun 25'],
+  ];
+  const _yearPillsOpen=G._yearPillsOpen===true||_inYearMode;
+  const filts=[
+    ['all',`הכל (${G.QZ.length})`],
+    ['__years__',''],
     // Conditional pills — only show when their bucket has questions. Showing
     // "AI (0)" or "Traps (0)" is confusing for cold-start users: tap → empty
     // result → looks like a broken filter. Hide instead.
@@ -315,7 +321,16 @@ function renderQuizControls(dueN){
   const _wrongCount=getWrongAnswerCount();
   if(_wrongCount>0)filts.push(['wrong-review',`סקור טעויות (${_wrongCount})`]);
   filts.forEach(([f,l])=>{
-    if(f==='rescue'){
+    if(f==='__years__'){
+      const _badge=_yearSel.length>0?` (${_yearSel.length})`:'';
+      h+=`<span class="pill" data-state="${_inYearMode?'on':''}" data-action="toggle-year-pills" title="סנן לפי שנת מבחן — בחירה מרובה אפשרית">📅 לפי שנה${_badge} ${_yearPillsOpen?'▴':'▾'}</span>`;
+      if(_yearPillsOpen){
+        _yearFilts.forEach(([yf,yl])=>{
+          const _yOn=_yearSel.includes(yf);
+          h+=`<span class="pill" data-state="${_yOn?'on':''}" data-action="filter-year" data-f="${yf}" title="לחץ להחלפה — בחירה מרובה אפשרית">${sanitize(yl)}${_yOn?' ✓':''}</span>`;
+        });
+      }
+    } else if(f==='rescue'){
       h+=`<span class="pill" data-state="${G.filt==='rescue'?'on':''}" data-action="filter-rescue">${sanitize(l)}</span>`;
     } else if(f==='wrong-review'){
       h+=`<span class="pill" data-state="${G.filt==='wrong-review'?'on':''}" data-action="filter-wrong-review">${sanitize(l)}</span>`;
@@ -366,6 +381,7 @@ export function renderQuiz(){
 if(G.sdMode){
 if(G.sdQi>=G.sdPool.length)G.sdQi=0;
 const q=G.QZ[G.sdPool[G.sdQi]];
+const _qIdx=G.sdPool[G.sdQi]; // SD-mode Q index — image/upload/flag actions must target the displayed SD question, not G.pool[G.qi] (regular-mode Q)
 let h=`<div class="sudden-death-banner"><span style="font-weight:700;font-size:13px">💀 Sudden Death</span>
 <span style="font-size:16px;font-weight:700">🔥 ${G.sdStreak}</span>
 <button class="btn" style="background:rgba(255,255,255,.2);color:#fff;font-size:10px;padding:4px 10px" data-action="quit-sd" aria-label="צא ממצב מוות פתאומי">צא</button></div>`;
@@ -379,12 +395,12 @@ if(G.timedMode&&!G.ans){
 <button data-action="pause-timed" style="font-size:9px;padding:2px 7px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;white-space:nowrap" aria-label="${G.timedPaused?'Resume timer':'Pause timer'}">${G.timedPaused?'▶ המשך':'⏸ עצור'}</button>
 </div>`;
 }
-const _isFlagQ=(G.S.flagged||{})[G.pool[G.qi]];
+const _isFlagQ=(G.S.flagged||{})[_qIdx];
 const _eFlagQ=q.eFlag;
 h+=`<p class="heb" style="font-size:13px;font-weight:700;line-height:1.7;margin-bottom:${q.img?'10':'16'}px" dir="auto">${_isFlagQ?'<span style="color:#dc2626;font-size:11px" title="Explanation flagged — verify">⚑ </span>':''  }${q.q}</p>`;
-if(_eFlagQ&&G.ans){h+=`<div style="margin:6px 0;padding:6px 10px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;font-size:10px;color:#991b1b;text-align:start;line-height:1.4;display:flex;align-items:center;gap:6px;justify-content:space-between;unicode-bidi:plaintext" dir="auto"><span style="flex:1">⚠️ AI flagged: ההסבר עשוי לא להתאים לתשובה הנכונה (<bdi>${sanitize(_eFlagQ)}</bdi>)</span><button data-action="clear-eflag" data-idx="${G.pool[G.qi]}" style="font-size:9px;padding:3px 8px;background:#991b1b;color:#fff;border:none;border-radius:6px;cursor:pointer;flex:0 0 auto">✓ אמת</button></div>`;}
-if(q.img){h+=`<div style="margin-bottom:14px;text-align:center;position:relative"><img src="${q.img}" alt="Question image" style="max-width:100%;max-height:300px;border-radius:10px;border:1px solid #e2e8f0;cursor:pointer" data-action="view-img" loading="lazy"><button data-action="remove-img" data-idx="${G.pool[G.qi]}" style="position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:24px;height:24px;font-size:12px;cursor:pointer">✕</button>${q.imgDep?'<div style="margin-top:6px;padding:6px 10px;background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;font-size:10px;color:#92400e;text-align:start;line-height:1.4;display:flex;align-items:center;gap:6px;justify-content:space-between;unicode-bidi:plaintext" dir="auto"><span style="flex:1">⚠️ שאלה תלוית-תמונה: ההסבר עלול להיות שגוי.</span><button data-action="mark-verified" data-idx="'+G.pool[G.qi]+'" style="font-size:9px;padding:3px 8px;background:#d97706;color:#fff;border:none;border-radius:6px;cursor:pointer;flex:0 0 auto">✓ מאומת</button></div>':''}</div>`;}
-if(!q.img&&!G.examMode){h+=`<div style="margin-bottom:10px"><button data-action="upload-img" data-idx="${G.pool[G.qi]}" style="font-size:10px;padding:4px 12px;background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer">📷 Attach Image</button><span id="img-status-${G.pool[G.qi]}" style="font-size:10px;color:#94a3b8;margin-left:6px"></span></div>`;}
+if(_eFlagQ&&G.ans){h+=`<div style="margin:6px 0;padding:6px 10px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;font-size:10px;color:#991b1b;text-align:start;line-height:1.4;display:flex;align-items:center;gap:6px;justify-content:space-between;unicode-bidi:plaintext" dir="auto"><span style="flex:1">⚠️ AI flagged: ההסבר עשוי לא להתאים לתשובה הנכונה (<bdi>${sanitize(_eFlagQ)}</bdi>)</span><button data-action="clear-eflag" data-idx="${_qIdx}" style="font-size:9px;padding:3px 8px;background:#991b1b;color:#fff;border:none;border-radius:6px;cursor:pointer;flex:0 0 auto">✓ אמת</button></div>`;}
+if(q.img){h+=`<div style="margin-bottom:14px;text-align:center;position:relative"><img src="${q.img}" alt="Question image" style="max-width:100%;max-height:300px;border-radius:10px;border:1px solid #e2e8f0;cursor:pointer" data-action="view-img" loading="lazy"><button data-action="remove-img" data-idx="${_qIdx}" style="position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:24px;height:24px;font-size:12px;cursor:pointer">✕</button>${q.imgDep?'<div style="margin-top:6px;padding:6px 10px;background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;font-size:10px;color:#92400e;text-align:start;line-height:1.4;display:flex;align-items:center;gap:6px;justify-content:space-between;unicode-bidi:plaintext" dir="auto"><span style="flex:1">⚠️ שאלה תלוית-תמונה: ההסבר עלול להיות שגוי.</span><button data-action="mark-verified" data-idx="'+_qIdx+'" style="font-size:9px;padding:3px 8px;background:#d97706;color:#fff;border:none;border-radius:6px;cursor:pointer;flex:0 0 auto">✓ מאומת</button></div>':''}</div>`;}
+if(!q.img&&!G.examMode){h+=`<div style="margin-bottom:10px"><button data-action="upload-img" data-idx="${_qIdx}" style="font-size:10px;padding:4px 12px;background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer">📷 Attach Image</button><span id="img-status-${_qIdx}" style="font-size:10px;color:#94a3b8;margin-left:6px"></span></div>`;}
 q.o.forEach((o,i)=>{
 let cls='qo';
 if(G.ans){cls+=' lk';if(isOk(q,i))cls+=' ok';else if(i===G.sel)cls+=' no';else cls+=' dim';}
@@ -815,6 +831,7 @@ export function initQuizEvents(container) {
 
     // === Filters ===
     else if (action === 'filter') { setFilt(el.dataset.f); }
+    else if (action === 'toggle-year-pills') { G._yearPillsOpen = !(G._yearPillsOpen===true); G.render(); }
     else if (action === 'filter-year') { toggleYearFilt(el.dataset.f); }
     else if (action === 'filter-year-clear') { clearYearFilt(); }
     else if (action === 'filter-rescue') { buildRescuePool(); }

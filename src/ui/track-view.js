@@ -1,6 +1,6 @@
 import G from '../core/globals.js';
-import { TOPICS, EXAM_FREQ, IMA_WEIGHTS, APP_VERSION, HARRISON_PDF_MAP, LS, BUILD_HASH } from '../core/constants.js';
-import { sanitize, fmtT, safeJSONParse, getApiKey, setApiKey, heDir } from '../core/utils.js';
+import { TOPICS, EXAM_FREQ, IMA_WEIGHTS, HARRISON_PDF_MAP } from '../core/constants.js';
+import { sanitize, fmtT, safeJSONParse, heDir } from '../core/utils.js';
 import { getDueQuestions, getWeakTopics, getStudyStreak, getTopicStats, isExamTrap, getChaptersDueForReading, getDrillTarget, buildDrillPool } from '../sr/spaced-repetition.js';
 import { isChronicFail } from '../sr/fsrs-bridge.js';
 import { setFilt, startTopicMiniExam, buildPool, buildMockExamPool } from '../quiz/engine.js';
@@ -1053,53 +1053,13 @@ h+=`<div class="card" style="padding:14px;text-align:center;margin-top:12px">
 <div style="font-size:10px;color:#64748b;margin-bottom:10px">שתף את האפליקציה עם מתמחים אחרים ברפואת המשפחה</div>
 <button class="btn btn-p" data-action="share-app" style="margin-bottom:8px" aria-label="Share app link">📤 Share App Link</button>
 </div>`;
-// Data management
-h+=`<div class="card" style="padding:14px;margin-top:12px">
-<div style="font-weight:700;font-size:12px;margin-bottom:8px">💾 Data Management</div>
-<div style="font-size:10px;color:#64748b;margin-bottom:10px">Your progress is saved automatically in your browser. Export to backup or transfer between devices.</div>
-<div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap">
-<button class="btn btn-p" data-action="export-progress" aria-label="Export progress">📥 Export Progress</button>
-<button class="btn btn-g" data-action="import-progress" aria-label="Import progress">📤 Import Progress</button>
-<button class="btn" style="background:#fef2f2;color:#991b1b" data-action="reset-all" aria-label="Reset all data">🗑️ Reset</button>
-</div>
-<div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:8px">
-<button id="cloud-backup-btn" class="btn" style="background:#e0f2fe;color:#0284c7" data-action="cloud-backup" aria-label="Backup to cloud">☁️ Backup to Cloud</button>
-<button class="btn" style="background:#e0f2fe;color:#0284c7" data-action="cloud-restore" aria-label="Restore from cloud">☁️ Restore from Cloud</button>
-</div>
-<div style="font-size:9px;color:#94a3b8;text-align:center;margin-top:6px">Cloud sync · progress keyed by device ID</div>
-</div></div>`;
+// Data Management, API Key, and version footer REMOVED from Track — they were duplicated
+// here and in Settings; Settings (Data / API Key / About) is now their single home.
 // Study Journal — wrong answer log + personal notes
 h+=`<div class="card" style="padding:14px;margin-top:12px">
 <div style="font-weight:700;font-size:12px;margin-bottom:10px">📓 Study Journal</div>
 ${renderWrongAnswerLog()}
 </div>`;
-// API key settings card
-var _storedKey=getApiKey();
-h+='<div class="card" style="padding:14px;margin-top:10px;border:2px solid '+(_storedKey?'#bbf7d0':'#fde68a')+'">';
-h+='<div class="sec-t" style="font-size:13px">🔑 Anthropic API Key</div>';
-h+='<div class="sec-s" style="margin-bottom:10px">לשימוש ב-AI Explain ו-Teach-Back · מאוחסן בדפדפן בלבד</div>';
-if(!_storedKey){h+='<div style="padding:8px 10px;background:#ecfdf5;border:1px solid #bbf7d0;border-radius:8px;font-size:10px;color:#065f46;margin-bottom:10px">✅ AI פועל דרך שרת proxy — לא צריך מפתח אישי. אפשר להוסיף כגיבוי. <a href="https://console.anthropic.com/keys" target="_blank" style="color:#d97706;font-weight:700">קבל מפתח ↗</a></div>';}
-if(_storedKey){
-  h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
-  h+='<div style="flex:1;font-size:11px;background:#ecfdf5;border:1px solid #bbf7d0;border-radius:8px;padding:6px 10px;color:#065f46">✅ API key מוגדר (sk-...'+_storedKey.slice(-6)+')</div>';
-  h+='<button class="btn btn-o" style="font-size:11px" data-action="remove-api-key" aria-label="Remove API key">הסר</button>';
-  h+='</div>';
-} else {
-  h+='<div style="display:flex;gap:8px;margin-bottom:8px">';
-  h+='<input id="apiKeyInput" type="password" placeholder="sk-ant-..." class="calc-in" style="flex:1;margin:0;font-size:11px" aria-label="Claude API key">';
-  h+='<button class="btn btn-p" style="font-size:11px" data-action="save-api-key" aria-label="Save API key">שמור</button>';
-  h+='</div>';
-}
-h+='<div style="font-size:9px;color:#94a3b8">API key נשמר ב-localStorage בלבד · לא נשלח לשרתים של האפליקציה</div></div>';
-// Version footer
-h+=`<div style="text-align:center;margin-top:20px;padding:12px;font-size:9px;color:#94a3b8;line-height:1.8">
-<div>Mishpacha Mega v${APP_VERSION} · ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})} · build ${BUILD_HASH}</div>
-<div>Harrison's 22e · ${G.QZ.length} Questions</div>
-<div style="margin-top:8px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-<button data-action="force-update" style="font-size:10px;padding:5px 14px;background:#4f46e5;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600">🔄 Force Update</button>
-<a href="https://eiasash.github.io/Geriatrics/" target="_blank" style="font-size:10px;padding:5px 14px;background:#0D7377;color:#fff;border:none;border-radius:8px;text-decoration:none;font-weight:600;display:inline-block">🩺 Geriatrics App →</a>
-</div>
-<div style="margin-top:6px">صدقة جارية الى من نحب</div></div>`;
 return h;
 }
 
@@ -1233,21 +1193,6 @@ export function initTrackEvents(container) {
     }
     // Settings
     else if (action === 'share-app') { window.shareApp(); }
-    else if (action === 'export-progress') { window.exportProgress(); }
-    else if (action === 'import-progress') { window.importProgress(); }
-    else if (action === 'reset-all') {
-      if (confirm('Reset ALL data? This cannot be undone.')) {
-        localStorage.removeItem(LS); location.reload();
-      }
-    }
-    else if (action === 'cloud-backup') { window.cloudBackup(); }
-    else if (action === 'cloud-restore') { window.cloudRestore(); }
-    else if (action === 'remove-api-key') { setApiKey(''); G.render(); }
-    else if (action === 'save-api-key') {
-      const v = document.getElementById('apiKeyInput')?.value?.trim();
-      if (v) { setApiKey(v); G.render(); }
-    }
-    else if (action === 'force-update') { window.applyUpdate(); }
     else if (action === 'calc-set') {
       const key = el.dataset.key; const val = parseInt(el.dataset.val, 10) || 0;
       calcUp(key, val);
