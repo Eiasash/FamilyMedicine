@@ -64,7 +64,7 @@ export function jumpToQuestion(idx){
   let pos=G.pool.indexOf(idx);
   if(pos<0){G.filt='all';G.topicFilt=-1;G.years=[];
     // Rebuild pool
-    G.pool=[];G.QZ.forEach((_,i)=>{if(!G.QZ[i]||!G.QZ[i].dup)G.pool.push(i);});
+    G.pool=[];G.QZ.forEach((_,i)=>{if(!G.QZ[i]||(!G.QZ[i].dup&&!G.QZ[i].broken))G.pool.push(i);});
     pos=G.pool.indexOf(idx);if(pos<0)pos=0;
   }
   G.qi=pos;G.sel=null;G.ans=false;G.render();

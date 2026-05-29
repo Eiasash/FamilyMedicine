@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.21.48': [
+    'fix(quiz): quarantined 8 questions whose CORRECT answer is unreadable transcription garble (you would memorize nonsense) via the broken flag, and extended the pool filters (render guard, sudden-death, jumpToQuestion) to exclude broken in addition to dup. The bank has a broader systemic transcription-quality problem (~120 questions with garbled stems or options across all exam batches) that needs the source exams to repair faithfully — not auto-fixed here, to avoid hiding clean questions (legitimate drug-name transliterations score the same) or fabricating exam content.'
+  ],
   '1.21.47': [
     'fix(quiz): show the attach-photo / image UI only on questions that actually reference an image (q.imgPending — the 2020 and Jun-2023 image-album exams). Previously the photo button rendered on every text question, which was pointless clutter and confusing (a photo prompt on questions that never had one). Pure-text questions now render nothing in the image slot.'
   ],

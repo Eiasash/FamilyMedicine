@@ -56,7 +56,7 @@ d.textContent=fmtT(G.pomoBreakSec);},1000);
 
 // ===== SUDDEN DEATH MODE =====
 export function startSuddenDeath(){
-G.sdMode=true;G.sdStreak=0;G.sdPool=G.QZ.map((_,i)=>i).filter(i=>!G.QZ[i]||!G.QZ[i].dup);
+G.sdMode=true;G.sdStreak=0;G.sdPool=G.QZ.map((_,i)=>i).filter(i=>!G.QZ[i]||(!G.QZ[i].dup&&!G.QZ[i].broken));
 for(let i=G.sdPool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[G.sdPool[i],G.sdPool[j]]=[G.sdPool[j],G.sdPool[i]];}
 G.sdQi=0;G.sel=null;G.ans=false;G.render();
 }
