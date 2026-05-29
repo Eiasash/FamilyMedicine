@@ -575,7 +575,7 @@ if(!G.ans){
 // ── Feedback panel ──────────────────────────────────────────────────
 const correct=isOk(q,G.sel);
 const feedbackVariant=correct?'ok':'err';
-const feedbackTitle=correct?'Correct':'Not quite';
+const feedbackTitle=correct?'נכון':'לא נכון';
 h+=`<aside class="quiz-feedback quiz-feedback--${feedbackVariant}" role="status" aria-live="polite">`;
 h+=`<span class="quiz-feedback__title">${feedbackTitle}</span>`;
 if(!G.examMode&&q.e){
@@ -592,7 +592,7 @@ if(!G.examMode){
     h+=`<div id="ai-explain-${_aiIdx}"></div>`;
     setTimeout(()=>renderExplainBox(_aiIdx),0);
   } else {
-    const label=G._exCache[_aiIdx]?'Retry AI explain':'Ask Claude';
+    const label=G._exCache[_aiIdx]?'נסה שוב':'שאל את קלוד';
     h+=`<button class="btn btn--secondary" data-action="ai-explain" data-idx="${_aiIdx}">${label}</button>`;
   }
   h+=`</div>`;

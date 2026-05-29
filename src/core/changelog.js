@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.22.3': [
+    '🇮🇱 עקביות שפה בכרטיס השאלה — חיווי התשובה לאחר מענה (נכון / לא נכון) וכפתורי ההסבר של ה-AI (שאל את קלוד / נסה שוב) מוצגים כעת בעברית. קודם הופיעו באנגלית בלבד (Correct / Not quite / Ask Claude) בתוך ממשק עברי לחלוטין — חוסר עקביות חזותית. שינוי טקסט בלבד; אין שינוי בלוגיקה, בשאלות או במפתחות התשובה.'
+  ],
   '1.22.2': [
     'fix(content): corrected 3 explanations (2020 exam) that defended the WRONG option while the official key was right — found via an explanation-vs-option detection pass, repaired from Goroll 8e (verbatim). idx 61 deep hand burn: key stays ד (analgesia + refer) — hand burns are a referral criterion (Goroll Ch 196), not office wound care. idx 111 dizziness: key stays א (diplopia = brainstem/central sign); the old text wrongly called unidirectional horizontal nystagmus central — it is peripheral (Goroll Ch 166). idx 118 diabetic vomiting: key stays ב (gastroscopy first to exclude obstruction); gastric-emptying scan only after anatomic causes are ruled out (Goroll Ch 59/102).',
     'No answer keys changed. Detection also confirmed the explanation corpus is otherwise clean: zero letter-contradictions, zero garbled explanations.'
