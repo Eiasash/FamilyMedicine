@@ -49,7 +49,8 @@ describe('FM v1.21.13 P0 (a) — toLowerCase undefined defensive (4,890 chaos cr
     const moreView = readFileSync(resolve(rootDir, 'src/ui/more-view.js'), 'utf-8');
     expect(moreView).toMatch(/\(item\.q\|\|''\)\.toLowerCase\(\)/);
     expect(moreView).toMatch(/\(n\.topic\|\|''\)\.toLowerCase\(\)/);
-    expect(moreView).toMatch(/\(d\.name\|\|''\)\.toLowerCase\(\)/);
+    // Drug search removed from global Search (v1.23.0 — Drugs tab retired); the
+    // defensive d.name guard now lives only in learn-view.js (asserted below).
   });
 
   it('learn-view.js notes filter uses (field||\'\').toLowerCase()', () => {
