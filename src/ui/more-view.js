@@ -71,7 +71,7 @@ export function jumpToQuestion(idx){
 }
 
 export function renderSearch(){
-let h=`<div class="sec-t">🔍 חיפוש</div><div class="sec-s">חיפוש בכל ${G.QZ.length} השאלות + ${G.NOTES.length} סיכומים + ${G.DRUGS.length} תרופות</div>`;
+let h=`<div class="sec-t">🔍 חיפוש</div><div class="sec-s">חיפוש בכל ${G.QZ.length} השאלות + ${G.NOTES.length} סיכומים</div>`;
 h+=`<div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
 <input class="search-box" style="margin-bottom:0;flex:1" placeholder="הקלד לחיפוש..." data-action="search-input" value="${G.srchQ}" id="srchi">
 <button class="voice-btn${G.voiceListening?' listening':''}" data-action="voice-parser" aria-label="${G.voiceListening?'Stop voice input':'Start voice input'}">${G.voiceListening?'🔴 מקשיב...':'🎤 קול'}</button>
@@ -87,18 +87,11 @@ const q=G.srchQ.toLowerCase();
 const qRes=[];G.QZ.forEach((item,i)=>{if((item.q||'').toLowerCase().includes(q)||(item.o||[]).some(o=>(o||'').toLowerCase().includes(q)))qRes.push(i);});
 // Search notes
 const nRes=G.NOTES.filter(n=>(n.topic||'').toLowerCase().includes(q)||(n.notes||'').toLowerCase().includes(q));
-// Search drugs
-const dRes=G.DRUGS.filter(d=>(d.name||'').toLowerCase().includes(q)||(d.heb||'').includes(q)||(d.risk||'').toLowerCase().includes(q));
-
-h+=`<div style="font-size:11px;color:#64748b;margin-bottom:10px">${qRes.length} שאלות · ${nRes.length} נושאים · ${dRes.length} תרופות</div>`;
+h+=`<div style="font-size:11px;color:#64748b;margin-bottom:10px">${qRes.length} שאלות · ${nRes.length} נושאים</div>`;
 
 if(nRes.length){
 h+=`<div style="font-weight:700;font-size:12px;margin-bottom:6px">📚 סיכומים</div>`;
 nRes.forEach(n=>{h+=`<div class="card" style="padding:10px"><div style="font-weight:700;font-size:11px">${n.topic}</div><div style="font-size:10px;color:#475569;margin-top:4px;line-height:1.6">${n.notes.substring(0,200)}...</div></div>`;});
-}
-if(dRes.length){
-h+=`<div style="font-weight:700;font-size:12px;margin:8px 0 6px">💊 תרופות</div>`;
-dRes.forEach(d=>{h+=`<div class="card" style="padding:10px"><span style="font-weight:700;font-size:11px">${d.name}</span> ${d.beers?'<span class="badge badge-r">BEERS</span>':''}<div style="font-size:10px;color:#475569;margin-top:2px">${d.risk}</div></div>`;});
 }
 if(qRes.length){
 h+=`<div style="font-weight:700;font-size:12px;margin:8px 0 6px">📝 Questions (${Math.min(qRes.length,15)} shown)</div>`;
