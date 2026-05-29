@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.21.45': [
+    'fix(data): content-integrity dedup — soft-retired 5 duplicate question copies (idx 162, 482, 742, 788, 792) and added a render-time guard that keeps any retired copy out of every multi-question pool before display, so all pool builders are covered (not only buildPool callers). Four were VARIANT near-dups where the cleaner copy was kept (retinal detachment, BRCA position-paper, diabetic retinopathy, pregnancy-termination committee criteria); one (acne, idx 14 vs 162) was an answer-conflict where the Duac first-line-topical version was kept. BUILD_HASH synced. Indices and progress preserved; no questions deleted.'
+  ],
   '1.21.44': [
     '🧹 ניקוי לשונית מעקב — הוסרו שלושה כרטיסים כפולים (נתונים, מפתח API, וכותרת גרסה עם כפתור עדכון וקישור לאפליקציות) שכבר קיימים בלשונית ההגדרות. ניהול הנתונים, המפתח והגרסה מרוכזים כעת במקום אחד.',
     '📅 שורת הסינון נוקתה — שבע גלולות שנות המבחן מתקפלות מאחורי כפתור לפי שנה, שנפתח אוטומטית כשיש שנים פעילות ומציג מונה. בחירה מרובה נשמרה.',
