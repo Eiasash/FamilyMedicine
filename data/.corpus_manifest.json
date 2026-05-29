@@ -1,11 +1,11 @@
 {
   "schema": "corpus-manifest-v1",
   "repo": "FamilyMedicine",
-  "total_questions": 1061,
+  "total_questions": 1091,
   "topics": [
     {
       "id": 0,
-      "n_questions": 20
+      "n_questions": 24
     },
     {
       "id": 1,
@@ -13,11 +13,11 @@
     },
     {
       "id": 2,
-      "n_questions": 29
+      "n_questions": 33
     },
     {
       "id": 3,
-      "n_questions": 38
+      "n_questions": 40
     },
     {
       "id": 4,
@@ -25,23 +25,23 @@
     },
     {
       "id": 5,
-      "n_questions": 27
+      "n_questions": 29
     },
     {
       "id": 6,
-      "n_questions": 31
+      "n_questions": 32
     },
     {
       "id": 7,
-      "n_questions": 24
+      "n_questions": 27
     },
     {
       "id": 8,
-      "n_questions": 28
+      "n_questions": 30
     },
     {
       "id": 9,
-      "n_questions": 100
+      "n_questions": 101
     },
     {
       "id": 10,
@@ -49,15 +49,15 @@
     },
     {
       "id": 11,
-      "n_questions": 22
+      "n_questions": 24
     },
     {
       "id": 12,
-      "n_questions": 21
+      "n_questions": 22
     },
     {
       "id": 13,
-      "n_questions": 50
+      "n_questions": 52
     },
     {
       "id": 14,
@@ -69,7 +69,7 @@
     },
     {
       "id": 16,
-      "n_questions": 20
+      "n_questions": 21
     },
     {
       "id": 17,
@@ -77,11 +77,11 @@
     },
     {
       "id": 18,
-      "n_questions": 32
+      "n_questions": 34
     },
     {
       "id": 19,
-      "n_questions": 16
+      "n_questions": 18
     },
     {
       "id": 20,
@@ -89,7 +89,7 @@
     },
     {
       "id": 21,
-      "n_questions": 20
+      "n_questions": 21
     },
     {
       "id": 22,
