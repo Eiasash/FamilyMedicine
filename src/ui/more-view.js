@@ -71,10 +71,10 @@ export function jumpToQuestion(idx){
 }
 
 export function renderSearch(){
-let h=`<div class="sec-t">🔍 Search</div><div class="sec-s">Search across all ${G.QZ.length} questions + ${G.NOTES.length} study notes + ${G.DRUGS.length} drugs</div>`;
+let h=`<div class="sec-t">🔍 חיפוש</div><div class="sec-s">חיפוש בכל ${G.QZ.length} השאלות + ${G.NOTES.length} סיכומים + ${G.DRUGS.length} תרופות</div>`;
 h+=`<div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
-<input class="search-box" style="margin-bottom:0;flex:1" placeholder="Type to search..." data-action="search-input" value="${G.srchQ}" id="srchi">
-<button class="voice-btn${G.voiceListening?' listening':''}" data-action="voice-parser" aria-label="${G.voiceListening?'Stop voice input':'Start voice input'}">${G.voiceListening?'🔴 Listening...':'🎤 Voice'}</button>
+<input class="search-box" style="margin-bottom:0;flex:1" placeholder="הקלד לחיפוש..." data-action="search-input" value="${G.srchQ}" id="srchi">
+<button class="voice-btn${G.voiceListening?' listening':''}" data-action="voice-parser" aria-label="${G.voiceListening?'Stop voice input':'Start voice input'}">${G.voiceListening?'🔴 מקשיב...':'🎤 קול'}</button>
 </div>`;
 if(G.voiceTranscript&&G.srchQ){h+=`<div style="font-size:10px;color:#64748b;margin-bottom:8px;padding:6px 10px;background:#f8fafc;border-radius:8px" dir="auto">🎤 "${G.voiceTranscript}"</div>`;}
 if(G.srchQ.length>=2){
@@ -90,14 +90,14 @@ const nRes=G.NOTES.filter(n=>(n.topic||'').toLowerCase().includes(q)||(n.notes||
 // Search drugs
 const dRes=G.DRUGS.filter(d=>(d.name||'').toLowerCase().includes(q)||(d.heb||'').includes(q)||(d.risk||'').toLowerCase().includes(q));
 
-h+=`<div style="font-size:11px;color:#64748b;margin-bottom:10px">${qRes.length} questions · ${nRes.length} topics · ${dRes.length} drugs</div>`;
+h+=`<div style="font-size:11px;color:#64748b;margin-bottom:10px">${qRes.length} שאלות · ${nRes.length} נושאים · ${dRes.length} תרופות</div>`;
 
 if(nRes.length){
-h+=`<div style="font-weight:700;font-size:12px;margin-bottom:6px">📚 Study Notes</div>`;
+h+=`<div style="font-weight:700;font-size:12px;margin-bottom:6px">📚 סיכומים</div>`;
 nRes.forEach(n=>{h+=`<div class="card" style="padding:10px"><div style="font-weight:700;font-size:11px">${n.topic}</div><div style="font-size:10px;color:#475569;margin-top:4px;line-height:1.6">${n.notes.substring(0,200)}...</div></div>`;});
 }
 if(dRes.length){
-h+=`<div style="font-weight:700;font-size:12px;margin:8px 0 6px">💊 Drugs</div>`;
+h+=`<div style="font-weight:700;font-size:12px;margin:8px 0 6px">💊 תרופות</div>`;
 dRes.forEach(d=>{h+=`<div class="card" style="padding:10px"><span style="font-weight:700;font-size:11px">${d.name}</span> ${d.beers?'<span class="badge badge-r">BEERS</span>':''}<div style="font-size:10px;color:#475569;margin-top:2px">${d.risk}</div></div>`;});
 }
 if(qRes.length){
@@ -148,7 +148,7 @@ const CHAT_STARTERS=[
 const CHAT_SYSTEM="You are a senior family physician and mentor at Shaare Zedek Medical Center in Jerusalem. The user is a family medicine resident preparing for their Stage A board exam (P0062-2025 — רפואת המשפחה שלב א׳). Answer in the same language as the question (Hebrew or English). Be concise, clinically precise. Focus on Goroll 8e (primary source), Nelson 22e selected chapters (peds), AFP review articles, and Israeli הר\"י guidelines. Use Harrison 22e only as cross-reference. Emphasize primary-care pathophysiology, evidence-based management, Israeli national guidelines, and exam-tested thresholds.";
 
 export function renderChat(){
-let h='<div class="sec-t">💬 AI Chat</div><div class="sec-s">Claude-powered Family Medicine Q&A — board prep focus</div>';
+let h='<div class="sec-t">💬 צ׳אט AI</div><div class="sec-s">שאלות ותשובות ברפואת משפחה מבוססות Claude — מיקוד בהכנה לבחינה</div>';
 h+='<div class="card" style="display:flex;flex-direction:column;height:calc(100vh - 200px);overflow:hidden">';
 h+='<div class="chat-disclaimer" style="margin:10px 10px 0">⚠️ AI mentor — not a substitute for clinical judgment. For board prep use only.</div>';
 if(G.S.chat.length>0){h+='<div style="padding:4px 10px;text-align:left"><button data-action="clear-chat" style="font-size:10px;color:#94a3b8;background:none;border:none;cursor:pointer" aria-label="Clear chat history">🗑 נקה שיחה</button></div>';}
