@@ -1,5 +1,36 @@
 # IMPROVEMENTS — mishpacha-mega (Family Medicine)
 
+## 2026-05-30 — audit-fix-deploy § C pass (1 i18n fix shipped → PR #117, v1.22.3, live-verified)
+
+**Result: AUDIT CLEAN except one shipped i18n fix (LANG-1) + two non-blocking findings logged (RI-1 headline, BC-1 tech-debt).** PR #117 merged (squash `502def3`) and **live-verified** at v1.22.3. Captain-mode session (Eias delegated; executed without per-step confirmation).
+
+**Findings (audit, all green):**
+
+| Check | Expected | Actual | Status |
+|---|---|---|---|
+| Version quartet | constants APP_VERSION === BUILD_HASH-ver === sw.js CACHE === package.json | all `1.22.3` | PASS |
+| BUILD_HASH | `<Qcount>q-v<ver>` | `1061q-v1.22.3` | PASS |
+| Q count | matches BUILD_HASH | 1061 | PASS |
+| Per-tag breakdown | 7 sessions + FM-Core | 2020/2021-Jun/2022-Jun/2023-Jun=150, 2024-May/2024-Sep=100, 2025-Jun=150, FM-Core=111 | PASS |
+| Topic coverage | every ti 0..26 ≥1 (flag <3) | all 27 ≥3 | PASS |
+| Tests | ≥315 floor | **964 across 57 files**, all green (pre- and post-fix) | PASS |
+| TODO/FIXME in src/ | none | none | PASS |
+| console.log leaks (non-DEV) | none | the one hit is inside a changelog **string**, not code | PASS |
+| `dir="rtl"` in src/ui/ | prefer `dir="auto"` | none | PASS |
+| deployConfigGuard / vite base | `/FamilyMedicine/` | correct | PASS |
+| Live verify (GitHub Pages) | sw + bundle carry v1.22.3 | sw `mishpacha-v1.22.3` ✓, bundle `B2e05E_p.js` carries `1061q-v1.22.3` + Hebrew strings ✓, English `Not quite` gone ✓ | PASS |
+
+**LANG-1 (FIXED, shipped PR #117).** The quiz card still rendered 2 English visible-text strings inside an otherwise fully-Hebrew RTL exam app: feedback title `Correct`/`Not quite` (`quiz-view.js:578`) and the AI-explain button `Ask Claude`/`Retry AI explain` (`:595`). Hebraized to `נכון`/`לא נכון` and `שאל את קלוד`/`נסה שוב`. Safe: `quizViewMarkup.test.js:140` asserts the **class** `quiz-feedback__title`, not its text; no test pins the English strings; feedback colors come from `--color-success/--color-danger` CSS vars (untouched). Text-only, no logic/question/key change. 964/964 green pre- and post-edit. (Left English **aria-labels** for a later focused a11y-copy pass — kept PR tight.)
+
+**RI-1 (HEADLINE — NOT fixed; high-value but care-requiring; surfaced to Eias as next-session fork).** The clickable "מקור" source-link feature is **100% dead in production.** `quiz-view.js:585` gates the chip on `if(!G.examMode && q.ref)`, but **0/1061 questions carry a `ref` field** (verified this pass). The entire feature is dormant: module `src/ui/source-link.js` (parseRef/renderSourceLink/openSource), CSS `.quiz-source` (`quiz-view.css:614`), the click handler (`quiz-view.js:853`), and 40+ tests in `tests/sourceLink.test.js` — none of it ever renders. Users see citations only as Hebrew prose inside `q.e` (e.g. "התשובה מבוססת על גורול פרק 46").
+**Why NOT blind-backfilled** (disciplined call; honors fabrication-risk rule + corroborated by the **2026-05-10 BAILED** entry below): (1) the existing `.audit_logs/.../sources_extracted.csv` was already proven RTL-parse-corrupted (page numbers mis-grabbed as Q-numbers) and abandoned for exactly this purpose — that path is closed; (2) the dominant in-corpus marker is Hebrew `פרק N`, which `parseRef`'s `/Ch\.?\s*(\d+)/i` does not match; (3) real edition variants exist ("גורול מהדורה **7**, פרק 207" vs our Goroll **8e** `goroll_chapters.json`; "נלסון מהדורה **21**" vs our 165-entry Nelson subset) → a naive numeric map would **mis-attribute clinical sources**; (4) Lerner cites by quoted section title, not number; Nelson cites mostly out-of-range. A correct backfill is an **anchor-verified content batch** (per the `citationCoveragePilot.test.js` precedent — position-pinned, with `.audit_logs/` evidence + a count-pinning test), edition-aware, Nelson-skipped, emitting a link only where the chapter resolves in the real index — NOT a render-time regex and NOT a re-run of the bailed CSV.
+
+**BC-1 (tech-debt, not a bug).** Two button-class systems coexist — BEM (`btn--primary/secondary/ghost`) and legacy (`btn-p/btn-o/btn-g/btn-d`). All legacy classes ARE defined (`components.css` + dark-mode in `theme.css` + a11y note in `layout.css`), so buttons render correctly; purely stylistic. Plus ~58 raw inline-styled `<button>` across `src/ui` (app.js share/close, library-view add-qs, …). Too broad for a small single-purpose PR; defer to a dedicated UI-consistency pass.
+
+**RLS sanity pass: NOT TRIGGERED (logged per rule).** PR #117 touches zero schema/migration/table/policy/role/grant surface — pure client-side copy + version strings. The Phase-1 RLS check is only required for schema-adjacent work; recorded here as deliberately not-run, not skipped.
+
+**Why minimal change shipped:** repo is genuinely clean (964-test floor = 3× the 315 baseline; version/hygiene/coverage all green). Adding tests or refactors "for the sake of it" violates Working Rule 2 (minimum code that solves the problem). The one real user-facing defect (English strings in a Hebrew app) was fixed; the one high-value latent issue (RI-1) is correctly deferred to an authorized content workstream rather than risk fabricated citations.
+
 ## 2026-05-10 — FM source-citation backfill — BAILED (dataset unreliable)
 
 **Goal.** Use `.audit_logs/topic_analysis_2026-05-03/sources_extracted.csv` (advertised: "1231 source rows extracted from FM exam source-reference PDFs") to close the 83% citation-coverage gap surfaced in PR #53 (878/1061 FM Qs without recognizable source).
