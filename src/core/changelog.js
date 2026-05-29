@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.21.46': [
+    'fix(quiz): exclude soft-retired duplicate questions from the Sudden Death pool. Sudden Death builds its own G.sdPool separately from the main G.pool, so the v1.21.45 render-time dedup guard did not cover it; G.sdPool is now filtered at build the same way. Completes the dedup pool coverage flagged in review.'
+  ],
   '1.21.45': [
     'fix(data): content-integrity dedup — soft-retired 5 duplicate question copies (idx 162, 482, 742, 788, 792) and added a render-time guard that keeps any retired copy out of every multi-question pool before display, so all pool builders are covered (not only buildPool callers). Four were VARIANT near-dups where the cleaner copy was kept (retinal detachment, BRCA position-paper, diabetic retinopathy, pregnancy-termination committee criteria); one (acne, idx 14 vs 162) was an answer-conflict where the Duac first-line-topical version was kept. BUILD_HASH synced. Indices and progress preserved; no questions deleted.'
   ],
