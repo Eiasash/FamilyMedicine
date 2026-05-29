@@ -32,8 +32,6 @@ G._dataPromise = (async function loadDataArrays() {
     QZ: 'questions.json',
     TK: 'topics.json',
     NOTES: 'notes.json',
-    DRUGS: 'drugs.json',
-    FLASH: 'flashcards.json',
     TABS: 'tabs.json',
   };
   try {
@@ -52,8 +50,6 @@ G._dataPromise = (async function loadDataArrays() {
       if (varName === 'QZ') G.QZ = results[i];
       else if (varName === 'TK') G.TK = results[i];
       else if (varName === 'NOTES') G.NOTES = results[i];
-      else if (varName === 'DRUGS') G.DRUGS = results[i];
-      else if (varName === 'FLASH') G.FLASH = results[i];
       else if (varName === 'TABS') G.TABS = results[i];
       });
     G._dataReady = true;

@@ -207,14 +207,19 @@ jobs:
           python3 << 'PYEOF'
           import sys, os
           sw = open('sw.js').read()
+          # Files that must be referenced (precached) in the SW:
           REQUIRED = [
               'mishpacha-mega.html',
               'data/questions.json', 'data/topics.json', 'data/notes.json',
-              'data/drugs.json', 'data/flashcards.json', 'data/tabs.json',
+              'data/tabs.json',
               'shared/fsrs.js',
           ]
+          # Files that must exist on disk but are intentionally NOT precached
+          # (v1.24.1: drugs/flashcards data retired from precache with the
+          # Cards/Drugs tab removal; drugs.json still used by textbookData test).
+          DISK_ONLY = ['data/drugs.json', 'data/flashcards.json']
           missing_ref = [f for f in REQUIRED if f not in sw]
-          missing_disk = [f for f in REQUIRED if not os.path.exists(f)]
+          missing_disk = [f for f in (REQUIRED + DISK_ONLY) if not os.path.exists(f)]
           if missing_ref:
               print(f'ERROR: SW missing refs: {missing_ref}', file=sys.stderr); sys.exit(1)
           if missing_disk:
