@@ -81,7 +81,7 @@ case'drugs':G.tab='lib';G.S.libSub='drugs';el.innerHTML='';render();break;
 case'lib':
   {const _libSub=G.S.libSub||'read';
   const _libBar='<div style="display:flex;gap:4px;margin-bottom:12px;padding:4px;background:#f1f5f9;border-radius:12px">'+
-  [{id:'read',ic:'📖',l:'Read'},{id:'cards',ic:'🃏',l:'Cards'},{id:'notes',ic:'📝',l:'Notes'},{id:'drugs',ic:'💊',l:'Drugs'}].map(s=>
+  [{id:'read',ic:'📖',l:'מקורות'},{id:'cards',ic:'🃏',l:'כרטיסים'},{id:'notes',ic:'📝',l:'סיכומים'},{id:'drugs',ic:'💊',l:'תרופות'}].map(s=>
     '<button data-action="lib-sub" data-sub="'+s.id+'" style="flex:1;padding:8px 4px;border:none;border-radius:10px;font-size:11px;font-weight:'+(_libSub===s.id?'700':'400')+';cursor:pointer;background:'+(_libSub===s.id?'#fff':'transparent')+';color:'+(_libSub===s.id?'#0f172a':'#64748b')+';box-shadow:'+(_libSub===s.id?'0 1px 3px rgba(0,0,0,.1)':'none')+'">'+s.ic+' '+s.l+'</button>'
   ).join('')+'</div>';
   let _libBody='';
@@ -107,7 +107,7 @@ case'more':
   if(G.moreSub==='settings')G.moreSub='calc';
   if(!['calc','search','notes','chat','feedback'].includes(G.moreSub))G.moreSub='calc';
   {const _moreBar='<div style="display:flex;gap:4px;margin-bottom:12px;padding:4px;background:#f1f5f9;border-radius:12px">'+
-  [{id:'calc',ic:'🧮',l:'Calc'},{id:'search',ic:'🔍',l:'Search'},{id:'notes',ic:'📝',l:'Notes'},{id:'chat',ic:'💬',l:'Chat'},{id:'feedback',ic:'💡',l:'Feedback'}].map(s=>
+  [{id:'calc',ic:'🧮',l:'מחשבונים'},{id:'search',ic:'🔍',l:'חיפוש'},{id:'notes',ic:'📝',l:'הערות'},{id:'chat',ic:'💬',l:'צ׳אט'},{id:'feedback',ic:'💡',l:'משוב'}].map(s=>
     '<button data-action="more-sub" data-sub="'+s.id+'" style="flex:1;padding:8px 4px;border:none;border-radius:10px;font-size:11px;font-weight:'+(G.moreSub===s.id?'700':'400')+';cursor:pointer;background:'+(G.moreSub===s.id?'#fff':'transparent')+';color:'+(G.moreSub===s.id?'#0f172a':'#64748b')+';box-shadow:'+(G.moreSub===s.id?'0 1px 3px rgba(0,0,0,.1)':'none')+'">'+s.ic+' '+s.l+'</button>'
   ).join('')+'</div>';
   let _mBody='';
