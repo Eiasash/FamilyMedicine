@@ -52,6 +52,12 @@ document.getElementById('tb').innerHTML=G.TABS.map(t=>
 export function go(t){G.tab=t;renderTabs();render()}
 
 export function render(){
+// v1.21.45 dedup: keep soft-retired duplicate questions (dup:1) out of any
+// multi-question pool before it is displayed. Several pool builders set G.pool
+// directly without going through buildPool(), so this render chokepoint (G.render,
+// called by every builder) is the reliable single place to enforce it. Single-item
+// pools (explicit "go to this question" navigation) are left intact.
+if(Array.isArray(G.pool)&&G.pool.length>1){G.pool=G.pool.filter(i=>!G.QZ||!G.QZ[i]||!G.QZ[i].dup);}
 const el=document.getElementById('ct');
 const focused=document.activeElement?.id;
 const sv={srchi:document.getElementById('srchi')?.value,nfilt:document.getElementById('nfilt')?.value,dsrch:document.getElementById('dsrch')?.value};
