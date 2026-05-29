@@ -57,7 +57,7 @@ export function render(){
 // directly without going through buildPool(), so this render chokepoint (G.render,
 // called by every builder) is the reliable single place to enforce it. Single-item
 // pools (explicit "go to this question" navigation) are left intact.
-if(Array.isArray(G.pool)&&G.pool.length>1){G.pool=G.pool.filter(i=>!G.QZ||!G.QZ[i]||!G.QZ[i].dup);}
+if(Array.isArray(G.pool)&&G.pool.length>1){G.pool=G.pool.filter(i=>!G.QZ||!G.QZ[i]||(!G.QZ[i].dup&&!G.QZ[i].broken));}
 const el=document.getElementById('ct');
 const focused=document.activeElement?.id;
 const sv={srchi:document.getElementById('srchi')?.value,nfilt:document.getElementById('nfilt')?.value,dsrch:document.getElementById('dsrch')?.value};
