@@ -16,6 +16,7 @@ const EXPECTED_COUNTS = {
   '2025-Jun': 150,   // v1.3.0: cosmetic refresh (PDF was IM but data was FM; re-extracted for consistency)
   'FM-Core': 111,    // v1.6.0: low-volume bucket fill — HF&Valves +10 (CASTLE-AF, GDMT 4-pillar, EMPEROR-Preserved, ARNI), Allergy +10, Men's Health +11, Addictions +10, Pain/Pall +10. Generated via toranot proxy 3-worker + retry-on-5xx. Prior v1.5.0 baseline: 60 (cancer screening 12, vaccines 12, contraception 10, HEEADSSS 10, IPV 8, STI 8 — IL MOH + USPSTF + CDC)
   'AI-2026': 30,     // v1.24.0: curated diverse-difficulty batch (10 easy / 12 medium / 8 hard) across under-covered topics (addictions, men's health, allergy, pain, thyroid, derma...). Each carries a verified Goroll 8e `ref` (Latin "Ch N", deep-linkable) + Hebrew inline citation. ti corrected to topic-index 0..26.
+  'AI-2026b': 30,    // v1.25.0: second curated batch, explanations open with explicit 'correct answer is X because' justification; verified Goroll refs.
 };
 
 const EXPECTED_TOTAL = Object.values(EXPECTED_COUNTS).reduce((a, b) => a + b, 0);
@@ -24,7 +25,7 @@ const ALLOWED_TAGS = new Set([
   '2020', '2021-Jun', '2022-Jun', '2023-Jun',
   '2024-May', '2024-Sep', '2025-Jun',
   'Goroll', 'Nelson', 'AFP', 'Exam',
-  'FM-Core', 'AI-2026',
+  'FM-Core', 'AI-2026', 'AI-2026b',
 ]);
 
 describe('data/questions.json — count + schema lock', () => {

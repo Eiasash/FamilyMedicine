@@ -49,8 +49,8 @@ const PILOT_CITATIONS = {
 };
 
 describe('FM v1.21.22 Goroll citation pilot (16 HTN/Lipid Qs)', () => {
-  it('corpus size is the v1.24.0 baseline (1091 Qs)', () => {
-    expect(QS).toHaveLength(1091);
+  it('corpus size is the v1.25.0 baseline (1121 Qs)', () => {
+    expect(QS).toHaveLength(1121);
   });
 
   for (const [posStr, ch] of Object.entries(PILOT_CITATIONS)) {
