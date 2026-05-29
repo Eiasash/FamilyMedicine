@@ -7,6 +7,11 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.22.0': [
+    'fix(content): repaired 455 questions corrupted by bad OCR/transcription, using the official IMA family-medicine exam papers and answer keys (2021-Jun through 2025-Jun) as the authoritative source.',
+    'Stems and options were replaced with verified source text and correct answers set from the official key — 449 via an automated parser+matcher with a content-plus-position dual cross-check, 6 hand-extracted from merged-OCR regions. 7 of 8 previously-quarantined questions restored; the 2020 paper was not in the source set so one question stays quarantined. 2 answers that disagreed with the official key were corrected.',
+    'Note: explanations were left unchanged and still need a separate verification pass.'
+  ],
   '1.21.48': [
     'fix(quiz): quarantined 8 questions whose CORRECT answer is unreadable transcription garble (you would memorize nonsense) via the broken flag, and extended the pool filters (render guard, sudden-death, jumpToQuestion) to exclude broken in addition to dup. The bank has a broader systemic transcription-quality problem (~120 questions with garbled stems or options across all exam batches) that needs the source exams to repair faithfully — not auto-fixed here, to avoid hiding clean questions (legitimate drug-name transliterations score the same) or fabricating exam content.'
   ],
