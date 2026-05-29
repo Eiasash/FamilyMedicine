@@ -55,8 +55,8 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.21.43';
-export const BUILD_HASH='1061q-v1.21.43';
+export const APP_VERSION='1.21.44';
+export const BUILD_HASH='1061q-v1.21.44';
 export const SYLLABUS_VERSION='P0062-2025';
 // CHANGELOG moved to ./changelog.js for code-splitting. Dynamically
 // imported in showHelp() so the ~69KB raw / ~30KB gzipped doesn't load
