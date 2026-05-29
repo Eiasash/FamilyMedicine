@@ -18,8 +18,7 @@ import { requestWakeLock, startPomodoro, stopPomodoro, startSuddenDeath, endSudd
 import { callAI } from '../ai/client.js';
 import { explainWithAI, aiAutopsy, gradeTeachBack, renderExplainBox, toggleFlagExplain,
          startVoiceTeachBack } from '../ai/explain.js';
-import { submitLeaderboardScore, fetchLeaderboard, showLeaderboard, renderFeedback,
-         submitFeedbackForm, cloudBackup, cloudRestore, getDiagnostics, submitReport,
+import { submitLeaderboardScore, fetchLeaderboard, showLeaderboard, cloudBackup, cloudRestore, getDiagnostics, submitReport,
          saveAnswerReport, _sbDeviceId } from '../features/cloud.js';
 import { renderQuiz, toggleBk, uploadQImage, removeQImage, viewImg, pauseTimed,
          startTimedQ, stopTimedMode, sdCheck, sdNext, initQuizEvents } from './quiz-view.js';
@@ -29,15 +28,14 @@ import { renderQuiz, toggleBk, uploadQImage, removeQImage, viewImg, pauseTimed,
 // 2026-05-05 caught 16 ReferenceError pageerrors from engine.js calling the
 // unbound name; same root cause as Pnimit Mega's 38 hits, fixed in parallel.
 G.startTimedQ = startTimedQ;
-import { renderStudy, toggleNote, filterNotes, renderFlash, renderDrugs, initLearnEvents } from './learn-view.js';
+import { renderStudy, toggleNote, filterNotes, initLearnEvents } from './learn-view.js';
 import { renderLibrary, openHarrisonChapter,
          toggleHarrisonAI, submitHarrisonAI, aiSummarizeChapter, quizMeOnChapter,
          addChapterQsToBank, renderWrongAnswerLog, initLibraryEvents } from './library-view.js';
-import { renderTrack, renderCalc, calcUp, calcEstScore, renderStudyPlan, renderExamTrendCard, renderPriorityMatrix,
+import { renderTrack, renderStudyPlan, renderExamTrendCard, renderPriorityMatrix,
          renderDailyPlan, renderSessionCard, setExamDate, exportCheatSheet,
          saveSessionSummary, initTrackEvents } from './track-view.js';
-import { renderSearch, renderChat, sendChat, sendChatStarter, clearChat,
-         showAnswerHardFail, renderNotes,
+import { renderSearch, showAnswerHardFail, renderNotes,
          initMoreEvents } from './more-view.js';
 import { getCurrentUser } from '../features/auth.js';
 import { initPostLoginRestore } from '../features/post-login-restore.js';
@@ -70,24 +68,18 @@ case'quiz':el.innerHTML=G.onCallMode?renderOnCall():renderQuiz();break;
 // (pregnancy/peds/renal columns) and not duplicated in ward-helper.
 case'learn':
   G.tab='lib';
-  if(G.learnSub==='flash')G.S.libSub='cards';
-  else if(G.learnSub==='drugs')G.S.libSub='drugs';
-  else G.S.libSub='notes';
+  G.S.libSub='notes';
   G.save&&G.save();
   el.innerHTML='';render();break;
 case'study':G.tab='lib';G.S.libSub='notes';el.innerHTML='';render();break;
-case'flash':G.tab='lib';G.S.libSub='cards';el.innerHTML='';render();break;
-case'drugs':G.tab='lib';G.S.libSub='drugs';el.innerHTML='';render();break;
 case'lib':
   {const _libSub=G.S.libSub||'read';
   const _libBar='<div style="display:flex;gap:4px;margin-bottom:12px;padding:4px;background:#f1f5f9;border-radius:12px">'+
-  [{id:'read',ic:'📖',l:'מקורות'},{id:'cards',ic:'🃏',l:'כרטיסים'},{id:'notes',ic:'📝',l:'סיכומים'},{id:'drugs',ic:'💊',l:'תרופות'}].map(s=>
+  [{id:'read',ic:'📖',l:'מקורות'},{id:'notes',ic:'📝',l:'סיכומים'}].map(s=>
     '<button data-action="lib-sub" data-sub="'+s.id+'" style="flex:1;padding:8px 4px;border:none;border-radius:10px;font-size:11px;font-weight:'+(_libSub===s.id?'700':'400')+';cursor:pointer;background:'+(_libSub===s.id?'#fff':'transparent')+';color:'+(_libSub===s.id?'#0f172a':'#64748b')+';box-shadow:'+(_libSub===s.id?'0 1px 3px rgba(0,0,0,.1)':'none')+'">'+s.ic+' '+s.l+'</button>'
   ).join('')+'</div>';
   let _libBody='';
-  if(_libSub==='cards')_libBody=renderFlash();
-  else if(_libSub==='notes')_libBody=renderStudy();
-  else if(_libSub==='drugs')_libBody=renderDrugs();
+  if(_libSub==='notes')_libBody=renderStudy();
   else _libBody=renderLibrary();
   el.innerHTML=_libBar+_libBody;}break; // safe-innerhtml: _libBar is static HTML; _libBody from internal render*() functions (no user input)
 case'articles':G.libSec='afphari';G.tab='lib';G.S.libSub='read';el.innerHTML='';render();break;
@@ -102,24 +94,19 @@ case'more':
   // restored Learn tab. v1.19.0: Learn → Library, so legacy learnSub maps below.
   // Repair stale G.moreSub from a pre-1.19.0 install whose last view was
   // study/flash/drugs (it'd render the Calc 'undefined' state otherwise).
-  if(['study','flash','drugs'].includes(G.moreSub)){G.tab='lib';G.S.libSub=G.moreSub==='study'?'notes':(G.moreSub==='flash'?'cards':'drugs');G.moreSub='calc';el.innerHTML='';render();break;}
+  if(['study','flash','drugs','calc','chat','feedback'].includes(G.moreSub)){G.tab='lib';if(G.moreSub==='study')G.S.libSub='notes';G.moreSub='search';el.innerHTML='';render();break;}
   // 'settings' migrated to gear-icon overlay v1.19.0 — auto-redirect old state
-  if(G.moreSub==='settings')G.moreSub='calc';
-  if(!['calc','search','notes','chat','feedback'].includes(G.moreSub))G.moreSub='calc';
+  if(G.moreSub==='settings')G.moreSub='search';
+  if(!['search','notes'].includes(G.moreSub))G.moreSub='search';
   {const _moreBar='<div style="display:flex;gap:4px;margin-bottom:12px;padding:4px;background:#f1f5f9;border-radius:12px">'+
-  [{id:'calc',ic:'🧮',l:'מחשבונים'},{id:'search',ic:'🔍',l:'חיפוש'},{id:'notes',ic:'📝',l:'הערות'},{id:'chat',ic:'💬',l:'צ׳אט'},{id:'feedback',ic:'💡',l:'משוב'}].map(s=>
+  [{id:'search',ic:'🔍',l:'חיפוש'},{id:'notes',ic:'📝',l:'הערות'}].map(s=>
     '<button data-action="more-sub" data-sub="'+s.id+'" style="flex:1;padding:8px 4px;border:none;border-radius:10px;font-size:11px;font-weight:'+(G.moreSub===s.id?'700':'400')+';cursor:pointer;background:'+(G.moreSub===s.id?'#fff':'transparent')+';color:'+(G.moreSub===s.id?'#0f172a':'#64748b')+';box-shadow:'+(G.moreSub===s.id?'0 1px 3px rgba(0,0,0,.1)':'none')+'">'+s.ic+' '+s.l+'</button>'
   ).join('')+'</div>';
   let _mBody='';
-  if(G.moreSub==='calc')_mBody=renderCalc();
-  else if(G.moreSub==='search')_mBody=renderSearch();
-  else if(G.moreSub==='notes')_mBody=renderNotes();
-  else if(G.moreSub==='chat')_mBody=renderChat();
-  else if(G.moreSub==='feedback')_mBody=renderFeedback();
+  if(G.moreSub==='notes')_mBody=renderNotes();
+  else _mBody=renderSearch();
   el.innerHTML=_moreBar+_mBody;}break; // safe-innerhtml: _moreBar is static HTML; _mBody from internal render*() functions (no user input)
-case'calc':G.tab='more';G.moreSub='calc';el.innerHTML='';render();break;
 case'search':G.tab='more';G.moreSub='search';el.innerHTML='';render();break;
-case'chat':G.tab='more';G.moreSub='chat';el.innerHTML='';render();break;
 case'book':case'syl':G.tab='lib';el.innerHTML=renderLibrary();break;
 default:G.tab='quiz';el.innerHTML=renderQuiz();break;
 }
@@ -280,9 +267,7 @@ ${sec('Study Modes','📚','#dc2626',
 '<b>⏱️ Pomodoro</b> — טיימר 25 דקות פוקוס / 5 דקות הפסקה<br>'+
 '<b>📖 Library</b> — <bdi>Goroll 8e</bdi> (239 פרקים) · <bdi>Nelson 22e</bdi> · <bdi>Harrison 22e</bdi> (cross-ref)<br>'+
 '<b>📝 Notes</b> — הערות אישיות כלליות + לכל שאלה<br>'+
-'<b>🃏 Flashcards</b> — '+G.FLASH.length+' כרטיסים עם חזרה מרווחת<br>'+
-'<b>📄 Articles</b> — רשימת קריאה מלאה של <bdi>P0062-2025</bdi>: PCC, Family systems, EBM, הר"י<br>'+
-'<b>🧮 Calculators</b> — CrCl, CHA₂DS₂-VASc, CURB-65, Wells, PADUA'
+'<b>📄 Articles</b> — רשימת קריאה מלאה של <bdi>P0062-2025</bdi>: PCC, Family systems, EBM, הר"י'
 )}
 ${sec('Progress Tracking','📊','#f59e0b',
 '<b>⏱️ Answer Timer</b> — מעקב שקט אחרי זמן לכל שאלה<br>'+
@@ -373,7 +358,6 @@ _w.showHelp = showHelp; _w.applyUpdate = applyUpdate;
 _w.importProgress = importProgress; _w.exportProgress = exportProgress;
 _w.shareQ = shareQ;
  _w.shareApp = shareApp;
-_w.sendChatStarter = sendChatStarter;
 
 // === Event delegation (set up once, survives innerHTML changes) ===
 // Tab bar (outside #ct)
