@@ -524,15 +524,14 @@ if(q.img){
   if(q.imgDep){
     h+=`<div class="quiz-image-dep" dir="auto"><span style="flex:1">⚠️ שאלה תלוית-תמונה: ההסבר עלול להיות שגוי.</span><button data-action="mark-verified" data-idx="${G.pool[G.qi]}">✓ מאומת</button></div>`;
   }
-}else if(!G.examMode){
-  // imgPending: question text references an image (ראה תמונה / הממצא הבא) but
-  // the plate isn't in the bank yet (2020 + Jun-2023 exams — their image albums
-  // are numbered by image, not question, so they can't be auto-matched safely).
-  // Flag it honestly so the student isn't confused by a missing image.
-  if(q.imgPending){
-    h+=`<div class="quiz-image-pending" dir="auto" style="margin:8px 0;padding:8px 12px;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;font-size:11px;color:#92400e;line-height:1.5">📷 שאלה זו מתייחסת לתמונה שטרם נוספה למאגר — התשובה וההסבר עשויים להיות חלקיים. ניתן לצרף תמונה ידנית.</div>`;
-  }
-  // No image attached — show inline upload affordance (legacy path had this; v1.15 dropped it accidentally).
+}else if(!G.examMode && q.imgPending){
+  // v1.21.47: only surface photo UI when the question actually references an image
+  // (q.imgPending — set for the 2020 + Jun-2023 image-album exams). Previously the
+  // upload button rendered on EVERY text question — pointless clutter ("where is the
+  // photo?" on questions that never had one). Pure-text questions now render nothing
+  // here; imgPending questions still get the honest "not in bank" note plus a manual
+  // upload affordance so the real exam plate can be attached.
+  h+=`<div class="quiz-image-pending" dir="auto" style="margin:8px 0;padding:8px 12px;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;font-size:11px;color:#92400e;line-height:1.5">📷 שאלה זו מתייחסת לתמונה שטרם נוספה למאגר — התשובה וההסבר עשויים להיות חלקיים. ניתן לצרף תמונה ידנית.</div>`;
   h+=`<div class="quiz-image-attach"><button class="quiz-tool quiz-image-upload" data-action="upload-img" data-idx="${G.pool[G.qi]}" aria-label="צרף תמונה">📷 צרף תמונה</button><span id="img-status-${G.pool[G.qi]}" class="quiz-image-status"></span></div>`;
 }
 
