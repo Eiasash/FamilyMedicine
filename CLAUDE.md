@@ -31,14 +31,14 @@ These four rules are the floor. They override any conflicting guidance later in 
 
 Sibling PWA to **Shlav A Mega** (geriatrics) and **Pnimit Mega** (internal medicine). Shares engine, FSRS, Supabase, AI proxy.
 
-## Current state (v1.25.2, 30/05/26)
+## Current state (v1.25.3, 30/05/26)
 - **1121 Qs** total — 950 across 7 exam sessions (2020=150, 2021-Jun=150, 2022-Jun=150, 2023-Jun=150, 2024-May=100, 2024-Sep=100, 2025-Jun=150) + 111 `FM-Core` curated textbook Qs
 - All 7 sessions CONFIRMED Family Medicine content (fork-bug remediated in v1.3.0 — see CHANGELOG)
 - **27 topics** (`ti` range 0-26), **47 drugs**, **0 flashcards** (unused so far)
 - **53 test files / 845 tests** under `tests/` (v1.21.15 added 2 SW regression guards: HTML_URLS *.js + CSS_URLS on-disk). Pnimit regression guards ported + Mishpacha-specific guards added + AFP topic-map / FSRS boundary tests (v1.21.1) + R2 deep coverage (quiz-engine multi-tag, study-plan DST/calendar, sw manifest, IDB mock, bidi numerics, mutation resistance — v1.21.2) + apiKeyLoginRestore covering v1.21.12-14 cloud sync + 3 P0 chaos crash fixes (v1.21.13: toLowerCase undefined, flashcards `f` undefined bounds-check, startTimedQ G-binding)
 - Goroll 239 ch (local PDF, 1-tap deep-link) + Nelson 165 ch (Drive PDF via progressive-upgrade schema) + Harrison 42 ch (cross-ref, in-app reader) + Lerner 2025 329 sections (Hebrew prose, 6th Library tab, added v1.4.3)
 - AFP/הר"י index: 542 papers across 23 specialties; year metadata cleaned in v1.21.2 (18 entries: 16 corrected from title/filename, 2 null sentinels). Schema invariant: `paper.year` is `string|null`, never empty string.
-- localStorage `mishpacha_mega`, SW cache `mishpacha-v1.25.2`
+- localStorage `mishpacha_mega`, SW cache `mishpacha-v1.25.3`
 - `shared/fsrs.js` byte-identical with § D Geriatrics + § E Pnimit (canonical git hash-object `89aa3940…`; canonical md5 `71f9f2d4…` post-LF normalization, was `cea66a0435…` pre-2026-04-22). Known issue: `isChronicFail()` returns `undefined` instead of `false` when `fsrsD` missing — patch staged in IMPROVEMENTS.md, requires Round 3 cross-repo coordinated bump.
 
 ## Recent (v1.8.0 → v1.9.1)
@@ -81,7 +81,7 @@ Before v1.3.0, 5 of 7 exam sessions (2021-Jun, 2022-Jun, 2023-Jun, 2024-May, 202
 4. **Question content edits** — any change to `data/questions.json` `o[]` text, `c` index, or `e` explanation must quote the source (Goroll 8e / Nelson 22e / AFP) in the chat or commit message before the edit lands. Never paraphrase or fabricate option text — fork-bug remediation history (v1.3.0) shows how badly this can go wrong when sources blur between sibling repos.
 
 ## Do NOT split the modular build
-Keep the 26-JS-module split in `src/` (was 21 at v1.3.4; grew with debug console, study-plan, supabaseAuth). Pnimit's pattern, mirror it exactly.
+Keep the 32-JS-module split in `src/` (was 21 at v1.3.4; grew with debug console, study-plan, supabaseAuth). Pnimit's pattern, mirror it exactly.
 
 ## Tag whitelist
 `2020`, `2021-Jun`, `2022-Jun`, `2023-Jun`, `2024-May`, `2024-Sep`, `2025-Jun`, `Goroll`, `Nelson`, `AFP`, `Exam`
