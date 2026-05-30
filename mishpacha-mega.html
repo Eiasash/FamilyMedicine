@@ -171,16 +171,24 @@ body.study .badge-info    {background:#1e2a3d;color:#a0c8f0}
 
 <a href="#ct" class="skip-link">Skip to content</a>
 <div class="hdr" style="position:sticky;top:0">
+<!-- v1.25.4: header restructured to flexbox (.hdr-bar). Icons live in .dm-row
+     (flex, no absolute positioning) so they can no longer overlap the RTL
+     title/date. Version stamp stays OUTSIDE <h1> (LCP: h1 box final at first
+     paint, no mutation after me()/IDB migration). -->
+<div class="hdr-bar">
+<div class="hdr-titleblock">
 <h1>Mishpacha Mega <span style="font-size:9px;font-weight:600;color:#92400e;vertical-align:middle;background:#fffbeb;padding:2px 6px;border-radius:6px;margin-right:4px">Family Medicine</span></h1>
-<!-- v1.21.x LCP fix: version stamp moved out of <h1> so h1 bounding box
-     is finalized at first paint. Previously JS populated #headerVer
-     AFTER me() (IDB migration), re-measuring h1 LCP to that later paint
-     — producing the bimodal 3.5s/7.1s pattern. Now lives below the h1
-     inside .hdr; same approximate visual location, h1 no longer mutates
-     after first paint. -->
-<div style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:9px;font-weight:400;line-height:1"><span id="headerVer" style="color:#cbd5e1"></span></div>
-<button class="dm-btn" data-action="toggle-dark" title="Dark Mode" aria-label="Toggle dark mode">🌓</button><button class="dm-btn" data-action="toggle-study" title="Night/Study Mode" aria-label="Toggle night mode" style="right:44px">🕯️</button><button class="dm-btn" data-action="open-settings" title="Settings" aria-label="Settings" style="right:82px;font-size:13px">⚙️</button><button class="dm-btn" data-action="show-help" title="Help" aria-label="Help" style="right:120px;font-size:11px">❓</button><button class="dm-btn" data-action="goto-account" title="Account" aria-label="Account / Login" id="hdr-account-btn" style="right:158px;font-size:11px;font-weight:700;background:rgba(255,255,255,0.08);border:none;border-radius:50%;width:24px;height:24px;line-height:24px;text-align:center;padding:0;color:#fff">👤</button>
+<div class="hdr-ver"><span id="headerVer" style="color:#cbd5e1"></span></div>
 <p id="hdr-sub">Loading...</p>
+</div>
+<div class="dm-row">
+<button class="dm-btn" data-action="goto-account" title="Account" aria-label="Account / Login" id="hdr-account-btn">👤</button>
+<button class="dm-btn" data-action="show-help" title="Help" aria-label="Help">❓</button>
+<button class="dm-btn" data-action="open-settings" title="Settings" aria-label="Settings">⚙️</button>
+<button class="dm-btn" data-action="toggle-study" title="Night/Study Mode" aria-label="Toggle night mode">🕯️</button>
+<button class="dm-btn" data-action="toggle-dark" title="Dark Mode" aria-label="Toggle dark mode">🌓</button>
+</div>
+</div>
 </div>
 
 <div class="ct" id="ct" role="main"></div>
