@@ -124,7 +124,7 @@
   font-size: var(--text-xl);
   font-weight: var(--weight-regular);
   line-height: var(--leading-snug);
-  color: var(--color-fg);
+  color: var(--color-fg, #1a1916);
   unicode-bidi: plaintext;
   text-align: start;
   margin: 0;
@@ -153,8 +153,8 @@
   font-size: var(--text-md);
   line-height: var(--leading-body);
   text-align: start;
-  color: var(--color-fg);
-  background: var(--color-surface);
+  color: var(--color-fg, #1a1916);
+  background: var(--color-surface, #ffffff);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -326,15 +326,30 @@
 /* ── Question header (meta tags + tool buttons) ─────────────────────────── */
 .quiz-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: var(--space-3);
+  gap: var(--space-2) var(--space-3);
+}
+/* Meta group takes remaining width and wraps internally; tools stay intact. */
+.quiz-meta__group {
+  flex: 1 1 auto;
+  min-inline-size: 0;
 }
 .quiz-tools {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
+  flex: 0 0 auto;          /* never shrink — keeps icons off the title/pills */
+  margin-inline-start: auto;
+}
+/* Narrow phones: give the tools their own row so they can't ride onto the title. */
+@media (max-width: 28rem) {
+  .quiz-tools {
+    flex-basis: 100%;
+    justify-content: flex-end;
+    margin-block-start: var(--space-1);
+  }
 }
 .quiz-tool {
   display: inline-flex;
@@ -666,7 +681,9 @@
  * Study mode is FM-only — Pnimit/Geri don't have it. Sepia palette
  * mirrors body.study values from src/styles/theme.css.
  * ────────────────────────────────────────────────────────────────────── */
-body.dark {
+body.dark,
+[data-theme="dark"] body,
+body[data-theme="dark"] {
   --color-bg:           #0e0e10;
   --color-surface:      #18181b;
   --color-surface-2:    #1f1f22;
