@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.25.8': [
+    '🪝 תוקנה התנגשות מאזיני #ct: גם לוח-השנה בספרייה וגם גלולות-השנה בחידון שידרו data-action="filter-year" על אותו מיכל #ct, כך שלחיצה על גלולת-שנה בחידון הריצה תחילה את מטפל הספרייה (G.filt=undefined + render מבוזבז) ותוקנה רק כי initQuizEvents נרשם אחרון. שם הפעולה של הספרייה שונה ל-goto-quiz-year (פעולה נפרדת — קפיצה לחידון מסונן לפי שנה). פורט מ-Pnimit #152.'
+  ],
   '1.25.7': [
     '🔤 הקורא של Harrison (תוכן אנגלי) — כותרת הפרק, כותרות המקטעים, ופסקאות הטקסט קיבלו dir="auto" + unicode-bidi:plaintext (והפסקאות text-align:start במקום justify), כך שטקסט אנגלי נקרא משמאל-לימין במקום לרשת RTL מ-<html dir=rtl>. שלושת הקוראים האחרים (Goroll/Nelson משגרי-PDF, Lerner) כבר תקינים. פורט מ-Pnimit #150.'
   ],
