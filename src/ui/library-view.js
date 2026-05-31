@@ -826,7 +826,7 @@ h+=`<div class="card" style="padding:14px">
 <div style="font-size:10px;color:#64748b;margin-bottom:10px">${G.QZ.length} questions from ${examYears.length} exam sessions</div>`;
 examYears.forEach(yr=>{
 const cnt=G.QZ.filter(q=>q.t===yr).length;
-h+=`<div data-action="filter-year" data-yr="${yr}" style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f1f5f9;cursor:pointer">
+h+=`<div data-action="goto-quiz-year" data-yr="${yr}" style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f1f5f9;cursor:pointer">
 <span style="background:#06b6d4;color:#fff;font-size:10px;font-weight:700;padding:4px 10px;border-radius:8px;min-width:60px;text-align:center">${yr}</span>
 <span style="font-size:11px;flex:1">${cnt} questions</span>
 <span style="font-size:14px;color:#94a3b8">›</span></div>`;
@@ -907,7 +907,7 @@ export function initLibraryEvents(container) {
       G.tab = 'quiz'; G.filt = 'topic'; G.topicFilt = ti;
       buildPool(); G.render();
     }
-    else if (action === 'filter-year') {
+    else if (action === 'goto-quiz-year') {
       G.tab = 'quiz'; G.filt = el.dataset.yr;
       buildPool(); G.render();
     }
