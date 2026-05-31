@@ -35,7 +35,7 @@ Sibling PWA to **Shlav A Mega** (geriatrics) and **Pnimit Mega** (internal medic
 - **1121 Qs** total — 950 across 7 exam sessions (2020=150, 2021-Jun=150, 2022-Jun=150, 2023-Jun=150, 2024-May=100, 2024-Sep=100, 2025-Jun=150) + 111 `FM-Core` curated textbook Qs
 - All 7 sessions CONFIRMED Family Medicine content (fork-bug remediated in v1.3.0 — see CHANGELOG)
 - **27 topics** (`ti` range 0-26), **47 drugs**, **0 flashcards** (unused so far)
-- **53 test files / 845 tests** under `tests/` (v1.21.15 added 2 SW regression guards: HTML_URLS *.js + CSS_URLS on-disk). Pnimit regression guards ported + Mishpacha-specific guards added + AFP topic-map / FSRS boundary tests (v1.21.1) + R2 deep coverage (quiz-engine multi-tag, study-plan DST/calendar, sw manifest, IDB mock, bidi numerics, mutation resistance — v1.21.2) + apiKeyLoginRestore covering v1.21.12-14 cloud sync + 3 P0 chaos crash fixes (v1.21.13: toLowerCase undefined, flashcards `f` undefined bounds-check, startTimedQ G-binding)
+- **62 test files / 977 tests** under `tests/` (v1.21.15 added 2 SW regression guards: HTML_URLS *.js + CSS_URLS on-disk). Pnimit regression guards ported + Mishpacha-specific guards added + AFP topic-map / FSRS boundary tests (v1.21.1) + R2 deep coverage (quiz-engine multi-tag, study-plan DST/calendar, sw manifest, IDB mock, bidi numerics, mutation resistance — v1.21.2) + apiKeyLoginRestore covering v1.21.12-14 cloud sync + 3 P0 chaos crash fixes (v1.21.13: toLowerCase undefined, flashcards `f` undefined bounds-check, startTimedQ G-binding)
 - Goroll 239 ch (local PDF, 1-tap deep-link) + Nelson 165 ch (Drive PDF via progressive-upgrade schema) + Harrison 42 ch (cross-ref, in-app reader) + Lerner 2025 329 sections (Hebrew prose, 6th Library tab, added v1.4.3)
 - AFP/הר"י index: 542 papers across 23 specialties; year metadata cleaned in v1.21.2 (18 entries: 16 corrected from title/filename, 2 null sentinels). Schema invariant: `paper.year` is `string|null`, never empty string.
 - localStorage `mishpacha_mega`, SW cache `mishpacha-v1.25.9`
@@ -84,7 +84,7 @@ Before v1.3.0, 5 of 7 exam sessions (2021-Jun, 2022-Jun, 2023-Jun, 2024-May, 202
 Keep the 32-JS-module split in `src/` (was 21 at v1.3.4; grew with debug console, study-plan, supabaseAuth). Pnimit's pattern, mirror it exactly.
 
 ## Tag whitelist
-`2020`, `2021-Jun`, `2022-Jun`, `2023-Jun`, `2024-May`, `2024-Sep`, `2025-Jun`, `Goroll`, `Nelson`, `AFP`, `Exam`
+`2020`, `2021-Jun`, `2022-Jun`, `2023-Jun`, `2024-May`, `2024-Sep`, `2025-Jun`, `AI-2026`, `AI-2026b`, `FM-Core` — the question `t` tags actually present, locked by `tests/questionsCountLock.test.js`. (`Goroll`/`Nelson`/`AFP` are source/library citation refs, not question `t` tags.)
 
 ## Clinical knowledge hierarchy (family medicine — different from Pnimit/Geri)
 1. **Goroll 8e** — primary (no chapter exclusions)
@@ -104,11 +104,11 @@ Official IMA keys sometimes accept multiple letters. Store as `c_accept: [0,2]` 
 
 ## Pending work
 - **Supabase tables** — run `supabase/migrations/0001_init_mishpacha_tables.sql` once in dashboard
-- **2020 answer key cleanup** — currently `usable: false` in `exams/answer_keys/2020.json`; master doc merges sources + answers, needs Sonnet pass
+- ~~**2020 answer key cleanup**~~ — done; `exams/answer_keys/2020.json` is now `usable: true` (verified 2026-05-31 audit)
 - **AFP + HARI articles** — Google Drive folder `1GGYGFe9s-BiaRSHohn5NrRf0mMk5hERB`
 - **Nelson page numbers** — add `page: N` to entries in `nelson_chapters.json` (from Nelson 22e ToC) to enable Drive `#page=N` deep-linking. Code already supports it; purely a data-fill task.
 - **Nelson per-chapter PDFs** (optional upgrade) — drop individual PDFs into `nelson/` and set `{file: "Ch42.pdf"}` per entry to serve offline-capable from same origin (mirrors Harrison's pattern). Library UI prefers `file` > `page` > Drive root.
 - **Image ingestion** — audit for image-dep Qs across the 7 sessions; Supabase bucket `question-images` uses `mishpacha_` prefix
 - **Calibrate `IMA_WEIGHTS` + `EXAM_FREQ`** in `src/core/constants.js` from real tag distribution
 - ~~**Add `weekly-audit.yml`** workflow~~ — done; workflows now: ci, deploy, integrity-guard, distractor-autopsy, weekly-audit.
-- **Annotate `heDir(…)` innerHTML-pieces** — `scripts/check-innerhtml-pieces.py` flags two sites in `src/ai/explain.js:29` and `src/quiz/engine.js:197` (pre-existing from v1.2.16). Not wired into CI, doesn't block deploy, but add `// safe-innerhtml:` annotations or wrap in `sanitize()` to get the checker green.
+- ~~**Annotate `heDir(…)` innerHTML-pieces**~~ — done; both sites carry `// safe-innerhtml:` annotations (`src/ai/explain.js:29`, `src/quiz/engine.js:204`).
