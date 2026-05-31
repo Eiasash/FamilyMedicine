@@ -99,3 +99,40 @@ body.study [data-action="read-chapter"] { background: #2a1e0d !important; color:
 body.study [data-action="diff-rating"]  { background: #2a1e0d !important; color: #a08060 !important }
 body.study [data-action="prev-q"]       { background: #2a1e0d !important; color: #a08060 !important; border-color: #3d2a12 !important }
 body.study [data-action="give-up"]      { background: #2a1e0d !important; color: #c48a3a !important }
+
+/* ========================================
+   Dark/Study — inverse dark-on-dark fix (v1.25.6, 2026-05-31 audit, suite-wide P1)
+   Reader prose / study notes / flashcard fronts / section headings hardcode a dark
+   inline color (#1e293b / #0f172a / #334155) that collides with the dark .card / .fc /
+   body background → text colour == background == invisible. Rescue them to light text.
+   The :not([style*="background"]) guard skips light-islands (code blocks, note editors,
+   modal overlays) which carry their own light bg and stay legible as-is. The ^= / ;color
+   anchors avoid false-matching border-color / background-color.
+   ======================================== */
+body.dark [style^="color:#1e293b"]:not([style*="background"]),
+body.dark [style*=";color:#1e293b"]:not([style*="background"]),
+body.dark [style^="color:#0f172a"]:not([style*="background"]),
+body.dark [style*=";color:#0f172a"]:not([style*="background"]),
+body.dark [style^="color:#334155"]:not([style*="background"]),
+body.dark [style*=";color:#334155"]:not([style*="background"]) { color: #e2e8f0 !important }
+body.study [style^="color:#1e293b"]:not([style*="background"]),
+body.study [style*=";color:#1e293b"]:not([style*="background"]),
+body.study [style^="color:#0f172a"]:not([style*="background"]),
+body.study [style*=";color:#0f172a"]:not([style*="background"]),
+body.study [style^="color:#334155"]:not([style*="background"]),
+body.study [style*=";color:#334155"]:not([style*="background"]) { color: #e8d5b0 !important }
+
+/* Dark — light-island surfaces hardcode a light bg with no dark override → jarring
+   light islands on the dark page. (Ports InternalMedicine theme.css:82-90 + the
+   FM-only daily-contract banner.) */
+body.dark #gnotes-ta            { background: #0f172a !important; color: #e2e8f0 !important; border-color: #334155 !important }
+body.dark .gnotes-panel         { background: #422006 !important; border-color: #92400e !important }
+body.dark .gnotes-panel > div:first-child { color: #fcd34d !important }
+body.dark .qnote-card           { background: #1e293b !important; border-color: #334155 !important }
+body.dark .due-alert            { background: #450a0a !important; border-color: #7f1d1d !important }
+body.dark .due-alert [style*="dc2626"] { color: #fca5a5 !important }
+body.dark .due-alert [style*="64748b"] { color: #cbd5e1 !important }
+body.dark .chat-msg-err         { background: #450a0a !important; color: #fca5a5 !important; border-color: #7f1d1d !important }
+body.dark .daily-contract       { background: #172554 !important; border-color: #1e3a8a !important }
+body.dark .daily-contract [style*="4338ca"], body.dark .daily-contract [style*="6366f1"] { color: #93c5fd !important }
+body.dark .daily-contract button[data-action="dismiss-daily"] { background: #1e293b !important; color: #93c5fd !important; border-color: #1e3a8a !important }
