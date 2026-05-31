@@ -72,7 +72,17 @@ jobs:
           conflicts = []
           reorder_skipped = 0
           c_accept_skipped = 0
+          excluded = 0
+          # Soft-retired (dup) / out-of-pool (broken) rows are filtered from every
+          # served quiz pool (app.js / modes.js / more-view.js) — users never see
+          # them — so exclude them from this conflict gate too: comparing against
+          # dead, often OCR-drifted retired copies reddens CI over data no one is
+          # served. SERVED rows stay fully checked — a served/in-pool row that is
+          # OCR-drifted still flags below.
           for i, q in enumerate(qs):
+              if q.get('dup') or q.get('broken'):
+                  excluded += 1
+                  continue
               key = q['q'].strip()[:80]
               priors = seen.get(key, [])
               for j in priors:
@@ -91,12 +101,13 @@ jobs:
                       continue
                   conflicts.append((j, i, key[:60]))
               seen.setdefault(key, []).append(i)
+          print(f'scope: {len(qs) - excluded} served rows checked; {excluded} soft-retired (dup/broken) rows excluded')
           if conflicts:
-              print(f'CRITICAL: {len(conflicts)} conflicting duplicates:')
+              print(f'CRITICAL: {len(conflicts)} conflicting duplicates among SERVED rows:')
               for j, i, k in conflicts:
                   print(f'  Q{j} vs Q{i}: {k}...')
               sys.exit(1)
-          msg = 'OK: No conflicting duplicates'
+          msg = 'OK: No conflicting duplicates among served rows'
           extras = []
           if reorder_skipped: extras.append(f'{reorder_skipped} re-ordered pairs')
           if c_accept_skipped: extras.append(f'{c_accept_skipped} c_accept-compatible pairs')
