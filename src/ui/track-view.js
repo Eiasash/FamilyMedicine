@@ -829,7 +829,7 @@ let h=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;marg
 </div>`;
 // SRS due alert
 if(dueN>0){
-h+=`<div class="card" style="padding:12px;margin-bottom:8px;background:#fef2f2;border:1px solid #fecaca">
+h+=`<div class="card due-alert" style="padding:12px;margin-bottom:8px;background:#fef2f2;border:1px solid #fecaca">
 <div style="display:flex;align-items:center;gap:8px">
 <span style="font-size:18px">🔔</span>
 <div style="flex:1"><div style="font-size:12px;font-weight:700;color:#dc2626">${dueN} questions due for review</div>

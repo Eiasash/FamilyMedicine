@@ -250,7 +250,7 @@ export function renderDailyContract(dueN){
     ${done?'':actionBtn}
   </div>`;
   const btn=(action,txt,color)=>`<button data-action="${action}" class="btn" style="font-size:10px;padding:4px 10px;background:${color};color:#fff;border:none;border-radius:6px;font-weight:700;white-space:nowrap;cursor:pointer">${txt}</button>`;
-  let h=`<div style="margin-bottom:12px;padding:12px 14px;background:linear-gradient(135deg,#eff6ff 0%,#f5f3ff 100%);border:1px solid #c7d2fe;border-radius:12px" dir="auto">
+  let h=`<div class="daily-contract" style="margin-bottom:12px;padding:12px 14px;background:linear-gradient(135deg,#eff6ff 0%,#f5f3ff 100%);border:1px solid #c7d2fe;border-radius:12px" dir="auto">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
       <div style="font-weight:700;font-size:12px;color:#4338ca">📅 חוזה יומי <span style="font-weight:400;color:#6366f1;font-size:10px">· ${today}</span></div>
       <div style="display:flex;gap:6px;align-items:center">
