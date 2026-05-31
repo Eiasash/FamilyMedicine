@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.25.7': [
+    '🔤 הקורא של Harrison (תוכן אנגלי) — כותרת הפרק, כותרות המקטעים, ופסקאות הטקסט קיבלו dir="auto" + unicode-bidi:plaintext (והפסקאות text-align:start במקום justify), כך שטקסט אנגלי נקרא משמאל-לימין במקום לרשת RTL מ-<html dir=rtl>. שלושת הקוראים האחרים (Goroll/Nelson משגרי-PDF, Lerner) כבר תקינים. פורט מ-Pnimit #150.'
+  ],
   '1.25.6': [
     '🌙 מצב כהה — תוכן ליבה שהיה בלתי-נראה תוקן: טקסט הקורא (Harrison/Nelson/Goroll/Lerner/AFP), הערות לימוד, צד-השאלה בכרטיסיות, וכותרות מקטעים השתמשו בצבע כהה מוטבע (#1e293b/#0f172a) שהתנגש 1:1 עם רקע ה-.card/.fc/body הכהה והפך לבלתי-נראה. נוסף כלל חילוץ ב-theme.css (dark + study) שמאיר את הטקסט, עם :not([style*=background]) שמדלג על "איי-אור" לגיטימיים (בלוקי קוד, עורכי הערות, חלוניות). בנוסף הואפלו איי-האור: פנקס/הערות (gnotes/qnote), התראת חזרה (due-alert), בועת שגיאת צ׳אט, ובאנר החוזה היומי. תיקון P1 חוצה-אפליקציות (מבדיקת הקוד 2026-05-31).'
   ],
