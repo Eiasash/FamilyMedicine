@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.25.9': [
+    '♿ נגישות: כפתור הסרת-התמונה (✕) במסלול ה-Sudden-Death (quiz-view.js:402) קיבל aria-label + title "הסר תמונה" — היה כפתור-אייקון הרסני ללא שם נגיש. המסלול הראשי (:522) כבר היה מתויג. פורט מ-Pnimit #149.'
+  ],
   '1.25.8': [
     '🪝 תוקנה התנגשות מאזיני #ct: גם לוח-השנה בספרייה וגם גלולות-השנה בחידון שידרו data-action="filter-year" על אותו מיכל #ct, כך שלחיצה על גלולת-שנה בחידון הריצה תחילה את מטפל הספרייה (G.filt=undefined + render מבוזבז) ותוקנה רק כי initQuizEvents נרשם אחרון. שם הפעולה של הספרייה שונה ל-goto-quiz-year (פעולה נפרדת — קפיצה לחידון מסונן לפי שנה). פורט מ-Pnimit #152.'
   ],
