@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.25.11': [
+    '🔤 spaced-Hebrew source-render (verified against the exam-booklet visual): idx565 "ה ניזון"→"הניזון" (תינוק הניזון מהנקה — Q116/2023-Jun, glued in the booklet, pure-despace) + idx415 "של ר"→"שלך" ("תעודת מחלה למטופל שלך" — Q116/2022-Jun, a render-verified letter reconstruction). Confirmed booklet-FAITHFUL and left untouched: idx254 "ו ארבעה" (the booklet prints the ו spaced) + idx794 "משפחת ש." (ש is a family-name initial/label). idx17 "ב הוסם ACE" (likely a ב/ח letter-error "בחוסם") not yet located in the 2020 booklet. spacedHebrewGuard ALLOWLIST 4→3 (565 repaired). 0 answer-key changes; 1121 unchanged. Quintet 1.25.10->1.25.11.'
+  ],
   '1.25.10': [
     '🔤 תיקון רווחים-בתוך-מילה (spaced-Hebrew): פוצלו 3 מילים עבריות ששובְרו ע"י רווחים שגויים מחילוץ PDF — "ל תופעות"→"לתופעות", "כ וח"→"כוח", "וחיטו י"→"וחיטוי". תיקון מכני בלבד (הסרת רווחים, רב-קבוצת האותיות זהה, 0 שינויי מפתח-תשובה). נוסף guard ראשון מסוג spacedHebrewGuard (פורט מ-Geri/Pnimit, כללים a/b/c); 4 מקרים דו-משמעיים (ב/ו/ה/ש: idx 17/254/565/794) הושמו ב-allowlist לקריאה מהמקור.'
   ],
