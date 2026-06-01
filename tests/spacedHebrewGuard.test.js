@@ -30,7 +30,11 @@ import { resolve } from 'path';
 const ROOT = resolve(import.meta.dirname, '..');
 const QZ = JSON.parse(readFileSync(resolve(ROOT, 'data/questions.json'), 'utf-8'));
 
-const ALLOWLIST = new Set([17, 254, 565, 794]);
+// v1.25.11 source-render: idx565 ("ה ניזון"→"הניזון", Q116/2023-Jun, glued in booklet) repaired.
+// Remaining are booklet-FAITHFUL or unlocated, NOT corruptions to glue: 254 ("ו ארבעה" — the
+// booklet itself prints the ו spaced), 794 ("משפחת ש." — ש is a family-name initial/label),
+// 17 ("ב הוסם ACE" — likely a ב/ח letter-error "בחוסם", not yet located in the 2020 booklet).
+const ALLOWLIST = new Set([17, 254, 794]);
 
 const isHeb = (ch) => /[֐-׿]/.test(ch);
 const PFX = new Set('ובהלמכש'); // 1-letter Hebrew prefixes — always glued to the next token
