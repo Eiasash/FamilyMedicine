@@ -31,11 +31,11 @@ These four rules are the floor. They override any conflicting guidance later in 
 
 Sibling PWA to **Shlav A Mega** (geriatrics) and **Pnimit Mega** (internal medicine). Shares engine, FSRS, Supabase, AI proxy.
 
-## Current state (v1.25.9, 31/05/26)
+## Current state (v1.25.9, 01/06/26)
 - **1121 Qs** total — 950 across 7 exam sessions (2020=150, 2021-Jun=150, 2022-Jun=150, 2023-Jun=150, 2024-May=100, 2024-Sep=100, 2025-Jun=150) + 111 `FM-Core` curated textbook Qs
 - All 7 sessions CONFIRMED Family Medicine content (fork-bug remediated in v1.3.0 — see CHANGELOG)
 - **27 topics** (`ti` range 0-26), **47 drugs**, **0 flashcards** (unused so far)
-- **62 test files / 977 tests** under `tests/` (v1.21.15 added 2 SW regression guards: HTML_URLS *.js + CSS_URLS on-disk). Pnimit regression guards ported + Mishpacha-specific guards added + AFP topic-map / FSRS boundary tests (v1.21.1) + R2 deep coverage (quiz-engine multi-tag, study-plan DST/calendar, sw manifest, IDB mock, bidi numerics, mutation resistance — v1.21.2) + apiKeyLoginRestore covering v1.21.12-14 cloud sync + 3 P0 chaos crash fixes (v1.21.13: toLowerCase undefined, flashcards `f` undefined bounds-check, startTimedQ G-binding)
+- **63 test files / 977 tests** under `tests/` (v1.21.15 added 2 SW regression guards: HTML_URLS *.js + CSS_URLS on-disk). Pnimit regression guards ported + Mishpacha-specific guards added + AFP topic-map / FSRS boundary tests (v1.21.1) + R2 deep coverage (quiz-engine multi-tag, study-plan DST/calendar, sw manifest, IDB mock, bidi numerics, mutation resistance — v1.21.2) + apiKeyLoginRestore covering v1.21.12-14 cloud sync + 3 P0 chaos crash fixes (v1.21.13: toLowerCase undefined, flashcards `f` undefined bounds-check, startTimedQ G-binding)
 - Goroll 239 ch (local PDF, 1-tap deep-link) + Nelson 165 ch (Drive PDF via progressive-upgrade schema) + Harrison 42 ch (cross-ref, in-app reader) + Lerner 2025 329 sections (Hebrew prose, 6th Library tab, added v1.4.3)
 - AFP/הר"י index: 542 papers across 23 specialties; year metadata cleaned in v1.21.2 (18 entries: 16 corrected from title/filename, 2 null sentinels). Schema invariant: `paper.year` is `string|null`, never empty string.
 - localStorage `mishpacha_mega`, SW cache `mishpacha-v1.25.9`
@@ -110,5 +110,5 @@ Official IMA keys sometimes accept multiple letters. Store as `c_accept: [0,2]` 
 - **Nelson per-chapter PDFs** (optional upgrade) — drop individual PDFs into `nelson/` and set `{file: "Ch42.pdf"}` per entry to serve offline-capable from same origin (mirrors Harrison's pattern). Library UI prefers `file` > `page` > Drive root.
 - **Image ingestion** — audit for image-dep Qs across the 7 sessions; Supabase bucket `question-images` uses `mishpacha_` prefix
 - **Calibrate `IMA_WEIGHTS` + `EXAM_FREQ`** in `src/core/constants.js` from real tag distribution
-- ~~**Add `weekly-audit.yml`** workflow~~ — done; workflows now: ci, deploy, integrity-guard, distractor-autopsy, weekly-audit.
+- ~~**Add `weekly-audit.yml`** workflow~~ — done; workflows now: ci, deploy, integrity-guard, distractor-autopsy, notify-auto-audit, weekly-audit.
 - ~~**Annotate `heDir(…)` innerHTML-pieces**~~ — done; both sites carry `// safe-innerhtml:` annotations (`src/ai/explain.js:29`, `src/quiz/engine.js:204`).
