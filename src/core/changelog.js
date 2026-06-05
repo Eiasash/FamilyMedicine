@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.25.12': [
+    '🔒 XSS/sanitize fix — Sudden-Death render branch (quiz-view.js:400/402/408) interpolated the question stem, the user-attached q.img src, and each option RAW, while the main quiz path sanitizes all three. Two impacts now closed: (a) display corruption — a stem like "P value <or =0.05" opened a phantom <or> tag that ate text to the next ">"; (b) q.img is user-attached (image-upload feature), so a crafted value was genuine attribute injection. All three SD surfaces now wrapped in sanitize() to match the main path. Added 3 SD-mode regression tests to quizViewMarkup.test.js (the SD branch was previously untested — the suite forced sdMode=false). 0 data/answer-key changes; 1121 unchanged.'
+  ],
   '1.25.11': [
     '🔤 spaced-Hebrew source-render (verified against the exam-booklet visual): idx565 "ה ניזון"→"הניזון" (תינוק הניזון מהנקה — Q116/2023-Jun, glued in the booklet, pure-despace) + idx415 "של ר"→"שלך" ("תעודת מחלה למטופל שלך" — Q116/2022-Jun, a render-verified letter reconstruction). Confirmed booklet-FAITHFUL and left untouched: idx254 "ו ארבעה" (the booklet prints the ו spaced) + idx794 "משפחת ש." (ש is a family-name initial/label). idx17 "ב הוסם ACE" (likely a ב/ח letter-error "בחוסם") not yet located in the 2020 booklet. spacedHebrewGuard ALLOWLIST 4→3 (565 repaired). 0 answer-key changes; 1121 unchanged. Quintet 1.25.10->1.25.11.'
   ],
