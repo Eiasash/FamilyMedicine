@@ -30,3 +30,6 @@ chaos-reports/*.jsonl
 # 2026-05-10: chaos-bot output + test coverage (prevent git add -A near-misses)
 chaos-reports/
 coverage/
+
+# Orphan AI-generation scratch stub (no in-repo producer) — prevent git add -A commits
+data/gapfill.generated.json
