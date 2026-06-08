@@ -83,7 +83,7 @@ const SHELL_URLS=['mishpacha-mega.html','manifest.json','shared/fsrs.js','shared
 // CRITICAL_DATA: pre-cached on install (best-effort — Promise.allSettled).
 // One transient 5xx must NOT kill SW install — these files are also fetched
 // at runtime via stale-while-revalidate, so a missed pre-cache self-heals.
-const CRITICAL_DATA=['data/questions.json','data/topics.json','data/notes.json','data/tabs.json','data/distractors.json'];
+const CRITICAL_DATA=['data/questions.json','data/highyield.json','data/topics.json','data/notes.json','data/tabs.json','data/distractors.json'];
 // LAZY_DATA: NOT pre-cached on install (~8 MB total). Cached on first fetch via
 // the stale-while-revalidate handler below. Removes 8 MB of network from the
 // install path so SW activates fast even on slow mobile (LCP fix, issue #25).

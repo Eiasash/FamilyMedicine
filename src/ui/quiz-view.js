@@ -485,10 +485,7 @@ if(G.timedMode&&!G.ans){
 
 // ── Meta row: year, topic, position, tools ──────────────────────────
 const topicName=q.ti>=0&&TOPICS[q.ti]?TOPICS[q.ti]:'';
-const tagLabel=q.t==='AI-Ch'?'AI — Chapter'
-  :q.t==='AI-Hard-G'?'Hard · Goroll'
-  :q.t==='AI-Hard-AFP'?'Hard · AFP'
-  :q.t;
+const tagLabel=q.t==='AI-Ch'?'AI — Chapter':q.t==='AI-Hard-G'?'Hard · Goroll':q.t==='AI-Hard-AFP'?'Hard · AFP':q.t==='AI-2026-hy'?'🤖 AI — High-Yield':q.t;
 h+=`<div class="quiz-header">`;
 h+=`<div class="quiz-meta__group">`;
 h+=`<span class="pill">${sanitize(tagLabel)}</span>`;
