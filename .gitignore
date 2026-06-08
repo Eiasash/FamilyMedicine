@@ -33,3 +33,4 @@ coverage/
 
 # Orphan AI-generation scratch stub (no in-repo producer) — prevent git add -A commits
 data/gapfill.generated.json
+data/highyield.generated.json
