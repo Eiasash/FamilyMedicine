@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.26.0': [
+    'content(highyield): +133 AI-generated high-yield board MCQs in a NEW separate bank (data/highyield.json, tag AI-2026-hy) loaded additively by data-loader.js and labeled AI High-Yield in the quiz UI for transparency. Deliberately NOT merged into data/questions.json, so the count-lock (1121) + BUILD_HASH count + the cross-repo corpus-manifest/Geri-syllabus contract stay untouched. Pipeline: scripts/gen_highyield.mjs (Toranot proxy, Goroll 8e/AFP) then scripts/verify_questions.mjs key/explanation judge (0/190 conflicts) then scripts/audit_keys_blind.mjs blind board-evidence audit (opus); 57 disagreement/low-confidence flags HELD OUT pending human key review. BUILD_HASH 1121q-v1.26.0; 1.25.12 to 1.26.0.'
+  ],
   '1.25.12': [
     '🔒 XSS/sanitize fix — Sudden-Death render branch (quiz-view.js:400/402/408) interpolated the question stem, the user-attached q.img src, and each option RAW, while the main quiz path sanitizes all three. Two impacts now closed: (a) display corruption — a stem like "P value <or =0.05" opened a phantom <or> tag that ate text to the next ">"; (b) q.img is user-attached (image-upload feature), so a crafted value was genuine attribute injection. All three SD surfaces now wrapped in sanitize() to match the main path. Added 3 SD-mode regression tests to quizViewMarkup.test.js (the SD branch was previously untested — the suite forced sdMode=false). 0 data/answer-key changes; 1121 unchanged.'
   ],
