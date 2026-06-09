@@ -11,7 +11,7 @@
 import G from '../core/globals.js';
 import { sanitize, getApiKey, setApiKey, toast } from '../core/utils.js';
 import { APP_VERSION, BUILD_HASH, LS, SUPA_URL, SUPA_ANON } from '../core/constants.js';
-import { renderAuthSection, bindAuthEvents } from '../features/auth.js';
+import { renderAuthSection, bindAuthEvents, syncApiKeyToAccount } from '../features/auth.js';
 import { getCurrentUser } from '../features/auth.js';
 import { renderStudyPlanSection, bindStudyPlanEvents } from '../features/study_plan/index.js';
 
@@ -164,7 +164,7 @@ function renderSettingsBody() {
                <input id="settings-api-key-input" type="password" placeholder="sk-ant-..." class="calc-in" style="flex:1;margin:0;font-size:11px" aria-label="Claude API key">
                <button class="btn btn-p" style="font-size:11px;min-height:36px" data-action="settings-save-api-key" aria-label="Save API key">שמור</button>
              </div>`}
-        <div style="font-size:9px;color:#94a3b8">API key נשמר ב-localStorage בלבד · לא נשלח לשרתים של האפליקציה</div>
+        <div style="font-size:9px;color:#94a3b8">API key נשמר ב-localStorage · בחשבון מחובר תוצע שמירה גם בחשבון (עם אישור סיסמה) כדי שהמפתח יעבור איתך בין מכשירים</div>
       </div>
     </section>
 
@@ -275,11 +275,24 @@ async function handleSettingsAction(action, btn) {
   }
   if (action === 'settings-save-api-key') {
     const v = document.getElementById('settings-api-key-input')?.value?.trim();
-    if (v) { setApiKey(v); toast('API key נשמר', 'success'); refreshSettings(); }
+    if (v) {
+      // Local save FIRST — never blocked by the network (#353).
+      setApiKey(v);
+      const r = await syncApiKeyToAccount(v);
+      if (r.ok) toast('🔑 המפתח נשמר וסונכרן לחשבון', 'success');
+      else if (r.error === 'cancelled') toast('המפתח נשמר במכשיר זה בלבד', 'info');
+      else if (r.error === 'not_logged_in') toast('API key נשמר', 'success');
+      else toast('המפתח נשמר מקומית — הסנכרון לחשבון נכשל (' + (r.error || '') + ')', 'warn');
+      refreshSettings();
+    }
     return;
   }
   if (action === 'settings-remove-api-key') {
     setApiKey('');
+    const r = await syncApiKeyToAccount('');
+    if (r.ok) toast('🔑 המפתח הוסר גם מהחשבון', 'success');
+    else if (r.error === 'cancelled') toast('המפתח הוסר מהמכשיר בלבד — עותק החשבון נשאר', 'info');
+    else if (r.error !== 'not_logged_in') toast('המפתח הוסר מקומית — ההסרה מהחשבון נכשלה (' + (r.error || '') + ')', 'warn');
     refreshSettings();
     return;
   }

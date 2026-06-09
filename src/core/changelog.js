@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.26.2': [
+    'fix(account): sync the Anthropic API key to the account at save time (#353 sibling, Geri v10.64.160 / Pnimit v10.4.45). The v1.26.1 security fix removed _apikey from the cloud backup, which also severed the only WRITE path into app_users.api_key (the sync_api_key_from_backup trigger fed off backup writes) — a key saved or rotated after .1 stayed localStorage-only, so auth_login_user restored a stale or null key on the next device (the Codex P2 on #142). Now settings-save-api-key / settings-remove-api-key save locally FIRST (never network-blocked), then for logged-in users sync via the existing auth_set_api_key RPC (SECURITY DEFINER, re-auth required — password collected with window.prompt, the _handleChangePassword pattern). Cancel = device-only with explicit toast; RPC failure keeps the local save and warns; guests keep the old behavior. Empty key clears the account copy. tests/apikeyAccountSync.test.js pins wiring + ordering + the .1 regression locks. BUILD_HASH 1121q-v1.26.2; 1.26.1 to 1.26.2.'
+  ],
   '1.26.1': [
     'fix(security): stop cloud-syncing the Anthropic API key. backup_get/backup_set are SECURITY DEFINER with no caller-identity check, so the synced backup blob (which included _apikey) was readable by anyone who could guess a username id using only the public anon key. Since auth_login_user already returns api_key on a password-checked login, syncing it in the backup was redundant. Removed _apikey from the cloudBackup payload (_bundled) so new backups no longer carry the secret; the restore-read path stays for backward compatibility and login still restores the key, so no feature is lost. Existing rows scrubbed server-side separately. New tests/apikeyExposureGuard.test.js pins both halves. Sibling of Geri v10.64.158 / Pnimit v10.4.44. BUILD_HASH 1121q-v1.26.1; 1.26.0 to 1.26.1.'
   ],
