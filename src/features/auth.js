@@ -100,6 +100,38 @@ export async function authChangePassword(username, oldPwd, newPwd) {
   });
 }
 
+export async function authSetApiKey(username, password, apiKey) {
+  return _rpc('auth_set_api_key', {
+    p_username: username || '',
+    p_password: password || '',
+    p_api_key: apiKey || '',
+  });
+}
+
+// v1.26.2 (#353, Geri sibling): keys saved/rotated after the v1.26.1 _apikey
+// backup removal no longer reach app_users.api_key (the backup trigger feed is
+// gone), so a new device's login would restore a stale key. Sync at the save
+// moment via auth_set_api_key — the RPC requires re-auth, so collect the
+// password with window.prompt (same pattern as _handleChangePassword).
+// Empty apiKey clears the account copy (parity with setApiKey('')).
+export async function syncApiKeyToAccount(apiKey) {
+  const user = getCurrentUser();
+  if (!user) return { ok: false, error: 'not_logged_in' };
+  const msg = apiKey
+    ? 'אישור סיסמה — סנכרון המפתח לחשבון (ביטול = שמירה במכשיר זה בלבד):'
+    : 'אישור סיסמה — הסרת המפתח גם מהחשבון (ביטול = הסרה מהמכשיר בלבד):';
+  const pwd = window.prompt(msg);
+  if (!pwd) return { ok: false, error: 'cancelled' };
+  // _rpc lets fetch rejections bubble (unlike the Geri sibling) — catch here so
+  // an offline save still reaches the caller's warn-toast + refreshSettings
+  // path instead of aborting the handler (#353 round-3 Codex P2).
+  try {
+    return await authSetApiKey(user.username, pwd, apiKey || '');
+  } catch (e) {
+    return { ok: false, error: 'network', message: String(e) };
+  }
+}
+
 // ───────────────────────── auth events ─────────────────────────
 // Lightweight pub/sub so other modules (e.g. post-login-restore) can react to
 // auth state transitions without coupling to the UI layer. Modeled on the
