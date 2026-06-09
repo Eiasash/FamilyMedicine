@@ -1,6 +1,6 @@
 import G from '../core/globals.js';
 import { SUPA_URL, SUPA_ANON, TOPICS, APP_VERSION } from '../core/constants.js';
-import { sanitize, fmtT, toast, setApiKey } from '../core/utils.js';
+import { sanitize, fmtT, toast, getApiKey, setApiKey } from '../core/utils.js';
 import { callAI } from '../ai/client.js';
 import { calcEstScore } from '../ui/track-view.js';
 import { getTopicStats, getDueQuestions } from '../sr/spaced-repetition.js';
@@ -296,7 +296,10 @@ export function applyRestorePayload(rowData) {
   try { if (Array.isArray(rowData._sessions)) localStorage.setItem('mishpacha_sessions', JSON.stringify(rowData._sessions.slice(-30))); } catch (e) {}
   // v1.21.12: restore the user's Anthropic API key from the bundle. Backwards-compat:
   // legacy backups without _apikey are ignored (typeof check). Empty string clears.
-  if (typeof rowData._apikey === 'string') setApiKey(rowData._apikey);
+  // #353 round-2 (Codex P2 on Geri #354): FILL-ONLY — a backup _apikey is by
+  // definition pre-.1-stale (new backups no longer carry it), so it must never
+  // clobber a present key (login already restored the fresher account copy).
+  if (typeof rowData._apikey === 'string' && !getApiKey()) setApiKey(rowData._apikey);
   const validated = filterRestorePayload(rowData, new Set(Object.keys(G.S)));
   Object.assign(G.S, validated);
   G.save();
