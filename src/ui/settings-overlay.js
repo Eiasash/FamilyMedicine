@@ -11,7 +11,7 @@
 import G from '../core/globals.js';
 import { sanitize, getApiKey, setApiKey, toast } from '../core/utils.js';
 import { APP_VERSION, BUILD_HASH, LS, SUPA_URL, SUPA_ANON } from '../core/constants.js';
-import { renderAuthSection, bindAuthEvents } from '../features/auth.js';
+import { renderAuthSection, bindAuthEvents, syncApiKeyToAccount } from '../features/auth.js';
 import { getCurrentUser } from '../features/auth.js';
 import { renderStudyPlanSection, bindStudyPlanEvents } from '../features/study_plan/index.js';
 
@@ -158,13 +158,17 @@ function renderSettingsBody() {
           ? `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
                <div style="flex:1;font-size:11px;background:#ecfdf5;border:1px solid #bbf7d0;border-radius:8px;padding:6px 10px;color:#065f46">✅ API key מוגדר (sk-...${sanitize(storedKey.slice(-6))})</div>
                <button class="btn btn-o" style="font-size:11px;min-height:36px" data-action="settings-remove-api-key" aria-label="Remove API key">הסר</button>
-             </div>`
+             </div>${
+               getCurrentUser()
+                 ? `<button class="btn" style="font-size:11px;min-height:36px;width:100%;margin-bottom:8px;background:#f0f9ff;color:#075985;border:1px solid #bae6fd" data-action="settings-sync-api-key" aria-label="סנכרן את המפתח לחשבון">🔄 סנכרן את המפתח לחשבון</button>`
+                 : ''
+             }`
           : `<div style="padding:8px 10px;background:#ecfdf5;border:1px solid #bbf7d0;border-radius:8px;font-size:10px;color:#065f46;margin-bottom:10px">✅ AI פועל דרך proxy — לא צריך מפתח אישי. אפשר להוסיף כגיבוי. <a href="https://console.anthropic.com/keys" target="_blank" rel="noopener" style="color:#d97706;font-weight:700">קבל מפתח ↗</a></div>
              <div style="display:flex;gap:8px;margin-bottom:8px">
                <input id="settings-api-key-input" type="password" placeholder="sk-ant-..." class="calc-in" style="flex:1;margin:0;font-size:11px" aria-label="Claude API key">
                <button class="btn btn-p" style="font-size:11px;min-height:36px" data-action="settings-save-api-key" aria-label="Save API key">שמור</button>
              </div>`}
-        <div style="font-size:9px;color:#94a3b8">API key נשמר ב-localStorage בלבד · לא נשלח לשרתים של האפליקציה</div>
+        <div style="font-size:9px;color:#94a3b8">API key נשמר ב-localStorage · בחשבון מחובר תוצע שמירה גם בחשבון (עם אישור סיסמה) כדי שהמפתח יעבור איתך בין מכשירים</div>
       </div>
     </section>
 
@@ -275,12 +279,37 @@ async function handleSettingsAction(action, btn) {
   }
   if (action === 'settings-save-api-key') {
     const v = document.getElementById('settings-api-key-input')?.value?.trim();
-    if (v) { setApiKey(v); toast('API key נשמר', 'success'); refreshSettings(); }
+    if (v) {
+      // Local save FIRST — never blocked by the network (#353).
+      setApiKey(v);
+      const r = await syncApiKeyToAccount(v);
+      if (r.ok) toast('🔑 המפתח נשמר וסונכרן לחשבון', 'success');
+      else if (r.error === 'cancelled') toast('המפתח נשמר במכשיר זה בלבד', 'info');
+      else if (r.error === 'not_logged_in') toast('API key נשמר', 'success');
+      else toast('המפתח נשמר מקומית — הסנכרון לחשבון נכשל (' + (r.error || '') + ')', 'warn');
+      refreshSettings();
+    }
     return;
   }
   if (action === 'settings-remove-api-key') {
     setApiKey('');
+    const r = await syncApiKeyToAccount('');
+    if (r.ok) toast('🔑 המפתח הוסר גם מהחשבון', 'success');
+    else if (r.error === 'cancelled') toast('המפתח הוסר מהמכשיר בלבד — עותק החשבון נשאר', 'info');
+    else if (r.error !== 'not_logged_in') toast('המפתח הוסר מקומית — ההסרה מהחשבון נכשלה (' + (r.error || '') + ')', 'warn');
     refreshSettings();
+    return;
+  }
+  if (action === 'settings-sync-api-key') {
+    // #353 round-2: push an ALREADY-saved key to the account (no remove+re-enter).
+    const k = getApiKey();
+    if (k) {
+      const r = await syncApiKeyToAccount(k);
+      if (r.ok) toast('🔑 המפתח סונכרן לחשבון', 'success');
+      else if (r.error === 'cancelled') toast('הסנכרון בוטל — המפתח נשאר במכשיר זה', 'info');
+      else if (r.error !== 'not_logged_in') toast('הסנכרון לחשבון נכשל (' + (r.error || '') + ')', 'warn');
+      refreshSettings();
+    }
     return;
   }
   if (action === 'settings-export-progress') { window.exportProgress?.(); return; }
