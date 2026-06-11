@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.26.4': [
+    'ui(theme): medexams-style retheme — teal/turquoise accent (--sky #13a99c, --em #0e8c81) + medexams red (--red #d6453d) + medexams gold (--amb #e8a13a), teal-tinted selected-answer + hover, softer 12px cards, teal focus ring. The mishpacha amber/gold primary (pills, buttons, tabs) is KEPT — medexams is teal+gold, and the amber IS the gold, so it stays as the warm accent (its tuned a11y overrides #92400e / #d97706 untouched). The skip-link moved blue-700 → dark teal #0a5d54 (7.76:1, still AAA). No layout/markup/content change; data/questions.json + count-lock (1121) untouched. Sibling of Geri v10.64.167 / Pnimit v10.4.46. BUILD_HASH 1121q-v1.26.4; 1.26.3 to 1.26.4.'
+  ],
   '1.26.3': [
     'content(highyield): +35 more AI high-yield board MCQs into the additive data/highyield.json bank (133 to 168, tag AI-2026-hy) — same separate-bank design as 1.26.0, so data/questions.json count-lock (1121) + BUILD_HASH count + the cross-repo corpus-manifest/Geri-syllabus contract stay untouched. The scripts/gen_highyield.mjs pilot emitted 202 candidates; 133 were duplicates of the live bank, leaving 69 genuinely new. Each of the 69 went through a BLIND board-evidence audit (3x Opus subagents, each picking the answer WITHOUT seeing the stored key, against Goroll 8e / AFP / USPSTF / ADA / KDIGO evidence): 35 SURVIVORS merged (independent blind pick matched the stored key AND no ambiguity flag) and 34 HELD OUT (26 ambiguity / multiple-defensible-answer flags + 8 confident blind disagreements, including one item that keyed the 2013 USPSTF lung-screening criteria instead of the 2021 update). Blind agreement on the non-flagged subset was 81%. No data/questions.json edits. Audit doc: docs/AUDIT_HY_PILOT_2026-06-11.md. BUILD_HASH 1121q-v1.26.3; 1.26.2 to 1.26.3.'
   ],
