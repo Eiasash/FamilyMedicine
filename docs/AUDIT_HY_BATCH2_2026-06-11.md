@@ -1,7 +1,7 @@
-# High-Yield Batch 2 — 2026-06-11 (v1.26.5, +40)
+# High-Yield Batch 2 — 2026-06-11 (v1.26.5, +35 shipped)
 
 Fresh-generated AI high-yield MCQs, gated before merging into the additive
-`data/highyield.json` bank (168 → 208).
+`data/highyield.json` bank (168 → 203 after 5 Codex-flagged items were dropped).
 
 ## Why subagent-generated
 The canonical `gen_highyield.mjs` pipeline routes through the Toranot proxy
