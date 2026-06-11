@@ -28,21 +28,26 @@ each producing ORIGINAL Hebrew clinical vignettes, then the same blind-audit gat
 | Generated | 40 |
 | Structural fails | 0 |
 | Duplicates | 0 |
-| **Blind agreement (pick == key)** | **40/40 = 100%** |
-| Ambiguity flags | 0 |
-| **Merged → highyield.json (168→208)** | **40** |
+| Opus blind agreement (pick == key) | 40/40 = 100% |
+| Fable blind agreement (different model) | 40/40 = 100% |
+| **Codex / GPT cross-vendor review** | **5 P2 issues found → dropped** |
+| **Merged → highyield.json (168→203)** | **35** |
 
-This is markedly cleaner than the 2026-06-11 *pilot* (81% blind agreement, 38%
-flags, 35/69 shipped) — because the generators built genuine single-best-answer
-vignettes that pre-empt the trap patterns.
+## Three-model gate (the point)
+1. **Opus** generated + blind-audited → 40/40, 0 flags.
+2. **Fable** (a different Anthropic model) blind-audited independently → 40/40, 0 disagreements.
+3. **Codex / GPT** (different *vendor*) reviewed the PR and flagged **5 real P2 nuance issues that BOTH Opus and Fable missed** — shared Anthropic-family blind spots:
+   - Cervical screening: stem age 30 but key uses the 21-29 pathway (at 30, hrHPV/cotesting are also valid).
+   - Gonococcal urethritis: chlamydia not excluded → CDC 2021 is ceftriaxone **+ doxycycline**, not ceftriaxone alone.
+   - Nonsevere AOM (2yo, unilateral, no severe features): AAP allows observation, so amoxicillin-only-keyed is ambiguous.
+   - Stage-2 HTN (150/96): ACC/AHA starts **two** agents; single-drug key = undertreatment.
+   - Gout explanation: cited the pre-ACR-2020 "don't start allopurinol during a flare" teaching (reversed in 2020).
 
-**Caveat (honest):** generators and blind auditors are both Opus, so 100%
-agreement reflects internal consistency + unambiguity, not an independent
-ground-truth proof. Mitigations applied: explicit current-guideline instructions,
-independent blind re-derivation matching every key, zero ambiguity flags, and a
-manual spot-read of the trap-adjacent items (diabetic-CKD, gout-in-CKD,
-lung-screening) confirming correct keys + sound explanations. `ti` topic tags were
-re-derived by content (a subagent re-tag against the 27-topic map) after the
-generators mis-guessed some indices.
+Those **5 were dropped**; the **35 triple-clean** questions shipped.
+
+**Lesson:** same-vendor agreement (Opus + Fable both 100%) is NOT independent
+validation — cross-VENDOR review (GPT) found what the shared blind spots hid. For
+AI-generated medical content, a different-vendor auditor is the meaningful gate.
+`ti` topic tags were re-derived by content (subagent re-tag vs the 27-topic map).
 
 Generated + audited by Claude Code (Opus 4.8) via Opus subagents.
