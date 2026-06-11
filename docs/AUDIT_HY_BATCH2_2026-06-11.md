@@ -1,7 +1,21 @@
-# High-Yield Batch 2 — 2026-06-11 (v1.26.5, +35 shipped)
+# High-Yield Batch 2 — 2026-06-11 (v1.26.6, +35 shipped)
 
 Fresh-generated AI high-yield MCQs, gated before merging into the additive
 `data/highyield.json` bank (168 → 203 after 5 Codex-flagged items were dropped).
+
+## Post-merge nit fixes (v1.26.6, PR #151)
+Two residual issues in the 35 shipped Qs, fixed after merge:
+- **GERD (ti 4):** option text said `PPR (Proton Pump Inhibitor)` — a typo; the
+  explanation and all sibling options use **PPI**. Corrected `PPR` → `PPI`.
+- **HCV screening (ti 20):** stem said "גבר בן 55 ... נולד ב-1968" (age 55 vs
+  born 1968 ≈ 58 — inconsistent). Recast to "גבר יליד 1968" and dropped the
+  explicit age from the explanation (Codex).
+
+**Cross-vendor confirmation (the third vendor, now wired in):** after the two
+fixes, **Gemini 2.5-pro** (Google — independent of both Anthropic and GPT)
+blind-audited both questions: `Q1(GERD) best=0 matches_key=yes issues=none`,
+`Q2(HCV) best=0 matches_key=yes issues=none`. This closes the three-VENDOR loop
+(Anthropic generate+audit → GPT/Codex review → Google/Gemini confirm).
 
 ## Why subagent-generated
 The canonical `gen_highyield.mjs` pipeline routes through the Toranot proxy
