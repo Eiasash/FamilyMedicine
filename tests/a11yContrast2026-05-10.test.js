@@ -35,10 +35,10 @@ describe('a11y v1.21.20 — html dir="rtl"', () => {
 });
 
 describe('a11y v1.21.20 — skip-link contrast', () => {
-  it('skip-link bg is #2563eb (4.78:1, AA), not #3b82f6 (3.68:1)', () => {
+  it('skip-link bg is teal #0a5d54 (7.76:1, AAA), not light sky #3b82f6 (3.68:1)', () => {
     const m = utilitiesCss.match(/\.skip-link\s*\{[^}]+\}/);
     expect(m).toBeTruthy();
-    expect(m[0]).toContain('background: #2563eb');
+    expect(m[0]).toContain('background: #0a5d54');
     expect(m[0]).not.toContain('background: #3b82f6');
   });
 });
