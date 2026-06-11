@@ -801,6 +801,97 @@ export function renderDrillTargetCard(){
     </div></div>`;
 }
 
+// ===== Track progress donut (parity with Pnimit/Shlav, v1.26.7) =====
+// The one stats visual the Track tab lacked (per AGENTS.md). Computes
+// correct / wrong / טרם-נענה from the FSRS spaced-rep store (G.S.sr) and the
+// ACTIVE question set (dup/broken filtered, matching the render chokepoint),
+// with two distinct accuracies: question-status (card currently "known") and
+// historical attempt accuracy (ok/tot). Does NOT duplicate heatmap/matrix.
+export function getTrackStatsDonutData(){
+  const sr=G.S&&G.S.sr?G.S.sr:{};
+  const QZ=Array.isArray(G.QZ)?G.QZ:[];
+  // Active set only: the render chokepoint (app.js / modes.js / more-view.js)
+  // filters soft-retired dup/broken questions out of every reachable pool, so
+  // counting them here would cap coverage below 100% forever.
+  const isActive=q=>!!q&&!q.dup&&!q.broken;
+  const total=QZ.filter(isActive).length;
+  let correct=0;
+  let wrong=0;
+  let attemptTotal=0;
+  let attemptCorrect=0;
+
+  Object.entries(sr).forEach(([idx,d])=>{
+    if(!isActive(QZ[Number(idx)])||!d)return;
+    const tot=Number(d.tot)||0;
+    const hasAnswered=tot>0||d.n!==undefined;
+    if(!hasAnswered)return;
+    const ok=Math.max(0,Math.min(Number(d.ok)||0,tot));
+    // "Known" = FSRS streak n>0. Restored/legacy entries can carry tot/ok with
+    // no n (the same shape heatmap mastery accepts) — fall back to hit-rate so a
+    // restored tot:3/ok:3 reads as correct, not wrong.
+    const known=d.n!==undefined?Number(d.n)>0:ok>0;
+    if(known)correct++;
+    else wrong++;
+    if(tot>0){
+      attemptTotal+=tot;
+      attemptCorrect+=ok;
+    }
+  });
+
+  const answered=correct+wrong;
+  const unanswered=Math.max(0,total-answered);
+  const accuracy=answered?Math.round(correct/answered*100):null;
+  const attemptAccuracy=attemptTotal?Math.round(attemptCorrect/attemptTotal*100):null;
+  return{total,correct,wrong,unanswered,answered,attemptTotal,attemptCorrect,accuracy,attemptAccuracy};
+}
+
+function _donutSegmentPct(value,total){
+  return total?Math.round(value/total*100):0;
+}
+
+function _familyStatsDonutCard(){
+  const st=getTrackStatsDonutData();
+  const correctPct=_donutSegmentPct(st.correct,st.total);
+  const wrongPct=_donutSegmentPct(st.wrong,st.total);
+  const unansweredPct=_donutSegmentPct(st.unanswered,st.total);
+  const correctEnd=correctPct;
+  const wrongEnd=correctPct+wrongPct;
+  const donutBg=st.total?
+    `conic-gradient(#16a34a 0 ${correctEnd}%, #dc2626 ${correctEnd}% ${wrongEnd}%, #e2e8f0 ${wrongEnd}% 100%)`:
+    '#e2e8f0';
+  const accuracyText=st.accuracy===null?'—':st.accuracy+'%';
+  const attemptText=st.attemptAccuracy===null?'—':st.attemptAccuracy+'%';
+  const completionPct=_donutSegmentPct(st.answered,st.total);
+  const remaining=Math.max(0,st.total-st.answered);
+
+  return `<div class="card" dir="auto" style="padding:16px;margin-bottom:12px;text-align:center;unicode-bidi:plaintext">
+<div style="font-size:13px;font-weight:800;color:#0f172a;margin-bottom:4px">סטטיסטיקת התקדמות</div>
+<div style="font-size:10px;color:#64748b;margin-bottom:16px">סיכום נכון / שגוי / טרם נענה לפי נתוני החזרה המרווחת</div>
+<div style="display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap">
+  <div role="img" aria-label="דיוק שאלות ${accuracyText}, דיוק ניסיונות ${attemptText}. ${correctPct}% נכון, ${wrongPct}% שגוי, ${unansweredPct}% טרם נענה" style="width:168px;height:168px;border-radius:50%;background:${donutBg};display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(15,23,42,.06)">
+    <div style="width:106px;height:106px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(15,23,42,.08)">
+      <div style="font-size:28px;font-weight:900;color:${st.accuracy===null?'#94a3b8':st.accuracy>=70?'#059669':st.accuracy>=50?'#d97706':'#dc2626'}">${accuracyText}</div>
+      <div style="font-size:10px;color:#64748b;font-weight:700">דיוק שאלות</div>
+      <div style="font-size:9px;color:#94a3b8;margin-top:2px">${attemptText} דיוק ניסיונות</div>
+    </div>
+  </div>
+  <div style="min-width:190px;max-width:260px;flex:1;text-align:right">
+    <div style="display:grid;grid-template-columns:1fr;gap:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 10px;border-radius:10px;background:#f0fdf4;border:1px solid #bbf7d0"><span style="font-size:11px;font-weight:700;color:#166534">● נכון</span><span style="font-size:12px;font-weight:800;color:#166534">${st.correct} (${correctPct}%)</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 10px;border-radius:10px;background:#fef2f2;border:1px solid #fecaca"><span style="font-size:11px;font-weight:700;color:#991b1b">● שגוי</span><span style="font-size:12px;font-weight:800;color:#991b1b">${st.wrong} (${wrongPct}%)</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 10px;border-radius:10px;background:#f8fafc;border:1px solid #e2e8f0"><span style="font-size:11px;font-weight:700;color:#475569">● טרם נענה</span><span style="font-size:12px;font-weight:800;color:#475569">${st.unanswered} (${unansweredPct}%)</span></div>
+    </div>
+  </div>
+</div>
+<div style="margin-top:16px;padding-top:12px;border-top:1px solid #f1f5f9;display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+  <div><div style="font-size:18px;font-weight:900;color:#0ea5e9">${completionPct}%</div><div style="font-size:9px;color:#64748b">כיסוי</div></div>
+  <div><div style="font-size:18px;font-weight:900;color:#7c3aed">${st.answered}</div><div style="font-size:9px;color:#64748b">שאלות שנענו</div></div>
+  <div><div style="font-size:18px;font-weight:900;color:#f59e0b">${remaining}</div><div style="font-size:9px;color:#64748b">נותרו</div></div>
+</div>
+${remaining?'<button data-action="goto-quiz-build" data-filt="all" class="btn btn-p" style="margin-top:14px;font-size:11px;padding:8px 14px">המשך תרגול</button>':''}
+</div>`;
+}
+
 export function renderTrack(){
 const done=Object.values(G.S.ck).filter(Boolean).length;
 const tot=G.S.qOk+G.S.qNo;const pctN=tot?Math.round(G.S.qOk/tot*100):0;const pct=tot?pctN+'%':'—';
@@ -827,6 +918,8 @@ let h=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;marg
 <div style="font-size:9px;color:#64748b">דיוק</div>
 </div>
 </div>`;
+// Progress donut — single-glance correct/wrong/unanswered summary (v1.26.7)
+h+=_familyStatsDonutCard();
 // SRS due alert
 if(dueN>0){
 h+=`<div class="card due-alert" style="padding:12px;margin-bottom:8px;background:#fef2f2;border:1px solid #fecaca">
