@@ -810,21 +810,30 @@ export function renderDrillTargetCard(){
 // the heatmap or priority matrix — purely a single-glance summary.
 export function getTrackStatsDonutData(){
   const sr=G.S&&G.S.sr?G.S.sr:{};
-  const total=Array.isArray(G.QZ)?G.QZ.length:0;
+  const QZ=Array.isArray(G.QZ)?G.QZ:[];
+  // Active set only: the render chokepoint (app.js / modes.js / more-view.js)
+  // filters soft-retired dup/broken questions out of every reachable pool, so
+  // counting them here would cap coverage below 100% forever.
+  const isActive=q=>!!q&&!q.dup&&!q.broken;
+  const total=QZ.filter(isActive).length;
   let correct=0;
   let wrong=0;
   let attemptTotal=0;
   let attemptCorrect=0;
 
   Object.entries(sr).forEach(([idx,d])=>{
-    if(!G.QZ[Number(idx)]||!d)return;
+    if(!isActive(QZ[Number(idx)])||!d)return;
     const tot=Number(d.tot)||0;
     const hasAnswered=tot>0||d.n!==undefined;
     if(!hasAnswered)return;
-    if(Number(d.n)>0)correct++;
+    const ok=Math.max(0,Math.min(Number(d.ok)||0,tot));
+    // "Known" = FSRS streak n>0. Restored/legacy entries can carry tot/ok with
+    // no n (the same shape heatmap mastery accepts) — fall back to hit-rate so a
+    // restored tot:3/ok:3 reads as correct, not wrong.
+    const known=d.n!==undefined?Number(d.n)>0:ok>0;
+    if(known)correct++;
     else wrong++;
     if(tot>0){
-      const ok=Math.max(0,Math.min(Number(d.ok)||0,tot));
       attemptTotal+=tot;
       attemptCorrect+=ok;
     }
@@ -859,7 +868,7 @@ function _familyStatsDonutCard(){
 <div style="font-size:13px;font-weight:800;color:#0f172a;margin-bottom:4px">סטטיסטיקת התקדמות</div>
 <div style="font-size:10px;color:#64748b;margin-bottom:16px">סיכום נכון / שגוי / טרם נענה לפי נתוני החזרה המרווחת</div>
 <div style="display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap">
-  <div role="img" aria-label="${correctPct}% נכון, ${wrongPct}% שגוי, ${unansweredPct}% טרם נענה" style="width:168px;height:168px;border-radius:50%;background:${donutBg};display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(15,23,42,.06)">
+  <div role="img" aria-label="דיוק שאלות ${accuracyText}, דיוק ניסיונות ${st.attemptAccuracy===null?'—':st.attemptAccuracy+'%'}. ${correctPct}% נכון, ${wrongPct}% שגוי, ${unansweredPct}% טרם נענה" style="width:168px;height:168px;border-radius:50%;background:${donutBg};display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(15,23,42,.06)">
     <div style="width:106px;height:106px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(15,23,42,.08)">
       <div style="font-size:28px;font-weight:900;color:${st.accuracy===null?'#94a3b8':st.accuracy>=70?'#059669':st.accuracy>=50?'#d97706':'#dc2626'}">${accuracyText}</div>
       <div style="font-size:10px;color:#64748b;font-weight:700">דיוק שאלות</div>

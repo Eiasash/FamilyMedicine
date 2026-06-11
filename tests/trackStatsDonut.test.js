@@ -86,6 +86,32 @@ describe('track progress donut data', () => {
       attemptAccuracy: null,
     });
   });
+
+  it('excludes soft-retired dup/broken questions from totals and the SR loop', () => {
+    // the render chokepoint filters these out of every reachable pool, so a
+    // user who answers all reachable questions should still reach 100% coverage.
+    G.QZ = [{}, { dup: true }, {}, { broken: true }, {}];
+    G.S.sr = {
+      0: { n: 1, tot: 1, ok: 1 },
+      1: { n: 1, tot: 1, ok: 1 }, // dup → must be ignored
+    };
+    const d = getTrackStatsDonutData();
+    expect(d.total).toBe(3); // 5 minus 1 dup minus 1 broken
+    expect(d.correct).toBe(1); // only idx0; idx1 (dup) ignored
+    expect(d.unanswered).toBe(2);
+  });
+
+  it('treats a restored entry with attempt history but no n as correct via hit-rate', () => {
+    // backup/legacy entries can carry tot/ok without an n field (the shape
+    // heatmap mastery already accepts); they must not all read as wrong.
+    G.QZ = [{}, {}];
+    G.S.sr = { 0: { tot: 3, ok: 3 }, 1: { tot: 2, ok: 0 } };
+    expect(getTrackStatsDonutData()).toMatchObject({
+      correct: 1, // idx0 ok>0 → known
+      wrong: 1, // idx1 ok=0 → not known
+      attemptAccuracy: 60, // (3+0)/(3+2)
+    });
+  });
 });
 
 describe('track progress donut wiring (source guard)', () => {
