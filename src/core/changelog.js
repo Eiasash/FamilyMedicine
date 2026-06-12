@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.26.13': [
+    'ui(study): deepen the Study dashboard button cleanup. The Today Study Plan now uses classed step rows with full-width mobile tap targets instead of tiny inline Start/Open chips, and the long Study Plan defaults to collapsed tiers so Study no longer opens as a wall of repeated action buttons. Added regression guards for daily-plan action classes, mobile tap targets, and compact tier defaults. No question content, answer keys, explanations, source mappings, or audit queues changed. BUILD_HASH 1121q-v1.26.13; package/app/SW markers bumped 1.26.12 to 1.26.13.'
+  ],
   '1.26.12': [
     'ui(quiz): polish the Quiz filter controls after the deep button cleanup. Interactive filter pills now render as real buttons with pressed state, native button chrome reset, stable touch sizing, and keyboard semantics. The Due review pill is emitted only from the live due-count path, preventing duplicate Due controls in the filter row. Added regression guards for semantic filter buttons, single Due source, and pill button reset styling. No question content, answer keys, explanations, source mappings, or audit queues changed. BUILD_HASH 1121q-v1.26.12; package/app/SW markers bumped 1.26.11 to 1.26.12.'
   ],
