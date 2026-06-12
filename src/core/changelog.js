@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.26.9': [
+    'content(review): source-backed physician-review batch for five internally contradictory 2020 FM items from the cross-vendor audit. Flipped 2020 Q54 to Trajenta/linagliptin, made 2020 Q70 AOM multi-answer for otorrhea and age <6mo, flipped 2020 Q84 diabetic NPDR to LDL<100 risk-factor control, kept 2020 Q125 Fosalan/alendronate and repaired its explanation, and made 2020 Q139 H. pylori multi-answer for dyspepsia and long-term aspirin/NSAID-risk indications. Also restored missing 2024-May Q30 RCT numeric data in the stem from the source PDF and updated its explanation math. No option text changed; other image-dependent flags checked separately. BUILD_HASH 1121q-v1.26.9; package/app/SW markers bumped 1.26.8 to 1.26.9.'
+  ],
   '1.26.8': [
     'fix(data): adjudicated the first Claude multi-model FM review batch against official exam answer fixtures and repaired eight explanations that contradicted the canonical keyed answer while leaving all answer keys unchanged. Fixed 2020 Q54, Q70, Q84, Q96, Q125, Q139; 2022-Jun Q84; 2024-May Q64. Ambiguous AOM and H. pylori stems now explicitly note the official-key basis and remaining source-review caveat. BUILD_HASH 1121q-v1.26.8; package/app/SW markers bumped 1.26.7 to 1.26.8.'
   ],
