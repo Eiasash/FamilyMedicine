@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 // ESM imports would hoist above it). Mirrors InternalMedicine's track test.
 globalThis.window = globalThis;
 
-let G, getTrackStatsDonutData;
+let G, getTrackStatsDonutData, renderTrack, renderStudyDashboard;
 
 const SRC = readFileSync(
   fileURLToPath(new URL('../src/ui/track-view.js', import.meta.url)),
@@ -16,12 +16,29 @@ const SRC = readFileSync(
 
 beforeAll(async () => {
   G = (await import('../src/core/globals.js')).default;
-  getTrackStatsDonutData = (await import('../src/ui/track-view.js')).getTrackStatsDonutData;
+  const mod = await import('../src/ui/track-view.js');
+  getTrackStatsDonutData = mod.getTrackStatsDonutData;
+  renderTrack = mod.renderTrack;
+  renderStudyDashboard = mod.renderStudyDashboard;
 });
 
 beforeEach(() => {
-  G.QZ = [{}, {}, {}, {}];
-  G.S = { sr: {}, qOk: 0, qNo: 0, ck: {}, bk: {} };
+  globalThis.localStorage = {
+    getItem: () => null,
+    setItem: () => {},
+    removeItem: () => {},
+  };
+  G.QZ = [
+    { t: '2020', ti: 0 },
+    { t: '2024-May', ti: 1 },
+    { t: '2025-Jun', ti: 2 },
+    { t: '2023-Jun', ti: 3 },
+  ];
+  G.S = { sr: {}, qOk: 0, qNo: 0, ck: {}, bk: {}, ts: {}, sp: {}, spOpen: false };
+  G._sessionOk = 0;
+  G._sessionNo = 0;
+  G._sessionBest = {};
+  G._sessionWorse = {};
 });
 
 describe('track progress donut data', () => {
@@ -130,8 +147,34 @@ describe('track progress donut wiring (source guard)', () => {
   it('does not duplicate the heatmap or priority matrix inside the donut card', () => {
     const card = SRC.slice(
       SRC.indexOf('function _familyStatsDonutCard()'),
-      SRC.indexOf('export function renderTrack()'),
+      SRC.indexOf('export function renderDueReviewCard()'),
     );
     expect(card).not.toMatch(/renderHeatmap|Priority Matrix|priority-matrix/);
+  });
+});
+
+describe('Study/Track information architecture', () => {
+  it('keeps Track analytics-only and removes workflow cards from rendered Track', () => {
+    const html = renderTrack();
+
+    expect(html).toContain('conic-gradient');
+    expect(html).toContain('Activity (last 30 days)');
+    expect(html).toContain('Leaderboard');
+    expect(html).not.toContain('questions due for review');
+    expect(html).not.toContain('Export Weak Topics Cheat Sheet');
+    expect(html).not.toContain('Chapters Due for Re-Reading');
+    expect(html).not.toContain('Bookmarked');
+    expect(html).not.toContain('Syllabus (');
+    expect(html).not.toContain('Study Journal');
+    expect(html).not.toContain('Share App Link');
+  });
+
+  it('renders the moved workbench cards under Study Today', () => {
+    const html = renderStudyDashboard();
+
+    expect(html).toContain('When is your exam?');
+    expect(html).toContain('Export Weak Topics Cheat Sheet');
+    expect(html).toContain('Syllabus (');
+    expect(html).toContain('Study Journal');
   });
 });
