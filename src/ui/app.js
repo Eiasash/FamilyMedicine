@@ -28,12 +28,12 @@ import { renderQuiz, toggleBk, uploadQImage, removeQImage, viewImg, pauseTimed,
 // 2026-05-05 caught 16 ReferenceError pageerrors from engine.js calling the
 // unbound name; same root cause as Pnimit Mega's 38 hits, fixed in parallel.
 G.startTimedQ = startTimedQ;
-import { renderStudy, toggleNote, filterNotes, initLearnEvents } from './learn-view.js';
+import { renderStudy, renderFlash, renderDrugs, toggleNote, filterNotes, initLearnEvents } from './learn-view.js';
 import { renderLibrary, openHarrisonChapter,
          toggleHarrisonAI, submitHarrisonAI, aiSummarizeChapter, quizMeOnChapter,
          addChapterQsToBank, renderWrongAnswerLog, initLibraryEvents } from './library-view.js';
 import { renderTrack, renderStudyPlan, renderExamTrendCard, renderPriorityMatrix,
-         renderDailyPlan, renderSessionCard, setExamDate, exportCheatSheet,
+         renderDailyPlan, renderSessionCard, renderStudyDashboard, setExamDate, exportCheatSheet,
          saveSessionSummary, initTrackEvents } from './track-view.js';
 import { renderSearch, showAnswerHardFail, renderNotes,
          initMoreEvents } from './more-view.js';
@@ -68,18 +68,23 @@ case'quiz':el.innerHTML=G.onCallMode?renderOnCall():renderQuiz();break;
 // (pregnancy/peds/renal columns) and not duplicated in ward-helper.
 case'learn':
   G.tab='lib';
-  G.S.libSub='notes';
+  if(G.learnSub==='flash')G.S.libSub='cards';
+  else if(G.learnSub==='drugs')G.S.libSub='meds';
+  else G.S.libSub='notes';
   G.save&&G.save();
   el.innerHTML='';render();break;
-case'study':G.tab='lib';G.S.libSub='notes';el.innerHTML='';render();break;
+case'study':G.tab='lib';G.S.libSub=G.openNote!==null?'notes':'today';el.innerHTML='';render();break;
 case'lib':
-  {const _libSub=G.S.libSub||'read';
+  {const _libSub=G.S.libSub||'today';
   const _libBar='<div style="display:flex;gap:4px;margin-bottom:12px;padding:4px;background:#f1f5f9;border-radius:12px">'+
-  [{id:'read',ic:'📖',l:'מקורות'},{id:'notes',ic:'📝',l:'סיכומים'}].map(s=>
+  [{id:'today',ic:'📌',l:'Today'},{id:'read',ic:'📖',l:'מקורות'},{id:'notes',ic:'📝',l:'סיכומים'},{id:'cards',ic:'🃏',l:'Cards'},{id:'meds',ic:'💊',l:'Meds'}].map(s=>
     '<button data-action="lib-sub" data-sub="'+s.id+'" style="flex:1;padding:8px 4px;border:none;border-radius:10px;font-size:11px;font-weight:'+(_libSub===s.id?'700':'400')+';cursor:pointer;background:'+(_libSub===s.id?'#fff':'transparent')+';color:'+(_libSub===s.id?'#0f172a':'#64748b')+';box-shadow:'+(_libSub===s.id?'0 1px 3px rgba(0,0,0,.1)':'none')+'">'+s.ic+' '+s.l+'</button>'
   ).join('')+'</div>';
   let _libBody='';
-  if(_libSub==='notes')_libBody=renderStudy();
+  if(_libSub==='today')_libBody=renderStudyDashboard();
+  else if(_libSub==='notes')_libBody=renderStudy();
+  else if(_libSub==='cards')_libBody=renderFlash();
+  else if(_libSub==='meds')_libBody=renderDrugs();
   else _libBody=renderLibrary();
   el.innerHTML=_libBar+_libBody;}break; // safe-innerhtml: _libBar is static HTML; _libBody from internal render*() functions (no user input)
 case'articles':G.libSec='afphari';G.tab='lib';G.S.libSub='read';el.innerHTML='';render();break;
@@ -252,8 +257,7 @@ ${sec('Quiz Filters','📝','#047857',
 '<b>⏱️ Slow</b> — שאלות שלקחו לך יותר מ־60 שניות<br>'+
 '<b>🎯 Weak</b> — הנושאים החלשים שלך<br>'+
 '<b>🔄 Due</b> — חזרה מרווחת (SM-2)<br>'+
-'<b>📋 Exam</b> — מבחן מדומה 150 שאלות (3 שעות)<br>'+
-'<b>💀 Sudden Death</b> — טעות אחת = סוף המשחק'
+'<b>📋 Exam</b> — מבחן מדומה 150 שאלות (3 שעות)'
 )}
 ${sec('AI Study Tools','🤖','#6d28d9',
 'כל יכולות ה-AI עובדות בלי מפתח API — דרך פרוקסי משותף.<br><br>'+
@@ -264,7 +268,6 @@ ${sec('AI Study Tools','🤖','#6d28d9',
 )}
 ${sec('Study Modes','📚','#dc2626',
 '<b>🙈 Cover Options</b> — מסתיר תשובות, מכריח היזכרות חופשית<br>'+
-'<b>⏱️ Pomodoro</b> — טיימר 25 דקות פוקוס / 5 דקות הפסקה<br>'+
 '<b>📖 Library</b> — <bdi>Goroll 8e</bdi> (239 פרקים) · <bdi>Nelson 22e</bdi> · <bdi>Harrison 22e</bdi> (cross-ref)<br>'+
 '<b>📝 Notes</b> — הערות אישיות כלליות + לכל שאלה<br>'+
 '<b>📄 Articles</b> — רשימת קריאה מלאה של <bdi>P0062-2025</bdi>: PCC, Family systems, EBM, הר"י'
