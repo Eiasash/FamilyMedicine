@@ -49,10 +49,11 @@
 
 .settings-close {
   background: rgba(255, 255, 255, 0.12);
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: #fff;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
   border-radius: 50%;
   font-size: 16px;
   font-weight: 700;
@@ -79,6 +80,10 @@
 
 .settings-section:last-child {
   margin-bottom: 0;
+}
+
+.settings-section .card {
+  border-radius: 8px;
 }
 
 /* Lock body scroll while overlay is open */
