@@ -309,7 +309,7 @@ function renderQuizControls(dueN){
     ...(_aiCount>0?[['AI-Ch',`AI (${_aiCount})`]]:[]),
     ...(_aiHardGCount>0?[['AI-Hard-G',`Hard-G (${_aiHardGCount})`]]:[]),
     ...(_aiHardAfpCount>0?[['AI-Hard-AFP',`Hard-AFP (${_aiHardAfpCount})`]]:[]),
-    ['hard','קשות'],['slow','איטיות'],['weak','חלשות'],['due','לחזרה'],
+    ['hard','קשות'],['slow','איטיות'],['weak','חלשות'],
     ...(_trapCount>0?[['traps',`מלכודות (${_trapCount})`]]:[]),
     ['nbs','השלב הבא']
   ];
@@ -318,33 +318,34 @@ function renderQuizControls(dueN){
   if(dueN>0)filts.push(['due',`לחזרה (${dueN})`]);
   const _wrongCount=getWrongAnswerCount();
   if(_wrongCount>0)filts.push(['wrong-review',`סקור טעויות (${_wrongCount})`]);
+  const pillButton=(attrs,label,on=false)=>`<button type="button" class="pill" data-state="${on?'on':''}" aria-pressed="${on?'true':'false'}" ${attrs}>${label}</button>`;
   filts.forEach(([f,l])=>{
     if(f==='__years__'){
       const _badge=_yearSel.length>0?` (${_yearSel.length})`:'';
-      h+=`<span class="pill" data-state="${_inYearMode?'on':''}" data-action="toggle-year-pills" title="סנן לפי שנת מבחן — בחירה מרובה אפשרית">📅 לפי שנה${_badge} ${_yearPillsOpen?'▴':'▾'}</span>`;
+      h+=pillButton('data-action="toggle-year-pills" title="סנן לפי שנת מבחן — בחירה מרובה אפשרית"', `📅 לפי שנה${_badge} ${_yearPillsOpen?'▴':'▾'}`, _inYearMode);
       if(_yearPillsOpen){
         _yearFilts.forEach(([yf,yl])=>{
           const _yOn=_yearSel.includes(yf);
-          h+=`<span class="pill" data-state="${_yOn?'on':''}" data-action="filter-year" data-f="${yf}" title="לחץ להחלפה — בחירה מרובה אפשרית">${sanitize(yl)}${_yOn?' ✓':''}</span>`;
+          h+=pillButton(`data-action="filter-year" data-f="${yf}" title="לחץ להחלפה — בחירה מרובה אפשרית"`, `${sanitize(yl)}${_yOn?' ✓':''}`, _yOn);
         });
       }
     } else if(f==='rescue'){
-      h+=`<span class="pill" data-state="${G.filt==='rescue'?'on':''}" data-action="filter-rescue">${sanitize(l)}</span>`;
+      h+=pillButton('data-action="filter-rescue"', sanitize(l), G.filt==='rescue');
     } else if(f==='wrong-review'){
-      h+=`<span class="pill" data-state="${G.filt==='wrong-review'?'on':''}" data-action="filter-wrong-review">${sanitize(l)}</span>`;
+      h+=pillButton('data-action="filter-wrong-review"', sanitize(l), G.filt==='wrong-review');
     } else if(f==='nbs'){
-      h+=`<span class="pill" data-state="${G.filt==='nbs'?'on':''}" data-action="filter-nbs">${sanitize(l)}</span>`;
+      h+=pillButton('data-action="filter-nbs"', sanitize(l), G.filt==='nbs');
     } else if(EXAM_YEARS.includes(f)){
       const _yOn=_yearSel.includes(f);
-      h+=`<span class="pill" data-state="${_yOn?'on':''}" data-action="filter-year" data-f="${f}" title="לחץ להחלפה — בחירה מרובה אפשרית">${sanitize(l)}${_yOn?' ✓':''}</span>`;
+      h+=pillButton(`data-action="filter-year" data-f="${f}" title="לחץ להחלפה — בחירה מרובה אפשרית"`, `${sanitize(l)}${_yOn?' ✓':''}`, _yOn);
     } else if(f==='all'){
-      h+=`<span class="pill" data-state="${G.filt==='all'&&!_inYearMode?'on':''}" data-action="filter" data-f="${f}">${sanitize(l)}</span>`;
+      h+=pillButton(`data-action="filter" data-f="${f}"`, sanitize(l), G.filt==='all'&&!_inYearMode);
     } else {
-      h+=`<span class="pill" data-state="${G.filt===f&&G.filt!=='topic'?'on':''}" data-action="filter" data-f="${f}">${sanitize(l)}</span>`;
+      h+=pillButton(`data-action="filter" data-f="${f}"`, sanitize(l), G.filt===f&&G.filt!=='topic');
     }
   });
   if(_yearSel.length>=2){
-    h+=`<span class="pill" data-action="filter-year-clear" title="נקה סינון שנים">נקה ${_yearSel.length} שנים</span>`;
+    h+=pillButton('data-action="filter-year-clear" title="נקה סינון שנים"', `נקה ${_yearSel.length} שנים`);
   }
   h+='</div>';
   h+='<div class="quiz-controls__row">';

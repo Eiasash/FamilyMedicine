@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.26.12': [
+    'ui(quiz): polish the Quiz filter controls after the deep button cleanup. Interactive filter pills now render as real buttons with pressed state, native button chrome reset, stable touch sizing, and keyboard semantics. The Due review pill is emitted only from the live due-count path, preventing duplicate Due controls in the filter row. Added regression guards for semantic filter buttons, single Due source, and pill button reset styling. No question content, answer keys, explanations, source mappings, or audit queues changed. BUILD_HASH 1121q-v1.26.12; package/app/SW markers bumped 1.26.11 to 1.26.12.'
+  ],
   '1.26.11': [
     'ui(buttons): deep FamilyMedicine control cleanup after the Study/Track IA pass. Shared buttons now have stable touch targets, 8px radii, focus states, wrapping text, and dark/study parity; Study/More sub-tabs are class-driven segmented controls; bottom navigation is equal-width and RTL overflow-safe; Settings utility links use real app buttons; Study Plan row actions and Track leaderboard refresh no longer render as tiny inline chips. Added regression guards for segmented tabs, Settings utilities, Study Plan action classes, and the mobile RTL tab-bar overflow clamp. No question content, answer keys, explanations, source mappings, or audit queues changed. BUILD_HASH 1121q-v1.26.11; package/app/SW markers bumped 1.26.10 to 1.26.11.'
   ],
