@@ -282,10 +282,8 @@ function renderQuizControls(dueN){
   let h='<nav class="quiz-controls" aria-label="פילטרים לחידון">';
   h+='<div class="quiz-controls__row">';
   h+='<span class="quiz-controls__label">מצב</span>';
+  h+='<button class="btn btn--secondary" data-action="start-exam" aria-label="התחל מבחן מלא של 150 שאלות">Full 150q</button>';
   h+='<button class="btn btn--secondary" data-action="start-mock" aria-label="התחל מבחן סימולציה">סימולציה</button>';
-  h+='<button class="btn btn--ghost" data-action="start-sd" aria-label="התחל מוות פתאומי">מוות פתאומי</button>';
-  h+='<button class="btn btn--ghost" data-action="start-oncall" aria-label="התחל מצב תורנות">תורנות</button>';
-  if(!G.pomoActive)h+='<button class="btn btn--ghost" data-action="start-pomo" aria-label="התחל טיימר פומודורו">פומודורו</button>';
   h+='</div>';
   h+='<div class="quiz-controls__row">';
   h+='<span class="quiz-controls__label">סינון</span>';

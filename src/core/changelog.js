@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.26.10': [
+    'ui(ia): move active study workflows out of Track and into Study Today. Study now opens Today by default with plan, due review, exam-date/daily-plan, drills, cheat-sheet export, reading due, bookmarks, syllabus, and journal; Track is analytics-only with KPI/donut/heatmap/session/activity/leaderboard/exam trend/priority matrix. Share App Link now lives in Settings About, and visible Pomodoro / Sudden Death / On-call launch controls were removed while Mock and Full 150q remain. No question content, answer keys, explanations, or audit queues changed. BUILD_HASH 1121q-v1.26.10; package/app/SW markers bumped 1.26.9 to 1.26.10.'
+  ],
   '1.26.9': [
     'content(review): source-backed physician-review batch for five internally contradictory 2020 FM items from the cross-vendor audit. Flipped 2020 Q54 to Trajenta/linagliptin, made 2020 Q70 AOM multi-answer for otorrhea and age <6mo, flipped 2020 Q84 diabetic NPDR to LDL<100 risk-factor control, kept 2020 Q125 Fosalan/alendronate and repaired its explanation, and made 2020 Q139 H. pylori multi-answer for dyspepsia and long-term aspirin/NSAID-risk indications. Also restored missing 2024-May Q30 RCT numeric data in the stem from the source PDF and updated its explanation math. No option text changed; other image-dependent flags checked separately. BUILD_HASH 1121q-v1.26.9; package/app/SW markers bumped 1.26.8 to 1.26.9.'
   ],
@@ -154,16 +157,16 @@ export const CHANGELOG={
     '🖼️ תמונות מבחן — יוני 2023 (13 שאלות, חלק א) — מתוך חוברת הבחינה המקורית שהועלתה: 13 שאלות עם תמונה משובצת חולצו ואומתו חזותית מול מספר השאלה בחוברת (idx=450+(שאלה-1)): 14 (אוטיטיס), 17 (forest plot), 48 (עין אדומה), 51 (ECG), 80 (kerion), 89 (רטינופתיה סוכרתית), 90 (תפרחת הרפטית פנים), 100 (פסוריאזיס), 115 (טחורים), 121 (אודיוגרמה), 126 (RA ידיים), 130 (ויטיליגו), 141 (Raynaud). ~10 תמונות נוספות קיימות רק באלבום (ECG/CT/CXR/משטח/היסטולוגיה) וטרם מופו — החוברת אינה ממספרת אותן. הוסרה הערת imgPending מ-13 אלו.',
   ],
   '1.21.35': [
-    '🐛 תיקון 3 התראות-תמונה שגויות — שאלות [1] גלאוקומה, [97] DVT, [112] אינסולינומה נוסחו \"איזה מהממצאים הבאים\" (= חלופות התשובה), לא הפניה לתמונה. הוסרה מהן הערת imgPending. נותרו 10 שאלות 2020/2023 עם הפניה אמיתית לתמונה.',
+    '🐛 תיקון 3 התראות-תמונה שגויות — שאלות [1] גלאוקומה, [97] DVT, [112] אינסולינומה נוסחו "איזה מהממצאים הבאים" (= חלופות התשובה), לא הפניה לתמונה. הוסרה מהן הערת imgPending. נותרו 10 שאלות 2020/2023 עם הפניה אמיתית לתמונה.',
   ],
   '1.21.34': [
-    '📷 הערת \"תמונה טרם נוספה\" — 13 שאלות במבחני 2020 + יוני-2023 שמתייחסות במפורש לתמונה (\"ראה תמונה\", \"הממצא הבא\") אך התמונה טרם מופתה. אלבומי התמונה של שני המבחנים ממוספרים לפי תמונה (לא לפי שאלה) וסדרם אינו תואם את סדר השאלות, כך שלא ניתן למפותם אוטומטית בבטחה (8 ECG + 5 משטחי דם כמעט זהים). במקום תמונה שגויה — הערה כתומה כנה שהתמונה תיווסף, וההסבר עשוי להיות חלקי. שאר 5 המבחנים (70 תמונות) מופו ואומתו במלואם.',
+    '📷 הערת "תמונה טרם נוספה" — 13 שאלות במבחני 2020 + יוני-2023 שמתייחסות במפורש לתמונה ("ראה תמונה", "הממצא הבא") אך התמונה טרם מופתה. אלבומי התמונה של שני המבחנים ממוספרים לפי תמונה (לא לפי שאלה) וסדרם אינו תואם את סדר השאלות, כך שלא ניתן למפותם אוטומטית בבטחה (8 ECG + 5 משטחי דם כמעט זהים). במקום תמונה שגויה — הערה כתומה כנה שהתמונה תיווסף, וההסבר עשוי להיות חלקי. שאר 5 המבחנים (70 תמונות) מופו ואומתו במלואם.',
   ],
   '1.21.33': [
     '🖼️ תמונות מבחן — ספטמבר 2024 (9 שאלות) — idx=700+(שאלה-1), אימות חזותי מלא: 36 (גנוגרם — שמות תואמים), 40 (התקרחות מפושטת), 54 (ECG), 58 (פיסורה אנאלית), 66 (alopecia areata), 74 (אצבע+זרוע משולב), 79 (Dupuytren כף יד), 83 (forest plot DAPT), 95 (פדיגרי גנטי). מבחן 5 מתוך 7. נותרו 2020 ו-יוני 2023 (ממוספרים לפי תמונה, דורשים התאמת תוכן).',
   ],
   '1.21.32': [
-    '🖼️ תמונות מבחן — מאי 2024 (13 שאלות) — idx=600+(שאלה-1), אימות חזותי מלא: 22 (פטריגיום), 36 (ECG), 39 (נומוגרמת בילירובין), 41 (גינגיבוסטומטיטיס הרפטי), 45 (פצע לחץ סקראלי), 48 (צילום ע\"ש), 49 (אבצס פילונידלי), 52 (Scheuermann), 78 (DEXA — שתי הטבלאות אוחו לתמונה אחת), 83 (גנו ורום/ולגום), 84 (גנגליון), 91 (אקנה), 93 (פנים קשישה). מבחן 4 מתוך 7.',
+    '🖼️ תמונות מבחן — מאי 2024 (13 שאלות) — idx=600+(שאלה-1), אימות חזותי מלא: 22 (פטריגיום), 36 (ECG), 39 (נומוגרמת בילירובין), 41 (גינגיבוסטומטיטיס הרפטי), 45 (פצע לחץ סקראלי), 48 (צילום ע"ש), 49 (אבצס פילונידלי), 52 (Scheuermann), 78 (DEXA — שתי הטבלאות אוחו לתמונה אחת), 83 (גנו ורום/ולגום), 84 (גנגליון), 91 (אקנה), 93 (פנים קשישה). מבחן 4 מתוך 7.',
   ],
   '1.21.31': [
     '🖼️ תמונות מבחן — יוני 2022 (19 שאלות) — מופו לפי מספר שאלה מקורי (idx=300+(שאלה-1)) עם אימות חזותי לפי תוכן: 5 (אוטוסקופיה), 14 (kerion קרקפת), 16 (אטופי), 24 (אורטיקריה), 28 (פיגמנטציה מצח), 33 (ידיים), 35 (אגרופים/clubbing), 42+150 (ECG), 47 (alopecia areata), 63 (roseola), 79 (HSP), 81 (אודיוגרמה — Meniere), 83 (לופוס עורי דיסקואידי), 91 (סרקואיד — erythema nodosum + צילום חזה, תמונה משולבת), 99 (אננתמה), 111 (פי הטבעת), 119 (בצקת פנים), 123 (אריתמה פלמרית). מבחן 3 מתוך 7.',
