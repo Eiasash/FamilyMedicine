@@ -235,8 +235,8 @@ export function renderAuthSection() {
     </div>
   </div>
   <div style="display:flex;gap:6px;flex-wrap:wrap">
-    <button class="btn" data-action="auth-change-pwd" style="flex:1;font-size:10px;background:#f0f9ff;color:#075985;border:1px solid #bae6fd;min-height:36px">🔑 שנה סיסמה</button>
-    <button class="btn" data-action="auth-logout" style="flex:1;font-size:10px;background:#fef2f2;color:#991b1b;border:1px solid #fecaca;min-height:36px">🚪 התנתק</button>
+    <button class="btn" data-action="auth-change-pwd" style="flex:1;font-size:10px;background:#f0f9ff;color:#075985;border:1px solid #bae6fd;min-height:40px">🔑 שנה סיסמה</button>
+    <button class="btn" data-action="auth-logout" style="flex:1;font-size:10px;background:#fef2f2;color:#991b1b;border:1px solid #fecaca;min-height:40px">🚪 התנתק</button>
   </div>
   <div style="font-size:10px;color:#64748b;margin-top:8px;line-height:1.5">
     ההתקדמות שלך, הציון בלוח התוצאות והגיבוי בענן קשורים לחשבון הזה. אפשר להתחבר באותו שם משתמש מכל מכשיר.
@@ -252,8 +252,8 @@ export function renderAuthSection() {
     התחבר כדי לסנכרן התקדמות בין מכשירים. <strong>אין חובה</strong> — אפשר להמשיך כאורח כרגיל.
   </div>
   <div style="display:flex;gap:0;background:#f1f5f9;padding:3px;border-radius:10px;margin-bottom:10px" id="auth-tabs">
-    <button class="btn" data-action="auth-tab-login"    style="flex:1;font-size:11px;min-height:34px;background:#fff;color:#0f172a;border-radius:8px;font-weight:700">התחברות</button>
-    <button class="btn" data-action="auth-tab-register" style="flex:1;font-size:11px;min-height:34px;background:transparent;color:#64748b;border:none;border-radius:8px">הרשמה</button>
+    <button class="btn" data-action="auth-tab-login"    style="flex:1;font-size:11px;min-height:40px;background:#fff;color:#0f172a;border-radius:8px;font-weight:700">התחברות</button>
+    <button class="btn" data-action="auth-tab-register" style="flex:1;font-size:11px;min-height:40px;background:transparent;color:#64748b;border:none;border-radius:8px">הרשמה</button>
   </div>
   <div id="auth-form-login">
     <input id="auth-li-user" placeholder="שם משתמש" autocomplete="username"

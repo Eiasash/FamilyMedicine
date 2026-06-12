@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.26.11': [
+    'ui(buttons): deep FamilyMedicine control cleanup after the Study/Track IA pass. Shared buttons now have stable touch targets, 8px radii, focus states, wrapping text, and dark/study parity; Study/More sub-tabs are class-driven segmented controls; bottom navigation is equal-width and RTL overflow-safe; Settings utility links use real app buttons; Study Plan row actions and Track leaderboard refresh no longer render as tiny inline chips. Added regression guards for segmented tabs, Settings utilities, Study Plan action classes, and the mobile RTL tab-bar overflow clamp. No question content, answer keys, explanations, source mappings, or audit queues changed. BUILD_HASH 1121q-v1.26.11; package/app/SW markers bumped 1.26.10 to 1.26.11.'
+  ],
   '1.26.10': [
     'ui(ia): move active study workflows out of Track and into Study Today. Study now opens Today by default with plan, due review, exam-date/daily-plan, drills, cheat-sheet export, reading due, bookmarks, syllabus, and journal; Track is analytics-only with KPI/donut/heatmap/session/activity/leaderboard/exam trend/priority matrix. Share App Link now lives in Settings About, and visible Pomodoro / Sudden Death / On-call launch controls were removed while Mock and Full 150q remain. No question content, answer keys, explanations, or audit queues changed. BUILD_HASH 1121q-v1.26.10; package/app/SW markers bumped 1.26.9 to 1.26.10.'
   ],

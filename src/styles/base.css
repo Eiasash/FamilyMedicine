@@ -1,5 +1,6 @@
 /* === Reset & Root Variables === */
 * { box-sizing: border-box; margin: 0; padding: 0 }
+html { overflow-x: hidden }
 
 :root {
   --sky: 19 169 156;
@@ -17,6 +18,7 @@ body {
   color: #1e293b;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  max-width: 100%;
 }
 
 /* Hebrew-font container: BIDI-safe via unicode-bidi:plaintext (each paragraph's
