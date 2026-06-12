@@ -734,11 +734,11 @@ export function renderStudyPlan(){
             ${accBadge}
             <span style="color:#94a3b8;font-size:9px;white-space:nowrap">${topic.hrs}</span>
             </div>
-            <div style="display:flex;gap:4px;padding:0 8px 6px 36px;flex-wrap:wrap">
-            ${HAR_CHAPTERS[topic.n]?`<button data-action="sp-open-chapter" style="font-size:9px;padding:3px 8px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;color:#b45309;cursor:pointer;white-space:nowrap">📕 Ch ${HAR_CHAPTERS[topic.n].ch}</button>`:""}
-            <button data-action="sp-open-notes" data-ti="${topic.ti}" style="font-size:9px;padding:3px 8px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;color:#0D7377;cursor:pointer;white-space:nowrap" aria-label="Open notes for ${topic.n.replace(/'/g,'')}">📖 Notes</button>
-            <button data-action="sp-quiz" data-ti="${topic.ti}" style="font-size:9px;padding:3px 8px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;color:#3b82f6;cursor:pointer;white-space:nowrap" aria-label="Quiz ${topic.n.replace(/'/g,'')}">📝 Quiz</button>
-            <button data-action="sp-summarize" data-topic="${topic.n.replace(/'/g,'&apos;')}" style="font-size:9px;padding:3px 8px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;color:#7c3aed;cursor:pointer;white-space:nowrap" aria-label="AI summary of ${topic.n.replace(/'/g,'')}">🤖 Summarize</button>
+            <div class="sp-actions">
+            ${HAR_CHAPTERS[topic.n]?`<button class="sp-action sp-action--chapter" data-action="sp-open-chapter">📕 Ch ${HAR_CHAPTERS[topic.n].ch}</button>`:""}
+            <button class="sp-action sp-action--notes" data-action="sp-open-notes" data-ti="${topic.ti}" aria-label="Open notes for ${topic.n.replace(/'/g,'')}">📖 Notes</button>
+            <button class="sp-action sp-action--quiz" data-action="sp-quiz" data-ti="${topic.ti}" aria-label="Quiz ${topic.n.replace(/'/g,'')}">📝 Quiz</button>
+            <button class="sp-action sp-action--ai" data-action="sp-summarize" data-topic="${topic.n.replace(/'/g,'&apos;')}" aria-label="AI summary of ${topic.n.replace(/'/g,'')}">🤖 Summarize</button>
             </div>
             </div>`;
           });
@@ -994,7 +994,7 @@ const done=Object.values(G.S.ck).filter(Boolean).length;
 let h=`<div class="card" style="padding:14px"><div style="font-weight:700;font-size:12px;margin-bottom:10px">Syllabus (${done}/${TOPICS.length})</div>`;
 TOPICS.forEach((t,i)=>{h+=`<div class="topic${G.S.ck[i]?' done':''}" data-action="syl-check" data-i="${i}" style="display:${G.S._sylOpen?'flex':'none'}" role="checkbox" aria-checked="${G.S.ck[i]?'true':'false'}" tabindex="0" aria-label="${t}">
 <input type="checkbox" ${G.S.ck[i]?'checked':''} readonly style="width:13px;height:13px" tabindex="-1"><span>${t}</span></div>`;});
-h+=`<div data-action="syl-toggle" style="text-align:center;padding:8px;cursor:pointer;font-size:10px;color:rgb(var(--sky));font-weight:600" role="button" tabindex="0" aria-expanded="${G.S._sylOpen}" aria-label="Toggle syllabus topics">${G.S._sylOpen?'Collapse':'Show '+TOPICS.length+' topics'}</div>`;
+h+=`<div class="syl-toggle-btn" data-action="syl-toggle" role="button" tabindex="0" aria-expanded="${G.S._sylOpen}" aria-label="Toggle syllabus topics">${G.S._sylOpen?'Collapse':'Show '+TOPICS.length+' topics'}</div>`;
 h+=`</div>`;
 return h;
 }
@@ -1063,7 +1063,7 @@ h+=`<div class="card" style="padding:14px;margin-bottom:10px">
 <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
 <span style="font-size:14px">🏆</span>
 <div style="font-size:12px;font-weight:700;flex:1">Leaderboard</div>
-<button data-action="show-leaderboard" style="font-size:9px;padding:4px 10px;background:#f59e0b;color:#fff;border:none;border-radius:6px;cursor:pointer">Refresh</button>
+<button class="btn btn--compact btn-p" data-action="show-leaderboard">Refresh</button>
 </div>
 <div id="leaderboard-box" style="font-size:10px;color:#94a3b8;text-align:center">Tap refresh to load</div>
 </div>`;

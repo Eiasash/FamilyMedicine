@@ -13,3 +13,20 @@
 
 /* === Leaderboard === */
 .leaderboard-row { display: flex; justify-content: space-between; padding: 6px 10px; border-bottom: 1px solid #f1f5f9; font-size: 11px }
+
+/* === Study Plan Row Actions === */
+.sp-actions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; padding: 0 8px 8px 36px }
+.sp-action { min-height: 38px; padding: 7px 8px; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; font-family: inherit; font-size: 10px; font-weight: 700; line-height: 1.2; text-align: center; white-space: normal; cursor: pointer }
+.sp-action--chapter { color: #b45309; background: #fffbeb; border-color: #fde68a }
+.sp-action--notes { color: #0f766e; background: #ecfdf5; border-color: #99f6e4 }
+.sp-action--quiz { color: #1d4ed8; background: #eff6ff; border-color: #bfdbfe }
+.sp-action--ai { color: #7c3aed; background: #f5f3ff; border-color: #ddd6fe }
+.sp-action:focus-visible { outline: 2px solid rgb(var(--sky)); outline-offset: 2px }
+
+.syl-toggle-btn { min-height: 40px; display: flex; align-items: center; justify-content: center; padding: 8px; border-radius: 8px; color: rgb(var(--sky)); font-size: 10px; font-weight: 700; cursor: pointer }
+.syl-toggle-btn:hover { background: #f0fdfa }
+.syl-toggle-btn:focus-visible { outline: 2px solid rgb(var(--sky)); outline-offset: 2px }
+
+@media (max-width: 520px) {
+  .sp-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); padding-inline-start: 8px }
+}

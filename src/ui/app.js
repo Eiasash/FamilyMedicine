@@ -76,9 +76,9 @@ case'learn':
 case'study':G.tab='lib';G.S.libSub=G.openNote!==null?'notes':'today';el.innerHTML='';render();break;
 case'lib':
   {const _libSub=G.S.libSub||'today';
-  const _libBar='<div style="display:flex;gap:4px;margin-bottom:12px;padding:4px;background:#f1f5f9;border-radius:12px">'+
+  const _libBar='<div class="subtabs" role="tablist" aria-label="Study sections">'+
   [{id:'today',ic:'📌',l:'Today'},{id:'read',ic:'📖',l:'מקורות'},{id:'notes',ic:'📝',l:'סיכומים'},{id:'cards',ic:'🃏',l:'Cards'},{id:'meds',ic:'💊',l:'Meds'}].map(s=>
-    '<button data-action="lib-sub" data-sub="'+s.id+'" style="flex:1;padding:8px 4px;border:none;border-radius:10px;font-size:11px;font-weight:'+(_libSub===s.id?'700':'400')+';cursor:pointer;background:'+(_libSub===s.id?'#fff':'transparent')+';color:'+(_libSub===s.id?'#0f172a':'#64748b')+';box-shadow:'+(_libSub===s.id?'0 1px 3px rgba(0,0,0,.1)':'none')+'">'+s.ic+' '+s.l+'</button>'
+    '<button data-action="lib-sub" data-sub="'+s.id+'" class="subtab-btn '+(_libSub===s.id?'on':'')+'" role="tab" aria-selected="'+(_libSub===s.id?'true':'false')+'"><span>'+s.ic+'</span><span>'+s.l+'</span></button>'
   ).join('')+'</div>';
   let _libBody='';
   if(_libSub==='today')_libBody=renderStudyDashboard();
@@ -103,9 +103,9 @@ case'more':
   // 'settings' migrated to gear-icon overlay v1.19.0 — auto-redirect old state
   if(G.moreSub==='settings')G.moreSub='search';
   if(!['search','notes'].includes(G.moreSub))G.moreSub='search';
-  {const _moreBar='<div style="display:flex;gap:4px;margin-bottom:12px;padding:4px;background:#f1f5f9;border-radius:12px">'+
+  {const _moreBar='<div class="subtabs" role="tablist" aria-label="More sections">'+
   [{id:'search',ic:'🔍',l:'חיפוש'},{id:'notes',ic:'📝',l:'הערות'}].map(s=>
-    '<button data-action="more-sub" data-sub="'+s.id+'" style="flex:1;padding:8px 4px;border:none;border-radius:10px;font-size:11px;font-weight:'+(G.moreSub===s.id?'700':'400')+';cursor:pointer;background:'+(G.moreSub===s.id?'#fff':'transparent')+';color:'+(G.moreSub===s.id?'#0f172a':'#64748b')+';box-shadow:'+(G.moreSub===s.id?'0 1px 3px rgba(0,0,0,.1)':'none')+'">'+s.ic+' '+s.l+'</button>'
+    '<button data-action="more-sub" data-sub="'+s.id+'" class="subtab-btn '+(G.moreSub===s.id?'on':'')+'" role="tab" aria-selected="'+(G.moreSub===s.id?'true':'false')+'"><span>'+s.ic+'</span><span>'+s.l+'</span></button>'
   ).join('')+'</div>';
   let _mBody='';
   if(G.moreSub==='notes')_mBody=renderNotes();
