@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.26.14': [
+    'ui(ia): align visible navigation with the shared board-app shell. Bottom tabs are Quiz, Study, Track, Settings; Study now exposes Today, Read, Notes, and Tools while legacy search, chat, meds, cards, and more links redirect into Study or Settings. No question content, answer keys, explanations, source mappings, or audit queues changed. BUILD_HASH 1121q-v1.26.14; package/app/SW markers bumped 1.26.13 to 1.26.14.'
+  ],
   '1.26.13': [
     'ui(study): deepen the Study dashboard button cleanup. The Today Study Plan now uses classed step rows with full-width mobile tap targets instead of tiny inline Start/Open chips, and the long Study Plan defaults to collapsed tiers so Study no longer opens as a wall of repeated action buttons. Added regression guards for daily-plan action classes, mobile tap targets, and compact tier defaults. No question content, answer keys, explanations, source mappings, or audit queues changed. BUILD_HASH 1121q-v1.26.13; package/app/SW markers bumped 1.26.12 to 1.26.13.'
   ],
