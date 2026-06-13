@@ -44,9 +44,6 @@ function seedG() {
   G.sel = null;
   G.ans = false;
   G.examMode = false;
-  G.sdMode = false;
-  G.onCallMode = false;
-  G.pomoActive = false;
   G.timedMode = false;
   G.blindRecall = false;
   G.autopsyMode = false;
@@ -181,62 +178,6 @@ describe('renderQuiz — post-answer (wrong)', () => {
     const html = renderQuiz();
     expect(html).toContain('class="quiz-wrong-reason"');
     expect(html).toMatch(/data-action="wrong-reason"\s+data-r="no_knowledge"/);
-  });
-});
-
-describe('renderQuiz — Sudden-Death mode XSS / sanitize (v1.25.12 regression)', () => {
-  // The SD render branch (G.sdMode) historically interpolated q.q, q.img and
-  // each option RAW, while the main path sanitizes all three. Two impacts:
-  // (a) display corruption — "P value <or =0.05" opens a phantom <or> tag that
-  //     eats text to the next '>'; (b) q.img is user-attached, so a crafted
-  //     value is genuine attribute injection. This block fires the SD branch
-  //     with hostile content and asserts every surface is escaped.
-  beforeEach(() => {
-    G.sdMode = true;
-    G.sel = null;
-    G.ans = false;
-    G.timedMode = false;
-    G.timedSec = 60;
-    G.timedPaused = false;
-    G.sdStreak = 0;
-    G.sdLeaderboard = [];
-    G.QZ = [
-      {
-        q: 'P value <or =0.05 <img src=x onerror=alert(1)>',
-        o: ['choice <b>bold</b>', 'plain', 'x" onfocus="evil', 'd'],
-        c: 0,
-        ti: 1,
-        t: '2024-Sep',
-        img: 'x" onerror="alert(1)',
-      },
-    ];
-    G.sdPool = [0];
-    G.sdQi = 0;
-    G.pool = [0];
-    G.qi = 0;
-  });
-
-  it('escapes the question stem in SD mode (no phantom <or> tag, no raw <img injection)', () => {
-    const html = renderQuiz();
-    expect(html).toContain('&lt;or =0.05');
-    expect(html).not.toContain('<or =0.05');
-    expect(html).not.toMatch(/<img src=x onerror=/);
-    expect(html).toContain('&lt;img src=x onerror=alert(1)&gt;');
-  });
-
-  it('escapes option text + aria-label in SD mode', () => {
-    const html = renderQuiz();
-    expect(html).toContain('choice &lt;b&gt;bold&lt;/b&gt;');
-    expect(html).not.toContain('choice <b>bold</b>');
-    // the option with a quote-breakout payload must not produce a live attribute
-    expect(html).not.toContain('onfocus="evil');
-    expect(html).toContain('onfocus=&quot;evil');
-  });
-
-  it('escapes the user-attached q.img src in SD mode (no attribute breakout)', () => {
-    const html = renderQuiz();
-    expect(html).toContain('src="x&quot; onerror=&quot;alert(1)"');
-    expect(html).not.toContain('onerror="alert(1)"');
   });
 });
 

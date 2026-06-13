@@ -6,10 +6,10 @@ import { isChronicFail } from '../sr/fsrs-bridge.js';
 import { renderExplainBox, toggleFlagExplain, explainWithAI, aiAutopsy, gradeTeachBack, startVoiceTeachBack } from '../ai/explain.js';
 import { TOPIC_REF } from './track-view.js';
 import { openHarrisonChapter } from './library-view.js';
-import { buildPool, check, next, prev, pick, checkMockIntercept, exitOnCallMode, flipCard, runExplainOnCall, onCallPick,
+import { buildPool, check, next, prev, pick, checkMockIntercept,
          setFilt, setTopicFilt, toggleYearFilt, clearYearFilt, startExam, startMockExam, startMockExamByTag, showMockExamPicker, startTopicMiniExam,
-         startOnCallMode, _storeDiff } from '../quiz/engine.js';
-import { startPomodoro, stopPomodoro, startSuddenDeath, endSuddenDeath, speakQuestion, startNextBestStep } from '../quiz/modes.js';
+         _storeDiff } from '../quiz/engine.js';
+import { speakQuestion, startNextBestStep } from '../quiz/modes.js';
 import { showAnswerHardFail } from './more-view.js';
 import { buildWrongReviewPool, getWrongAnswerCount, resetWrongSet } from '../quiz/wrong-review.js';
 import { renderSourceLink, openSource } from './source-link.js';
@@ -18,7 +18,7 @@ export function toggleBk(){G.S.bk[G.pool[G.qi]]=!G.S.bk[G.pool[G.qi]];G.save();G
 export function toggleQNote(){
   const box=document.getElementById('qnote-box');if(box){box.remove();return;}
   const idx=G.pool[G.qi];const cur=(G.S.qnotes&&G.S.qnotes[idx])||'';
-  const h=`<div id="qnote-box" style="margin:8px 0;padding:10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px"><div style="font-size:10px;font-weight:700;color:#475569;margin-bottom:6px">📝 הערה לשאלה זו</div><textarea id="qnote-ta" dir="auto" placeholder="כתוב הערה אישית..." style="width:100%;min-height:70px;resize:vertical;font-family:Heebo,Inter,sans-serif;border:1px solid #e2e8f0;border-radius:8px;padding:8px;font-size:12px;background:#fff;color:#0f172a">${sanitize(cur)}</textarea><div style="display:flex;gap:6px;margin-top:6px"><button class="btn btn-p" data-action="save-qnote" style="flex:1;font-size:11px;min-height:36px">שמור</button><button class="btn" data-action="del-qnote" style="font-size:11px;min-height:36px;background:#fef2f2;color:#991b1b">מחק</button><button class="btn" data-action="cancel-qnote" style="font-size:11px;min-height:36px;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0">ביטול</button></div></div>`;
+  const h=`<div id="qnote-box" style="margin:8px 0;padding:10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px"><div style="font-size:10px;font-weight:700;color:#475569;margin-bottom:6px">📝 הערה לשאלה זו</div><textarea id="qnote-ta" dir="auto" placeholder="כתוב הערה אישית..." style="width:100%;min-height:70px;resize:vertical;font-family:Heebo,Inter,sans-serif;border:1px solid #e2e8f0;border-radius:8px;padding:8px;font-size:12px;background:#fff;color:#0f172a">${sanitize(cur)}</textarea><div style="display:flex;gap:6px;margin-top:6px"><button class="btn btn-p" data-action="save-qnote" style="flex:1;font-size:11px;min-height:44px">שמור</button><button class="btn" data-action="del-qnote" style="font-size:11px;min-height:44px;background:#fef2f2;color:#991b1b">מחק</button><button class="btn" data-action="cancel-qnote" style="font-size:11px;min-height:44px;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0">ביטול</button></div></div>`;
   const tgt=document.querySelector('#ct .card')||document.querySelector('#ct');if(tgt)tgt.insertAdjacentHTML('beforeend',h);
   setTimeout(()=>{const t=document.getElementById('qnote-ta');if(t)t.focus();},50);
 }
@@ -279,144 +279,101 @@ export function renderDailyContract(dueN){
 // Extracted from renderQuiz so the main render path stays readable.
 // All markup uses tokenized classes; no inline styles.
 function renderQuizControls(dueN){
-  let h='<nav class="quiz-controls" aria-label="פילטרים לחידון">';
-  h+='<div class="quiz-controls__row">';
-  h+='<span class="quiz-controls__label">מצב</span>';
-  h+='<button class="btn btn--secondary" data-action="start-exam" aria-label="התחל מבחן מלא של 150 שאלות">Full 150q</button>';
-  h+='<button class="btn btn--secondary" data-action="start-mock" aria-label="התחל מבחן סימולציה">סימולציה</button>';
-  h+='</div>';
-  h+='<div class="quiz-controls__row">';
-  h+='<span class="quiz-controls__label">סינון</span>';
-  const _trapCount=G.QZ.filter((_,i)=>isExamTrap(i)).length;
-  const _aiCount=G.QZ.filter(qq=>qq.t==='AI-Ch').length;
-  const _yearSel=Array.isArray(G.years)?G.years:[];
-  const _inYearMode=G.filt==='years'&&_yearSel.length>0;
-  const _aiHardGCount=G.QZ.filter(qq=>qq.t==='AI-Hard-G').length;
-  const _aiHardAfpCount=G.QZ.filter(qq=>qq.t==='AI-Hard-AFP').length;
-  // Exam-year pills collapse behind a "📅 לפי שנה ▾" toggle to de-clutter the row.
-  // Multi-select preserved; group auto-opens when years are active.
-  const _yearFilts=[
-    ['2020','2020'],['2021-Jun','Jun 21'],['2022-Jun','Jun 22'],['2023-Jun','Jun 23'],
-    ['2024-May','May 24'],['2024-Sep','Sep 24'],['2025-Jun','Jun 25'],
-  ];
-  const _yearPillsOpen=G._yearPillsOpen===true||_inYearMode;
-  const filts=[
-    ['all',`הכל (${G.QZ.length})`],
-    ['__years__',''],
-    // Conditional pills — only show when their bucket has questions. Showing
-    // "AI (0)" or "Traps (0)" is confusing for cold-start users: tap → empty
-    // result → looks like a broken filter. Hide instead.
-    ...(_aiCount>0?[['AI-Ch',`AI (${_aiCount})`]]:[]),
-    ...(_aiHardGCount>0?[['AI-Hard-G',`Hard-G (${_aiHardGCount})`]]:[]),
-    ...(_aiHardAfpCount>0?[['AI-Hard-AFP',`Hard-AFP (${_aiHardAfpCount})`]]:[]),
-    ['hard','קשות'],['slow','איטיות'],['weak','חלשות'],
-    ...(_trapCount>0?[['traps',`מלכודות (${_trapCount})`]]:[]),
-    ['nbs','השלב הבא']
-  ];
-  const _weakForPill=getWeakTopics(3);
-  if(_weakForPill.length&&_weakForPill[0].pct!==null&&_weakForPill[0].pct<65)filts.push(['rescue','חילוץ']);
-  if(dueN>0)filts.push(['due',`לחזרה (${dueN})`]);
-  const _wrongCount=getWrongAnswerCount();
-  if(_wrongCount>0)filts.push(['wrong-review',`סקור טעויות (${_wrongCount})`]);
-  const pillButton=(attrs,label,on=false)=>`<button type="button" class="pill" data-state="${on?'on':''}" aria-pressed="${on?'true':'false'}" ${attrs}>${label}</button>`;
-  filts.forEach(([f,l])=>{
-    if(f==='__years__'){
-      const _badge=_yearSel.length>0?` (${_yearSel.length})`:'';
-      h+=pillButton('data-action="toggle-year-pills" title="סנן לפי שנת מבחן — בחירה מרובה אפשרית"', `📅 לפי שנה${_badge} ${_yearPillsOpen?'▴':'▾'}`, _inYearMode);
-      if(_yearPillsOpen){
-        _yearFilts.forEach(([yf,yl])=>{
-          const _yOn=_yearSel.includes(yf);
-          h+=pillButton(`data-action="filter-year" data-f="${yf}" title="לחץ להחלפה — בחירה מרובה אפשרית"`, `${sanitize(yl)}${_yOn?' ✓':''}`, _yOn);
-        });
-      }
-    } else if(f==='rescue'){
-      h+=pillButton('data-action="filter-rescue"', sanitize(l), G.filt==='rescue');
-    } else if(f==='wrong-review'){
-      h+=pillButton('data-action="filter-wrong-review"', sanitize(l), G.filt==='wrong-review');
-    } else if(f==='nbs'){
-      h+=pillButton('data-action="filter-nbs"', sanitize(l), G.filt==='nbs');
-    } else if(EXAM_YEARS.includes(f)){
-      const _yOn=_yearSel.includes(f);
-      h+=pillButton(`data-action="filter-year" data-f="${f}" title="לחץ להחלפה — בחירה מרובה אפשרית"`, `${sanitize(l)}${_yOn?' ✓':''}`, _yOn);
-    } else if(f==='all'){
-      h+=pillButton(`data-action="filter" data-f="${f}"`, sanitize(l), G.filt==='all'&&!_inYearMode);
-    } else {
-      h+=pillButton(`data-action="filter" data-f="${f}"`, sanitize(l), G.filt===f&&G.filt!=='topic');
-    }
-  });
-  if(_yearSel.length>=2){
-    h+=pillButton('data-action="filter-year-clear" title="נקה סינון שנים"', `נקה ${_yearSel.length} שנים`);
-  }
-  h+='</div>';
-  h+='<div class="quiz-controls__row">';
-  h+='<span class="quiz-controls__label">נושא</span>';
-  h+=`<select class="quiz-controls__select" data-action="topic-select" aria-label="סנן לפי נושא">`;
-  h+=`<option value="-1"${G.filt!=='topic'?' selected':''}>כל הנושאים</option>`;
-  TOPICS.forEach((t,i)=>{ h+=`<option value="${i}"${G.filt==='topic'&&G.topicFilt===i?' selected':''}>${sanitize(t)}</option>`; });
-  h+='</select>';
-  if(G.filt==='topic'&&G.topicFilt>=0){
-    const _tqCount=G.QZ.filter(qq=>qq.ti===G.topicFilt).length;
-    h+=`<button class="btn btn--secondary" data-action="start-mini-exam" data-ti="${G.topicFilt}" aria-label="התחל מבחן מיני לנושא">מיני מבחן (${Math.min(_tqCount,20)})</button>`;
-  }
-  h+='</div>';
-  h+='<div class="quiz-controls__row">';
-  h+='<span class="quiz-controls__label">תרגול</span>';
-  h+=`<label class="btn btn--ghost"><input type="checkbox" ${G.blindRecall?'checked':''} data-action="toggle-blind"> כסה תשובות</label>`;
-  h+=`<label class="btn btn--ghost"><input type="checkbox" ${G.timedMode?'checked':''} data-action="toggle-timed"> טיימר (90 שנ׳)</label>`;
-  h+='</div>';
-  if(G.filt==='wrong-review'){
-    const _wrCount=getWrongAnswerCount();
-    h+=`<div class="quiz-controls__row">`+
-       `<span class="pill pill--danger">מצב סקירת טעויות · ${_wrCount}</span>`+
-       `<button class="btn btn--ghost" data-action="wrong-review-clear">נקה</button>`+
-       `</div>`;
-  }
-  h+='</nav>';
+  const trapCount=G.QZ.filter((_,i)=>isExamTrap(i)).length;
+  const aiCount=G.QZ.filter(qq=>qq.t==='AI-Ch').length;
+  const aiHardGCount=G.QZ.filter(qq=>qq.t==='AI-Hard-G').length;
+  const aiHardAfpCount=G.QZ.filter(qq=>qq.t==='AI-Hard-AFP').length;
+  const yearSel=Array.isArray(G.years)?G.years:[];
+  const inYearMode=G.filt==='years'&&yearSel.length>0;
+  const wrongCount=getWrongAnswerCount();
+  const weakForPill=getWeakTopics(3);
+  const filterLabel=G.filt==='all'?'All questions':
+    G.filt==='years'?`${yearSel.length} year${yearSel.length===1?'':'s'}`:
+    G.filt==='topic'&&G.topicFilt>=0?(TOPICS[G.topicFilt]||'Topic'):
+    G.filt==='AI-Ch'?'AI chapter':
+    G.filt==='AI-Hard-G'?'Hard Goroll':
+    G.filt==='AI-Hard-AFP'?'Hard AFP':
+    G.filt==='hard'?'Hard':
+    G.filt==='slow'?'Slow':
+    G.filt==='weak'?'Weak':
+    G.filt==='traps'?'Traps':
+    G.filt==='nbs'?'Next best step':
+    G.filt==='rescue'?'Rescue':
+    G.filt==='due'?'Due review':
+    G.filt==='wrong-review'?'Review wrong':G.filt;
+  const activeBits=[
+    filterLabel,
+    inYearMode?yearSel.join(', '):'',
+    G.blindRecall?'cover options':'',
+    G.timedMode?'90s timed':'',
+  ].filter(Boolean);
+  const pill=(attrs,label,on=false)=>`<button type="button" class="pill" data-state="${on?'on':'off'}" aria-pressed="${on?'true':'false'}" ${attrs}>${label}</button>`;
+  let h=`<section class="quiz-filter-summary" aria-label="Quiz controls">
+    <div class="quiz-filter-summary__top">
+      <div>
+        <div class="sec-t">Quiz</div>
+        <div class="quiz-filter-summary__meta">${G.pool.length}/${G.QZ.length} questions - ${activeBits.join(' - ')}</div>
+      </div>
+      <div class="quiz-filter-summary__actions">
+        <button class="btn btn--primary quiz-mode-btn" data-action="start-mock" aria-label="Start mock exam">Mock</button>
+        <button class="btn btn--secondary quiz-mode-btn" data-action="start-exam" aria-label="Start full 150 question exam">Full 150q</button>
+      </div>
+    </div>
+    <div class="quiz-filter-summary__bottom">
+      <button type="button" data-action="toggle-quiz-filters" class="quiz-filter-toggle" aria-expanded="${G.quizFiltersOpen?'true':'false'}" aria-controls="quizFilterDrawer">Filters</button>
+      ${wrongCount>0?`<button type="button" data-action="filter-wrong-review" class="quiz-review-compact">Review wrong (${wrongCount})</button>`:''}
+    </div>
+  </section>`;
+  if(!G.quizFiltersOpen)return h;
+  h+=`<section id="quizFilterDrawer" class="quiz-filter-drawer" aria-label="Advanced quiz filters">
+    <div class="quiz-filter-drawer__head">
+      <strong>Filters</strong>
+      <button type="button" data-action="toggle-quiz-filters" class="quiz-filter-drawer__done">Done</button>
+    </div>
+    <div class="quiz-filter-group">
+      <div class="quiz-filter-group__label">Scope</div>
+      <div class="quiz-filter-pills">
+        ${pill('data-action="filter" data-f="all"',`All (${G.QZ.length})`,G.filt==='all'&&!inYearMode)}
+        ${aiCount>0?pill('data-action="filter" data-f="AI-Ch"',`AI (${aiCount})`,G.filt==='AI-Ch'):''}
+        ${aiHardGCount>0?pill('data-action="filter" data-f="AI-Hard-G"',`Hard-G (${aiHardGCount})`,G.filt==='AI-Hard-G'):''}
+        ${aiHardAfpCount>0?pill('data-action="filter" data-f="AI-Hard-AFP"',`Hard-AFP (${aiHardAfpCount})`,G.filt==='AI-Hard-AFP'):''}
+        ${pill('data-action="filter" data-f="hard"','Hard',G.filt==='hard')}
+        ${pill('data-action="filter" data-f="slow"','Slow',G.filt==='slow')}
+        ${pill('data-action="filter" data-f="weak"','Weak',G.filt==='weak')}
+        ${trapCount>0?pill('data-action="filter" data-f="traps"',`Traps (${trapCount})`,G.filt==='traps'):''}
+        ${pill('data-action="filter-nbs"','NBS',G.filt==='nbs')}
+        ${(weakForPill.length&&weakForPill[0].pct!==null&&weakForPill[0].pct<65)?pill('data-action="filter-rescue"','Rescue',G.filt==='rescue'):''}
+        ${dueN>0?pill('data-action="filter" data-f="due"',`Due (${dueN})`,G.filt==='due'):''}
+      </div>
+    </div>
+    <div class="quiz-filter-group">
+      <div class="quiz-filter-group__label">Years</div>
+      <div class="quiz-filter-pills">
+        ${EXAM_YEARS.map(y=>pill(`data-action="filter-year" data-f="${y}"`,`${y}${yearSel.includes(y)?' ok':''}`,yearSel.includes(y))).join('')}
+        ${yearSel.length?pill('data-action="filter-year-clear"','Clear years',false):''}
+      </div>
+    </div>
+    <div class="quiz-filter-group">
+      <label class="quiz-filter-group__label" for="quiz-topic-select">Topic</label>
+      <div class="quiz-filter-topic-row">
+        <select id="quiz-topic-select" class="quiz-controls__select" data-action="topic-select" aria-label="Filter by topic">
+          <option value="-1"${G.filt!=='topic'?' selected':''}>All topics</option>
+          ${TOPICS.map((t,i)=>`<option value="${i}"${G.filt==='topic'&&G.topicFilt===i?' selected':''}>${sanitize(t)}</option>`).join('')}
+        </select>
+        ${G.filt==='topic'&&G.topicFilt>=0?`<button class="btn btn--secondary quiz-mini-exam" data-action="start-mini-exam" data-ti="${G.topicFilt}" aria-label="Start topic mini exam">Mini Exam</button>`:''}
+      </div>
+    </div>
+    <div class="quiz-filter-group">
+      <div class="quiz-filter-group__label">Practice settings</div>
+      <div class="quiz-toggle-row">
+        <label><input type="checkbox" ${G.blindRecall?'checked':''} data-action="toggle-blind"> Cover options</label>
+        <label><input type="checkbox" ${G.timedMode?'checked':''} data-action="toggle-timed"> Timed 90s</label>
+      </div>
+    </div>
+  </section>`;
   return h;
 }
-
 export function renderQuiz(){
-// ===== SUDDEN DEATH RENDERING =====
-if(G.sdMode){
-if(G.sdQi>=G.sdPool.length)G.sdQi=0;
-const q=G.QZ[G.sdPool[G.sdQi]];
-const _qIdx=G.sdPool[G.sdQi]; // SD-mode Q index — image/upload/flag actions must target the displayed SD question, not G.pool[G.qi] (regular-mode Q)
-let h=`<div class="sudden-death-banner"><span style="font-weight:700;font-size:13px">💀 Sudden Death</span>
-<span style="font-size:16px;font-weight:700">🔥 ${G.sdStreak}</span>
-<button class="btn" style="background:rgba(255,255,255,.2);color:#fff;font-size:10px;padding:4px 10px" data-action="quit-sd" aria-label="צא ממצב מוות פתאומי">צא</button></div>`;
-h+=`<div class="card" style="padding:16px">`;
-if(G.timedMode&&!G.ans){
-  h+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-<span id="timed-count" style="font-size:11px;font-weight:700;color:#64748b;min-width:24px">${G.timedSec}s</span>
-<div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden">
-  <div id="timed-bar" style="height:100%;width:${Math.round(G.timedSec/90*100)}%;background:${G.timedSec>45?'#10b981':G.timedSec>22?'#f59e0b':'#ef4444'};border-radius:3px;transition:width .9s linear"></div>
-</div>
-<button data-action="pause-timed" style="font-size:9px;padding:2px 7px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;white-space:nowrap" aria-label="${G.timedPaused?'Resume timer':'Pause timer'}">${G.timedPaused?'▶ המשך':'⏸ עצור'}</button>
-</div>`;
-}
-const _isFlagQ=(G.S.flagged||{})[_qIdx];
-const _eFlagQ=q.eFlag;
-h+=`<p class="heb" style="font-size:13px;font-weight:700;line-height:1.7;margin-bottom:${q.img?'10':'16'}px" dir="auto">${_isFlagQ?'<span style="color:#dc2626;font-size:11px" title="Explanation flagged — verify">⚑ </span>':''  }${sanitize(q.q)}</p>`;
-if(_eFlagQ&&G.ans){h+=`<div style="margin:6px 0;padding:6px 10px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;font-size:10px;color:#991b1b;text-align:start;line-height:1.4;display:flex;align-items:center;gap:6px;justify-content:space-between;unicode-bidi:plaintext" dir="auto"><span style="flex:1">⚠️ AI flagged: ההסבר עשוי לא להתאים לתשובה הנכונה (<bdi>${sanitize(_eFlagQ)}</bdi>)</span><button data-action="clear-eflag" data-idx="${_qIdx}" style="font-size:9px;padding:3px 8px;background:#991b1b;color:#fff;border:none;border-radius:6px;cursor:pointer;flex:0 0 auto">✓ אמת</button></div>`;}
-if(q.img){h+=`<div style="margin-bottom:14px;text-align:center;position:relative"><img src="${sanitize(q.img)}" alt="Question image" style="max-width:100%;max-height:300px;border-radius:10px;border:1px solid #e2e8f0;cursor:pointer" data-action="view-img" loading="lazy"><button data-action="remove-img" data-idx="${_qIdx}" aria-label="הסר תמונה" title="הסר תמונה" style="position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:24px;height:24px;font-size:12px;cursor:pointer">✕</button>${q.imgDep?'<div style="margin-top:6px;padding:6px 10px;background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;font-size:10px;color:#92400e;text-align:start;line-height:1.4;display:flex;align-items:center;gap:6px;justify-content:space-between;unicode-bidi:plaintext" dir="auto"><span style="flex:1">⚠️ שאלה תלוית-תמונה: ההסבר עלול להיות שגוי.</span><button data-action="mark-verified" data-idx="'+_qIdx+'" style="font-size:9px;padding:3px 8px;background:#d97706;color:#fff;border:none;border-radius:6px;cursor:pointer;flex:0 0 auto">✓ מאומת</button></div>':''}</div>`;}
-if(!q.img&&!G.examMode){h+=`<div style="margin-bottom:10px"><button data-action="upload-img" data-idx="${_qIdx}" style="font-size:10px;padding:4px 12px;background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer">📷 Attach Image</button><span id="img-status-${_qIdx}" style="font-size:10px;color:#94a3b8;margin-left:6px"></span></div>`;}
-q.o.forEach((o,i)=>{
-let cls='qo';
-if(G.ans){cls+=' lk';if(isOk(q,i))cls+=' ok';else if(i===G.sel)cls+=' no';else cls+=' dim';}
-else if(i===G.sel)cls+=' sel';
-h+=`<button class="${cls}" data-action="pick" data-i="${i}" aria-label="Option ${i+1}: ${sanitize(o)}" dir="${heDir(o)}">${sanitize(o)}</button>`;
-});
-if(!G.ans)h+=`<button class="btn btn-p" data-action="sd-check"${G.sel===null?' disabled':''} aria-label="Check answer">בדוק</button>`;
-else h+=`<button class="btn btn-d" data-action="sd-next" aria-label="Next question">הבאה ←</button>`;
-h+=`</div>`;
-// Leaderboard
-if(G.sdLeaderboard.length){
-h+=`<div class="card" style="padding:14px"><div style="font-weight:700;font-size:12px;margin-bottom:8px">🏆 Leaderboard</div>`;
-G.sdLeaderboard.forEach((e,i)=>{h+=`<div class="leaderboard-row"><span>${i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1)} ${e.streak} questions</span><span style="color:#94a3b8">${e.date}</span></div>`;});
-h+=`</div>`;}
-return h;
-}
-
 // === MAIN QUIZ PATH (v1.15.0 rebuild — Editorial Clinical) ===
 // Emits semantic, class-driven HTML against src/ui/quiz-view.css.
 // ZERO inline `style=""` attributes. All dimensions/colors via CSS tokens.
@@ -432,15 +389,6 @@ const dueN=getDueQuestions().length;
 
 let h='<section class="quiz-stage" aria-label="שאלה">';
 
-// ── Pomodoro banner ─────────────────────────────────────────────────
-if(G.pomoActive){
-  h+=`<div class="quiz-banner quiz-banner--pomo">`+
-     `<span class="quiz-banner__label">פומודורו</span>`+
-     `<span class="quiz-banner__timer" id="pomo-time">${fmtT(G.pomoSec)}</span>`+
-     `<button class="btn btn--ghost" data-action="stop-pomo" aria-label="עצור טיימר פומודורו">עצור</button>`+
-     `</div>`;
-}
-
 // ── Exam-mode banner ────────────────────────────────────────────────
 if(G.examMode){
   const isMock=!!G.mockExamResults;
@@ -454,7 +402,6 @@ if(G.examMode){
 
 // ── Daily Contract + filter controls (skipped under exam mode) ──────
 if(!G.examMode){
-  h+=renderDailyContract(dueN);
   h+=renderQuizControls(dueN);
 }
 
@@ -718,12 +665,6 @@ h+='</section>';
 return h;
 }
 
-// Sudden Death check/next
-export function sdCheck(){if(G.sel===null)return;G.ans=true;const q=G.QZ[G.sdPool[G.sdQi]];if(isOk(q,G.sel)){G.sdStreak++;G.S.qOk++;srScore(G.sdPool[G.sdQi],true);G.save();G.render();}else{G.S.qNo++;srScore(G.sdPool[G.sdQi],false);G.save();G.render();setTimeout(()=>endSuddenDeath(),800);}}
-export function sdNext(){G.sdQi++;if(G.sdQi>=G.sdPool.length)G.sdQi=0;G.sel=null;G.ans=false;G.autopsyDistractor=-1;G.render();}
-
-
-
 // Event delegation for Quiz tab — set up once on #ct container
 export function initQuizEvents(container) {
   container.addEventListener('click', (e) => {
@@ -739,8 +680,7 @@ export function initQuizEvents(container) {
     }
     else if (action === 'check-answer') { check(); }
     else if (action === 'give-up') { showAnswerHardFail(); }
-    else if (action === 'sd-check') { sdCheck(); }
-    else if (action === 'sd-next') { sdNext(); }
+
 
     // === Post-answer ===
     else if (action === 'next-q') { next(); }
@@ -783,18 +723,16 @@ export function initQuizEvents(container) {
     else if (action === 'ai-autopsy') { aiAutopsy(G.pool[G.qi]); }
 
     // === Mode controls ===
-    else if (action === 'quit-sd') { endSuddenDeath(); }
+
     else if (action === 'pause-timed') { pauseTimed(); }
-    else if (action === 'stop-pomo') { stopPomodoro(); }
+
     else if (action === 'start-exam') { startExam(); }
     else if (action === 'start-mock') { showMockExamPicker(); }
     else if (action === 'mock-picker-noop') { /* stop propagation so card clicks don't close modal */ }
     else if (action === 'start-mock-mixed') { document.getElementById('mockPicker')?.remove(); startMockExam(); }
     else if (action === 'start-mock-tag') { const tag=el.dataset.tag; document.getElementById('mockPicker')?.remove(); if(tag)startMockExamByTag(tag); }
     else if (action === 'close-mock-picker') { if(el.id==='mockPicker')document.getElementById('mockPicker')?.remove(); }
-    else if (action === 'start-sd') { startSuddenDeath(); }
-    else if (action === 'start-oncall') { startOnCallMode(); }
-    else if (action === 'start-pomo') { startPomodoro(); }
+
     else if (action === 'start-mini-exam') {
       startTopicMiniExam(parseInt(el.dataset.ti, 10));
     }
@@ -826,12 +764,12 @@ export function initQuizEvents(container) {
 
     // === Filters ===
     else if (action === 'filter') { setFilt(el.dataset.f); }
-    else if (action === 'toggle-year-pills') { G._yearPillsOpen = !(G._yearPillsOpen===true); G.render(); }
     else if (action === 'filter-year') { toggleYearFilt(el.dataset.f); }
     else if (action === 'filter-year-clear') { clearYearFilt(); }
     else if (action === 'filter-rescue') { buildRescuePool(); }
     else if (action === 'filter-nbs') { startNextBestStep(); }
     else if (action === 'filter-wrong-review') { buildWrongReviewPool(); }
+    else if (action === 'toggle-quiz-filters') { G.quizFiltersOpen = !G.quizFiltersOpen; G.render(); }
     else if (action === 'wrong-review-clear') {
       // Confirm-then-wipe is intentionally light-touch (toast-only) — undo path is
       // cloud-backup → cloudRestore. UI lives in renderQuiz when filter is active.
@@ -879,12 +817,6 @@ export function initQuizEvents(container) {
     else if (action === 'speak-q') { speakQuestion(); }
     else if (action === 'share-q') { window.shareQ(); }
     else if (action === 'dismiss') { el.parentElement.style.display = 'none'; }
-
-    // === On-call mode ===
-    else if (action === 'exit-oncall') { exitOnCallMode(); }
-    else if (action === 'flip-card') { flipCard(); }
-    else if (action === 'explain-oncall') { runExplainOnCall(parseInt(el.dataset.idx, 10)); }
-    else if (action === 'oncall-pick') { onCallPick(el.dataset.correct === 'true'); }
 
     // === AI explain ===
     else if (action === 'flag-explain') { toggleFlagExplain(parseInt(el.dataset.idx, 10)); }

@@ -1,13 +1,13 @@
-/* ============================================================================
- * Quiz tab — Editorial Clinical rebuild (v1.15.0, 2026-04-28)
+﻿/* ============================================================================
+ * Quiz tab â€” Editorial Clinical rebuild (v1.15.0, 2026-04-28)
  *
  * Component-specific styles for the rebuilt quiz screen. Loaded AFTER
  * shared/tokens.css and shared/layout-primitives.css so that all values
  * resolve through `var(--*)` tokens and never via hardcoded literals.
  *
  * Hard rules enforced here (do not relax):
- *   - Zero hardcoded hex codes — every color is `var(--color-*)`.
- *   - Zero hardcoded px — every dimension is `var(--space-*)` / `var(--radius-*)`
+ *   - Zero hardcoded hex codes â€” every color is `var(--color-*)`.
+ *   - Zero hardcoded px â€” every dimension is `var(--space-*)` / `var(--radius-*)`
  *     or a single rem unit for stroke widths and chip diameters that scale
  *     with the type system.
  *   - Logical properties only: `inset-inline-*`, `padding-block-*`,
@@ -18,7 +18,7 @@
  * Rendering contract (mirrored in src/ui/quiz-view.js):
  *   .quiz-stage           outer reading column, max-inline-size capped
  *   .quiz-meta            metadata row (year pill, topic pill, position)
- *   .quiz-question        the stem — display serif, generous leading
+ *   .quiz-question        the stem â€” display serif, generous leading
  *   .quiz-choices         <ol> radiogroup wrapper
  *   .quiz-choice          each <button role="radio">
  *   .quiz-choice__letter  A/B/C/D circular chip on the leading edge
@@ -27,7 +27,7 @@
  *   .quiz-actions         primary/secondary action footer
  * ========================================================================= */
 
-/* ── Stage: the reading column ───────────────────────────────────────────── */
+/* â”€â”€ Stage: the reading column â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .quiz-stage {
   max-inline-size: min(640px, 100%);
   margin-inline: auto;
@@ -37,7 +37,7 @@
   margin-block-start: var(--space-6);
 }
 
-/* ── Metadata row ─────────────────────────────────────────────────────────── */
+/* â”€â”€ Metadata row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .quiz-meta {
   display: flex;
   flex-wrap: wrap;
@@ -56,11 +56,11 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   letter-spacing: 0.04em;
-  /* v1.21.21 a11y fix: --color-fg-subtle (3.27:1) → --color-fg-muted (6.49:1 AAA), same pattern as quiz-controls__label. */
+  /* v1.21.21 a11y fix: --color-fg-subtle (3.27:1) â†’ --color-fg-muted (6.49:1 AAA), same pattern as quiz-controls__label. */
   color: var(--color-fg-muted);
 }
 
-/* ── Filter bar (controls strip above the question) ───────────────────────── */
+/* â”€â”€ Filter bar (controls strip above the question) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .quiz-controls {
   display: flex;
   flex-direction: column;
@@ -80,7 +80,7 @@
   font-size: var(--text-xs);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  /* v1.21.20 a11y fix: --color-fg-subtle (#8d8b80) on --color-bg (#fafaf7) is 3.27:1 — fails WCAG AA. Bump to --color-fg-muted (#5b5a52) for the label which is 6.49:1 (AAA). Subtle is reserved for decorative text only. */
+  /* v1.21.20 a11y fix: --color-fg-subtle (#8d8b80) on --color-bg (#fafaf7) is 3.27:1 â€” fails WCAG AA. Bump to --color-fg-muted (#5b5a52) for the label which is 6.49:1 (AAA). Subtle is reserved for decorative text only. */
   color: var(--color-fg-muted);
   margin-inline-end: var(--space-2);
 }
@@ -105,7 +105,7 @@
   outline-offset: 2px;
 }
 
-/* Pill state — extends layout-primitives `.pill` with a selectable variant. */
+/* Pill state â€” extends layout-primitives `.pill` with a selectable variant. */
 .pill[data-state="on"] {
   color: var(--color-accent);
   background: var(--color-accent-soft);
@@ -118,7 +118,125 @@
 }
 .pill[data-action]:hover { border-color: var(--color-border-strong); }
 
-/* ── Question text ────────────────────────────────────────────────────────── */
+/* Compact Quiz filter summary + drawer */
+.quiz-filter-summary,
+.quiz-filter-drawer {
+  margin-block-end: var(--space-4);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: 0 1px 3px rgba(15,23,42,.06);
+}
+.quiz-filter-summary__top,
+.quiz-filter-summary__bottom,
+.quiz-filter-topic-row,
+.quiz-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.quiz-filter-summary__top {
+  justify-content: space-between;
+  margin-block-end: var(--space-3);
+}
+.quiz-filter-summary__bottom {
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.quiz-filter-summary__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.quiz-filter-summary__meta {
+  margin-block-start: var(--space-1);
+  color: var(--color-fg-muted);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  unicode-bidi: plaintext;
+}
+.quiz-mode-btn,
+.quiz-filter-toggle,
+.quiz-review-compact,
+.quiz-filter-drawer__done,
+.quiz-mini-exam {
+  min-block-size: 44px;
+}
+.quiz-filter-toggle,
+.quiz-review-compact,
+.quiz-filter-drawer__done {
+  padding-inline: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+}
+.quiz-review-compact {
+  border-color: var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger) 8%, var(--color-surface));
+  color: var(--color-danger);
+}
+.quiz-filter-drawer { background: var(--color-bg); }
+.quiz-filter-drawer__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  margin-block-end: var(--space-3);
+}
+.quiz-filter-group {
+  padding-block-start: var(--space-3);
+  border-block-start: 1px solid var(--color-border);
+}
+.quiz-filter-group:first-of-type {
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+.quiz-filter-group + .quiz-filter-group { margin-block-start: var(--space-3); }
+.quiz-filter-group__label {
+  display: block;
+  margin-block-end: var(--space-2);
+  color: var(--color-fg-muted);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.quiz-filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.quiz-filter-pills .pill {
+  min-block-size: 44px;
+  border-radius: var(--radius-md);
+}
+.quiz-filter-topic-row .quiz-controls__select {
+  flex: 1;
+  min-block-size: 44px;
+}
+.quiz-toggle-row { flex-wrap: wrap; }
+.quiz-toggle-row label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: 44px;
+  padding-inline: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-fg);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+}
+
+/* â”€â”€ Question text â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .quiz-question {
   font-family: var(--font-display);
   font-size: var(--text-xl);
@@ -131,7 +249,7 @@
   margin-block: var(--space-8);
 }
 
-/* ── Choices ──────────────────────────────────────────────────────────────── */
+/* â”€â”€ Choices â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .quiz-choices {
   list-style: none;
   margin: 0;
@@ -231,7 +349,7 @@
   text-align: start;
 }
 
-/* ── Feedback panel (post-submit) ─────────────────────────────────────────── */
+/* â”€â”€ Feedback panel (post-submit) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .quiz-feedback {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -282,7 +400,7 @@
   .quiz-feedback { animation: none; }
 }
 
-/* ── Action footer ────────────────────────────────────────────────────────── */
+/* â”€â”€ Action footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .quiz-actions {
   display: flex;
   flex-wrap: wrap;
@@ -307,7 +425,7 @@
   }
 }
 
-/* ── Empty / loading states ──────────────────────────────────────────────── */
+/* â”€â”€ Empty / loading states â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .quiz-empty {
   padding: var(--space-12) var(--space-6);
   text-align: center;
@@ -323,7 +441,7 @@
   margin-block-end: var(--space-2);
 }
 
-/* ── Question header (meta tags + tool buttons) ─────────────────────────── */
+/* â”€â”€ Question header (meta tags + tool buttons) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .quiz-header {
   display: flex;
   align-items: flex-start;
@@ -340,7 +458,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  flex: 0 0 auto;          /* never shrink — keeps icons off the title/pills */
+  flex: 0 0 auto;          /* never shrink â€” keeps icons off the title/pills */
   margin-inline-start: auto;
 }
 /* Narrow phones: give the tools their own row so they can't ride onto the title. */
@@ -355,9 +473,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  inline-size: 2.5rem;
-  block-size: 2.5rem;
-  min-inline-size: 2.5rem;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  min-inline-size: 2.75rem;
   font-size: var(--text-sm);
   color: var(--color-fg-muted);
   background: transparent;
@@ -377,14 +495,14 @@
   background: var(--color-accent-soft);
 }
 
-/* ── Button modifiers (.btn--primary / --secondary / --ghost) ───────────────
+/* â”€â”€ Button modifiers (.btn--primary / --secondary / --ghost) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    v1.21.28 fix: the v1.15.0 quiz rebuild switched all action buttons to BEM
    modifier classes (btn--primary / btn--secondary / btn--ghost) but the
-   modifier styles were never added to any stylesheet — only the base .btn
+   modifier styles were never added to any stylesheet â€” only the base .btn
    (from components.css) existed. Result: 26 buttons across the Quiz tab
-   (Check, Next, Previous, Mock exam, Sudden death, On-call, Pomodoro, the
-   filter mode toggles, Cover-options/Timed checkboxes, etc.) rendered with
-   NO background, NO border — just bold text. The primary "בדוק" (Check)
+   (Check, Next, Previous, Mock exam, filter mode toggles,
+   Cover-options/Timed checkboxes, etc.) rendered with
+   NO background, NO border â€” just bold text. The primary "×‘×“×•×§" (Check)
    button looked like inert plain text, which read as "the button doesn't
    work." These rules give each modifier a real, tappable appearance.
    quiz-view.css loads AFTER components.css so these win the cascade. */
@@ -413,7 +531,7 @@
   background: transparent;
   color: var(--color-fg-muted);
   border: 1px solid var(--color-border);
-  min-block-size: 40px;
+  min-block-size: 44px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -427,7 +545,7 @@
 .btn--secondary:focus-visible,
 .btn--ghost:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 
-/* ── Pomodoro / Exam-mode banners (top of stage) ────────────────────────── */
+/* Exam-mode banner (top of stage) */
 .quiz-banner {
   display: flex;
   align-items: center;
@@ -441,11 +559,6 @@
   letter-spacing: 0.04em;
   margin-block-end: var(--space-4);
 }
-.quiz-banner--pomo {
-  background: var(--color-accent-soft);
-  color: var(--color-accent);
-  border: 1px solid transparent;
-}
 .quiz-banner--exam {
   background: var(--color-fg);
   color: var(--color-bg);
@@ -458,7 +571,7 @@
   font-weight: var(--weight-bold);
 }
 
-/* ── Timed bar (countdown above the question) ───────────────────────────── */
+/* â”€â”€ Timed bar (countdown above the question) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .quiz-timed {
   display: flex;
   align-items: center;
@@ -486,7 +599,7 @@
   transition: inline-size 0.9s linear;
 }
 
-/* ── Progress sliver above the question ─────────────────────────────────── */
+/* â”€â”€ Progress sliver above the question â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .quiz-progress {
   block-size: 0.125rem;
   background: var(--color-surface-2);
@@ -501,7 +614,7 @@
   transition: inline-size var(--motion-base) var(--easing-out);
 }
 
-/* ── Personal note callout under the question ──────────────────────────── */
+/* â”€â”€ Personal note callout under the question â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .quiz-note {
   border-inline-start: 2px solid var(--color-warn);
   padding-block: var(--space-3);
@@ -517,7 +630,7 @@
   text-align: start;
 }
 
-/* ── Question image ─────────────────────────────────────────────────────── */
+/* â”€â”€ Question image â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .quiz-image {
   display: block;
   inline-size: 100%;
@@ -531,7 +644,7 @@
   cursor: zoom-in;
 }
 
-/* ── Wrong-reason chips ─────────────────────────────────────────────────── */
+/* â”€â”€ Wrong-reason chips â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .quiz-wrong-reason {
   margin-block-start: var(--space-4);
 }
@@ -549,7 +662,7 @@
   gap: var(--space-2);
 }
 
-/* ── Difficulty rating row ──────────────────────────────────────────────── */
+/* â”€â”€ Difficulty rating row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .quiz-difficulty {
   display: flex;
   flex-wrap: wrap;
@@ -565,7 +678,7 @@
   color: var(--color-fg-subtle);
 }
 
-/* ── Auxiliary post-answer panels (autopsy, teach-back, AI explain) ─────── */
+/* â”€â”€ Auxiliary post-answer panels (autopsy, teach-back, AI explain) â”€â”€â”€â”€â”€â”€â”€ */
 .quiz-aux {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -665,13 +778,13 @@
   outline-offset: 2px;
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
- * v1.20.0 — Theme bridge for FM
- * ──────────────────────────────────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+ * v1.20.0 â€” Theme bridge for FM
+ * â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
  * The shared/tokens.css palette flips on `[data-theme="dark"]`, but FM's
  * dark/study toggles set `body.dark`/`body.study` classes (legacy from
  * pre-tokens days). Bug: in dark mode the new quiz UI rendered at
- * --color-fg=#1a1916 (light-theme almost-black) on the dark body bg →
+ * --color-fg=#1a1916 (light-theme almost-black) on the dark body bg â†’
  * unreadable question stem.
  *
  * This block bridges the two systems by overriding the CSS custom
@@ -679,9 +792,9 @@
  * the byte-identical shared/tokens.css. Pnimit + Geri don't use the
  * tokens system in their quiz views (yet), so they don't need this.
  *
- * Study mode is FM-only — Pnimit/Geri don't have it. Sepia palette
+ * Study mode is FM-only â€” Pnimit/Geri don't have it. Sepia palette
  * mirrors body.study values from src/styles/theme.css.
- * ────────────────────────────────────────────────────────────────────── */
+ * â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 body.dark,
 [data-theme="dark"] body,
 body[data-theme="dark"] {
@@ -712,9 +825,9 @@ body.study {
   --color-accent-soft:  #2a1e0d;
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
- * Question image — wrap, remove button, dependency-warning, upload affordance
- * ────────────────────────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+ * Question image â€” wrap, remove button, dependency-warning, upload affordance
+ * â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .quiz-image-wrap {
   position: relative;
   text-align: center;

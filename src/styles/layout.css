@@ -10,7 +10,7 @@
 /* v1.25.4: icons are flex items in .dm-row (was position:absolute right:Npx, which
    overlapped the RTL title/date). No absolute positioning anymore. */
 .dm-row { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; flex-wrap: wrap; justify-content: flex-end; max-width: none }
-.dm-btn { position: static; transform: none; font-size: 14px; padding: 0; opacity: .9; color: #fff; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.08); border-radius: 50%; width: 34px; height: 34px; min-width: 34px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; flex: 0 0 auto; box-sizing: border-box }
+.dm-btn { position: static; transform: none; font-size: 14px; padding: 0; opacity: .9; color: #fff; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.08); border-radius: 50%; width: 44px; height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; flex: 0 0 auto; box-sizing: border-box }
 .dm-btn:hover { opacity: 1; background: rgba(255,255,255,0.18) }
 .dm-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px }
 
@@ -49,7 +49,7 @@ html[data-skin="mishpacha"] body.dark .tabs button.on { color: var(--app-primary
   .hdr { padding-left: 10px; padding-right: 10px }
   .hdr-bar { gap: 8px }
   .dm-row { gap: 4px }
-  .dm-btn { width: 32px; height: 32px; min-width: 32px; font-size: 13px }
+  .dm-btn { width: 44px; height: 44px; min-width: 44px; font-size: 14px }
   .tabs button { min-height: 58px; padding-inline: 2px; font-size: 10px }
   .ct { padding-left: 10px; padding-right: 10px }
 }

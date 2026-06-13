@@ -8,20 +8,18 @@ import '../core/data-loader.js'; // side-effect: populates G.QZ, G.TABS, etc.
 import '../clock.js'; // side-effect: header clock (#hdr-sub)
 import { getDueQuestions, getWeakTopics, getStudyStreak, getTopicStats, buildRescuePool,
          srScore, trackChapterRead, getChaptersDueForReading, isExamTrap } from '../sr/spaced-repetition.js';
-import { buildPool, setFilt, setTopicFilt, startOnCallMode, exitOnCallMode, flipCard,
-         onCallPick, renderOnCall, runExplainOnCall, pick, check, next, _storeDiff,
+import { buildPool, setFilt, setTopicFilt, pick, check, next, _storeDiff,
          startTopicMiniExam, endMiniExam, startExam, startMockExam, endExam, endMockExam,
          checkMockIntercept, showMockExamResult, buildMockExamPool,
          replayMockWrong, replayLastMockWrong } from '../quiz/engine.js';
-import { requestWakeLock, startPomodoro, stopPomodoro, startSuddenDeath, endSuddenDeath,
-         speakQuestion, startNextBestStep, startVoiceParser } from '../quiz/modes.js';
+import { requestWakeLock, speakQuestion, startNextBestStep, startVoiceParser } from '../quiz/modes.js';
 import { callAI } from '../ai/client.js';
 import { explainWithAI, aiAutopsy, gradeTeachBack, renderExplainBox, toggleFlagExplain,
          startVoiceTeachBack } from '../ai/explain.js';
 import { submitLeaderboardScore, fetchLeaderboard, showLeaderboard, cloudBackup, cloudRestore, getDiagnostics, submitReport,
          saveAnswerReport, _sbDeviceId } from '../features/cloud.js';
 import { renderQuiz, toggleBk, uploadQImage, removeQImage, viewImg, pauseTimed,
-         startTimedQ, stopTimedMode, sdCheck, sdNext, initQuizEvents } from './quiz-view.js';
+         startTimedQ, stopTimedMode, initQuizEvents } from './quiz-view.js';
 // v1.21.13: bind startTimedQ on G so engine.js can call G.startTimedQ() without
 // needing a direct import (which would create a circular dep:
 // engine.js → quiz-view.js → track-view.js → engine.js). 7h chaos run on
@@ -77,7 +75,7 @@ const focused=document.activeElement?.id;
 const sv={srchi:document.getElementById('srchi')?.value,nfilt:document.getElementById('nfilt')?.value,dsrch:document.getElementById('dsrch')?.value};
 if(G.tab!==G.lastTab){el.classList.remove('fade-in');void el.offsetWidth;el.classList.add('fade-in');window.scrollTo({top:0});G.lastTab=G.tab;}
 switch(G.tab){
-case'quiz':el.innerHTML=G.onCallMode?renderOnCall():renderQuiz();break;
+case'quiz':el.innerHTML=renderQuiz();break;
 // v1.19.0: Learn tab merged into Library. learnSub='flash' → Library Cards;
 // 'study' → Library Notes; 'drugs' → Library Drugs. Mirrors Pnimit v10.0 (PR #70)
 // but FM keeps the Drugs sub-tab — Family Medicine drug data is FM-specific
@@ -246,7 +244,7 @@ const sec=(title,icon,color,items)=>`<div style="margin-bottom:14px">
 ov.innerHTML=`<div style="max-width:420px;margin:0 auto;background:#fff;border-radius:16px;padding:20px;color:#1e293b;font-size:11px;line-height:1.7">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
 <div style="font-size:16px;font-weight:800">🏥 Mishpacha Mega</div>
-<button data-action="close-help" style="background:none;border:none;font-size:20px;cursor:pointer;color:#94a3b8" aria-label="Close help">✕</button>
+<button data-action="close-help" style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;background:none;border:none;font-size:20px;cursor:pointer;color:#94a3b8" aria-label="Close help">✕</button>
 </div>
 <div style="font-size:10px;color:#64748b;margin-bottom:16px;unicode-bidi:plaintext">Israeli Family Medicine Board Exam Prep (<bdi>שלב א׳ רפואת המשפחה</bdi>) · ${SYLLABUS_VERSION} · Goroll 8e + Nelson 22e + AFP + <bdi>הר"י</bdi> · Works Offline</div>
 <div style="padding:10px;background:#ecfdf5;border:1px solid #bbf7d0;border-radius:10px;margin-bottom:14px">
@@ -289,7 +287,7 @@ ${sec('Progress Tracking','📊','#f59e0b',
 </div>
 <div style="text-align:center;font-size:9px;color:#94a3b8;line-height:1.5">
 صدقة جارية الى من نحب<br>Ceaseless Charity — To the People That We Love<br><br>
-<button data-action="share-app" style="background:#059669;color:#fff;border:none;border-radius:8px;padding:6px 16px;font-size:10px;font-weight:600;cursor:pointer" aria-label="Share app with friends">📤 Share with Friends</button>
+<button data-action="share-app" style="min-height:44px;background:#059669;color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:10px;font-weight:600;cursor:pointer" aria-label="Share app with friends">📤 Share with Friends</button>
 </div>
 </div>`;
 document.body.appendChild(ov);

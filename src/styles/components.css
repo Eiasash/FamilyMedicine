@@ -7,7 +7,7 @@
 .pill:not(.on) { background: #fff; color: #64748b; border: 1px solid #e2e8f0 }
 
 /* === Buttons === */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; max-width: 100%; padding: 8px 16px; border: 1px solid transparent; border-radius: 8px; box-sizing: border-box; font-family: inherit; font-size: 12px; font-weight: 700; line-height: 1.2; text-align: center; text-decoration: none; white-space: normal; cursor: pointer; transition: background-color .15s, border-color .15s, color .15s, transform .15s, box-shadow .15s }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; max-width: 100%; padding: 8px 16px; border: 1px solid transparent; border-radius: 8px; box-sizing: border-box; font-family: inherit; font-size: 12px; font-weight: 700; line-height: 1.2; text-align: center; text-decoration: none; white-space: normal; cursor: pointer; transition: background-color .15s, border-color .15s, color .15s, transform .15s, box-shadow .15s }
 .btn:disabled { opacity: .35; cursor: not-allowed }
 .btn:active { transform: scale(.96) }
 .btn-p { background: var(--app-primary); color: var(--app-on-primary); border-color: var(--app-primary) }
@@ -15,18 +15,18 @@
 .btn-g { background: rgb(var(--em)); color: #fff; border-color: rgb(var(--em)) }
 .btn-o { background: #f1f5f9; color: #475569; border-color: #e2e8f0 }
 .btn:focus-visible { outline: 2px solid rgb(var(--sky)); outline-offset: 2px }
-.btn--compact { min-height: 38px; padding: 7px 12px; font-size: 11px }
+.btn--compact { min-height: 44px; padding: 8px 12px; font-size: 11px }
 .btn--linkish { background: #fff; color: #0f766e; border-color: #99f6e4 }
 
 /* === Segmented Sub Tabs === */
 .subtabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(86px, 1fr)); gap: 6px; margin-bottom: 12px; padding: 6px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 8px }
-.subtab-btn { min-height: 40px; padding: 7px 8px; border: 1px solid transparent; border-radius: 7px; background: transparent; color: #475569; font-family: inherit; font-size: 11px; font-weight: 700; line-height: 1.2; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 5px; text-align: center }
+.subtab-btn { min-height: 44px; padding: 7px 8px; border: 1px solid transparent; border-radius: 7px; background: transparent; color: #475569; font-family: inherit; font-size: 11px; font-weight: 700; line-height: 1.2; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 5px; text-align: center }
 .subtab-btn.on { background: #fff; color: #0f172a; border-color: #e2e8f0; box-shadow: 0 1px 2px rgba(15,23,42,.08) }
 .subtab-btn:focus-visible { outline: 2px solid rgb(var(--sky)); outline-offset: 2px }
 
 /* === Utility Actions === */
 .utility-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); gap: 8px; margin-top: 12px }
-.utility-actions .btn { width: 100%; min-height: 42px }
+.utility-actions .btn { width: 100%; min-height: 44px }
 
 /* === Badges === */
 .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700 }
@@ -86,8 +86,8 @@
 .img-overlay img { max-width: 95vw; max-height: 90vh; border-radius: 8px; box-shadow: 0 4px 24px rgba(0,0,0,.5); object-fit: contain }
 
 @media (max-width: 420px) {
-  .btn { min-height: 42px; padding: 9px 12px }
-  .btn--compact { min-height: 38px; padding: 8px 10px }
+  .btn { min-height: 44px; padding: 9px 12px }
+  .btn--compact { min-height: 44px; padding: 8px 10px }
   .subtabs { grid-template-columns: repeat(2, minmax(0, 1fr)) }
   .utility-actions { grid-template-columns: 1fr }
 }
