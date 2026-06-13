@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.26.15': [
+    'ui(quiz): standardize the FamilyMedicine Quiz surface around one compact control row plus an advanced Filters drawer. Visible controls are now Quiz, Mock, Full 150q, filter summary, Filters, and conditional Review wrong; year/topic/source/hard/slow/weak/due/traps/NBS/timed/cover-options controls move into the drawer. Removed dormant Sudden Death, On-Call, and Pomodoro state, handlers, CSS, and obsolete tests from active code paths. No question content, answer keys, explanations, source mappings, or audit queues changed. BUILD_HASH 1121q-v1.26.15; package/app/SW markers bumped 1.26.14 to 1.26.15.'
+  ],
   '1.26.14': [
     'ui(ia): align visible navigation with the shared board-app shell. Bottom tabs are Quiz, Study, Track, Settings; Study now exposes Today, Read, Notes, and Tools while legacy search, chat, meds, cards, and more links redirect into Study or Settings. No question content, answer keys, explanations, source mappings, or audit queues changed. BUILD_HASH 1121q-v1.26.14; package/app/SW markers bumped 1.26.13 to 1.26.14.'
   ],

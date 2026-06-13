@@ -15,12 +15,12 @@ describe('Quiz button polish guards', () => {
   it('renders interactive filter pills as real buttons, not clickable spans', () => {
     expect(quizViewJs).not.toMatch(/<span class="pill"[^>]*data-action=/);
     expect(quizViewJs).toMatch(/<button type="button" class="pill"/);
-    expect(quizViewJs).toMatch(/pillButton\(`data-action="filter"/);
+    expect(quizViewJs).toMatch(/const pill=\(attrs,label,on=false\)/);
     expect(quizViewJs).toMatch(/aria-pressed=/);
   });
 
   it('defines the due-review filter exactly once so the row cannot duplicate it', () => {
-    const dueDefinitions = quizViewJs.match(/\['due',/g) || [];
+    const dueDefinitions = quizViewJs.match(/data-f="due"/g) || [];
     expect(dueDefinitions.length).toBe(1);
   });
 

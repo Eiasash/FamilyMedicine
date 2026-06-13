@@ -40,7 +40,7 @@
 .sp-action--ai { color: #7c3aed; background: #f5f3ff; border-color: #ddd6fe }
 .sp-action:focus-visible { outline: 2px solid rgb(var(--sky)); outline-offset: 2px }
 
-.syl-toggle-btn { min-height: 40px; display: flex; align-items: center; justify-content: center; padding: 8px; border-radius: 8px; color: rgb(var(--sky)); font-size: 10px; font-weight: 700; cursor: pointer }
+.syl-toggle-btn { min-height: 44px; display: flex; align-items: center; justify-content: center; padding: 8px; border-radius: 8px; color: rgb(var(--sky)); font-size: 10px; font-weight: 700; cursor: pointer }
 .syl-toggle-btn:hover { background: #f0fdfa }
 .syl-toggle-btn:focus-visible { outline: 2px solid rgb(var(--sky)); outline-offset: 2px }
 

@@ -22,16 +22,7 @@
 .speech-btn.speaking { animation: pulse-speak 1s infinite }
 @keyframes pulse-speak { 0%,100% { transform: scale(1) } 50% { transform: scale(1.15) } }
 
-/* === Sudden Death === */
-.sudden-death-banner { background: linear-gradient(135deg, #dc2626, #991b1b); color: #fff; padding: 10px 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; animation: pulse-red 2s infinite }
 @keyframes pulse-red { 0%,100% { box-shadow: 0 0 0 0 rgba(220,38,38,.4) } 50% { box-shadow: 0 0 0 8px rgba(220,38,38,0) } }
-
-/* === Pomodoro === */
-.pomo-bar { position: fixed; top: 0; left: 0; right: 0; height: 4px; background: #e2e8f0; z-index: 60 }
-.pomo-bar .pomo-fill { height: 100%; background: rgb(var(--em)); transition: width 1s linear }
-.pomo-overlay { position: fixed; inset: 0; background: rgba(15,23,42,.92); z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; backdrop-filter: blur(6px) }
-.pomo-overlay h2 { font-size: 24px; margin-bottom: 8px }
-.pomo-overlay .pomo-break-timer { font-size: 64px; font-weight: 700; font-variant-numeric: tabular-nums }
 
 /* === Voice Parser === */
 .voice-btn { display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 600; background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; cursor: pointer }
