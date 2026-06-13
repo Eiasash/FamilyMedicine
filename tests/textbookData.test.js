@@ -36,47 +36,13 @@ function loadData(file) {
   return JSON.parse(readFileSync(resolve(DATA, file), 'utf-8'));
 }
 
-describe('harrison_chapters.json — schema', () => {
-  let harrison;
-  beforeAll(() => {
-    harrison = load('harrison_chapters.json');
+describe('copyright guard — verbatim textbook JSON not shipped', () => {
+  const present = (f) => { try { readFileSync(resolve(ROOT, f)); return true; } catch { return false; } };
+  it('harrison_chapters.json is NOT in the repo (server-side grounding only)', () => {
+    expect(present('harrison_chapters.json')).toBe(false);
   });
-
-  it('parses as a non-array object', () => {
-    expect(typeof harrison).toBe('object');
-    expect(Array.isArray(harrison)).toBe(false);
-  });
-
-  it('has at least 30 chapters (Mishpacha syllabus subset)', () => {
-    expect(Object.keys(harrison).length).toBeGreaterThanOrEqual(30);
-  });
-
-  it('every chapter has title (non-empty), sections (array), wordCount (number)', () => {
-    const bad = [];
-    for (const [k, ch] of Object.entries(harrison)) {
-      if (typeof ch.title !== 'string' || ch.title.trim().length === 0) bad.push({ k, why: 'title' });
-      if (!Array.isArray(ch.sections)) bad.push({ k, why: 'sections' });
-      if (typeof ch.wordCount !== 'number') bad.push({ k, why: 'wordCount' });
-    }
-    expect(bad).toEqual([]);
-  });
-
-  it('every section has title (string) and content (array of strings)', () => {
-    const bad = [];
-    for (const [k, ch] of Object.entries(harrison)) {
-      ch.sections.forEach((s, i) => {
-        if (typeof s.title !== 'string') bad.push({ k, i });
-        if (!Array.isArray(s.content)) bad.push({ k, i, why: 'content' });
-      });
-    }
-    expect(bad.slice(0, 3)).toEqual([]);
-  });
-
-  it('no chapter has zero sections or zero wordCount', () => {
-    const broken = Object.entries(harrison)
-      .filter(([, ch]) => ch.sections.length === 0 || ch.wordCount === 0)
-      .map(([k]) => k);
-    expect(broken).toEqual([]);
+  it('lerner_chapters.json is NOT in the repo (server-side grounding only)', () => {
+    expect(present('lerner_chapters.json')).toBe(false);
   });
 });
 
@@ -118,10 +84,10 @@ describe('goroll_chapters.json — TOC schema', () => {
   });
 });
 
-describe('lerner_chapters.json — AFP article index', () => {
+describe('lerner_index.json — nav metadata (body-stripped for copyright)', () => {
   let lerner;
   beforeAll(() => {
-    lerner = load('lerner_chapters.json');
+    lerner = load('lerner_index.json');
   });
 
   it('has the three top-level keys (meta, topics, chapters)', () => {
@@ -130,9 +96,15 @@ describe('lerner_chapters.json — AFP article index', () => {
     expect(lerner).toHaveProperty('chapters');
   });
 
-  it('chapters is a non-empty object', () => {
-    expect(typeof lerner.chapters).toBe('object');
-    expect(Object.keys(lerner.chapters).length).toBeGreaterThan(0);
+  it('chapters is a non-empty array', () => {
+    expect(Array.isArray(lerner.chapters)).toBe(true);
+    expect(lerner.chapters.length).toBeGreaterThan(0);
+  });
+
+  it('carries title nav fields but NO verbatim body (copyright)', () => {
+    const withBody = lerner.chapters.filter((c) => 'body' in c && c.body);
+    expect(withBody.length, 'no chapter may ship a body field').toBe(0);
+    lerner.chapters.slice(0, 5).forEach((c) => expect(typeof c.title).toBe('string'));
   });
 });
 
