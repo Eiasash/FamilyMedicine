@@ -35,7 +35,7 @@ import { renderLibrary, openHarrisonChapter,
 import { renderTrack, renderStudyPlan, renderExamTrendCard, renderPriorityMatrix,
          renderDailyPlan, renderSessionCard, renderStudyDashboard, setExamDate, exportCheatSheet,
          saveSessionSummary, initTrackEvents } from './track-view.js';
-import { renderSearch, showAnswerHardFail, renderNotes,
+import { renderSearch, renderChat, showAnswerHardFail, renderNotes,
          initMoreEvents } from './more-view.js';
 import { getCurrentUser } from '../features/auth.js';
 import { initPostLoginRestore } from '../features/post-login-restore.js';
@@ -43,11 +43,27 @@ import { openSettings, bindSettingsEvents, refreshSettings } from './settings-ov
 
 export function renderTabs(){
 // safe-innerhtml: G.TABS is a hardcoded array of tab definitions (id/label/icon); no user input
-document.getElementById('tb').innerHTML=G.TABS.map(t=>
-`<button class="${t.id===G.tab?'on':''}" data-action="go" data-tab="${t.id}" role="tab" aria-selected="${t.id===G.tab?'true':'false'}" aria-label="${t.l}"><span class="ic">${t.ic}</span>${t.l}</button>`
-).join('');
+document.getElementById('tb').innerHTML=G.TABS.map(t=>{
+const activeTab=G.tab==='lib'?'study':G.tab;
+return `<button class="${t.id===activeTab?'on':''}" data-action="go" data-tab="${t.id}" role="tab" aria-selected="${t.id===activeTab?'true':'false'}" aria-label="${t.l}"><span class="ic">${t.ic}</span>${t.l}</button>`;
+}).join('');
 }
 export function go(t){G.tab=t;renderTabs();render()}
+
+function renderStudyTools(){
+  const tool=['search','cards','meds','chat'].includes(G.S.studyTool)?G.S.studyTool:'search';
+  const toolBar='<div class="subtabs" role="tablist" aria-label="Study tools">'+
+  [{id:'search',ic:'F',l:'Search'},{id:'cards',ic:'C',l:'Cards'},{id:'meds',ic:'M',l:'Meds'},{id:'chat',ic:'A',l:'Chat'}].map(s=>
+    '<button data-action="study-tool" data-tool="'+s.id+'" class="subtab-btn '+(tool===s.id?'on':'')+'" role="tab" aria-selected="'+(tool===s.id?'true':'false')+'"><span>'+s.ic+'</span><span>'+s.l+'</span></button>'
+  ).join('')+'</div>';
+  const body=tool==='cards'?renderFlash():tool==='meds'?renderDrugs():tool==='chat'?renderChat():renderSearch();
+  return toolBar+body;
+}
+
+function renderSettingsTab(){
+  setTimeout(openSettings,0);
+  return '<div class="sec-t">Settings</div><div class="sec-s">Account, sync, data, reminders, API, feedback, app links, and update tools live here.</div><div class="card" style="padding:16px;text-align:center"><button class="btn btn-p" data-action="open-settings" style="min-height:44px">Open Settings</button></div>';
+}
 
 export function render(){
 // v1.21.45 dedup: keep soft-retired duplicate questions (dup:1) out of any
@@ -77,14 +93,13 @@ case'study':G.tab='lib';G.S.libSub=G.openNote!==null?'notes':'today';el.innerHTM
 case'lib':
   {const _libSub=G.S.libSub||'today';
   const _libBar='<div class="subtabs" role="tablist" aria-label="Study sections">'+
-  [{id:'today',ic:'📌',l:'Today'},{id:'read',ic:'📖',l:'מקורות'},{id:'notes',ic:'📝',l:'סיכומים'},{id:'cards',ic:'🃏',l:'Cards'},{id:'meds',ic:'💊',l:'Meds'}].map(s=>
+  [{id:'today',ic:'T',l:'Today'},{id:'read',ic:'R',l:'Read'},{id:'notes',ic:'N',l:'Notes'},{id:'tools',ic:'X',l:'Tools'}].map(s=>
     '<button data-action="lib-sub" data-sub="'+s.id+'" class="subtab-btn '+(_libSub===s.id?'on':'')+'" role="tab" aria-selected="'+(_libSub===s.id?'true':'false')+'"><span>'+s.ic+'</span><span>'+s.l+'</span></button>'
   ).join('')+'</div>';
   let _libBody='';
   if(_libSub==='today')_libBody=renderStudyDashboard();
   else if(_libSub==='notes')_libBody=renderStudy();
-  else if(_libSub==='cards')_libBody=renderFlash();
-  else if(_libSub==='meds')_libBody=renderDrugs();
+  else if(_libSub==='tools'||_libSub==='cards'||_libSub==='meds')_libBody=renderStudyTools();
   else _libBody=renderLibrary();
   el.innerHTML=_libBar+_libBody;}break; // safe-innerhtml: _libBar is static HTML; _libBody from internal render*() functions (no user input)
 case'articles':G.libSec='afphari';G.tab='lib';G.S.libSub='read';el.innerHTML='';render();break;
@@ -93,25 +108,14 @@ case'track':
     saveSessionSummary();G._sessionSaved=true;
   }
   el.innerHTML=renderTrack();break;
+case'settings':
+  el.innerHTML=renderSettingsTab();break;
 case'more':
-  // v1.19.0: Settings sub-tab removed — moved to gear-icon overlay (mirrors Pnimit v10.3.0).
-  // v1.10.0: shrunk from 9 sub-tabs to 6 — Study/Cards/Drugs moved to the
-  // restored Learn tab. v1.19.0: Learn → Library, so legacy learnSub maps below.
-  // Repair stale G.moreSub from a pre-1.19.0 install whose last view was
-  // study/flash/drugs (it'd render the Calc 'undefined' state otherwise).
-  if(['study','flash','drugs','calc','chat','feedback'].includes(G.moreSub)){G.tab='lib';if(G.moreSub==='study')G.S.libSub='notes';G.moreSub='search';el.innerHTML='';render();break;}
-  // 'settings' migrated to gear-icon overlay v1.19.0 — auto-redirect old state
-  if(G.moreSub==='settings')G.moreSub='search';
-  if(!['search','notes'].includes(G.moreSub))G.moreSub='search';
-  {const _moreBar='<div class="subtabs" role="tablist" aria-label="More sections">'+
-  [{id:'search',ic:'🔍',l:'חיפוש'},{id:'notes',ic:'📝',l:'הערות'}].map(s=>
-    '<button data-action="more-sub" data-sub="'+s.id+'" class="subtab-btn '+(G.moreSub===s.id?'on':'')+'" role="tab" aria-selected="'+(G.moreSub===s.id?'true':'false')+'"><span>'+s.ic+'</span><span>'+s.l+'</span></button>'
-  ).join('')+'</div>';
-  let _mBody='';
-  if(G.moreSub==='notes')_mBody=renderNotes();
-  else _mBody=renderSearch();
-  el.innerHTML=_moreBar+_mBody;}break; // safe-innerhtml: _moreBar is static HTML; _mBody from internal render*() functions (no user input)
-case'search':G.tab='more';G.moreSub='search';el.innerHTML='';render();break;
+  if(G.moreSub==='feedback'){G.tab='settings';el.innerHTML='';render();break;}
+  if(G.moreSub==='notes'||G.moreSub==='study'){G.tab='lib';G.S.libSub='notes';el.innerHTML='';render();break;}
+  G.tab='lib';G.S.libSub='tools';G.S.studyTool=G.moreSub==='chat'?'chat':G.moreSub==='drugs'?'meds':G.moreSub==='flash'?'cards':'search';el.innerHTML='';render();break;
+case'search':G.tab='lib';G.S.libSub='tools';G.S.studyTool='search';el.innerHTML='';render();break;
+case'chat':G.tab='lib';G.S.libSub='tools';G.S.studyTool='chat';el.innerHTML='';render();break;
 case'book':case'syl':G.tab='lib';el.innerHTML=renderLibrary();break;
 default:G.tab='quiz';el.innerHTML=renderQuiz();break;
 }
