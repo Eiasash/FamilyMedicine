@@ -5,7 +5,7 @@ import { getApiKey } from '../core/utils.js';
 // AI client — extracted from mishpacha-mega.html
 // Depends on: AI_PROXY, AI_SECRET (constants.js), getApiKey (utils.js)
 
-export async function callAI(messages,maxTokens=400,model='sonnet'){
+export async function callAI(messages,maxTokens=400,model='sonnet',ground=null){
   // v1.7.2: per-call AbortController (was singleton G._aiAbortController which
   // cancelled in-flight peers on every new invocation, breaking bulk callers).
   const _ctrl=new AbortController();
@@ -18,7 +18,7 @@ try{
 const pr=await fetch(AI_PROXY,{
 method:'POST',
 headers:{'Content-Type':'application/json','x-api-secret':AI_SECRET},
-body:JSON.stringify({model,max_tokens:maxTokens,messages}),
+body:JSON.stringify(ground?{model,max_tokens:maxTokens,messages,ground}:{model,max_tokens:maxTokens,messages}),
 signal
 });
 if(pr.ok){const d=await pr.json();return d.content?.[0]?.text||'';}

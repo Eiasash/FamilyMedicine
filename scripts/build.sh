@@ -10,10 +10,9 @@ npx vite build
 # 2. Copy static assets that Vite doesn't process
 echo "→ Copying static assets..."
 cp -r data/ dist/data/
-cp harrison_chapters.json dist/
 cp goroll_chapters.json dist/
 cp nelson_chapters.json dist/
-cp lerner_chapters.json dist/
+cp lerner_index.json dist/
 
 # 2a. Merge AI-hard seed Qs into dist/data/questions.json (v1.4.0+)
 # Source-of-truth questions.json stays clean of generated content; seed lives alongside.
@@ -34,9 +33,8 @@ if [ -f data/ai_hard_seed.json ]; then
 fi
 cp -r shared/ dist/shared/
 cp -r exams/ dist/exams/
+find dist/exams -name '*.pdf' -delete   # IMA exam PDFs are copyrighted; ship only question images
 [ -d articles ] && cp -r articles/ dist/articles/ || echo "  (skip: articles/ not present)"
-cp -r harrison/ dist/harrison/
-[ -d goroll ] && cp -r goroll/ dist/goroll/ || echo "  (skip: goroll/ not present)"
 [ -d docs/references/afp_hari ] && cp -r docs/references/afp_hari/ dist/afp_hari/ || echo "  (skip: docs/references/afp_hari/ not present)"
 [ -d questions ] && cp -r questions/ dist/questions/ || echo "  (skip: questions/ not present)"
 [ -d syllabus ] && cp -r syllabus/ dist/syllabus/ || echo "  (skip: syllabus/ not present)"
@@ -53,7 +51,7 @@ sed -i 's|href="[^"]*manifest[^"]*\.json"|href="manifest.json"|' dist/mishpacha-
 # similar per-file errors while returning 0 at the invocation level. Assert
 # every static-asset sub-tree that landed in dist/ matches its source count.
 echo "→ Verifying static-asset parity (src vs dist)..."
-for d in data shared exams harrison articles goroll docs/references/afp_hari questions syllabus; do
+for d in data shared articles docs/references/afp_hari questions syllabus; do
   dst=$(basename "$d")
   if [ -d "$d" ] && [ -d "dist/$dst" ]; then
     src_count=$(find "$d" -type f | wc -l)
@@ -87,7 +85,7 @@ const CRITICAL_DATA=['data/questions.json','data/highyield.json','data/topics.js
 // LAZY_DATA: NOT pre-cached on install (~8 MB total). Cached on first fetch via
 // the stale-while-revalidate handler below. Removes 8 MB of network from the
 // install path so SW activates fast even on slow mobile (LCP fix, issue #25).
-const LAZY_DATA=['data/afp_hari_index.json','data/nelson_notes.json','harrison_chapters.json','goroll_chapters.json','nelson_chapters.json','lerner_chapters.json'];
+const LAZY_DATA=['data/afp_hari_index.json','data/nelson_notes.json','goroll_chapters.json','nelson_chapters.json','lerner_index.json'];
 // DATA_URLS preserved so the fetch handler's stale-while-revalidate match still
 // covers both critical and lazy entries (cache-on-first-fetch for LAZY items).
 const DATA_URLS=[...CRITICAL_DATA,...LAZY_DATA];
@@ -204,5 +202,5 @@ echo "Key files:"
 ls -lh dist/mishpacha-mega.html dist/sw.js dist/manifest.json dist/assets/*.js dist/assets/*.css 2>/dev/null
 echo ""
 echo "Static assets:"
-du -sh dist/data/ dist/harrison_chapters.json dist/shared/ dist/exams/ dist/harrison/ 2>/dev/null; \
+du -sh dist/data/ dist/shared/ dist/exams/ 2>/dev/null; \
   for d in dist/articles/ dist/questions/ dist/syllabus/; do [ -d "$d" ] && du -sh "$d"; done; true

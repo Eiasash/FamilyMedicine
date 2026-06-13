@@ -191,15 +191,7 @@ export async function openSource(src, ch, ref) {
       // to the section is the best we can do — user taps the chapter row.
       // If we have a chapter number, open the PDF directly in a new tab.
       if (ch != null && !isNaN(ch)) {
-        try {
-          const data = G._gorollData;
-          if (Array.isArray(data)) {
-            const match = data.find((c) => Number(c.num) === ch);
-            if (match && typeof window !== 'undefined' && window.open) {
-              window.open(`goroll/Goroll_8e.pdf#page=${match.page}`, '_blank', 'noopener');
-            }
-          }
-        } catch (e) { /* fall through to library tab */ }
+        // Goroll PDF no longer bundled; navigate to the Goroll index tab (G.render below).
       }
       G.render();
       return;

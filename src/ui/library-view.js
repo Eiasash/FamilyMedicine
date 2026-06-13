@@ -237,19 +237,9 @@ export async function aiSummarizeChapter(chNum,chTitle,source){
   const box=document.getElementById('quiz-me-box');
   if(!box)return;
   box.innerHTML='<div style="text-align:center;padding:16px;color:#64748b">⏳ מסכם את הפרק...</div>';
-  let chText='';
-  const harCh=G._harData&&G._harData[chNum];
-  if(harCh&&harCh.sections&&source!=='nelson'){
-    chText=harCh.sections.slice(0,8).map(s=>{
-      const body=Array.isArray(s.content)?s.content.join(' '):(s.content||'');
-      return s.title+(body?': '+body.slice(0,300):'');
-    }).join('\n').slice(0,3500);
-  }
-  const srcLabel=source==='nelson'?'Nelson Textbook of Pediatrics 22e':`Goroll's Primary Care Medicine / Harrison`;
-  const prompt=`You are summarizing ${srcLabel} Ch ${chNum}: ${chTitle} for the Israeli family medicine board exam (שלב א׳ רפואת משפחה).
-
-Chapter content:
-${chText||'Chapter '+chNum+': '+chTitle}
+  const srcLabel=source==='nelson'?'Nelson Textbook of Pediatrics 22e':(source==='lerner'?"Dr. Nataly Lerner's FM board summary":`Goroll's Primary Care Medicine / Harrison`);
+  const _ground=(source==='nelson')?null:{book:(source==='lerner'?'lerner':'harrison'),chapter:Number(chNum)};
+  const prompt=`You are summarizing ${srcLabel} Ch ${chNum}: ${chTitle} for the Israeli family medicine board exam (שלב א׳ רפואת משפחה). The reference text is supplied to you as context where available.
 
 Create a board-focused summary in HEBREW with:
 1. 5-7 key facts/thresholds the examiner will test (specific numbers, criteria)
@@ -258,7 +248,7 @@ Create a board-focused summary in HEBREW with:
 
 Format as clean bullet points. Be concise and high-yield.`;
   try{
-    const txt=await callAI([{role:'user',content:prompt}],800,'sonnet');
+    const txt=await callAI([{role:'user',content:prompt}],800,'sonnet',_ground);
     box.innerHTML=`<div style="margin-top:12px;padding:14px;background:#f0fdf4;border-radius:10px;border-left:4px solid #059669">
 <div style="font-weight:700;font-size:12px;color:#065f46;margin-bottom:8px;unicode-bidi:plaintext" dir="auto">📝 Board Summary — Ch ${sanitize(String(chNum))}: ${sanitize(chTitle)}</div>
 <div style="font-size:11px;line-height:1.8;text-align:start;white-space:pre-wrap;unicode-bidi:plaintext" dir="auto">${sanitize(txt)}</div>
@@ -313,22 +303,8 @@ export async function quizMeOnChapter(chNum,chTitle,source){
   // safe-innerhtml: chNum is always an integer from parseInt() / G.harChOpen — no user input path.
   if(el){el.innerHTML='<div style="text-align:center;padding:20px;color:#64748b">⏳ Generating questions from Ch '+chNum+'...</div>';}
   // Get chapter text from already-loaded data
-  let chapterText='';
-  const harCh=G._harData&&G._harData[chNum];
-  if(harCh&&harCh.sections&&source!=='nelson'){
-    chapterText=harCh.sections.slice(0,6).map(s=>{
-      const body=Array.isArray(s.content)?s.content.join(' '):(s.content||'');
-      return s.title+': '+body;
-    }).join('\n').slice(0,3000);
-  }
-  if(!chapterText){
-    const srcLabel=source==='nelson'?'Nelson Textbook of Pediatrics 22e':'Textbook';
-    chapterText=srcLabel+" Chapter "+chNum+": "+chTitle;
-  }
-  const prompt=`You are an Israeli family medicine board examiner writing MCQ for the שלב א׳ רפואת המשפחה exam (P0062-2025).
-
-Based on this chapter content from Ch ${chNum} (${chTitle}):
-${chapterText}
+  const _ground=(source==='nelson')?null:{book:(source==='lerner'?'lerner':'harrison'),chapter:Number(chNum)};
+  const prompt=`You are an Israeli family medicine board examiner writing MCQ for the שלב א׳ רפואת המשפחה exam (P0062-2025). The reference text for Ch ${chNum} (${chTitle}) is supplied to you as context where available.
 
 Generate 3 original MCQ questions NOT already in the question bank. Each question must:
 1. Test a specific fact, threshold, or mechanism from this chapter
@@ -340,7 +316,7 @@ Return ONLY valid JSON array:
 [{"q":"question text","o":["A. opt","B. opt","C. opt","D. opt","E. opt"],"c":0,"e":"הסבר בעברית"}]
 c = 0-based index of correct answer. No markdown, no preamble.`;
   try{
-    const txt=await callAI([{role:'user',content:prompt}],1200,'sonnet');
+    const txt=await callAI([{role:'user',content:prompt}],1200,'sonnet',_ground);
     const clean=txt.replace(/```json|```/g,'').trim();
     const qs=JSON.parse(clean);
     // Display the generated questions
@@ -402,16 +378,16 @@ if(!G._gorollData){
 }else{
 h+=`<div class="card" style="padding:14px">
 <div style="font-size:13px;font-weight:700;margin-bottom:4px">📘 Goroll — Primary Care Medicine 8e</div>
-<div style="font-size:10px;color:#64748b;margin-bottom:12px">${G._gorollData.length} chapters · PRIMARY textbook for P0062-2025 · tap to open PDF at chapter page</div>`;
+<div style="font-size:10px;color:#64748b;margin-bottom:12px">${G._gorollData.length} chapters · PRIMARY textbook for P0062-2025 · chapter index (full text not bundled)</div>`;
 G._gorollData.forEach(c=>{
 const pageLen=c.end_page?(c.end_page-c.page+1):null;
-h+=`<a href="goroll/Goroll_8e.pdf#page=${c.page}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f1f5f9;text-decoration:none;color:inherit">
+h+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f1f5f9;color:inherit">
 <span style="background:#d97706;color:#fff;font-size:10px;font-weight:700;padding:4px 8px;border-radius:8px;min-width:42px;text-align:center">Ch ${c.num}</span>
 <div style="flex:1;min-width:0">
 <div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.title}</div>
 <div style="font-size:9px;color:#94a3b8;margin-top:2px">p.${c.page}${pageLen?' · ~'+pageLen+' pages':''}</div>
 </div>
-<span style="font-size:18px;color:#94a3b8">›</span></a>`;
+<span style="font-size:18px;color:#94a3b8">›</span></div>`;
 });
 h+=`</div>`;
 }
@@ -491,8 +467,9 @@ h+=`</div>`;
 
 // ===== HARRISON IN-APP READER (family-med relevant chapters only) =====
 else if(G.libSec==='harrison'){
-if(G.harChOpen!==null&&G._harData&&G._harData[String(G.harChOpen)]){
-const ch=G._harData[String(G.harChOpen)];
+const HAR_TITLE={};[...SYL_HAR_ALL,...SYL_HAR_BASE].forEach(c=>{HAR_TITLE[String(c.ch)]=c.t;});
+if(G.harChOpen!==null){
+const ch={title:HAR_TITLE[String(G.harChOpen)]||('Chapter '+G.harChOpen)};
 const allSylChNums=[...SYL_HAR_ALL,...SYL_HAR_BASE].map(c=>c.ch).sort((a,b)=>a-b);
 const curIdx=allSylChNums.indexOf(G.harChOpen);
 const prevCh=curIdx>0?allSylChNums[curIdx-1]:null;
@@ -522,10 +499,7 @@ ${_tpct!==null?`<span style="font-weight:700;color:${_tpct>=70?'#059669':_tpct>=
 <button data-action="drill-topic" data-ti="${_chTopicIdx}" style="margin-left:auto;font-size:10px;padding:4px 10px;background:#7c3aed;color:#fff;border:none;border-radius:6px;cursor:pointer">▶ Drill</button>
 </div>`;
 }
-ch.sections.forEach(sec=>{
-if(sec.title){h+=`<div dir="auto" style="font-size:13px;font-weight:800;color:#7c3aed;margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid #ede9fe;unicode-bidi:plaintext">${sec.title}</div>`;}
-sec.content.forEach(p=>{h+=`<p dir="auto" style="font-size:11.5px;line-height:1.9;color:#1e293b;margin:0 0 10px;text-align:start;unicode-bidi:plaintext">${p}</p>`;});
-});
+h+=`<div style="font-size:11px;color:#64748b;line-height:1.7;text-align:right" dir="rtl">📝 סיכום AI ממוקד-מבחן לפרק ${G.harChOpen} מופק אוטומטית למעלה. לחץ 🧠 ליצירת שאלות. הטקסט המלא אינו נכלל באפליקציה.</div>`;
 h+=`</div>`;
 }else if(G._harLoading){
 h+=`<div class="card" style="padding:40px;text-align:center"><div style="font-size:13px;color:#64748b">⏳ Loading Harrison's chapter...</div></div>`;
@@ -538,8 +512,7 @@ h+=`<div class="card" style="padding:14px">
 <div style="font-size:10px;color:#64748b;margin-bottom:12px">${allSylChs.length} chapters · <span style="color:#7c3aed">purple</span> = all examinees · <span style="color:#06b6d4">teal</span> = base track only</div>`;
 allSylChs.forEach(c=>{
 const isAll=allChNums.includes(c.ch);
-const harCh=G._harData&&G._harData[String(c.ch)];
-const wc=harCh?`~${Math.round(harCh.wordCount/250)} min`:'tap to load';
+const wc='tap to open';
 h+=`<div data-action="open-chapter" data-ch="${c.ch}" style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f1f5f9;cursor:pointer">
 <span style="background:${isAll?'#7c3aed':'#06b6d4'};color:#fff;font-size:10px;font-weight:700;padding:4px 8px;border-radius:8px;min-width:42px;text-align:center">Ch ${c.ch}</span>
 <div style="flex:1;min-width:0">
@@ -575,21 +548,26 @@ ${prevCh!==null?`<button data-action="open-ler-chapter" data-idx="${prevCh}" sty
 ${nextCh!==null?`<button data-action="open-ler-chapter" data-idx="${nextCh}" style="padding:4px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer">הבא ›</button>`:''}
 ${typeof ch.ti==='number'?`<button data-action="drill-topic" data-ti="${ch.ti}" style="padding:4px 10px;background:#7c3aed;color:#fff;border:none;border-radius:8px;cursor:pointer">🧠 תרגל נושא</button>`:''}
 </div>
+<div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;font-size:10px">
+<button data-action="ler-summary" style="padding:5px 10px;background:#059669;color:#fff;border:none;border-radius:8px;cursor:pointer">📝 סיכום</button>
+<button data-action="ler-quiz" style="padding:5px 10px;background:#7c3aed;color:#fff;border:none;border-radius:8px;cursor:pointer">🧠 שאלות</button>
+</div>
+<div id="quiz-me-box"></div>
 <div class="card" style="padding:16px">
-<div class="heb" style="font-size:12px;line-height:1.9;color:#1e293b;text-align:right;unicode-bidi:plaintext;white-space:pre-wrap" dir="auto">${sanitize(ch.body)}</div>
+<div style="font-size:11px;color:#64748b;line-height:1.7;text-align:right" dir="rtl">📝 סיכום AI מבוסס-מקור מופק אוטומטית למעלה. הטקסט המלא אינו נכלל באפליקציה.</div>
 </div>`;
 }else if(!G._lerData){
-  fetch('lerner_chapters.json').then(r=>r.json()).then(d=>{G._lerData=d;G.render();}).catch(e=>{if(import.meta.env.DEV)console.error('Lerner load failed',e);G._lerData={_error:true};});
+  fetch('lerner_index.json').then(r=>r.json()).then(d=>{G._lerData=d;G.render();}).catch(e=>{if(import.meta.env.DEV)console.error('Lerner index load failed',e);G._lerData={_error:true};});
   h+=`<div class="card" style="padding:40px;text-align:center"><div style="font-size:13px;color:#64748b">⏳ טוען את סיכום לרנר...</div></div>`;
 }else if(G._lerData._error){
-  h+=`<div class="card" style="padding:20px;text-align:center;font-size:12px;color:#dc2626">Failed to load Lerner summary. Check lerner_chapters.json.</div>`;
+  h+=`<div class="card" style="padding:20px;text-align:center;font-size:12px;color:#dc2626">Failed to load Lerner index. Check lerner_index.json.</div>`;
 }else{
 const data=G._lerData;
 const q=(G.lerSearch||'').trim().toLowerCase();
 const tiFilter=(typeof G.lerTi==='number')?G.lerTi:null;
 let filtered=data.chapters;
 if(tiFilter!==null)filtered=filtered.filter(c=>c.ti===tiFilter);
-if(q)filtered=filtered.filter(c=>c.title.toLowerCase().includes(q)||c.body.toLowerCase().includes(q));
+if(q)filtered=filtered.filter(c=>c.title.toLowerCase().includes(q));
 h+=`<div class="card" style="padding:14px">
 <div style="font-size:13px;font-weight:700;margin-bottom:4px">📒 סיכום רפואת המשפחה — ד"ר נטלי לרנר</div>
 <div style="font-size:10px;color:#64748b;margin-bottom:10px">${data.meta.chapter_count} sections · 860-page supplement · עודכן ${data.meta.updated} · SUPPLEMENTARY to Goroll/Nelson/Harrison</div>
@@ -846,19 +824,9 @@ return h;
 export async function openHarrisonChapter(ch){
 G.harChOpen=ch;
 trackChapterRead('har',ch);
-if(G._harData){G.render();return;}
-if(G._harLoading)return;
-G._harLoading=true;
 G.render();
-try{
-const r=await fetch('harrison_chapters.json');
-G._harData=await r.json();
-}catch(e){
-if(import.meta.env.DEV)console.error('Failed to load Harrison chapters',e);
-G._harData={};
-}
-G._harLoading=false;
-G.render();
+const _t=([...SYL_HAR_ALL,...SYL_HAR_BASE].find(c=>String(c.ch)===String(ch))||{}).t||('Chapter '+ch);
+aiSummarizeChapter(ch,_t,'harrison');
 }
 
 // ===== FLASHCARDS =====
@@ -894,12 +862,12 @@ export function initLibraryEvents(container) {
       openHarrisonChapter(parseInt(el.dataset.ch, 10));
     }
     else if (action === 'quiz-chapter') {
-      const ch = G._harData && G._harData[String(G.harChOpen)];
-      if (ch) quizMeOnChapter(G.harChOpen, ch.title);
+      const _t=([...SYL_HAR_ALL,...SYL_HAR_BASE].find(c=>String(c.ch)===String(G.harChOpen))||{}).t||('Chapter '+G.harChOpen);
+      quizMeOnChapter(G.harChOpen, _t, 'harrison');
     }
     else if (action === 'summarize-chapter') {
-      const ch = G._harData && G._harData[String(G.harChOpen)];
-      if (ch) aiSummarizeChapter(G.harChOpen, ch.title);
+      const _t=([...SYL_HAR_ALL,...SYL_HAR_BASE].find(c=>String(c.ch)===String(G.harChOpen))||{}).t||('Chapter '+G.harChOpen);
+      aiSummarizeChapter(G.harChOpen, _t, 'harrison');
     }
     else if (action === 'drill-topic') {
       const ti = parseInt(el.dataset.ti, 10);
@@ -969,10 +937,20 @@ export function initLibraryEvents(container) {
     }
     else if (action === 'open-ler-chapter') {
       const idx = parseInt(el.dataset.idx, 10);
-      if (!isNaN(idx)) { G.lerChOpen = idx; window.scrollTo(0,0); G.render(); }
+      if (!isNaN(idx)) { G.lerChOpen = idx; window.scrollTo(0,0); G.render();
+        const _c = G._lerData && G._lerData.chapters && G._lerData.chapters[idx];
+        if (_c) aiSummarizeChapter(idx, _c.title, 'lerner'); }
     }
     else if (action === 'close-ler-chapter') {
       G.lerChOpen = null; G.render();
+    }
+    else if (action === 'ler-summary') {
+      const _c = G._lerData && G._lerData.chapters && G._lerData.chapters[G.lerChOpen];
+      if (_c) aiSummarizeChapter(G.lerChOpen, _c.title, 'lerner');
+    }
+    else if (action === 'ler-quiz') {
+      const _c = G._lerData && G._lerData.chapters && G._lerData.chapters[G.lerChOpen];
+      if (_c) quizMeOnChapter(G.lerChOpen, _c.title, 'lerner');
     }
     else if (action === 'ler-ti') {
       const raw = el.dataset.ti;
