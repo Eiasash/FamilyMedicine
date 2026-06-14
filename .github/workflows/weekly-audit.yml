@@ -66,8 +66,21 @@ jobs:
           # Compare each new occurrence against ALL prior occurrences of the
           # same stem (not just the first) so a skipped pair doesn't shadow
           # a real conflict later in a triplet.
-          import json, sys
+          import json, sys, re, unicodedata
           qs = json.load(open('data/questions.json'))
+
+          def _norm_answer(s):
+              # Normalize chosen-option text for "same answer, re-ordered options"
+              # detection. Folds Unicode compatibility forms and strips ALL
+              # whitespace + the hyphen/dash family (ASCII -, Unicode dashes,
+              # Hebrew maqaf U+05BE). This is punctuation/whitespace-only — it
+              # never collapses two semantically different answers — so it cannot
+              # mask a genuine answer disagreement, but it does stop a one-hyphen
+              # transcription variance (e.g. 'ל6-8' vs 'ל-6-8') from reddening CI
+              # as a false "conflicting duplicate".
+              s = unicodedata.normalize('NFKC', s)
+              return re.sub(r'[\s־‐-―\-]', '', s)
+
           seen = {}  # key -> list of prior indices
           conflicts = []
           reorder_skipped = 0
@@ -90,9 +103,11 @@ jobs:
                   if qi['c'] == qj['c']:
                       continue
                   # Re-ordered duplicate: same chosen-option text at different indices.
+                  # Compare punctuation/whitespace-normalized so a one-hyphen
+                  # transcription variance isn't mistaken for a real conflict.
                   ti_text = qi['o'][qi['c']].strip() if qi['c'] < len(qi['o']) else None
                   tj_text = qj['o'][qj['c']].strip() if qj['c'] < len(qj['o']) else None
-                  if ti_text and tj_text and ti_text == tj_text:
+                  if ti_text and tj_text and _norm_answer(ti_text) == _norm_answer(tj_text):
                       reorder_skipped += 1
                       continue
                   # c_accept compatibility: chosen answers cross-accepted.
