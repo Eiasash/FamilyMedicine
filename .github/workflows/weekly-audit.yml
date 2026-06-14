@@ -71,15 +71,18 @@ jobs:
 
           def _norm_answer(s):
               # Normalize chosen-option text for "same answer, re-ordered options"
-              # detection. Folds Unicode compatibility forms and strips ALL
-              # whitespace + the hyphen/dash family (ASCII -, Unicode dashes,
-              # Hebrew maqaf U+05BE). This is punctuation/whitespace-only — it
-              # never collapses two semantically different answers — so it cannot
-              # mask a genuine answer disagreement, but it does stop a one-hyphen
-              # transcription variance (e.g. 'ל6-8' vs 'ל-6-8') from reddening CI
-              # as a false "conflicting duplicate".
+              # detection. Folds Unicode compatibility forms, then strips a
+              # hyphen/dash (ASCII -, Unicode dashes, Hebrew maqaf U+05BE) ONLY when
+              # it directly follows a letter — i.e. a Hebrew/Latin prefix hyphen
+              # ('ל-6' == 'ל6', fixing the 'ל6-8' vs 'ל-6-8' transcription variance;
+              # 'ל-מטופל' == 'למטופל'). A dash that follows a digit, space, or start
+              # is preserved, so numeric ranges and negatives stay distinct
+              # ('6-8' != '68', '-5' != '5') and a genuine answer disagreement can't
+              # be masked. Letter-stripping runs BEFORE whitespace removal so a
+              # space-led negative ('ערך -5') isn't reclassified as a prefix hyphen.
               s = unicodedata.normalize('NFKC', s)
-              return re.sub(r'[\s־‐-―\-]', '', s)
+              s = re.sub(r'(?<=[A-Za-z֐-׿])[־‐-―\-]', '', s)
+              return re.sub(r'\s+', '', s)
 
           seen = {}  # key -> list of prior indices
           conflicts = []
