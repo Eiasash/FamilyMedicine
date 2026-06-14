@@ -848,11 +848,14 @@ body.study {
   color: #fff;
   border: none;
   border-radius: 50%;
-  inline-size: 1.5rem;
-  block-size: 1.5rem;
+  inline-size: 44px;
+  block-size: 44px;
   font-size: 0.75rem;
   cursor: pointer;
   line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .quiz-image-dep {
   margin-block-start: var(--space-2);

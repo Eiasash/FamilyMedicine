@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.26.16': [
+    'ui(a11y): finish the touch-target pass. Overlay buttons, account/API inputs, feedback select, study-plan date/range controls, Share App Link, Force Update, and the quiz image remove control now meet the 44px mobile target. No question content, answer keys, explanations, source mappings, or audit queues changed. BUILD_HASH 1121q-v1.26.16; package/app/SW markers bumped 1.26.15 to 1.26.16.'
+  ],
   '1.26.15': [
     'ui(quiz): standardize the FamilyMedicine Quiz surface around one compact control row plus an advanced Filters drawer. Visible controls are now Quiz, Mock, Full 150q, filter summary, Filters, and conditional Review wrong; year/topic/source/hard/slow/weak/due/traps/NBS/timed/cover-options controls move into the drawer. Removed dormant Sudden Death, On-Call, and Pomodoro state, handlers, CSS, and obsolete tests from active code paths. No question content, answer keys, explanations, source mappings, or audit queues changed. BUILD_HASH 1121q-v1.26.15; package/app/SW markers bumped 1.26.14 to 1.26.15.'
   ],
