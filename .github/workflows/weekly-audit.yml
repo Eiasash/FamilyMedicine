@@ -66,8 +66,24 @@ jobs:
           # Compare each new occurrence against ALL prior occurrences of the
           # same stem (not just the first) so a skipped pair doesn't shadow
           # a real conflict later in a triplet.
-          import json, sys
+          import json, sys, re, unicodedata
           qs = json.load(open('data/questions.json'))
+
+          def _norm_answer(s):
+              # Normalize chosen-option text for "same answer, re-ordered options"
+              # detection. Folds Unicode compatibility forms, then strips a
+              # hyphen/dash (ASCII -, Unicode dashes, Hebrew maqaf U+05BE) ONLY when
+              # it directly follows a letter — i.e. a Hebrew/Latin prefix hyphen
+              # ('ל-6' == 'ל6', fixing the 'ל6-8' vs 'ל-6-8' transcription variance;
+              # 'ל-מטופל' == 'למטופל'). A dash that follows a digit, space, or start
+              # is preserved, so numeric ranges and negatives stay distinct
+              # ('6-8' != '68', '-5' != '5') and a genuine answer disagreement can't
+              # be masked. Letter-stripping runs BEFORE whitespace removal so a
+              # space-led negative ('ערך -5') isn't reclassified as a prefix hyphen.
+              s = unicodedata.normalize('NFKC', s)
+              s = re.sub(r'(?<=[A-Za-z֐-׿])[־‐-―\-]', '', s)
+              return re.sub(r'\s+', '', s)
+
           seen = {}  # key -> list of prior indices
           conflicts = []
           reorder_skipped = 0
@@ -90,9 +106,11 @@ jobs:
                   if qi['c'] == qj['c']:
                       continue
                   # Re-ordered duplicate: same chosen-option text at different indices.
+                  # Compare punctuation/whitespace-normalized so a one-hyphen
+                  # transcription variance isn't mistaken for a real conflict.
                   ti_text = qi['o'][qi['c']].strip() if qi['c'] < len(qi['o']) else None
                   tj_text = qj['o'][qj['c']].strip() if qj['c'] < len(qj['o']) else None
-                  if ti_text and tj_text and ti_text == tj_text:
+                  if ti_text and tj_text and _norm_answer(ti_text) == _norm_answer(tj_text):
                       reorder_skipped += 1
                       continue
                   # c_accept compatibility: chosen answers cross-accepted.
