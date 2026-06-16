@@ -142,3 +142,53 @@ describe('a11y v1.21.26 — skip-link mobile out-of-bounds guard', () => {
     expect(m[0]).toMatch(/clip:\s*auto/);
   });
 });
+
+describe('a11y — "mishpacha amber-on-white" deferred item (amber-600 → amber-800)', () => {
+  // Three rules set color:#d97706 (amber-600) text on a light bg = 3.07:1,
+  // failing WCAG AA. amber-800 (#92400e) on the same bg = 6.84:1 (AA pass).
+  // Same fix the v1.21.20 campaign used for the header subtitle + tabs button.
+  let componentsCss = '';
+  let trackCss = '';
+  let chatCss = '';
+  let themeCss = '';
+
+  beforeAll(() => {
+    const root = resolve(import.meta.dirname, '..');
+    componentsCss = readFileSync(resolve(root, 'src/styles/components.css'), 'utf-8');
+    trackCss = readFileSync(resolve(root, 'src/styles/track.css'), 'utf-8');
+    chatCss = readFileSync(resolve(root, 'src/styles/chat.css'), 'utf-8');
+    themeCss = readFileSync(resolve(root, 'src/styles/theme.css'), 'utf-8');
+  });
+
+  it('.badge-y uses amber-800 (#92400e), not amber-600 (#d97706)', () => {
+    const m = componentsCss.match(/\.badge-y\s*\{[^}]+\}/);
+    expect(m, '.badge-y rule must exist').toBeTruthy();
+    expect(m[0]).toContain('color: #92400e');
+    expect(m[0]).not.toContain('#d97706');
+  });
+
+  it('.streak-badge uses amber-800 (#92400e), not amber-600 (#d97706)', () => {
+    const m = trackCss.match(/\.streak-badge\s*\{[^}]+\}/);
+    expect(m, '.streak-badge rule must exist').toBeTruthy();
+    expect(m[0]).toContain('color: #92400e');
+    expect(m[0]).not.toContain('#d97706');
+  });
+
+  it('.chat-disclaimer uses amber-800 (#92400e), not amber-600 (#d97706)', () => {
+    const m = chatCss.match(/\.chat-disclaimer\s*\{[^}]+\}/);
+    expect(m, '.chat-disclaimer rule must exist').toBeTruthy();
+    expect(m[0]).toContain('color: #92400e');
+    expect(m[0]).not.toContain('#d97706');
+  });
+
+  it('dark .streak-badge sets an explicit color so amber-800 does not leak onto the dark bg', () => {
+    // The light-mode .streak-badge color now resolves to #92400e (amber-800).
+    // On the dark override bg (#451a03) that would be near-invisible. The dark
+    // rule must pin its own light color (#fde68a amber-200, ≈8.6:1).
+    const m = themeCss.match(/body\.dark\s+\.streak-badge\s*\{[^}]+\}/);
+    expect(m, 'body.dark .streak-badge rule must exist').toBeTruthy();
+    expect(m[0]).toMatch(/color:\s*#fde68a/);
+    // Must not leave the light amber-800 to cascade in dark mode.
+    expect(m[0]).not.toContain('#92400e;color:#92400e');
+  });
+});

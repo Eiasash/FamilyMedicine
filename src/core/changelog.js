@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.26.17': [
+    'fix(ai)+a11y(contrast): two verified fixes. (1) renderExplainBox now tolerates both AI-explanation cache shapes — the current {text:txt} object and a legacy BARE STRING written by the on-call mode removed in v1.26.15. localStorage (mishpacha_ex) persists across upgrades, so a user who used the old on-call mode had bare-string entries that rendered as an EMPTY explanation box (ex.text on a string is undefined) when re-opened in normal quiz mode. The bare string is now normalized and sanitized before render. Mirrors Geriatrics v10.64.158. (2) Raised three amber-on-white text rules from #d97706 amber-600 (3.07:1, fails WCAG AA) to #92400e amber-800 (6.84:1): .badge-y (components.css), .streak-badge (track.css), .chat-disclaimer (chat.css); and pinned an explicit color on the dark .streak-badge override so the new amber-800 does not leak as near-invisible text onto the dark bg. Matches the v1.21.20 contrast campaign pattern. New regression pins in tests/aiExplain.test.js (bare-string cache) and tests/a11yContrast2026-05-10.test.js (three amber rules + dark leak). No question content, answer keys, explanations, source mappings, or audit queues changed. BUILD_HASH 1121q-v1.26.17; package/app/SW markers bumped 1.26.16 to 1.26.17.'
+  ],
   '1.26.16': [
     'ui(a11y): finish the touch-target pass. Overlay buttons, account/API inputs, feedback select, study-plan date/range controls, Share App Link, Force Update, and the quiz image remove control now meet the 44px mobile target. No question content, answer keys, explanations, source mappings, or audit queues changed. BUILD_HASH 1121q-v1.26.16; package/app/SW markers bumped 1.26.15 to 1.26.16.'
   ],

@@ -39,7 +39,7 @@ body.dark .badge-g { background: #064e3b; color: #6ee7b7 }
 
 /* Dark: progress & track */
 body.dark .progress-bar { background: #334155 }
-body.dark .streak-badge { background: #451a03; border-color: #92400e }
+body.dark .streak-badge { background: #451a03; border-color: #92400e; color: #fde68a } /* set color so the light-mode amber-800 (#92400e) doesn't leak onto the dark #451a03 bg as near-invisible text; #fde68a amber-200 ≈ 8.6:1 AA, matches dark .badge-y */
 body.dark .leaderboard-row { border-color: #334155 }
 body.dark .calc-result { background: #1e293b !important }
 

@@ -147,6 +147,30 @@ describe('renderExplainBox', () => {
     expect(t.innerHTML).toContain('🤖');
   });
 
+  it('renders a BARE-STRING cache entry (legacy on-call shape) instead of an empty box', () => {
+    // Regression pin for the cross-mode blank-explanation bug: the on-call
+    // writer (removed v1.26.15) stored a bare string under the same qIdx key,
+    // and localStorage persists it across upgrades. Reading ex.text off a
+    // string used to yield undefined → an empty explanation box. The box must
+    // now render the string itself. Mirrors Geriatrics v10.64.158.
+    const t = document.createElement('div'); t.id = 'ai-explain-0';
+    G._exCache[0] = 'Bare string from legacy on-call cache';
+    renderExplainBox(0);
+    expect(t.innerHTML).toContain('Bare string from legacy on-call cache');
+    expect(t.innerHTML).toContain('🤖');
+    // Must NOT degrade to an empty / undefined-laden box.
+    expect(t.innerHTML).not.toContain('undefined');
+    expect(t.innerHTML).not.toBe('');
+  });
+
+  it('sanitizes a bare-string cache entry (no raw HTML leaks from legacy shape)', () => {
+    const t = document.createElement('div'); t.id = 'ai-explain-0';
+    G._exCache[0] = '<script>x</script>';
+    renderExplainBox(0);
+    expect(t.innerHTML).not.toMatch(/<script/);
+    expect(t.innerHTML).toContain('&lt;script&gt;');
+  });
+
   it('shows a red error banner when cache entry has err', () => {
     const t = document.createElement('div'); t.id = 'ai-explain-0';
     G._exCache[0] = { err: 'AI unavailable' };
