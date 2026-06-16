@@ -143,7 +143,7 @@ export function renderStudyPlanSection() {
 <div class="sec-t" style="font-size:13px;margin-top:18px">📅 תכנית לימוד</div>
 <div style="padding:14px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:12px" dir="rtl">
   <div style="font-size:11px;color:#475569;margin-bottom:12px;line-height:1.6">
-    תכנית לימוד שבועית משוקללת לפי תדירות הופעת נושאים בבחינות שלב א׳ קודמות (1,061 שאלות,
+    תכנית לימוד שבועית משוקללת לפי תדירות הופעת נושאים בבחינות שלב א׳ קודמות (${SYLLABUS.Mishpacha.total_questions_analyzed.toLocaleString('en-US')} שאלות,
     27 נושאים). הנתונים אמפיריים — מבוססים על מאגר השאלות של האפליקציה, לא על ניחוש.
   </div>`;
 

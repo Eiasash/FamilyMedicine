@@ -32,11 +32,11 @@ describe('study_plan algorithm — JS↔Python cross-language fixture (Mishpacha
     const allocated = allocateHours(MISHPACHA_TOPICS, 89.6);
     const top5 = [...allocated].sort((a, b) => b.hours - a.hours).slice(0, 5);
     expect(top5.map((t) => ({ id: t.id, freq: t.frequency_pct, hours: t.hours }))).toEqual([
-      { id: 24, freq: 10.8, hours: 6.0 },
-      { id:  9, freq:  9.4, hours: 6.0 },
-      { id: 26, freq:  7.1, hours: 6.0 },
-      { id: 14, freq:  6.4, hours: 5.7 },
-      { id: 13, freq:  4.7, hours: 4.2 },
+      { id: 24, freq: 10.26, hours: 6.0 },
+      { id:  9, freq:  9.19, hours: 6.0 },
+      { id: 26, freq:  6.69, hours: 6.0 },
+      { id: 14, freq:  6.24, hours: 5.6 },
+      { id: 13, freq:  4.91, hours: 4.4 },
     ]);
   });
 
@@ -52,16 +52,18 @@ describe('study_plan algorithm — JS↔Python cross-language fixture (Mishpacha
   });
 
   test('schedule: week_used per cell EXACTLY matches Python (≤ 1e-9 drift)', () => {
-    // Probed 2026-04-27: JS Math.round(x*10)/10 produces byte-identical output
-    // to Python round(x, 1) on this fixture (no .X5 edge-case inputs hit, and
-    // float-add accumulation across 16 weeks is bounded by ~16·ε·6 ≈ 2e-14).
-    // The previous ±0.05 tolerance was 7 orders of magnitude too loose and
-    // would have silently masked any single-topic rounding divergence.
-    // If this ever loosens, investigate before relaxing — it likely indicates
-    // real drift between the two implementations.
+    // Recomputed for the 2-decimal-frequency resync and re-verified bit-for-bit
+    // against the Python reference (auto-audit/scripts/generate_study_plan.py).
+    // On this data the greedy packer hits the weeklyBudget+0.5 (6.1) capacity
+    // boundary: a topic lands ~1e-15 above 6.1 in IEEE-754, so the `+ 1e-9`
+    // tolerance in BOTH capacity checks — algorithm.js here and Python's
+    // schedule (the matching epsilon is added in the paired auto-audit PR) —
+    // keeps placement identical. Without that shared tolerance JS places the
+    // topic in week 5 and Python in week 15: a real divergence the strict
+    // ≤1e-9 assertion below would (correctly) catch. Do not loosen.
     const allocated = allocateHours(MISHPACHA_TOPICS, 89.6);
     const { used } = schedule(allocated, 8, 16);
-    const expected = [6.0, 6.0, 6.0, 5.7, 6.1, 6.1, 6.0, 6.1, 5.8, 5.7, 6.0, 5.3, 5.9, 5.1, 1.3, 0.0];
+    const expected = [6.0, 6.0, 6.0, 5.6, 6.1, 6.1, 6.1, 6.0, 5.7, 6.1, 6.1, 5.4, 6.0, 5.5, 1.4, 0.0];
     expect(used.length).toBe(expected.length);
     for (let i = 0; i < expected.length; i++) {
       expect(Math.abs(used[i] - expected[i])).toBeLessThan(1e-9);
