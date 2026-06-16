@@ -12,7 +12,7 @@
 .chat-starter:hover { background: #e8f7f4; border-color: #a8e0d8 }
 
 /* === Disclaimer === */
-.chat-disclaimer { font-size: 10px; color: #d97706; padding: 5px 8px; background: #fffbeb; border-radius: 8px; border: 1px solid #fde68a }
+.chat-disclaimer { font-size: 10px; color: #92400e; padding: 5px 8px; background: #fffbeb; border-radius: 8px; border: 1px solid #fde68a } /* color: amber-800 (6.84:1 AA); was #d97706 amber-600 (3.07:1, failed) */
 
 /* === Typing Indicator === */
 .typing-dots { display: flex; gap: 4px; align-items: center; padding: 2px 0 }

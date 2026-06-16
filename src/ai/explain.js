@@ -25,9 +25,17 @@ export function renderExplainBox(qIdx){
   var ex=G._exCache[qIdx];
   if(!ex)return;
   if(ex.err){container.innerHTML='<div style="color:#dc2626;font-size:11px;padding:8px 0">⚠️ '+sanitize(ex.err)+'</div>';return;}
+  // Tolerate both cache shapes. The current writer stores {text:txt}, but a
+  // legacy on-call writer (removed v1.26.15) stored a BARE STRING under the same
+  // qIdx key + mishpacha_ex bucket. localStorage persists across upgrades, so a
+  // user who used the old on-call mode still has bare-string entries; reading
+  // ex.text off a string yields undefined → an EMPTY explanation box. Normalize
+  // here. Mirrors the Geriatrics v10.64.158 fix for the identical bug.
+  const _exText=typeof ex==='string'?ex:(ex.text||'');
+  if(!_exText)return;
   const _isFlagged=(G.S.flagged||{})[qIdx];
-  // safe-innerhtml: heDir returns only 'rtl'|'ltr'|'auto'; ex.text + qIdx go through sanitize()
-  container.innerHTML='<div class="explain-box" style="margin-top:8px;padding:10px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;font-size:11px;line-height:1.7;color:#166534;text-align:right;unicode-bidi:plaintext" dir="'+heDir(ex.text)+'"><div style="font-weight:700;margin-bottom:4px">🤖 הסבר AI</div><div dir="'+heDir(ex.text)+'">'+sanitize(ex.text)+'</div></div>'+
+  // safe-innerhtml: heDir returns only 'rtl'|'ltr'|'auto'; _exText + qIdx go through sanitize()
+  container.innerHTML='<div class="explain-box" style="margin-top:8px;padding:10px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;font-size:11px;line-height:1.7;color:#166534;text-align:right;unicode-bidi:plaintext" dir="'+heDir(_exText)+'"><div style="font-weight:700;margin-bottom:4px">🤖 הסבר AI</div><div dir="'+heDir(_exText)+'">'+sanitize(_exText)+'</div></div>'+
     '<button data-action="flag-explain" data-idx="'+sanitize(String(qIdx))+'" style="font-size:9px;padding:2px 8px;margin-top:3px;background:'+(_isFlagged?'#fef2f2':'#f8fafc')+';color:'+(_isFlagged?'#dc2626':'#94a3b8')+';border:1px solid '+(_isFlagged?'#fecaca':'#e2e8f0')+';border-radius:6px;cursor:pointer">'+(_isFlagged?'⚑ Flagged — verify':'⚐ Flag as unreliable')+'</button>';
 }
 export async function explainWithAI(qIdx){

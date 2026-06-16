@@ -31,7 +31,7 @@
 /* === Badges === */
 .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700 }
 .badge-r { background: #fef2f2; color: #dc2626 }
-.badge-y { background: #fffbeb; color: #d97706 }
+.badge-y { background: #fffbeb; color: #92400e } /* amber-800 (6.84:1 AA); was #d97706 amber-600 (3.07:1, failed) — v1.21.20 contrast pattern */
 .badge-g { background: #ecfdf5; color: #059669 }
 
 /* === Inputs === */
