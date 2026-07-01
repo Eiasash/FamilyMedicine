@@ -31,7 +31,7 @@ These four rules are the floor. They override any conflicting guidance later in 
 
 Sibling PWA to **Shlav A Mega** (geriatrics) and **Pnimit Mega** (internal medicine). Shares engine, FSRS, Supabase, AI proxy.
 
-## Current state (v1.26.17, 16/06/26)
+## Current state (v1.26.17, 01/07/26)
 - **+203 AI high-yield Qs** in a separate `data/highyield.json` bank (tag `AI-2026-hy`) loaded additively + labeled "AI — High-Yield" in-app; `data/questions.json` UNCHANGED (1121) so count-lock + BUILD_HASH count + cross-repo manifest/syllabus contract untouched. Audited blind (opus); 1.26.0 shipped 133 (57 flags held), v1.26.3 added 35 survivors from a 69-new pilot (34 held — 26 ambiguity flags + 8 confident blind disagreements; see `docs/AUDIT_HY_PILOT_2026-06-11.md`).
 - **1121 Qs** total — 950 across 7 exam sessions (2020=150, 2021-Jun=150, 2022-Jun=150, 2023-Jun=150, 2024-May=100, 2024-Sep=100, 2025-Jun=150) + 111 `FM-Core` curated textbook Qs
 - All 7 sessions CONFIRMED Family Medicine content (fork-bug remediated in v1.3.0 — see CHANGELOG)
