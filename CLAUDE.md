@@ -31,7 +31,9 @@ These four rules are the floor. They override any conflicting guidance later in 
 
 Sibling PWA to **Shlav A Mega** (geriatrics) and **Pnimit Mega** (internal medicine). Shares engine, FSRS, Supabase, AI proxy.
 
-## Current state (v1.26.17, 16/06/26)
+## Current state (v1.26.18, 13/07/26)
+
+- **v1.26.18 security**: rotated the shared Toranot AI-proxy secret (x-api-secret header) after the 2026-07-13 weekly audit flagged it as hardcoded client-visible plaintext, identical across Geriatrics/InternalMedicine/FamilyMedicine and unchanged since introduction. Coordinated rotation across all three sibling apps + the Netlify-side proxy config. Does not change the underlying architecture — the new value is embedded in client code and repo docs the same way the old one was, since this is a public static-site repo with no server-authenticated user session.
 - **+203 AI high-yield Qs** in a separate `data/highyield.json` bank (tag `AI-2026-hy`) loaded additively + labeled "AI — High-Yield" in-app; `data/questions.json` UNCHANGED (1121) so count-lock + BUILD_HASH count + cross-repo manifest/syllabus contract untouched. Audited blind (opus); 1.26.0 shipped 133 (57 flags held), v1.26.3 added 35 survivors from a 69-new pilot (34 held — 26 ambiguity flags + 8 confident blind disagreements; see `docs/AUDIT_HY_PILOT_2026-06-11.md`).
 - **1121 Qs** total — 950 across 7 exam sessions (2020=150, 2021-Jun=150, 2022-Jun=150, 2023-Jun=150, 2024-May=100, 2024-Sep=100, 2025-Jun=150) + 111 `FM-Core` curated textbook Qs
 - All 7 sessions CONFIRMED Family Medicine content (fork-bug remediated in v1.3.0 — see CHANGELOG)
@@ -39,7 +41,7 @@ Sibling PWA to **Shlav A Mega** (geriatrics) and **Pnimit Mega** (internal medic
 - **72 test files / 1030 tests** under `tests/` (v1.21.15 added 2 SW regression guards: HTML_URLS *.js + CSS_URLS on-disk). Pnimit regression guards ported + Mishpacha-specific guards added + AFP topic-map / FSRS boundary tests (v1.21.1) + R2 deep coverage (quiz-engine multi-tag, study-plan DST/calendar, sw manifest, IDB mock, bidi numerics, mutation resistance — v1.21.2) + apiKeyLoginRestore covering v1.21.12-14 cloud sync + 3 P0 chaos crash fixes (v1.21.13: toLowerCase undefined, flashcards `f` undefined bounds-check, startTimedQ G-binding)
 - Goroll 239 ch (local PDF, 1-tap deep-link) + Nelson 165 ch (Drive PDF via progressive-upgrade schema) + Harrison 42 ch (cross-ref, in-app reader) + Lerner 2025 329 sections (Hebrew prose, 6th Library tab, added v1.4.3)
 - AFP/הר"י index: 542 papers across 23 specialties; year metadata cleaned in v1.21.2 (18 entries: 16 corrected from title/filename, 2 null sentinels). Schema invariant: `paper.year` is `string|null`, never empty string.
-- localStorage `mishpacha_mega`, SW cache `mishpacha-v1.26.17`
+- localStorage `mishpacha_mega`, SW cache `mishpacha-v1.26.18`
 - **v1.26.7 Track progress donut** — correct/wrong/טרם-נענה conic-gradient donut on the Track tab (parity with Pnimit/Shlav; the one stats visual it lacked per AGENTS.md). Active-set total (dup/broken excluded), question-status vs attempt accuracy, n-absent restore via hit-rate, a11y aria-label. `_familyStatsDonutCard()`; 9 tests in `tests/trackStatsDonut.test.js`.
 - `shared/fsrs.js` byte-identical with § D Geriatrics + § E Pnimit (canonical git hash-object `89aa3940…`; canonical md5 `71f9f2d4…` post-LF normalization, was `cea66a0435…` pre-2026-04-22). Known issue: `isChronicFail()` returns `undefined` instead of `false` when `fsrsD` missing — patch staged in IMPROVEMENTS.md, requires Round 3 cross-repo coordinated bump.
 

@@ -13,7 +13,7 @@ Targets: ti=1 HF&Valves, ti=12 Allergy, ti=16 Men's Health, ti=19 Addictions, ti
 import json, sys, time, concurrent.futures, urllib.request, urllib.error, re
 
 PROXY = "https://toranot.netlify.app/api/claude"
-SECRET = "shlav-a-mega-1f97f311d307-2026"
+SECRET = "toranot-proxy-34207b1d12f35873d7f22d8ca0388b2a-r2"
 QS_PATH = "data/questions.json"
 
 BUCKETS = {

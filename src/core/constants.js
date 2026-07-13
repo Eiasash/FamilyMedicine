@@ -20,7 +20,7 @@ export const SUPA_ANON='sb_publishable_tUuqQQ8RKMvLDwTz5cKkOg_o_y-rHtw';
 
 // Shared AI proxy (Netlify function on toranot.netlify.app)
 export const AI_PROXY='https://toranot.netlify.app/api/claude';
-export const AI_SECRET='shlav-a-mega-1f97f311d307-2026';
+export const AI_SECRET='toranot-proxy-34207b1d12f35873d7f22d8ca0388b2a-r2';
 
 // 27 topics for Family Medicine Shlav A (P0062-2025)
 // Order follows clinical-workflow clustering (adult → age-group → cross-cutting)
@@ -55,8 +55,8 @@ export const TOPICS=[
 ];
 
 // Version & changelog
-export const APP_VERSION='1.26.17';
-export const BUILD_HASH='1121q-v1.26.17';
+export const APP_VERSION='1.26.18';
+export const BUILD_HASH='1121q-v1.26.18';
 export const SYLLABUS_VERSION='P0062-2025';
 // CHANGELOG moved to ./changelog.js for code-splitting. Dynamically
 // imported in showHelp() so the ~69KB raw / ~30KB gzipped doesn't load
