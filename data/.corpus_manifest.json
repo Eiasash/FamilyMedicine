@@ -1,115 +1,115 @@
 {
   "schema": "corpus-manifest-v1",
   "repo": "FamilyMedicine",
-  "total_questions": 1121,
+  "total_questions": 1271,
   "topics": [
     {
       "id": 0,
-      "n_questions": 26
-    },
-    {
-      "id": 1,
-      "n_questions": 24
-    },
-    {
-      "id": 2,
-      "n_questions": 35
-    },
-    {
-      "id": 3,
-      "n_questions": 41
-    },
-    {
-      "id": 4,
-      "n_questions": 43
-    },
-    {
-      "id": 5,
       "n_questions": 30
     },
     {
-      "id": 6,
-      "n_questions": 33
-    },
-    {
-      "id": 7,
-      "n_questions": 28
-    },
-    {
-      "id": 8,
-      "n_questions": 32
-    },
-    {
-      "id": 9,
-      "n_questions": 103
-    },
-    {
-      "id": 10,
-      "n_questions": 44
-    },
-    {
-      "id": 11,
+      "id": 1,
       "n_questions": 25
     },
     {
-      "id": 12,
-      "n_questions": 23
-    },
-    {
-      "id": 13,
-      "n_questions": 55
-    },
-    {
-      "id": 14,
-      "n_questions": 70
-    },
-    {
-      "id": 15,
+      "id": 2,
       "n_questions": 42
     },
     {
-      "id": 16,
-      "n_questions": 23
+      "id": 3,
+      "n_questions": 48
     },
     {
-      "id": 17,
-      "n_questions": 46
+      "id": 4,
+      "n_questions": 55
     },
     {
-      "id": 18,
+      "id": 5,
+      "n_questions": 33
+    },
+    {
+      "id": 6,
+      "n_questions": 38
+    },
+    {
+      "id": 7,
+      "n_questions": 32
+    },
+    {
+      "id": 8,
       "n_questions": 35
     },
     {
-      "id": 19,
-      "n_questions": 18
+      "id": 9,
+      "n_questions": 117
     },
     {
-      "id": 20,
-      "n_questions": 41
+      "id": 10,
+      "n_questions": 56
     },
     {
-      "id": 21,
-      "n_questions": 21
+      "id": 11,
+      "n_questions": 32
     },
     {
-      "id": 22,
-      "n_questions": 40
-    },
-    {
-      "id": 23,
+      "id": 12,
       "n_questions": 24
     },
     {
+      "id": 13,
+      "n_questions": 61
+    },
+    {
+      "id": 14,
+      "n_questions": 73
+    },
+    {
+      "id": 15,
+      "n_questions": 47
+    },
+    {
+      "id": 16,
+      "n_questions": 26
+    },
+    {
+      "id": 17,
+      "n_questions": 51
+    },
+    {
+      "id": 18,
+      "n_questions": 40
+    },
+    {
+      "id": 19,
+      "n_questions": 19
+    },
+    {
+      "id": 20,
+      "n_questions": 46
+    },
+    {
+      "id": 21,
+      "n_questions": 22
+    },
+    {
+      "id": 22,
+      "n_questions": 46
+    },
+    {
+      "id": 23,
+      "n_questions": 31
+    },
+    {
       "id": 24,
-      "n_questions": 115
+      "n_questions": 127
     },
     {
       "id": 25,
-      "n_questions": 29
+      "n_questions": 31
     },
     {
       "id": 26,
-      "n_questions": 75
+      "n_questions": 84
     }
   ]
 }

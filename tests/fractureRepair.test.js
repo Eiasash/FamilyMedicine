@@ -30,7 +30,7 @@ describe('intra-word fracture source-render ratchet (FM)', () => {
     });
   });
 
-  it('count unchanged (1121)', () => {
-    expect(QZ.length).toBe(1121);
+  it('count 1271 (1121 base + 150 for 2026-Jun)', () => {
+    expect(QZ.length).toBe(1271);
   });
 });
