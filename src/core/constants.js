@@ -20,7 +20,9 @@ export const SUPA_ANON='sb_publishable_tUuqQQ8RKMvLDwTz5cKkOg_o_y-rHtw';
 
 // Shared AI proxy (Netlify function on toranot.netlify.app)
 export const AI_PROXY='https://toranot.netlify.app/api/claude';
-export const AI_SECRET='toranot-proxy-34207b1d12f35873d7f22d8ca0388b2a-r2';
+// P0 cutover (runbook §3): the shared proxy x-api-secret was removed from the
+// client bundle. The proxy is now authenticated with a Supabase session JWT —
+// see getProxyBearer() in src/services/supabaseAuth.js.
 
 // 27 topics for Family Medicine Shlav A (P0062-2025)
 // Order follows clinical-workflow clustering (adult → age-group → cross-cutting)
