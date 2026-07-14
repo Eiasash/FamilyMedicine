@@ -63,7 +63,7 @@ jobs:
           python3 << 'PYEOF'
           import json, sys
           qs = json.load(open('data/questions.json'))
-          allowed = {'2020','2021-Jun','2022-Jun','2023-Jun','2024-May','2024-Sep','2025-Jun','Goroll','Nelson','AFP','Exam','FM-Core','AI-2026','AI-2026b'}
+          allowed = {'2020','2021-Jun','2022-Jun','2023-Jun','2024-May','2024-Sep','2025-Jun','2026-Jun','Goroll','Nelson','AFP','Exam','FM-Core','AI-2026','AI-2026b'}
           bad = []
           for i, q in enumerate(qs):
               if q.get('t') not in allowed:
