@@ -22,6 +22,7 @@ vi.mock('../src/ai/client.js', () => ({
 vi.mock('../src/sr/spaced-repetition.js', () => ({
   getTopicStats: vi.fn(() => ({})),
   getDueQuestions: vi.fn(() => []),
+  getDueCount: vi.fn(() => 0),
 }));
 
 import G from '../src/core/globals.js';

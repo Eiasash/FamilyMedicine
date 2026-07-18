@@ -1,7 +1,7 @@
 import G from '../core/globals.js';
 import { TOPICS, EXAM_FREQ, IMA_WEIGHTS, HARRISON_PDF_MAP } from '../core/constants.js';
 import { sanitize, fmtT, safeJSONParse, heDir } from '../core/utils.js';
-import { getDueQuestions, getWeakTopics, getStudyStreak, getTopicStats, isExamTrap, getChaptersDueForReading, getDrillTarget, buildDrillPool } from '../sr/spaced-repetition.js';
+import { getDueQuestions, getDueCount, getWeakTopics, getStudyStreak, getTopicStats, isExamTrap, getChaptersDueForReading, getDrillTarget, buildDrillPool } from '../sr/spaced-repetition.js';
 import { isChronicFail } from '../sr/fsrs-bridge.js';
 import { setFilt, startTopicMiniExam, buildPool, buildMockExamPool } from '../quiz/engine.js';
 import { buildRescuePool } from '../sr/spaced-repetition.js';
@@ -26,7 +26,9 @@ export function renderPriorityMatrix(){
   const TOPICS_L=TOPICS;
   const EF_FREQ=[50,45,40,30,45,60,50,40,35,50,45,35,55,35,40,30,15,15,20,20,15,15,25,20];
   const maxFreq=Math.max(...EF_FREQ);
-  const tSt=G.S.ts||{};
+  // IM-1 (2026-07-15): G.S.ts is never written anywhere; read live per-topic
+  // stats from getTopicStats() (derived from G.S.sr) — the real source.
+  const tSt=getTopicStats();
   const rows=TOPICS_L.map((name,ti)=>{
     const s=tSt[ti]||{ok:0,no:0,tot:0};
     const acc=s.tot>0?s.ok/s.tot:null;
@@ -367,7 +369,7 @@ export function saveSessionSummary(){
       ok:G._sessionOk,no:G._sessionNo,dur,
       best:best?{ti:+best[0],name:TOPICS_L[+best[0]],n:best[1]}:null,
       worse:worse?{ti:+worse[0],name:TOPICS_L[+worse[0]],n:worse[1]}:null,
-      due:getDueQuestions().length
+      due:getDueCount()
     };
     const hist=JSON.parse(localStorage.getItem('mishpacha_sessions')||'[]');
     hist.push(sess);if(hist.length>30)hist.splice(0,hist.length-30);
@@ -379,7 +381,7 @@ export function renderDailyPlan(){
 if(!G.S.examDate&&!localStorage.getItem('mishpacha_exam_date'))return '';
 const examDate=G.S.examDate||localStorage.getItem('mishpacha_exam_date')||'';
 const daysLeft=examDate?Math.max(0,Math.ceil((new Date(examDate)-Date.now())/864e5)):null;
-const dueN=getDueQuestions().length;
+const dueN=getDueCount();
 const tSt=getTopicStats();
 const weakest=TOPICS.map((t,i)=>({name:t,i,s:tSt[i]||{ok:0,no:0,tot:0}})).filter(p=>p.s.tot>=3).sort((a,b)=>{
 const pa=a.s.tot?a.s.ok/a.s.tot:0,pb=b.s.tot?b.s.ok/b.s.tot:0;return pa-pb;}).slice(0,3);
@@ -478,7 +480,8 @@ export function calcEstScore(){
   // Returns null when fewer than 3 topics have ≥3 answers; UI renders "—".
   const now2=Date.now();
   const totalFreq=EXAM_FREQ.reduce((a,b)=>a+b,0);
-  const tSt=G.S.ts||{};
+  // IM-1 (2026-07-15): G.S.ts is never written; use live getTopicStats() (G.S.sr).
+  const tSt=getTopicStats();
   const due=new Set(getDueQuestions());
 
   let topicsWithData=0;
@@ -899,7 +902,7 @@ ${remaining?'<button data-action="goto-quiz-build" data-filt="all" class="btn bt
 }
 
 export function renderDueReviewCard(){
-const dueN=getDueQuestions().length;
+const dueN=getDueCount();
 if(dueN<=0)return '';
 return `<div class="card due-alert" style="padding:12px;margin-bottom:8px;background:#fef2f2;border:1px solid #fecaca">
 <div style="display:flex;align-items:center;gap:8px">

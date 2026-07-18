@@ -6,7 +6,7 @@ import { sanitize, fmtT, safeJSONParse, getApiKey, setApiKey, toast, isOk} from 
 import { migrateToIDB } from '../core/state.js';
 import '../core/data-loader.js'; // side-effect: populates G.QZ, G.TABS, etc.
 import '../clock.js'; // side-effect: header clock (#hdr-sub)
-import { getDueQuestions, getWeakTopics, getStudyStreak, getTopicStats, buildRescuePool,
+import { getDueCount, getWeakTopics, getStudyStreak, getTopicStats, buildRescuePool,
          srScore, trackChapterRead, getChaptersDueForReading, isExamTrap } from '../sr/spaced-repetition.js';
 import { buildPool, setFilt, setTopicFilt, pick, check, next, _storeDiff,
          startTopicMiniExam, endMiniExam, startExam, startMockExam, endExam, endMockExam,
@@ -208,7 +208,7 @@ export function takeWeeklySnapshot(){
     const weekKey='w_'+now.getFullYear()+'_'+Math.floor((now-new Date(now.getFullYear(),0,0))/(7*864e5));
     const snapshots=JSON.parse(localStorage.getItem('mishpacha_weekly')||'{}');
     if(snapshots[weekKey])return; // already taken this week
-    const tSt=G.S&&G.S.ts?G.S.ts:{};
+    const tSt=getTopicStats();
     const snap={};
     for(let i=0;i<TOPICS.length;i++){const s=tSt[i]||{ok:0,no:0,tot:0};snap[i]=s.tot>=3?Math.round(s.ok/s.tot*100):null;}
     snapshots[weekKey]={date:now.toISOString(),acc:snap};
@@ -309,7 +309,7 @@ initSWUpdate(APP_VERSION).then(reg => {
     if (now >= target) target.setDate(target.getDate() + 1);
     setTimeout(() => {
       if (G.S.notifOptIn && typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-        const dueN = getDueQuestions().length;
+        const dueN = getDueCount();
         if (dueN > 0 && reg.active) {
           reg.active.postMessage({ type: 'schedule-notification', dueCount: dueN });
         }

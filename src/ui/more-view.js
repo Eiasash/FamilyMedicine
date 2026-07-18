@@ -7,6 +7,8 @@ import { startVoiceParser } from '../quiz/modes.js';
 import { submitFeedbackForm } from '../features/cloud.js';
 import { bindAuthEvents } from '../features/auth.js';
 import { bindStudyPlanEvents } from '../features/study_plan/index.js';
+import { srScore } from '../sr/spaced-repetition.js';
+import { markWrong } from '../quiz/wrong-review.js';
 
 export function renderNotes(){
   const qnoteEntries=Object.entries(G.S.qnotes||{}).filter(([k,v])=>v&&v.trim());
@@ -118,14 +120,20 @@ return h;
 export function showAnswerHardFail(){
 if(G.ans)return;
 const q=G.QZ[G.pool[G.qi]];
-G.sel=q.c;G.ans=true;
+const idx=G.pool[G.qi];
+// FM-3 (2026-07-15): "Give up / show me the answer" = a miss. Reveal the correct
+// option WITHOUT assigning it to G.sel — the transient G._reveal flag drives the
+// reveal so renderQuiz shows the incorrect/neutral feedback variant (not the green
+// "correct" panel) while still highlighting the right option. Score through the
+// SAME wrong path as check(): srScore(idx,false) (FSRS "Again") + markWrong(idx)
+// (enroll in wrong-review) — replacing the old ad-hoc SM-2 ef nudge that bypassed
+// FSRS scheduling and never enrolled the Q for review.
+G.sel=null;G._reveal=true;G.ans=true;
 if(!G.examMode){
 G.S.qNo++;
 if(q.ti>=0){if(!G.S.tpNo)G.S.tpNo={};if(!G.S.tpNo[q.ti])G.S.tpNo[q.ti]=0;G.S.tpNo[q.ti]++;}
-const _srk=String(G.pool[G.qi]);
-if(!G.S.sr[_srk])G.S.sr[_srk]={ef:2.5,n:0,next:0};
-G.S.sr[_srk].ef=Math.max(1.3,(G.S.sr[_srk].ef||2.5)-0.3);
-G.S.sr[_srk].n=0;G.S.sr[_srk].next=Date.now();
+srScore(idx,false);
+try{markWrong(idx);}catch(e){/* non-fatal */}
 }
 G.save();G.render();
 }
@@ -180,9 +188,9 @@ setTimeout(function(){const el=document.getElementById('chat-msgs');if(el)el.scr
 let history=G.S.chat.slice(-10);
 if(history.length>0&&history[0].role!=='user')history=history.slice(1);
 const messages=history.filter(function(m){return m.role==='user'||m.role==='assistant';}).map(function(m){return{role:m.role,content:m.text};});
-try{
 const ctrl=new AbortController();
 const timeout=setTimeout(function(){ctrl.abort();},45000);
+try{
 const _authz=await getProxyBearer();
 const resp=await fetch(AI_PROXY,{
 method:'POST',
@@ -190,14 +198,22 @@ headers:{'Content-Type':'application/json','Authorization':_authz},
 body:JSON.stringify({model:'sonnet',max_tokens:1024,system:CHAT_SYSTEM,messages:messages}),
 signal:ctrl.signal
 });
-clearTimeout(timeout);
-if(!resp.ok){const e=await resp.json().catch(function(){return{};});if(resp.status===401||resp.status===403){localStorage.removeItem('mishpacha_apikey');throw new Error('API key invalid');}throw new Error(e.error&&e.error.message?e.error.message:'HTTP '+resp.status);}
+// FM-2 (2026-07-15): after the JWT cutover a proxy 401/403 is about the Supabase
+// JWT minted by getProxyBearer, NOT the user's personal Anthropic key. Do NOT
+// removeItem('mishpacha_apikey') here — that wiped the key callAI() relies on,
+// blacking out all AI after one transient chat failure. Surface the service
+// error only; the personal key is left intact.
+if(!resp.ok){const e=await resp.json().catch(function(){return{};});if(resp.status===401||resp.status===403){throw new Error('AI service error ('+resp.status+')');}throw new Error(e.error&&e.error.message?e.error.message:'HTTP '+resp.status);}
 const data=await resp.json();
 G.S.chat.push({role:'assistant',text:data.content[0].text});
 }catch(e){
 const offline=!navigator.onLine||e.message.includes('Failed to fetch');
 const timedOut=e.name==='AbortError';
 G.S.chat.push({role:'error',text:offline?'📡 אין חיבור לאינטרנט':timedOut?'⏱️ תם הזמן':'⚠️ '+sanitize(e.message)});
+}finally{
+// FM-7 (2026-07-15): a getProxyBearer() throw used to skip clearTimeout and leak
+// the 45s abort timer. finally guarantees it clears on every path.
+clearTimeout(timeout);
 }
 G.chatLoading=false;G.save();G.render();
 setTimeout(function(){const el=document.getElementById('chat-msgs');if(el)el.scrollTop=el.scrollHeight;},50);

@@ -36,6 +36,7 @@ vi.mock('../src/ai/client.js', () => ({ callAI: vi.fn() }));
 vi.mock('../src/sr/spaced-repetition.js', () => ({
   getTopicStats: vi.fn(() => ({})),
   getDueQuestions: vi.fn(() => []),
+  getDueCount: vi.fn(() => 0),
 }));
 vi.mock('../src/core/globals.js', () => ({
   default: { S: { qOk: 0, qNo: 0, sr: {} }, save: vi.fn(), render: vi.fn() },

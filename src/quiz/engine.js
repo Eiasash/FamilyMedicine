@@ -137,6 +137,7 @@ export function pick(i){if(G.ans)return;G.sel=i;G.render()}
 export function _storeDiff(qIdx,d){if(!G.S.sr[qIdx])G.S.sr[qIdx]={ef:2.5,n:0,next:0,ts:[],at:0,tot:0,ok:0};G.S.sr[qIdx].diff=d;G.save();}
 export function check(){
 if(G.sel===null)return;
+G._reveal=false; // FM-3: a genuine answer must never inherit a stale give-up/timeout reveal
 checkMockIntercept();
 if(G.timedMode)clearInterval(G.timedInt);
 G.ans=true;
@@ -176,7 +177,7 @@ if(G.examMode&&!G.mockExamResults&&G.qi+1>=Math.min(G.pool.length,150)){endExam(
 // Save current answer state for prev() restoration
 if(!G._sessAnsw)G._sessAnsw={};
 if(G.ans&&!G.examMode)G._sessAnsw[G.pool[G.qi]]={sel:G.sel,ans:true,conf:G._confidence};
-G.qi++;if(G.qi>=G.pool.length)G.qi=0;G.sel=null;G.ans=false;G.autopsyDistractor=-1;G.teachBackState=null;G._optShuffle=null;G._confidence=null;G._wrongReason=null;G._diffRating=null;
+G.qi++;if(G.qi>=G.pool.length)G.qi=0;G.sel=null;G.ans=false;G.autopsyDistractor=-1;G.teachBackState=null;G._optShuffle=null;G._confidence=null;G._wrongReason=null;G._diffRating=null;G._reveal=false;
 if(G.timedMode){clearInterval(G.timedInt);G.timedSec=90;G.render();setTimeout(()=>G.startTimedQ&&G.startTimedQ(),100);}
 else G.render();
 }
@@ -189,7 +190,7 @@ G.qi--;
 const _st=G._sessAnsw&&G._sessAnsw[G.pool[G.qi]];
 if(_st){G.sel=_st.sel;G.ans=_st.ans;G._confidence=_st.conf;}
 else{G.sel=null;G.ans=false;G._confidence=null;}
-G.autopsyDistractor=-1;G.teachBackState=null;G._optShuffle=null;G._wrongReason=null;G._diffRating=null;
+G.autopsyDistractor=-1;G.teachBackState=null;G._optShuffle=null;G._wrongReason=null;G._diffRating=null;G._reveal=false;
 if(G.timedMode){clearInterval(G.timedInt);G.timedSec=90;G.render();setTimeout(()=>G.startTimedQ&&G.startTimedQ(),100);}
 else G.render();
 }
@@ -273,9 +274,16 @@ export function showMockExamPicker(){
 // Override check() to also record per-topic result when in mockExam
 const _origCheck=window.check;
 export function checkMockIntercept(){
-  if(G.ans||G.sel===null)return;
-  const qIdx=G.pool[G.qi];const q=G.QZ[qIdx];const correct=isOk(q,G.sel);
-  if(G.mockExamResults&&q.ti>=0){
+  if(G.ans)return;
+  // FM-3 reveal support: a give-up/timeout sets G.sel=null + G._reveal=true and
+  // must still be graded as a miss here (so a mock records byTopic .no++).
+  if(G.sel===null&&!G._reveal)return;
+  const qIdx=G.pool[G.qi];const q=G.QZ[qIdx];
+  if(!q)return;
+  const correct=!G._reveal&&isOk(q,G.sel);
+  // FM-6 (2026-07-15): byTopic is seeded only for ti 0..26 (EXAM_FREQ length); a
+  // ti>=27 (or unseeded) question would throw on .ok++/.no++. Guard on the bucket.
+  if(G.mockExamResults&&G.mockExamResults.byTopic[q.ti]){
     if(correct)G.mockExamResults.byTopic[q.ti].ok++;
     else {G.mockExamResults.byTopic[q.ti].no++; (G.mockExamResults.wrongIdxs=G.mockExamResults.wrongIdxs||[]).push(qIdx);}
     G._mockAnswered++;
