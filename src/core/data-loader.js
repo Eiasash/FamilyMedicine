@@ -5,13 +5,18 @@ import { TOPICS } from './constants.js';
 // Data loader + data arrays — extracted from mishpacha-mega.html
 // Depends on: safeJSONParse (utils.js), sanitize (utils.js), takeWeeklySnapshot (still in HTML)
 
-// ===== AUTO TOPIC TAGGING =====
-G.QZ.forEach(q=>{
-const txt=(q.q+' '+q.o.join(' ')).toLowerCase();
-let best=-1,mx=0;
-G.TK.forEach((keys,ti)=>{let sc=0;keys.forEach(k=>{if(txt.includes(k.toLowerCase()))sc++;});if(sc>mx){mx=sc;best=ti;}});
-q.ti=best>=0?best:8;
-});
+// ===== AUTO TOPIC TAGGING — REMOVED (FM-9, 2026-07-18) =====
+// A keyword-fallback tagger used to run HERE at module-eval, but G.QZ was still []
+// (globals.js) and G.TK still [] — a guaranteed no-op. It was NOT relocated into the
+// loader because it is unsalvageable against the real data: it expects G.TK
+// (data/topics.json) to be an array of keyword ARRAYS (keys.forEach(...)), but
+// topics.json is an array of {id,en,he} topic-name objects (see textbookData.test.js),
+// so running it after load would throw "keys.forEach is not a function" — and there is
+// no keyword source to match against. Every question in questions.json / highyield.json
+// / user-generated banks already carries a curated numeric ti (verified 1271/1271,
+// ti in 0..26), so no fallback tagging is needed. topics.json is unused at runtime —
+// topic NAMES come from the TOPICS constant (constants.js) — so the loader no longer
+// fetches it (G.TK stays []). Runtime behavior is unchanged (the block was already dead).
 
 // ===== G.TABS =====
 
@@ -34,7 +39,6 @@ G._dataPromise = (async function loadDataArrays() {
   // shows the full rationales.
   const files = {
     QZ: 'questions.json',
-    TK: 'topics.json',
     NOTES: 'notes.json',
     TABS: 'tabs.json',
   };
@@ -52,7 +56,6 @@ G._dataPromise = (async function loadDataArrays() {
     );
     entries.forEach(([varName], i) => {
       if (varName === 'QZ') G.QZ = results[i];
-      else if (varName === 'TK') G.TK = results[i];
       else if (varName === 'NOTES') G.NOTES = results[i];
       else if (varName === 'TABS') G.TABS = results[i];
       });

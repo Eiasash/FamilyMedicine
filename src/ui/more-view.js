@@ -176,6 +176,17 @@ h+='</div>';
 return h;
 }
 
+// IM-7 (2026-07-18): the AbortController below only covers the fetch — it does NOT cover
+// getProxyBearer(), whose Supabase getSession/signInAnonymously and dynamic https CDN
+// import can hang indefinitely. Race the token mint against an 8s reject so a hung
+// sign-in / CDN import rejects and surfaces as a chat error instead of hanging past the
+// timeout. This does NOT change getProxyBearer's minting logic or the JWT contract.
+function withAuthTimeout(promise,ms){
+  let t;
+  const timeout=new Promise((_,reject)=>{t=setTimeout(()=>reject(new Error('proxy_auth_timeout')),ms);});
+  return Promise.race([promise,timeout]).finally(()=>clearTimeout(t));
+}
+
 export async function sendChat(){
 const input=document.getElementById('chat-input');
 const text=(input?input.value:'').trim();
@@ -191,7 +202,7 @@ const messages=history.filter(function(m){return m.role==='user'||m.role==='assi
 const ctrl=new AbortController();
 const timeout=setTimeout(function(){ctrl.abort();},45000);
 try{
-const _authz=await getProxyBearer();
+const _authz=await withAuthTimeout(getProxyBearer(),8000);
 const resp=await fetch(AI_PROXY,{
 method:'POST',
 headers:{'Content-Type':'application/json','Authorization':_authz},
