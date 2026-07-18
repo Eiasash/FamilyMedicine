@@ -35,14 +35,45 @@ G.save=function(){clearTimeout(G._saveTimer);G._saveTimer=setTimeout(()=>{
     }
   }catch(e){}
   },150)};
-(function updateStreak(){
-const today=new Date().toISOString().slice(0,10);
-if(G.S.lastDay===today)return;
-const yest=new Date(Date.now()-86400000).toISOString().slice(0,10);
-if(G.S.lastDay===yest)G.S.streak++;
-else if(G.S.lastDay!==today)G.S.streak=1;
-G.S.lastDay=today;G.save();
-})();
+// FM-10 (2026-07-18): the previous updateStreak IIFE bumped G.S.streak on the first
+// save() of each calendar day — i.e. merely OPENING the app — and used UTC
+// (toISOString) day boundaries. Diagnostics + the leaderboard submit G.S.streak, so an
+// app-open with no studying inflated the value, and the UTC boundary rolled the "day"
+// over at the wrong local hour. Fix: (a) compute "today" from the LOCAL date, and
+// (b) derive the streak from REAL study activity (G.S.dailyAct — written only by
+// trackDailyActivity() when a question is answered), never from app-open alone.
+// G.S.streak stays a genuine study streak.
+export function localDayKey(ts){
+  const dt=ts==null?new Date():new Date(ts);
+  const y=dt.getFullYear();
+  const m=String(dt.getMonth()+1).padStart(2,'0');
+  const d=String(dt.getDate()).padStart(2,'0');
+  return y+'-'+m+'-'+d;
+}
+// Consecutive study-day count ending today (tolerant of "not studied yet today"),
+// walked over G.S.dailyAct using LOCAL dates. Mirrors getStudyStreak() in
+// spaced-repetition.js but with local — not UTC — day boundaries.
+function studyStreakFromDailyAct(){
+  const act=G.S.dailyAct;
+  if(!act)return G.S.streak||0; // no activity log (legacy state) → preserve prior value
+  let streak=0;const d=new Date();
+  for(let i=0;i<365;i++){
+    const key=localDayKey(d.getTime());
+    if(act[key]&&act[key].q>0)streak++;
+    else if(i>0)break;
+    d.setDate(d.getDate()-1);
+  }
+  return streak;
+}
+export function reconcileStreak(){
+  const today=localDayKey();
+  const real=studyStreakFromDailyAct();
+  if(G.S.lastDay===today&&G.S.streak===real)return;
+  G.S.streak=real;
+  G.S.lastDay=today;
+  G.save();
+}
+reconcileStreak();
 
 // ===== INDEXEDDB MIGRATION =====
 const IDB_NAME='mishpacha_mega_db',IDB_VER=1,IDB_STORE='state';

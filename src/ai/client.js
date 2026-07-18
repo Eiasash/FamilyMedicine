@@ -6,6 +6,18 @@ import { getProxyBearer } from '../services/supabaseAuth.js';
 // AI client — extracted from mishpacha-mega.html
 // Depends on: AI_PROXY (constants.js), getApiKey (utils.js), getProxyBearer (supabaseAuth.js)
 
+// IM-7 (2026-07-18): the per-call AbortController below only covers the fetch — it does
+// NOT cover getProxyBearer(), whose Supabase getSession/signInAnonymously and dynamic
+// https CDN import can hang indefinitely, blowing past the intended request timeout.
+// Race the token mint against an 8s reject so a hung sign-in / CDN import rejects and
+// the caller falls through to its existing fallback (here: the personal API key). This
+// does NOT change getProxyBearer's minting logic or the JWT contract.
+function withAuthTimeout(promise,ms){
+  let t;
+  const timeout=new Promise((_,reject)=>{t=setTimeout(()=>reject(new Error('proxy_auth_timeout')),ms);});
+  return Promise.race([promise,timeout]).finally(()=>clearTimeout(t));
+}
+
 export async function callAI(messages,maxTokens=400,model='sonnet',ground=null){
   // v1.7.2: per-call AbortController (was singleton G._aiAbortController which
   // cancelled in-flight peers on every new invocation, breaking bulk callers).
@@ -19,7 +31,7 @@ try{
 // P0 cutover (runbook §3): authenticate the proxy with a Supabase session JWT
 // (existing GoTrue/OAuth session, else an anonymous one) instead of the shared
 // x-api-secret that used to ship in the bundle.
-const _authz=await getProxyBearer();
+const _authz=await withAuthTimeout(getProxyBearer(),8000);
 const pr=await fetch(AI_PROXY,{
 method:'POST',
 headers:{'Content-Type':'application/json','Authorization':_authz},
