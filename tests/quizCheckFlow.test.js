@@ -11,7 +11,7 @@
 import { describe, it, expect, beforeAll, vi } from 'vitest';
 
 vi.mock('../src/sr/spaced-repetition.js', () => ({
-  getDueQuestions: vi.fn(() => []), getTopicStats: vi.fn(() => ({})),
+  getDueQuestions: vi.fn(() => []), getDueCount: vi.fn(() => 0), getTopicStats: vi.fn(() => ({})),
   isExamTrap: vi.fn(() => false), srScore: vi.fn(), buildRescuePool: vi.fn(),
 }));
 vi.mock('../src/ai/client.js', () => ({ callAI: vi.fn() }));

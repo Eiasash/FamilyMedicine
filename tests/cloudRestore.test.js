@@ -20,6 +20,7 @@ vi.mock('../src/ai/client.js', () => ({ callAI: vi.fn() }));
 vi.mock('../src/sr/spaced-repetition.js', () => ({
   getTopicStats: vi.fn(() => ({})),
   getDueQuestions: vi.fn(() => []),
+  getDueCount: vi.fn(() => 0),
 }));
 
 import { filterRestorePayload } from '../src/features/cloud.js';

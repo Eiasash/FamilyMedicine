@@ -66,7 +66,17 @@ G.save();
 // isChronicFail() loaded from shared/fsrs.js
 export function getDueQuestions(){
 const now=Date.now();
-return Object.entries(G.S.sr).filter(([k,v])=>v.next<=now).map(([k])=>parseInt(k)).slice(0,20);
+// IM-8 (2026-07-15): most-overdue-first — sort by scheduled `next` ascending
+// BEFORE capping at 20, so a review session surfaces the questions that have
+// been due longest. Previously sliced in numeric-index order, hiding older-due
+// items whenever more than 20 were due.
+return Object.entries(G.S.sr).filter(([k,v])=>v.next<=now).sort((a,b)=>(a[1].next||0)-(b[1].next||0)).map(([k])=>parseInt(k)).slice(0,20);
+}
+// True (unbounded) count of due questions. Badges must reflect the real backlog,
+// not min(20, ...) — getDueQuestions() caps its POOL at 20 but the COUNT should not.
+export function getDueCount(){
+const now=Date.now();
+return Object.entries(G.S.sr).filter(([k,v])=>v.next<=now).length;
 }
 // ===== RESCUE DRILL =====
 export function getWeakTopics(n=3){
@@ -134,9 +144,11 @@ export function buildDrillPool(ti, n=15){
   if(!pool.length){ toast('No questions for this topic yet','info'); return; }
   const now = Date.now();
   pool.forEach(x=>{
-    const s = G.S.sr[x.i] || { tot:0, ok:0, n:0, due:null };
+    const s = G.S.sr[x.i] || { tot:0, ok:0, n:0, next:0 };
     const acc = s.tot>0 ? s.ok/s.tot : 0.5;
-    const overdue = s.due && s.due<now ? 2 : 0;
+    // FM-4 (2026-07-15): entries carry `.next` (set by srScore), never `.due`, so
+    // the old `s.due` read was always undefined and overdue ranking was dead.
+    const overdue = s.next && s.next<=now ? 2 : 0;
     const untested = s.tot===0 ? 1 : 0;
     x.rank = -acc*3 + overdue + untested*0.5 + Math.random()*0.1;
   });

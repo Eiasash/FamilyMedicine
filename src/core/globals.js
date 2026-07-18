@@ -23,7 +23,7 @@ const G = {
   _sessionStart: Date.now(), _sessionSaved: false,
   _mockAnswered: 0,
   qStartTime: Date.now(),
-  _confidence: null, _wrongReason: null, _diffRating: null,
+  _confidence: null, _wrongReason: null, _diffRating: null, _reveal: false,
   miniExamTopic: -1, miniExamResults: null,
   mockExamResults: null,
 

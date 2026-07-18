@@ -1,7 +1,7 @@
 import G from '../core/globals.js';
 import { SUPA_URL, SUPA_ANON, TOPICS, EXAM_YEARS, TOPIC_TO_AFP_SPECS } from '../core/constants.js';
 import { sanitize, heDir, fmtT, safeJSONParse, getOptShuffle, remapExplanationLetters, isMetaOption, toast, isOk} from "../core/utils.js";
-import { getDueQuestions, getWeakTopics, isExamTrap, srScore, getTopicStats, buildRescuePool } from '../sr/spaced-repetition.js';
+import { getDueQuestions, getDueCount, getWeakTopics, isExamTrap, srScore, getTopicStats, buildRescuePool } from '../sr/spaced-repetition.js';
 import { isChronicFail } from '../sr/fsrs-bridge.js';
 import { renderExplainBox, toggleFlagExplain, explainWithAI, aiAutopsy, gradeTeachBack, startVoiceTeachBack } from '../ai/explain.js';
 import { TOPIC_REF } from './track-view.js';
@@ -11,7 +11,7 @@ import { buildPool, check, next, prev, pick, checkMockIntercept,
          _storeDiff } from '../quiz/engine.js';
 import { speakQuestion, startNextBestStep } from '../quiz/modes.js';
 import { showAnswerHardFail } from './more-view.js';
-import { buildWrongReviewPool, getWrongAnswerCount, resetWrongSet } from '../quiz/wrong-review.js';
+import { buildWrongReviewPool, getWrongAnswerCount, resetWrongSet, markWrong } from '../quiz/wrong-review.js';
 import { renderSourceLink, openSource } from './source-link.js';
 
 export function toggleBk(){G.S.bk[G.pool[G.qi]]=!G.S.bk[G.pool[G.qi]];G.save();G.render();}
@@ -114,11 +114,16 @@ export function startTimedQ(){
       clearInterval(G.timedInt);
       // Auto-advance: show correct answer briefly then next
       if(!G.ans){
-        G.sel=G.QZ[G.pool[G.qi]]?.c??0;
+        // FM-3 (2026-07-15): a timeout is a miss. Reveal the correct option WITHOUT
+        // assigning it to G.sel — the transient G._reveal flag drives the reveal so
+        // renderQuiz shows the incorrect/neutral feedback variant (not the green
+        // "correct" panel). checkMockIntercept() grades the reveal as a miss, and
+        // srScore(false)+markWrong() route it through the same wrong path as check().
+        G.sel=null;G._reveal=true;
         checkMockIntercept();
         G.ans=true;
         const q=G.QZ[G.pool[G.qi]];
-        if(q){G.S.qNo++;srScore(G.pool[G.qi],false);}
+        if(q){G.S.qNo++;srScore(G.pool[G.qi],false);try{markWrong(G.pool[G.qi]);}catch(e){}}
         G.save();G.render();
       }
       setTimeout(()=>{if(G.timedMode)next();},1800);
@@ -385,7 +390,7 @@ const q=G.QZ[G.pool[G.qi]];
 const tot=G.S.qOk+G.S.qNo;
 const pct=tot?Math.round(G.S.qOk/tot*100)+'%':'—';
 const bk=G.S.bk[G.pool[G.qi]];
-const dueN=getDueQuestions().length;
+const dueN=getDueCount();
 
 let h='<section class="quiz-stage" aria-label="שאלה">';
 
@@ -516,13 +521,22 @@ if(!G.ans){
 
 // ===== POST-ANSWER =====
 // ── Feedback panel ──────────────────────────────────────────────────
-const correct=isOk(q,G.sel);
+// FM-3 (2026-07-15): when the answer was revealed via give-up/timeout (G._reveal),
+// force the incorrect/neutral feedback variant — G.sel is intentionally left unset
+// so the correct option is still highlighted (correct-unchosen) without ever
+// showing the green "correct" panel for a missed question.
+const correct=!G._reveal&&isOk(q,G.sel);
 const feedbackVariant=correct?'ok':'err';
 const feedbackTitle=correct?'נכון':'לא נכון';
 h+=`<aside class="quiz-feedback quiz-feedback--${feedbackVariant}" role="status" aria-live="polite">`;
 h+=`<span class="quiz-feedback__title">${feedbackTitle}</span>`;
 if(!G.examMode&&q.e){
-  const rendered=remapExplanationLetters(q.e,_shuf).replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<b>$1</b>');
+  // FM-5 (2026-07-15): q.e is attacker-controllable for custom questions
+  // (mishpacha_custom_qs / pending). Escape FIRST, THEN apply the <br>/<b>
+  // formatting — mirroring the sanitize-then-format contract in explain.js
+  // formatAutopsy. remapExplanationLetters only rewrites letter labels (emits no
+  // HTML), so running it on already-escaped text is safe and does not double-escape.
+  const rendered=remapExplanationLetters(sanitize(q.e),_shuf).replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<b>$1</b>');
   h+=`<p class="quiz-feedback__body" dir="auto">${rendered}</p>`;
 }
 if(!G.examMode&&q.ref){

@@ -368,7 +368,7 @@ body:JSON.stringify({type,text:_reportText,ts:Date.now(),version:APP_VERSION,uid
 if(type==='wrong_answer'&&qObj){
 if(st){st.textContent='🤖 AI verifying...';st.style.color='#8b5cf6';}
 try{
-const aiText=await callAI([{role:'user',content:`Internal medicine board exam. A student reports wrong answer key.\nQUESTION: ${qObj.q}\nOPTIONS: ${qObj.o.map((o,i)=>(i===qObj.c?'[MARKED CORRECT] ':'')+o).join(' | ')}\nSTUDENT SAYS: ${msg}\nIs the answer key correct or wrong? 2-3 sentences. Start with VERDICT: CORRECT or VERDICT: WRONG.`}],400);
+const aiText=await callAI([{role:'user',content:`Israeli family medicine board exam (שלב א׳ רפואת המשפחה). A student reports wrong answer key.\nQUESTION: ${qObj.q}\nOPTIONS: ${qObj.o.map((o,i)=>(i===qObj.c?'[MARKED CORRECT] ':'')+o).join(' | ')}\nSTUDENT SAYS: ${msg}\nIs the answer key correct or wrong? 2-3 sentences. Start with VERDICT: CORRECT or VERDICT: WRONG.`}],400);
 const isWrong=aiText.startsWith('VERDICT: WRONG');
 const aiBox=document.getElementById('aiVerifyResult');
 if(aiBox){
