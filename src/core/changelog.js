@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.26.22': [
+    'content(explanations): rewrote 4 explanations whose text argued for a clinically-wrong option while the answer key was correct (idx 47 painful wheals lasting over 24h are urticarial vasculitis needing a urinalysis, not an antibiotic reaction; 116 comorbid CAP takes a beta-lactam plus a macrolide, not cefuroxime monotherapy; 127 a normal FEV1/FVC of 75 with low FVC is a restrictive pattern ILD, not COPD; 149 the patient smokes so the beta-carotene supplement is the inappropriate one). Keys and options unchanged. Trinity 1.26.21 to 1.26.22.',
+  ],
   '1.26.21': [
     'content(keys): corrected idx 698 key + c_accept — a hyperprolactinemia/prolactinoma workup question was keyed to inflammatory markers (CRP/ESR), which have no role in that workup; the explanation itself states the CRP/ESR option is wrong. Realigned c and c_accept to the thyroid-function option (hypothyroidism is a reversible cause of hyperprolactinemia) and refreshed the per-distractor rationale. Note: drug review and pituitary MRI are also part of the full workup, so c_accept may warrant expansion on review. Trinity 1.26.20 to 1.26.21.',
   ],
