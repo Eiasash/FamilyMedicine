@@ -7,6 +7,9 @@
 // directly, so the 'export const CHANGELOG={' marker must stay literal.
 
 export const CHANGELOG={
+  '1.26.21': [
+    'content(keys): corrected idx 698 key + c_accept — a hyperprolactinemia/prolactinoma workup question was keyed to inflammatory markers (CRP/ESR), which have no role in that workup; the explanation itself states the CRP/ESR option is wrong. Realigned c and c_accept to the thyroid-function option (hypothyroidism is a reversible cause of hyperprolactinemia) and refreshed the per-distractor rationale. Note: drug review and pituitary MRI are also part of the full workup, so c_accept may warrant expansion on review. Trinity 1.26.20 to 1.26.21.',
+  ],
   '1.26.20': [
     'content(keys): corrected one answer key (idx 107) — an ECG image question keyed to lobar pneumonia, but the ECG shows Osborn (J) waves, specific to hypothermia; realigned c and c_accept to the hypothermia option and refreshed its per-distractor rationale. Lobar pneumonia does not produce Osborn waves. One of the genuine key errors from a full key-vs-explanation desync audit of the FM bank; other flagged candidates were reviewed and held (correct keys with explanation-side wording, or debatable). Trinity 1.26.19 to 1.26.20.',
   ],
