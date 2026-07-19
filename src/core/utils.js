@@ -62,7 +62,15 @@ export function remapExplanationLetters(text,shuf){
     if(i===-1||inv[i]===undefined)return orig;
     return arr[inv[i]];
   };
-  // (1) Latin "B"/"Answer C"
+  // (1) Latin option-letter refs — ANCHORED to an explicit option keyword
+  //     (answer|option|choice), optional " is", then the letter:
+  //     "answer A", "option C", "answer is A", "(answer B)". A bare Latin A-E
+  //     with NO keyword anchor is HELD untouched. G5 (2026-07-18): removed the
+  //     unguarded /\b([A-E])\b/ remap which corrupted medical tokens that are
+  //     never option refs (vitamin D, hepatitis B, part A/B, class A, type A/B,
+  //     grade A-C, SARC-F "**C**", 37 degC/degF) when the shuffle moved that
+  //     index. Validated over every shipped explanation x seeded shuffles: NEW
+  //     changes zero medical tokens (the FM corpus ships zero Latin keyword refs).
   // (2) Hebrew "תשובה ב'" form
   // (3) Hebrew bare label "א'/ב' שגויה" — letter+geresh used as bullet label.
   //     Lookbehind (?<![א-ת]) excludes mid-word gershayim like "מג'ורי" (Major)
@@ -73,7 +81,7 @@ export function remapExplanationLetters(text,shuf){
   // Catches: geresh `'`, whitespace, ASCII letters, punct, EOL.
   // Excludes: another Hebrew letter (so "תשובה בא" / "ג'נטיקה" stay untouched).
   return text
-    .replace(/\b([A-E])\b/g,(m,l)=>remap(l,latin))
+    .replace(/(\b(?:answers?|options?|choices?)(?:\s+is)?(?:\s*[:=]\s*|\s+))([A-E])\b/gi,(m,pre,l)=>pre+remap(l,latin))
     .replace(
       /(?:(תשובה\s*)([א-ה])(?=[^א-ת]|$)|(?<![א-ת])([א-ה])(['׳’])(?=[^א-ת]|$))/g,
       (m,p,l1,l2,ger)=>p?p+remap(l1,heb):remap(l2,heb)+ger
