@@ -89,7 +89,7 @@ Before v1.3.0, 5 of 7 exam sessions (2021-Jun, 2022-Jun, 2023-Jun, 2024-May, 202
 Keep the 32-JS-module split in `src/` (was 21 at v1.3.4; grew with debug console, study-plan, supabaseAuth). Pnimit's pattern, mirror it exactly.
 
 ## Tag whitelist
-`2020`, `2021-Jun`, `2022-Jun`, `2023-Jun`, `2024-May`, `2024-Sep`, `2025-Jun`, `AI-2026`, `AI-2026b`, `FM-Core` — the question `t` tags actually present, locked by `tests/questionsCountLock.test.js`. (`Goroll`/`Nelson`/`AFP` are source/library citation refs, not question `t` tags.)
+`2020`, `2021-Jun`, `2022-Jun`, `2023-Jun`, `2024-May`, `2024-Sep`, `2025-Jun`, `2026-Jun`, `AI-2026`, `AI-2026b`, `FM-Core` — the question `t` tags actually present, locked by `tests/questionsCountLock.test.js`. (`Goroll`/`Nelson`/`AFP` are source/library citation refs, not question `t` tags.)
 
 ## Clinical knowledge hierarchy (family medicine — different from Pnimit/Geri)
 1. **Goroll 8e** — primary (no chapter exclusions)
